@@ -5,9 +5,7 @@ import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api.RegisterCustomPermissionPrefixesEvent;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
-import com.feed_the_beast.ftbu.gui.guide.GuidePage;
 import com.feed_the_beast.ftbu.net.FTBUNetHandler;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeChunkManager;
 
 import java.util.Collection;
@@ -39,18 +37,6 @@ public class FTBUCommon
 	}
 
 	public void postInit()
-	{
-	}
-
-	public void onReloadedClient()
-	{
-	}
-
-	public void openNBTEditorGui(NBTTagCompound info, NBTTagCompound mainNbt)
-	{
-	}
-
-	public void displayGuide(GuidePage page)
 	{
 	}
 }

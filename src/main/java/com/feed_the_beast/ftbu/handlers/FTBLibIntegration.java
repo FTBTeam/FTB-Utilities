@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbu.handlers;
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.RegisterDataProvidersEvent;
 import com.feed_the_beast.ftbl.api.RegisterOptionalServerModsEvent;
-import com.feed_the_beast.ftbl.api.ReloadEvent;
-import com.feed_the_beast.ftbu.FTBU;
+import com.feed_the_beast.ftbl.api.RegisterSyncDataEvent;
+import com.feed_the_beast.ftbl.api.ServerReloadEvent;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.ServerInfoPage;
@@ -28,7 +28,7 @@ public class FTBLibIntegration
 	public static final ResourceLocation RELOAD_BADGES = FTBUFinals.get("badges");
 
 	@SubscribeEvent
-	public static void registerReloadIds(ReloadEvent.RegisterIds event)
+	public static void registerReloadIds(ServerReloadEvent.RegisterIds event)
 	{
 		event.register(RELOAD_CONFIG);
 		event.register(RELOAD_RANKS);
@@ -37,33 +37,26 @@ public class FTBLibIntegration
 	}
 
 	@SubscribeEvent
-	public static void onReload(ReloadEvent event)
+	public static void onServerReload(ServerReloadEvent event)
 	{
-		if (event.getSide().isServer())
+		if (event.reload(RELOAD_CONFIG))
 		{
-			if (event.reload(RELOAD_CONFIG))
-			{
-				FTBUConfig.sync();
-			}
-
-			if (event.reload(RELOAD_RANKS) && !Ranks.reload())
-			{
-				event.failedToReload(RELOAD_RANKS);
-			}
-
-			if (event.reload(RELOAD_SERVER_INFO))
-			{
-				ServerInfoPage.reloadCachedInfo();
-			}
-
-			if (event.reload(RELOAD_BADGES) && !Badges.reloadServerBadges())
-			{
-				event.failedToReload(RELOAD_BADGES);
-			}
+			FTBUConfig.sync();
 		}
-		else
+
+		if (event.reload(RELOAD_RANKS) && !Ranks.reload())
 		{
-			FTBU.PROXY.onReloadedClient();
+			event.failedToReload(RELOAD_RANKS);
+		}
+
+		if (event.reload(RELOAD_SERVER_INFO))
+		{
+			ServerInfoPage.reloadCachedInfo();
+		}
+
+		if (event.reload(RELOAD_BADGES) && !Badges.reloadServerBadges())
+		{
+			event.failedToReload(RELOAD_BADGES);
 		}
 	}
 
@@ -83,5 +76,11 @@ public class FTBLibIntegration
 	public static void registerTeamDataProvider(RegisterDataProvidersEvent.Team event)
 	{
 		event.register(FTBU_DATA, FTBUTeamData::new);
+	}
+
+	@SubscribeEvent
+	public static void register(RegisterSyncDataEvent event)
+	{
+		event.register(FTBUFinals.MOD_ID, new FTBUSyncData());
 	}
 }

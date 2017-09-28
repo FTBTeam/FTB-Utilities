@@ -154,14 +154,13 @@ ftbu.lang.chunks.unclaim_all_dim_q=Unclaim all chunks in %s?
 ftbu.lang.chunks.claims_invalid_dim=Can't claim chunks in this dimension
 ftbu.lang.chunks.claimed_count=Claimed Chunks: %d / %d
 ftbu.lang.chunks.loaded_count=Loaded Chunks: %d / %d
+ftbu.lang.chunks.claimed_area=Claimed Area
+ftbu.lang.chunks.wilderness=Wilderness
 
 # Chunk Types
 ftbu.lang.chunks.upgrade.loaded=Chunkloaded
 ftbu.lang.chunks.upgrade.no_explosions=Explosions Disabled
 ftbu.lang.chunks.upgrade.no_pvp=Ally PVP Disabled
-
-ftbu.lang.chunks.upgrade.claimed=Claimed Area
-ftbu.lang.chunks.upgrade.wilderness=Wilderness
 
 # Warps
 ftbu.lang.warps.set=Warp '%s' set!

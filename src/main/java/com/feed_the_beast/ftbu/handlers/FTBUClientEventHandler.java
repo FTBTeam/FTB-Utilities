@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.handlers;
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.ISidebarButton;
+import com.feed_the_beast.ftbl.api.ISidebarButtonGroup;
 import com.feed_the_beast.ftbl.api.RegisterFTBClientCommandsEvent;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
@@ -121,14 +122,17 @@ public class FTBUClientEventHandler
 		page.page.setIcon(Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
 		page.page.setTitle(new TextComponentTranslation("sidebar_button"));
 
-		for (ISidebarButton button : FTBLibAPI.API.getSidebarButtons(true))
+		for (ISidebarButtonGroup group : FTBLibAPI.API.getSidebarButtonGroups())
 		{
-			if (button.isVisible() && StringUtils.canTranslate("sidebar_button." + button.getName() + ".tooltip"))
+			for (ISidebarButton button : group.getButtons())
 			{
-				IGuidePage page1 = page.page.getSub(button.getName());
-				page1.setIcon(button.getIcon());
-				page1.setTitle(new TextComponentTranslation("sidebar_button." + button.getName()));
-				page1.println(new TextComponentTranslation("sidebar_button." + button.getName() + ".tooltip"));
+				if (button.isVisible() && StringUtils.canTranslate("sidebar_button." + button.getName() + ".tooltip"))
+				{
+					IGuidePage page1 = page.page.getSub(button.getName());
+					page1.setIcon(button.getIcon());
+					page1.setTitle(new TextComponentTranslation("sidebar_button." + button.getName()));
+					page1.println(new TextComponentTranslation("sidebar_button." + button.getName() + ".tooltip"));
+				}
 			}
 		}
 

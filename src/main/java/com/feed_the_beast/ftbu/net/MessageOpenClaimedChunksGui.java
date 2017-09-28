@@ -26,6 +26,6 @@ public class MessageOpenClaimedChunksGui extends MessageToClient<MessageOpenClai
 	public void onMessage(MessageOpenClaimedChunksGui m, EntityPlayer player)
 	{
 		GuiClaimedChunks.instance = new GuiClaimedChunks();
-		GuiClaimedChunks.instance.openGui();
+		GuiClaimedChunks.instance.openGuiLater();
 	}
 }

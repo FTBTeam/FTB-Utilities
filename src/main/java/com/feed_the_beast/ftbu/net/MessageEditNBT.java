@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
-import com.feed_the_beast.ftbu.FTBU;
+import com.feed_the_beast.ftbu.gui.GuiEditNBT;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -54,6 +54,6 @@ public class MessageEditNBT extends MessageToClient<MessageEditNBT>
 	@Override
 	public void onMessage(MessageEditNBT m, EntityPlayer player)
 	{
-		FTBU.PROXY.openNBTEditorGui(m.info, m.mainNbt);
+		new GuiEditNBT(m.info, m.mainNbt).openGuiLater();
 	}
 }

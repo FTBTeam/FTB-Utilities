@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu.integration;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.api_impl.ChunkUpgrades;
+import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
 import com.feed_the_beast.ftbu.gui.ClientClaimedChunks;
@@ -39,7 +39,7 @@ public class JMIntegration implements IClientPlugin, IJMIntegration
 	{
 		clientAPI = api;
 		FTBUClient.JM_INTEGRATION = this;
-		api.subscribe(getModId(), EnumSet.of(ClientEvent.Type.DISPLAY_UPDATE, ClientEvent.Type.MAPPING_STARTED, ClientEvent.Type.MAPPING_STOPPED));
+		api.subscribe(getModId(), EnumSet.of(ClientEvent.Type.DISPLAY_UPDATE, ClientEvent.Type.MAPPING_STOPPED));
 	}
 
 	@Override
@@ -92,17 +92,17 @@ public class JMIntegration implements IClientPlugin, IJMIntegration
 			{
 				clientAPI.remove(p);
 
-				if (chunk == null || !chunk.hasUpgrade(ChunkUpgrades.CLAIMED))
+				if (chunk == null)
 				{
 					POLYGONS.remove(pos);
 				}
 			}
 
-			if (chunk != null && chunk.hasUpgrade(ChunkUpgrades.CLAIMED))
+			if (chunk != null)
 			{
 				int dim = 0;
 
-				MapPolygon poly = PolygonHelper.createChunkPolygon(pos.x, 100, pos.z);
+				MapPolygon poly = PolygonHelper.createChunkPolygon(pos.x, 0, pos.z);
 				ShapeProperties shapeProperties = new ShapeProperties();
 
 				shapeProperties.setFillOpacity(0.2F);
@@ -110,8 +110,8 @@ public class JMIntegration implements IClientPlugin, IJMIntegration
 
 				shapeProperties.setFillColor(chunk.team.color.getColor().rgba());
 
-				p = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + dim + '_' + pos.x + '_' + pos.z, dim, shapeProperties, poly);
-				p.setOverlayGroupName("Claimed Chunks").setTitle(chunk.team.formattedName + '\n' + TextFormatting.GREEN + ChunkUpgrades.CLAIMED.getLangKey().translate());
+				p = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + pos.x + '_' + pos.z, dim, shapeProperties, poly);
+				p.setOverlayGroupName("claimed_chunks").setTitle(chunk.team.formattedName + '\n' + TextFormatting.GREEN + FTBULang.CHUNKS_CLAIMED_AREA.translate());
 				POLYGONS.put(pos, p);
 				clientAPI.show(p);
 			}

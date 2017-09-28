@@ -1,16 +1,19 @@
 {
 	"chats": {
+		"group": "ftbl:info",
 		"icon": "ftbl:icons/chat",
-		"dependencies": "after:ftbl.settings",
+		"x": 500,
 		"click": {
 			"action": "run_command",
 			"value": "/ftbc open_chats"
 		},
+		"required_server_mods": ["ftbu"],
 		"config": true
 	},
 	"guide": {
+		"group": "ftbl:info",
 		"icon": "minecraft:items/book_normal",
-		"dependencies": "after:ftbu.claimed_chunks",
+		"x": 600,
 		"click": {
 			"action": "run_command",
 			"value": "/ftbc open_guide"
@@ -18,8 +21,9 @@
 		"config": true
 	},
 	"claimed_chunks": {
+		"group": "ftbu:util",
 		"icon": "ftbl:icons/map",
-		"dependencies": "after:ftbu.toggle.night",
+		"x": 0,
 		"click": {
 			"action": "run_command",
 			"value": "/ftb chunks gui"
@@ -29,8 +33,9 @@
 		"loading_screen": true
 	},
 	"trash_can": {
+		"group": "ftbu:util",
 		"icon": "ftbl:icons/bin",
-		"dependencies": "after:ftbu.server_info",
+		"x": 500,
 		"click": {
 			"action": "run_command",
 			"value": "/ftb trash_can"
@@ -40,8 +45,9 @@
 		"loading_screen": true
 	},
 	"shop": {
+		"group": "ftbu:util",
 		"icon": "ftbl:icons/money_bag",
-		"dependencies": "after:ftbu.trash_can",
+		"x": 100,
 		"click": {
 			"action": "run_command",
 			"value": "/ftb shop gui"
@@ -52,8 +58,9 @@
 		"loading_screen": true
 	},
 	"heal": {
+		"group": "ftbu:cheat",
 		"icon": "ftbl:icons/heart",
-		"dependencies": "after:ftbu.chats",
+		"x": 400,
 		"click": {
 			"action": "run_command",
 			"value": "/heal"
@@ -64,8 +71,9 @@
 		"requires_op": true
 	},
 	"toggle.gamemode": {
+		"group": "ftbu:cheat",
 		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_gamemode.png"],
-		"dependencies": "after:ftbu.heal",
+		"x": 0,
 		"click": {
 			"action": "run_command",
 			"value": "/ftbc toggle_gamemode"
@@ -75,8 +83,9 @@
 		"requires_op": true
 	},
 	"toggle.rain": {
+		"group": "ftbu:cheat",
 		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_rain.png"],
-		"dependencies": "after:ftbu.toggle.gamemode",
+		"x": 100,
 		"click": {
 			"action": "run_command",
 			"value": "/toggledownfall"
@@ -86,24 +95,28 @@
 		"requires_op": true
 	},
 	"toggle.day": {
+		"group": "ftbu:cheat",
 		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_day.png"],
-		"dependencies": "after:ftbu.toggle.rain",
+		"x": 200,
 		"click": {
 			"action": "run_command",
 			"value": "/ftb set_hour 6"
 		},
 		"config": true,
+		"required_server_mods": ["ftbu"],
 		"hide_with_nei": true,
 		"requires_op": true
 	},
 	"toggle.night": {
+		"group": "ftbu:cheat",
 		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_night.png"],
-		"dependencies": "after:ftbu.toggle.day",
+		"x": 300,
 		"click": {
 			"action": "run_command",
 			"value": "/ftb set_hour 18"
 		},
 		"config": true,
+		"required_server_mods": ["ftbu"],
 		"hide_with_nei": true,
 		"requires_op": true
 	}

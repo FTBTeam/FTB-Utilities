@@ -281,7 +281,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 		if (data != null)
 		{
 			list.add(data.team.formattedName);
-			list.add(TextFormatting.GREEN + ChunkUpgrades.CLAIMED.getLangKey().translate());
+			list.add(TextFormatting.GREEN + FTBULang.CHUNKS_CLAIMED_AREA.translate());
 
 			if (data.team.isAlly)
 			{
@@ -296,7 +296,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 		}
 		else
 		{
-			list.add(TextFormatting.DARK_GREEN + ChunkUpgrades.WILDERNESS.getLangKey().translate());
+			list.add(TextFormatting.DARK_GREEN + FTBULang.CHUNKS_WILDERNESS.translate());
 		}
 
 		if (GuiScreen.isCtrlKeyDown())

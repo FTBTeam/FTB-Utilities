@@ -23,6 +23,8 @@ public interface FTBULang
 	LangKey CHUNKS_UNCLAIM_ALL_DIM = LangKey.of("ftbu.lang.chunks.unclaim_all_dim", String.class);
 	LangKey CHUNKS_CLAIMED_COUNT = LangKey.of("ftbu.lang.chunks.claimed_count", Integer.class, Integer.class);
 	LangKey CHUNKS_LOADED_COUNT = LangKey.of("ftbu.lang.chunks.loaded_count", Integer.class, Integer.class);
+	LangKey CHUNKS_CLAIMED_AREA = LangKey.of("ftbu.lang.chunks.claimed_area");
+	LangKey CHUNKS_WILDERNESS = LangKey.of("ftbu.lang.chunks.wilderness");
 
 	LangKey WARP_SET = LangKey.of("ftbu.lang.warps.set", String.class);
 	LangKey WARP_DEL = LangKey.of("ftbu.lang.warps.del", String.class);

@@ -106,14 +106,14 @@ public enum Guides implements IResourceManagerReloadListener
 					{
 						reloadingThread = null;
 						cachedGui = new GuiGuide(INFO_PAGE);
-						cachedGui.openGui();
+						cachedGui.openGuiLater();
 					}
-				}.openGui();
+				}.openGuiLater();
 			}
 		}
 		else if (!isReloading)
 		{
-			cachedGui.openGui();
+			cachedGui.openGuiLater();
 		}
 	};
 

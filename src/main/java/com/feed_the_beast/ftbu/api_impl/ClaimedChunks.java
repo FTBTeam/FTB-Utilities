@@ -26,6 +26,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 
 import javax.annotation.Nullable;
@@ -171,7 +172,7 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 	{
 		ForgeChunkManager.Ticket ticket = ticketMap.get(key);
 
-		if (ticket == null)
+		if (ticket == null && DimensionManager.isDimensionRegistered(key.dimension))
 		{
 			WorldServer worldServer = ServerUtils.getServer().getWorld(key.dimension);
 			ticket = ForgeChunkManager.requestTicket(FTBU.INST, worldServer, ForgeChunkManager.Type.NORMAL);

@@ -11,23 +11,23 @@ import java.util.function.Function;
  */
 public class ClientGuideEvent extends FTBLibEvent
 {
-	private final Map<String, GuideTitlePage> map;
+	private final Map<String, IGuideTitlePage> map;
 	private final IResourceManager resourceManager;
-	private final Function<String, GuideTitlePage> modGuideProvider;
+	private final Function<String, IGuideTitlePage> modGuideProvider;
 
-	public ClientGuideEvent(Map<String, GuideTitlePage> m, IResourceManager r, Function<String, GuideTitlePage> f)
+	public ClientGuideEvent(Map<String, IGuideTitlePage> m, IResourceManager r, Function<String, IGuideTitlePage> f)
 	{
 		map = m;
 		resourceManager = r;
 		modGuideProvider = f;
 	}
 
-	public void add(GuideTitlePage page)
+	public void add(IGuideTitlePage page)
 	{
-		map.put(page.page.getName(), page);
+		map.put(page.getName(), page);
 	}
 
-	public GuideTitlePage getModGuide(String modid)
+	public IGuideTitlePage getModGuide(String modid)
 	{
 		return map.computeIfAbsent(modid, modGuideProvider);
 	}

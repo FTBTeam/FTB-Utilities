@@ -11,7 +11,6 @@ import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
-import com.feed_the_beast.ftbu.api.guide.GuideTitlePage;
 import com.feed_the_beast.ftbu.api.guide.GuideType;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
 import com.feed_the_beast.ftbu.api.guide.RegisterGuideLineProvidersEvent;
@@ -22,9 +21,9 @@ import com.feed_the_beast.ftbu.gui.guide.GuideExtendedTextLine;
 import com.feed_the_beast.ftbu.gui.guide.GuideHrLine;
 import com.feed_the_beast.ftbu.gui.guide.GuideImageLine;
 import com.feed_the_beast.ftbu.gui.guide.GuideListLine;
-import com.feed_the_beast.ftbu.gui.guide.GuidePage;
 import com.feed_the_beast.ftbu.gui.guide.GuideSwitchLine;
 import com.feed_the_beast.ftbu.gui.guide.GuideTextLineString;
+import com.feed_the_beast.ftbu.gui.guide.GuideTitlePage;
 import com.feed_the_beast.ftbu.gui.guide.Guides;
 import com.feed_the_beast.ftbu.gui.guide.IconAnimationLine;
 import net.minecraft.command.CommandException;
@@ -116,10 +115,10 @@ public class FTBUClientEventHandler
 	@SubscribeEvent
 	public static void onGuideEvent(ClientGuideEvent event)
 	{
-		GuideTitlePage page = new GuideTitlePage(new GuidePage("sidebar_buttons"), GuideType.OTHER);
-		page.authors.add("LatvianModder");
-		page.page.setIcon(Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
-		page.page.setTitle(new TextComponentTranslation("sidebar_button"));
+		GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER);
+		page.getAuthors().add("LatvianModder");
+		page.setIcon(Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
+		page.setTitle(new TextComponentTranslation("sidebar_button"));
 
 		for (ISidebarButtonGroup group : FTBLibAPI.API.getSidebarButtonGroups())
 		{
@@ -127,7 +126,7 @@ public class FTBUClientEventHandler
 			{
 				if (button.isVisible() && StringUtils.canTranslate("sidebar_button." + button.getName() + ".tooltip"))
 				{
-					IGuidePage page1 = page.page.getSub(button.getName());
+					IGuidePage page1 = page.getSub(button.getName());
 					page1.setIcon(button.getIcon());
 					page1.setTitle(new TextComponentTranslation("sidebar_button." + button.getName()));
 					page1.println(new TextComponentTranslation("sidebar_button." + button.getName() + ".tooltip"));

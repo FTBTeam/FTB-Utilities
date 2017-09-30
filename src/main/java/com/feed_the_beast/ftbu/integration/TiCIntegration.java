@@ -7,8 +7,8 @@ import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
-import com.feed_the_beast.ftbu.api.guide.GuideTitlePage;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
+import com.feed_the_beast.ftbu.api.guide.IGuideTitlePage;
 import com.feed_the_beast.ftbu.gui.guide.GuideContentsLine;
 import com.feed_the_beast.ftbu.gui.guide.GuideExtendedTextLine;
 import com.feed_the_beast.ftbu.gui.guide.GuideHrLine;
@@ -48,21 +48,21 @@ public class TiCIntegration
 	@SubscribeEvent
 	public static void onGuideEvent(ClientGuideEvent event)
 	{
-		GuideTitlePage guide = event.getModGuide("tconstruct");
-		guide.page.setIcon(new ItemIcon("tconstruct:toolforge"));
-		guide.page.println(new GuideHrLine(1, Color4I.NONE));
-		guide.page.println(new GuideContentsLine(guide.page));
+		IGuideTitlePage page = event.getModGuide("tconstruct");
+		page.setIcon(new ItemIcon("tconstruct:toolforge"));
+		page.println(new GuideHrLine(1, Color4I.NONE));
+		page.println(new GuideContentsLine(page));
 
-		GuidePage pageIntro = loadPage(event, "intro");
+		IGuidePage pageIntro = loadPage(event, "intro", page);
 
 		if (pageIntro != null)
 		{
 			pageIntro.setTitle(new TextComponentString("Introduction")); //LANG
 			pageIntro.setIcon(new ItemIcon("tconstruct:tooltables"));
-			guide.page.addSub(pageIntro);
+			page.addSub(pageIntro);
 		}
 
-		IGuidePage toolMaterials = guide.page.getSub("materials");
+		IGuidePage toolMaterials = page.getSub("materials");
 		toolMaterials.setTitle(new TextComponentString("Materials")); //LANG
 		toolMaterials.setIcon(new ItemIcon(new ItemStack(Items.IRON_PICKAXE)));
 
@@ -75,15 +75,15 @@ public class TiCIntegration
 				continue;
 			}
 
-			IGuidePage page = toolMaterials.getSub(material.getIdentifier());
-			page.setIcon(new ItemIcon(material.getRepresentativeItem()));
-			page.setTitle(new TextComponentString(material.getLocalizedName()));
+			IGuidePage page1 = toolMaterials.getSub(material.getIdentifier());
+			page1.setIcon(new ItemIcon(material.getRepresentativeItem()));
+			page1.setTitle(new TextComponentString(material.getLocalizedName()));
 
 			for (IMaterialStats stats : material.getAllStats())
 			{
 				ITextComponent component = new TextComponentString(stats.getLocalizedName());
 				component.getStyle().setUnderlined(true);
-				page.println(component);
+				page1.println(component);
 
 				//List<ITrait> traits = material.getAllTraitsForStats(stats.getIdentifier());
 				//allTraits.addAll(traits);
@@ -99,21 +99,21 @@ public class TiCIntegration
 
 				if (parts.list.size() > 0)
 				{
-					page.println(new IconAnimationLine(parts, 8));
+					page1.println(new IconAnimationLine(parts, 8));
 				}
 
 				for (int i = 0; i < stats.getLocalizedInfo().size(); i++)
 				{
 					ITextComponent component1 = new TextComponentString(transformString(stats.getLocalizedInfo().get(i)));
 					component1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(transformString(stats.getLocalizedDesc().get(i)))));
-					page.println(new GuideExtendedTextLine(component1));
+					page1.println(new GuideExtendedTextLine(component1));
 				}
 
-				page.println(null);
+				page1.println(null);
 			}
 		}
 
-		IGuidePage modifiers = guide.page.getSub("modifiers");
+		IGuidePage modifiers = page.getSub("modifiers");
 		modifiers.setTitle(new TextComponentString("Modifiers")); //LANG
 		modifiers.setIcon(new ItemIcon(new ItemStack(Items.REDSTONE)));
 
@@ -132,27 +132,27 @@ public class TiCIntegration
 				if (json.isJsonObject())
 				{
 					JsonObject o = json.getAsJsonObject();
-					IGuidePage page = modifiers.getSub(modifier.getIdentifier());
-					page.setTitle(new TextComponentString(modifier.getLocalizedName()));
-					page.println(transformString(modifier.getLocalizedDesc()));
+					IGuidePage page1 = modifiers.getSub(modifier.getIdentifier());
+					page1.setTitle(new TextComponentString(modifier.getLocalizedName()));
+					page1.println(transformString(modifier.getLocalizedDesc()));
 					IconAnimation displayItems = new IconAnimation(Collections.emptyList());
 
 					if (o.has("text"))
 					{
-						page.println(null);
+						page1.println(null);
 						for (JsonElement e : o.get("text").getAsJsonArray())
 						{
-							page.println(JsonUtils.deserializeTextComponent(e));
+							page1.println(JsonUtils.deserializeTextComponent(e));
 						}
 					}
 
 					if (o.has("effects"))
 					{
-						page.println(null);
-						page.println("Effects:");
+						page1.println(null);
+						page1.println("Effects:");
 						for (JsonElement e : o.get("effects").getAsJsonArray())
 						{
-							page.println(JsonUtils.deserializeTextComponent(e));
+							page1.println(JsonUtils.deserializeTextComponent(e));
 						}
 					}
 
@@ -170,8 +170,8 @@ public class TiCIntegration
 
 						if (!displayItems.list.isEmpty())
 						{
-							page.println(null);
-							page.println(new IconAnimationLine(displayItems, 8));
+							page1.println(null);
+							page1.println(new IconAnimationLine(displayItems, 8));
 						}
 					}
 				}
@@ -183,13 +183,13 @@ public class TiCIntegration
 
 		modifiers.sort(false);
 
-		GuidePage pageSmeltry = loadPage(event, "smeltery");
+		IGuidePage pageSmeltry = loadPage(event, "smeltery", page);
 
 		if (pageSmeltry != null)
 		{
 			pageSmeltry.setTitle(new TextComponentString("Smeltry")); //LANG
 			pageSmeltry.setIcon(new ItemIcon("tconstruct:toolstation"));
-			guide.page.addSub(pageSmeltry);
+			page.addSub(pageSmeltry);
 		}
 
         /*
@@ -207,7 +207,7 @@ public class TiCIntegration
 	}
 
 	@Nullable
-	private static GuidePage loadPage(ClientGuideEvent event, String id)
+	private static IGuidePage loadPage(ClientGuideEvent event, String id, IGuidePage p)
 	{
 		try
 		{
@@ -217,11 +217,10 @@ public class TiCIntegration
 
 			if (json.isJsonArray())
 			{
-				GuidePage page = new GuidePage(id);
+				GuidePage page = new GuidePage(id, p);
 
 				for (JsonElement e : json.getAsJsonArray())
 				{
-
 				}
 
 				return page;

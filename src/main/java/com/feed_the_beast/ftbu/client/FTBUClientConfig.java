@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.client;
 
+import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -12,10 +13,10 @@ import net.minecraftforge.fml.relauncher.Side;
  * @author LatvianModder
  */
 @Mod.EventBusSubscriber(modid = FTBUFinals.MOD_ID, value = Side.CLIENT)
-@Config(modid = FTBUFinals.MOD_ID + "_client", category = "config", name = "../local/client/" + FTBUFinals.MOD_ID)
+@Config(modid = FTBUFinals.MOD_ID + "_client", category = "config", name = "../local/client/ftbutilities")
 public class FTBUClientConfig
 {
-	@Config.LangKey("ftbl.config.general")
+	@Config.LangKey(GuiLang.LANG_GENERAL)
 	public static final General general = new General();
 
 	public static class General

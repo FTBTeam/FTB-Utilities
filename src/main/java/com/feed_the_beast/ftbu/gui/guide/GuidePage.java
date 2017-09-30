@@ -24,31 +24,30 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class GuidePage extends FinalIDObject implements IGuidePage
+public class GuidePage extends FinalIDObject implements IGuidePage
 {
 	public static final Map<String, IGuideTextLineProvider> LINE_PROVIDERS = new HashMap<>();
 
-	public final List<IGuideTextLine> text;
-	public final LinkedHashMap<String, IGuidePage> childPages;
-	private IGuidePage parent;
+	private final IGuidePage parent;
+	private final List<IGuideTextLine> text;
+	private final LinkedHashMap<String, IGuidePage> childPages;
 	private ITextComponent title;
 	private Icon pageIcon;
 	private final List<SpecialGuideButton> specialButtons;
 
-	public GuidePage(String id)
+	public GuidePage(String id, @Nullable IGuidePage p)
 	{
 		super(id);
+		parent = p;
 		text = new ArrayList<>();
 		childPages = new LinkedHashMap<>(0);
 		pageIcon = Icon.EMPTY;
 		specialButtons = new ArrayList<>();
 	}
 
-	public GuidePage(String id, @Nullable GuidePage p, JsonObject json)
+	@Override
+	public void fromJson(JsonObject json)
 	{
-		this(id);
-		parent = p;
-
 		if (json.has("title"))
 		{
 			setTitle(JsonUtils.deserializeTextComponent(json.get("title")));
@@ -67,7 +66,9 @@ public final class GuidePage extends FinalIDObject implements IGuidePage
 
 			for (Map.Entry<String, JsonElement> entry : o1.entrySet())
 			{
-				childPages.put(entry.getKey(), new GuidePage(entry.getKey(), this, entry.getValue().getAsJsonObject()));
+				GuidePage p = new GuidePage(entry.getKey(), this);
+				p.fromJson(entry.getValue().getAsJsonObject());
+				childPages.put(p.getName(), p);
 			}
 		}
 		if (json.has("icon"))
@@ -88,12 +89,6 @@ public final class GuidePage extends FinalIDObject implements IGuidePage
 	public IGuidePage getParent()
 	{
 		return parent;
-	}
-
-	@Override
-	public void setParent(IGuidePage page)
-	{
-		parent = page;
 	}
 
 	@Override
@@ -180,7 +175,7 @@ public final class GuidePage extends FinalIDObject implements IGuidePage
 
 		if (p == null)
 		{
-			p = addSub(new GuidePage(id));
+			p = addSub(new GuidePage(id, this));
 		}
 
 		return p;

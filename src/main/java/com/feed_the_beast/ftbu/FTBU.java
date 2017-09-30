@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu;
 
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbu.ranks.CmdOverride;
 import com.feed_the_beast.ftbu.ranks.FTBUPermissionHandler;
@@ -18,7 +19,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod(modid = FTBUFinals.MOD_ID, name = FTBUFinals.MOD_NAME, version = FTBUFinals.VERSION, acceptableRemoteVersions = "*", acceptedMinecraftVersions = "[1.10,)", dependencies = "required-after:ftbl")
+@Mod(modid = FTBUFinals.MOD_ID, name = FTBUFinals.MOD_NAME, version = FTBUFinals.VERSION, acceptableRemoteVersions = "*", acceptedMinecraftVersions = "[1.10,)", dependencies = "required-after:" + FTBLibFinals.MOD_ID)
 public class FTBU
 {
 	@Mod.Instance(FTBUFinals.MOD_ID)

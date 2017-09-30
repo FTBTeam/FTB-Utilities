@@ -33,7 +33,7 @@ public class CmdViewCrash extends CmdBase
 
 		if (args.length == 0)
 		{
-			GuidePage page = new GuidePage("crash_report_list");
+			GuidePage page = new GuidePage("crash_report_list", null);
 
 			try
 			{
@@ -61,7 +61,7 @@ public class CmdViewCrash extends CmdBase
 			return;
 		}
 
-		GuidePage page = new GuidePage("crash_report");
+		GuidePage page = new GuidePage("crash_report", null);
 
 		try
 		{

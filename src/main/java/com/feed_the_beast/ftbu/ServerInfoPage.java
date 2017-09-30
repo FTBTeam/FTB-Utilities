@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IUniverse;
-import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
@@ -20,6 +19,7 @@ import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import com.feed_the_beast.ftbu.util.backups.Backups;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -35,38 +35,55 @@ import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class ServerInfoPage
 {
-	private static final LangKey LANG_KEY = LangKey.of("sidebar_button.ftbu.server_info");
-	private static final GuidePage CACHED_PAGE = new GuidePage("server_info");
+	private static JsonElement serverGuide = null;
+	private static final Map<UUID, JsonObject> COMMAND_CACHE = new HashMap<>();
 
 	public static void reloadCachedInfo()
 	{
-		CACHED_PAGE.clear();
-		CACHED_PAGE.setTitle(LANG_KEY.textComponent());
-		JsonElement json = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbu/server_guide.json"));
-		if (json.isJsonObject())
-		{
-			CACHED_PAGE.addSub(new GuidePage("local_guide", null, json.getAsJsonObject()));
-		}
+		serverGuide = null;
+		COMMAND_CACHE.clear();
 	}
 
-	public static GuidePage getPageForPlayer(EntityPlayerMP ep)
+	public static JsonElement getServerGuide()
+	{
+		if (serverGuide == null)
+		{
+			serverGuide = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbu/server_guide.json"));
+		}
+
+		return serverGuide;
+	}
+
+	public static JsonObject getCommands(EntityPlayerMP player)
+	{
+		return new JsonObject();
+	}
+
+	public static JsonObject getPage(EntityPlayerMP player)
+	{
+		return new JsonObject();
+	}
+
+	public static GuidePage getPageForPlayer(EntityPlayerMP player)
 	{
 		IUniverse universe = FTBLibAPI.API.getUniverse();
 		Preconditions.checkNotNull(universe, "World can't be null!");
-		IForgePlayer self = universe.getPlayer(ep);
+		IForgePlayer self = universe.getPlayer(player);
 		Preconditions.checkNotNull(self, "Player can't be null!");
 
-		GuidePage page = new GuidePage(CACHED_PAGE.getName());
-		page.setTitle(CACHED_PAGE.getTitle());
-		page.copyFrom(CACHED_PAGE);
+		//FIXME
+		GuidePage page = new GuidePage("server_info", null);
 
 		MinecraftServer server = ServerUtils.getServer();
 
 		boolean isDedi = server.isDedicatedServer();
-		boolean isOP = !isDedi || PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_ADMIN_INFO);
+		boolean isOP = !isDedi || PermissionAPI.hasPermission(player, FTBUPermissions.DISPLAY_ADMIN_INFO);
 
 		//List<IForgePlayer> players = new ArrayList<>();
 		//players.addAll(universe.getPlayers());
@@ -84,7 +101,7 @@ public class ServerInfoPage
 
 		if (FTBUConfig.server_info.difficulty)
 		{
-			page.println(FTBLibLang.DIFFICULTY.textComponent(StringUtils.firstUppercase(ep.world.getDifficulty().toString().toLowerCase())));
+			page.println(FTBLibLang.DIFFICULTY.textComponent(StringUtils.firstUppercase(player.world.getDifficulty().toString().toLowerCase())));
 		}
 
 		if (FTBUConfig.server_info.motd && !FTBUConfig.login.getMOTD().isEmpty())
@@ -164,11 +181,11 @@ public class ServerInfoPage
 
 		try
 		{
-			for (ICommand c : ServerUtils.getAllCommands(server, ep))
+			for (ICommand c : ServerUtils.getAllCommands(server, player))
 			{
 				try
 				{
-					addCommandUsage(ep, page1.getSub(c.getName()), 0, c);
+					addCommandUsage(player, page1.getSub(c.getName()), 0, c);
 				}
 				catch (Exception ex1)
 				{
@@ -190,7 +207,7 @@ public class ServerInfoPage
 			page1.println(FTBULang.GUIDE_COMMANDS_FAILED.textComponent());
 		}
 
-		if (PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_PERMISSIONS))
+		if (PermissionAPI.hasPermission(player, FTBUPermissions.DISPLAY_PERMISSIONS))
 		{
 			page.addSub(Ranks.INFO_PAGE);
 		}

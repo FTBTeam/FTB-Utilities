@@ -12,9 +12,9 @@ import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
-import com.feed_the_beast.ftbu.api.guide.GuideTitlePage;
 import com.feed_the_beast.ftbu.api.guide.GuideType;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
+import com.feed_the_beast.ftbu.api.guide.IGuideTitlePage;
 import com.feed_the_beast.ftbu.api.guide.SpecialGuideButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -43,7 +43,15 @@ public enum Guides implements IResourceManagerReloadListener
 {
 	INSTANCE;
 
-	private static final IGuidePage INFO_PAGE = new GuidePage("guides").addSpecialButton(new SpecialGuideButton(GuiLang.REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftbc refresh_guide")));
+	public static final IGuidePage INFO_PAGE = new GuidePage("guides", null)
+	{
+		@Override
+		public String getFullId()
+		{
+			return "";
+		}
+	}.addSpecialButton(new SpecialGuideButton(GuiLang.REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftbc refresh_guide")));
+	public static final IGuidePage SERVER_INFO_PAGE = new GuidePage("server_info", INFO_PAGE).setTitle(new TextComponentTranslation("sidebar_button.ftbu.server_info"));
 
 	private static boolean isReloading = false;
 	private static Thread reloadingThread = null;
@@ -111,7 +119,7 @@ public enum Guides implements IResourceManagerReloadListener
 		INFO_PAGE.clear();
 		INFO_PAGE.setTitle(new TextComponentTranslation("sidebar_button.ftbu.guide"));
 
-		List<GuideTitlePage> guides = new ArrayList<>();
+		List<IGuideTitlePage> guides = new ArrayList<>();
 
 		for (String domain : resourceManager.getResourceDomains())
 		{
@@ -124,38 +132,38 @@ public enum Guides implements IResourceManagerReloadListener
 				{
 					JsonObject json = infoFile.getAsJsonObject();
 					GuideType type = json.has("type") ? GuideType.NAME_MAP.get(json.get("type").getAsString()) : GuideType.OTHER;
-					GuideTitlePage guide = new GuideTitlePage(new GuidePage(domain), type);
+					GuideTitlePage guide = new GuideTitlePage(domain, type);
 
-					guide.page.setTitle(new TextComponentTranslation(domain + ".guide"));
+					guide.setTitle(new TextComponentTranslation(domain + ".guide"));
 
 					if (!json.has("icon"))
 					{
-						guide.page.setIcon(Icon.getIcon(domain + ":textures/icon.png"));
+						guide.setIcon(Icon.getIcon(domain + ":textures/icon.png"));
 					}
 
 					for (JsonElement element : JsonUtils.toArray(json.get("authors")))
 					{
-						guide.authors.add(element.getAsString());
+						guide.getAuthors().add(element.getAsString());
 					}
 
 					if (json.has("guide_authors"))
 					{
 						for (JsonElement element : JsonUtils.toArray(json.get("guide_authors")))
 						{
-							guide.guideAuthors.add(element.getAsString());
+							guide.getGuideAuthors().add(element.getAsString());
 						}
 					}
 					else
 					{
-						guide.guideAuthors.addAll(guide.authors);
+						guide.getGuideAuthors().addAll(guide.getAuthors());
 					}
 
-					loadPage(resourceManager, domain, guide.page, json, "guide");
+					loadPage(resourceManager, domain, guide, json, "guide");
 
-					if (guide.page.getChildren().size() > 0)
+					if (guide.getChildren().size() > 0)
 					{
-						guide.page.println(new GuideHrLine(1, Color4I.NONE));
-						guide.page.println(new GuideContentsLine(guide.page));
+						guide.println(new GuideHrLine(1, Color4I.NONE));
+						guide.println(new GuideContentsLine(guide));
 					}
 
 					guides.add(guide);
@@ -172,25 +180,25 @@ public enum Guides implements IResourceManagerReloadListener
 			}
 		}
 
-		Map<String, GuideTitlePage> eventMap = new HashMap<>();
+		Map<String, IGuideTitlePage> eventMap = new HashMap<>();
 		new ClientGuideEvent(eventMap, resourceManager, modid ->
 		{
-			GuideTitlePage page = new GuideTitlePage(new GuidePage(modid), GuideType.MOD);
+			GuideTitlePage page = new GuideTitlePage(modid, GuideType.MOD);
 			ModContainer mod = Loader.instance().getIndexedModList().get(modid);
 
 			if (mod != null)
 			{
-				page.authors.addAll(mod.getMetadata().authorList);
+				page.getAuthors().addAll(mod.getMetadata().authorList);
 
 				if (!mod.getMetadata().description.isEmpty())
 				{
 					for (String s : mod.getMetadata().description.split("\n"))
 					{
-						page.page.println(s);
+						page.println(s);
 					}
 				}
 
-				page.page.setTitle(new TextComponentString(mod.getName()));
+				page.setTitle(new TextComponentString(mod.getName()));
 			}
 
 			return page;
@@ -198,9 +206,9 @@ public enum Guides implements IResourceManagerReloadListener
 
 		guides.addAll(eventMap.values());
 
-		for (GuideTitlePage guide : guides)
+		for (IGuideTitlePage guide : guides)
 		{
-			INFO_PAGE.addSub(guide.page);
+			INFO_PAGE.addSub(guide);
 		}
 
 		INFO_PAGE.cleanup();

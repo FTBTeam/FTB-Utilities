@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.MapUtils;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 
@@ -20,15 +21,16 @@ public interface IGuidePage extends IStringSerializable
 {
 	Comparator<Map.Entry<String, IGuidePage>> COMPARATOR = (o1, o2) -> o1.getValue().getDisplayName().getUnformattedText().compareToIgnoreCase(o2.getValue().getDisplayName().getUnformattedText());
 
+	void fromJson(JsonObject json);
+
 	@Nullable
 	IGuidePage getParent();
-
-	void setParent(IGuidePage parent);
 
 	default String getFullId()
 	{
 		IGuidePage parent = getParent();
-		return (parent == null) ? getName() : (parent.getFullId() + '.' + getName());
+		String parentId = parent == null ? "" : parent.getFullId();
+		return parentId.isEmpty() ? getName() : (parentId + '.' + getName());
 	}
 
 	ITextComponent getDisplayName();
@@ -46,7 +48,6 @@ public interface IGuidePage extends IStringSerializable
 
 	default IGuidePage addSub(IGuidePage c)
 	{
-		c.setParent(this);
 		getChildren().put(c.getName(), c);
 		return c;
 	}

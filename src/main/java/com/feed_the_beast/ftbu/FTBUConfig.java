@@ -19,7 +19,7 @@ import java.util.List;
  * @author LatvianModder
  */
 @Mod.EventBusSubscriber(modid = FTBUFinals.MOD_ID)
-@Config(modid = FTBUFinals.MOD_ID, category = "config", name = "../local/ftbu/config")
+@Config(modid = FTBUFinals.MOD_ID, category = "config", name = "../local/ftbutilities/config")
 public class FTBUConfig
 {
 	@Config.RequiresWorldRestart

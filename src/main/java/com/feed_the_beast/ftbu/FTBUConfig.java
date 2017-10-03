@@ -152,7 +152,7 @@ public class FTBUConfig
 
 		@Config.Comment({
 				"Items to give player when he first joins the server",
-				"Format: '{id:\"ID\",Count:X,Damage:X,tag:{}'"
+				"Format: '{id:\"ID\",Count:X,Damage:X,tag:{}}'"
 		})
 		public String[] starting_items = {"{id:\"minecraft:stone_sword\",Count:1,Damage:1,tag:{display:{Name:\"Epic Stone Sword\"}}}"};
 

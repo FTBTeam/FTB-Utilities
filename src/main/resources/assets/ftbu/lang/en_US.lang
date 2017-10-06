@@ -211,8 +211,8 @@ guide.ftbu.chunk_claiming.intro=FTBUtilities allows you to protect your base wit
 guide.ftbu.chunk_claiming.opengui=To open the GUI, you must click on the %s sidebar button.
 guide.ftbu.chunk_claiming.list.left_click=Left-click or drag chunks in the map to claim them
 guide.ftbu.chunk_claiming.list.right_click=Right-click to unclaim a chunk
-guide.ftbu.chunk_claiming.list.shift_left_click=Shift-left-click to load a chunk
-guide.ftbu.chunk_claiming.list.shift_right_click=Shift-right-click to unload a chunk
+guide.ftbu.chunk_claiming.list.shift_left_click=Shift-left-click to load a claimed chunk
+guide.ftbu.chunk_claiming.list.shift_right_click=Shift-right-click to unload a claimed chunk
 guide.ftbu.chunk_claiming.dragmouse=You can drag mouse to claim/unclaim/load/unload larger area at once.
 
 guide.ftbu.ranks=Ranks

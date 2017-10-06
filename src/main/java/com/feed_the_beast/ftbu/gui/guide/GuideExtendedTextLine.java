@@ -37,7 +37,7 @@ public class GuideExtendedTextLine extends EmptyGuidePageLine
 	@Override
 	public Widget createWidget(GuiBase gui, Panel parent)
 	{
-		return new ExtendedTextField(0, 0, parent.width, -1, gui.getFont(), textComponent);
+		return new ExtendedTextField(0, 0, parent.width, -1, textComponent);
 	}
 
 	@Override

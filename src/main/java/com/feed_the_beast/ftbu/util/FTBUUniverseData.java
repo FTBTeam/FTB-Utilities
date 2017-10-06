@@ -4,12 +4,12 @@ import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.universe.ForgeUniverseClosedEvent;
 import com.feed_the_beast.ftbl.api.universe.ForgeUniverseLoadedEvent;
 import com.feed_the_beast.ftbl.api.universe.ForgeUniverseSavedEvent;
-import com.feed_the_beast.ftbl.lib.ChatHistory;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbl.lib.util.misc.ChatHistory;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
@@ -18,6 +18,7 @@ import com.feed_the_beast.ftbu.api.chunks.RegisterChunkUpgradesEvent;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
 import com.feed_the_beast.ftbu.util.backups.Backups;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -40,13 +41,13 @@ public class FTBUUniverseData
 	public static final BlockDimPosStorage WARPS = new BlockDimPosStorage();
 	public static final ChatHistory GENERAL_CHAT = new ChatHistory(() -> FTBUConfig.chat.general_history_limit);
 	public static final Map<String, ChunkUpgrade> CHUNK_UPGRADES = new HashMap<>();
-	public static final Map<Integer, ChunkUpgrade> ID_TO_UPGRADE = new HashMap<>();
+	public static final Int2ObjectOpenHashMap<ChunkUpgrade> ID_TO_UPGRADE = new Int2ObjectOpenHashMap<>();
 	public static final Map<ChunkUpgrade, Integer> UPGRADE_TO_ID = new HashMap<>();
 
-	public static final BiConsumer<ChunkUpgrade, Integer> SET_UPGRADE_ID = (upgrade, id) ->
+	public static final BiConsumer<Integer, ChunkUpgrade> SET_UPGRADE_ID = (id, upgrade) ->
 	{
 		UPGRADE_TO_ID.put(upgrade, id);
-		ID_TO_UPGRADE.put(id, upgrade);
+		ID_TO_UPGRADE.put(id.intValue(), upgrade);
 	};
 
 	public static boolean isInSpawn(ChunkDimPos pos)
@@ -86,7 +87,7 @@ public class FTBUUniverseData
 			}
 
 			id++;
-			SET_UPGRADE_ID.accept(upgrade, id);
+			SET_UPGRADE_ID.accept(id, upgrade);
 		}
 
 		return id;
@@ -127,8 +128,7 @@ public class FTBUUniverseData
 
 			if (upgrade != null)
 			{
-				ID_TO_UPGRADE.put(id, upgrade);
-				UPGRADE_TO_ID.put(upgrade, id);
+				SET_UPGRADE_ID.accept(id, upgrade);
 			}
 		}
 

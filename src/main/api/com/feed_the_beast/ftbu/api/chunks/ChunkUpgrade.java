@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.api.chunks;
 
 import com.feed_the_beast.ftbl.api.ICustomName;
-import com.feed_the_beast.ftbl.lib.FinalIDObject;
-import com.feed_the_beast.ftbl.lib.LangKey;
+import com.feed_the_beast.ftbl.lib.util.FinalIDObject;
+import com.feed_the_beast.ftbl.lib.util.LangKey;
 import net.minecraft.util.text.ITextComponent;
 
 /**

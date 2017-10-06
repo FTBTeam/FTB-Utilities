@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
-import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftbl.lib.util.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
 import com.feed_the_beast.ftbu.api.guide.IGuideTextLine;

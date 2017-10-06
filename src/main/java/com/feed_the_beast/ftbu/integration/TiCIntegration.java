@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.integration;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.IconAnimation;
 import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
 import com.feed_the_beast.ftbu.api.guide.IGuideTitlePage;

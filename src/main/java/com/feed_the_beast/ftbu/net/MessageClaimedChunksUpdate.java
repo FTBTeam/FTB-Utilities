@@ -47,8 +47,8 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 		startX = sx;
 		startZ = sz;
 
-		IForgePlayer player1 = FTBLibAPI.API.getUniverse().getPlayer(player);
-		FTBUTeamData teamData = player1.getTeam() == null ? null : FTBUTeamData.get(player1.getTeam());
+		IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(player);
+		FTBUTeamData teamData = p.getTeam() == null ? null : FTBUTeamData.get(p.getTeam());
 
 		Collection<ClaimedChunk> chunks = teamData != null ? ClaimedChunks.INSTANCE.getTeamChunks(teamData.team) : Collections.emptyList();
 
@@ -93,9 +93,8 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 					}
 
 					ClientClaimedChunks.ChunkData data = new ClientClaimedChunks.ChunkData(team);
-					team.chunks.put(x1 + z1 * ChunkSelectorMap.TILES_GUI, data);
 
-					boolean member = chunkTeam.hasStatus(player1, EnumTeamStatus.MEMBER);
+					boolean member = chunkTeam.hasStatus(p, EnumTeamStatus.MEMBER);
 
 					if (canSeeChunkInfo || member)
 					{
@@ -107,6 +106,8 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 							}
 						}
 					}
+
+					team.chunks.put(x1 + z1 * ChunkSelectorMap.TILES_GUI, data);
 				}
 			}
 		}
@@ -127,7 +128,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 		data.writeInt(loadedChunks);
 		data.writeInt(maxClaimedChunks);
 		data.writeInt(maxLoadedChunks);
-		data.writeMap(FTBUUniverseData.UPGRADE_TO_ID, ClientClaimedChunks.ChunkData.UPGRADE_NAME_SERIALIZER, DataOut.INT);
+		data.writeMap(FTBUUniverseData.ID_TO_UPGRADE, DataOut.INT, ClientClaimedChunks.ChunkData.UPGRADE_NAME_SERIALIZER);
 		data.writeCollection(teams.values(), ClientClaimedChunks.Team.SERIALIZER);
 	}
 
@@ -140,7 +141,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 		loadedChunks = data.readInt();
 		maxClaimedChunks = data.readInt();
 		maxLoadedChunks = data.readInt();
-		data.readMap(null, ClientClaimedChunks.ChunkData.UPGRADE_NAME_DESERIALIZER, DataIn.INT).forEach(FTBUUniverseData.SET_UPGRADE_ID);
+		data.readMap(null, DataIn.INT, ClientClaimedChunks.ChunkData.UPGRADE_NAME_DESERIALIZER).forEach(FTBUUniverseData.SET_UPGRADE_ID);
 
 		teams = new HashMap<>();
 

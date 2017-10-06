@@ -155,7 +155,7 @@ public class Ranks
 
 		if (FTBUConfig.ranks.enabled)
 		{
-			JsonElement e = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbu/ranks.json"));
+			JsonElement e = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbutilities/ranks.json"));
 
 			if (e.isJsonObject())
 			{
@@ -163,9 +163,9 @@ public class Ranks
 
 				if (o.has("default_rank"))
 				{
-					FileUtils.delete(new File(CommonUtils.folderLocal, "ftbu/readme.txt"));
-					FileUtils.delete(new File(CommonUtils.folderLocal, "ftbu/ranks_example.json"));
-					FileUtils.delete(new File(CommonUtils.folderLocal, "ftbu/default_rank_config.json"));
+					FileUtils.delete(new File(CommonUtils.folderLocal, "ftbutilities/readme.txt"));
+					FileUtils.delete(new File(CommonUtils.folderLocal, "ftbutilities/ranks_example.json"));
+					FileUtils.delete(new File(CommonUtils.folderLocal, "ftbutilities/default_rank_config.json"));
 				}
 				else if (o.has("default_ranks") && o.has("ranks"))
 				{
@@ -187,7 +187,7 @@ public class Ranks
 
 			try
 			{
-				e = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbu/player_ranks.json"));
+				e = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbutilities/player_ranks.json"));
 
 				if (e.isJsonObject())
 				{
@@ -239,11 +239,11 @@ public class Ranks
 
 		o.add("ranks", o1);
 
-		JsonUtils.toJson(new File(CommonUtils.folderLocal, "ftbu/ranks.json"), o);
+		JsonUtils.toJson(new File(CommonUtils.folderLocal, "ftbutilities/ranks.json"), o);
 
 		final JsonObject o2 = new JsonObject();
 		PLAYER_MAP.forEach((key, value) -> o2.add(StringUtils.fromUUID(key), new JsonPrimitive(value.getName())));
-		JsonUtils.toJson(new File(CommonUtils.folderLocal, "ftbu/player_ranks.json"), o2);
+		JsonUtils.toJson(new File(CommonUtils.folderLocal, "ftbutilities/player_ranks.json"), o2);
 	}
 
 	static boolean checkCommandPermission(MinecraftServer server, ICommandSender sender, ICommand parent, String permission)
@@ -322,7 +322,7 @@ public class Ranks
 			}
 
 			list.add("</table></body></html>");
-			FileUtils.save(new File(CommonUtils.folderLocal, "ftbu/all_permissions.html"), list);
+			FileUtils.save(new File(CommonUtils.folderLocal, "ftbutilities/all_permissions.html"), list);
 		}
 		catch (Exception ex)
 		{
@@ -401,7 +401,7 @@ public class Ranks
 			}
 
 			list.add("</table></body></html>");
-			FileUtils.save(new File(CommonUtils.folderLocal, "ftbu/all_configs.html"), list);
+			FileUtils.save(new File(CommonUtils.folderLocal, "ftbutilities/all_configs.html"), list);
 
 			list.clear();
 
@@ -414,7 +414,7 @@ public class Ranks
 			Collections.sort(list);
 			list.add(0, "");
 			list.add(0, PermissionAPI.getPermissionHandler().getRegisteredNodes().size() + " nodes in total");
-			FileUtils.save(new File(CommonUtils.folderLocal, "ftbu/all_permissions_full_list.txt"), list);
+			FileUtils.save(new File(CommonUtils.folderLocal, "ftbutilities/all_permissions_full_list.txt"), list);
 		}
 		catch (Exception ex)
 		{

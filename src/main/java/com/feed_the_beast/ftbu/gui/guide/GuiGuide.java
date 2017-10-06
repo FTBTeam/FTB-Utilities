@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
@@ -13,6 +11,8 @@ import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.icon.ColoredIcon;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
+import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.guide.IGuideGui;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
@@ -281,6 +281,12 @@ public class GuiGuide extends GuiBase implements IGuideGui
 			ButtonSpecial b = specialButtons.get(i);
 			b.posX = panelWidth - 24 - 20 * i;
 			b.posY = 10;
+		}
+
+		if (!Guides.pageToOpen.isEmpty())
+		{
+			setSelectedPage(pageTree.getSub(Guides.pageToOpen));
+			Guides.pageToOpen = "";
 		}
 	}
 

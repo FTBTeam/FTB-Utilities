@@ -5,6 +5,11 @@ import com.feed_the_beast.ftbl.api.RegisterFTBClientCommandsEvent;
 import com.feed_the_beast.ftbl.api.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.cmd.chunks.CmdChunks;
+import com.feed_the_beast.ftbu.cmd.client.CmdOpenGuide;
+import com.feed_the_beast.ftbu.cmd.client.CmdRefreshGuide;
+import com.feed_the_beast.ftbu.cmd.client.CmdSetbadge;
+import com.feed_the_beast.ftbu.cmd.client.CmdShrug;
+import com.feed_the_beast.ftbu.cmd.client.CmdToggleGamemode;
 import com.feed_the_beast.ftbu.cmd.ranks.CmdRanks;
 import com.feed_the_beast.ftbu.cmd.tp.CmdAdminHome;
 import com.feed_the_beast.ftbu.cmd.tp.CmdBack;
@@ -121,5 +126,8 @@ public class FTBUCommands
 	{
 		event.add(new CmdSetbadge());
 		event.add(new CmdShrug());
+		event.add(new CmdRefreshGuide());
+		event.add(new CmdOpenGuide());
+		event.add(new CmdToggleGamemode());
 	}
 }

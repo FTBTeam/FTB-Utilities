@@ -32,29 +32,29 @@ import javax.annotation.Nullable;
 public class FTBUPermissions
 {
 	// Display //
-	public static final String DISPLAY_ADMIN_INFO = "ftbu.display.admin_info";
-	public static final String DISPLAY_PERMISSIONS = "ftbu.display.permissions";
-	public static final String BADGE = "ftbu.badge";
+	public static final String DISPLAY_ADMIN_INFO = FTBUFinals.MOD_ID + ".display.admin_info";
+	public static final String DISPLAY_PERMISSIONS = FTBUFinals.MOD_ID + ".display.permissions";
+	public static final String BADGE = FTBUFinals.MOD_ID + ".badge";
 
 	// Homes //
-	public static final String HOMES_CROSS_DIM = "ftbu.homes.cross_dim";
-	public static final String HOMES_MAX = "ftbu.homes.max";
+	public static final String HOMES_CROSS_DIM = FTBUFinals.MOD_ID + ".homes.cross_dim";
+	public static final String HOMES_MAX = FTBUFinals.MOD_ID + ".homes.max";
 
 	// Claims //
-	public static final String CLAIMS_CHUNKS_MODIFY_OTHERS = "ftbu.claims.modify.others";
-	public static final String CLAIMS_MAX_CHUNKS = "ftbu.claims.max_chunks";
-	public static final String CLAIMS_ALLOW_DISABLE_EXPLOSIONS = "ftbu.claims.allow_disable_explosions";
-	public static final String CLAIMS_BLOCK_CNB = "ftbu.claims.block.cnb";
-	private static final String CLAIMS_BLOCK_EDIT_PREFIX = "ftbu.claims.block.edit.";
-	private static final String CLAIMS_BLOCK_INTERACT_PREFIX = "ftbu.claims.block.interact.";
-	private static final String CLAIMS_ITEM_PREFIX = "ftbu.claims.item.";
+	public static final String CLAIMS_CHUNKS_MODIFY_OTHERS = FTBUFinals.MOD_ID + ".claims.modify.others";
+	public static final String CLAIMS_MAX_CHUNKS = FTBUFinals.MOD_ID + ".claims.max_chunks";
+	public static final String CLAIMS_ALLOW_DISABLE_EXPLOSIONS = FTBUFinals.MOD_ID + ".claims.allow_disable_explosions";
+	public static final String CLAIMS_BLOCK_CNB = FTBUFinals.MOD_ID + ".claims.block.cnb";
+	private static final String CLAIMS_BLOCK_EDIT_PREFIX = FTBUFinals.MOD_ID + ".claims.block.edit.";
+	private static final String CLAIMS_BLOCK_INTERACT_PREFIX = FTBUFinals.MOD_ID + ".claims.block.interact.";
+	private static final String CLAIMS_ITEM_PREFIX = FTBUFinals.MOD_ID + ".claims.item.";
 
-	public static final String INFINITE_BACK_USAGE = "ftbu.back.infinite";
+	public static final String INFINITE_BACK_USAGE = FTBUFinals.MOD_ID + ".back.infinite";
 
 	// Chunkloader //
-	public static final String CHUNKLOADER_MAX_CHUNKS = "ftbu.chunkloader.max_chunks";
-	//public static final String CHUNKLOADER_OFFLINE_TIMER = "ftbu.chunkloader.offline_timer";
-	public static final String CHUNKLOADER_LOAD_OFFLINE = "ftbu.chunkloader.load_offline";
+	public static final String CHUNKLOADER_MAX_CHUNKS = FTBUFinals.MOD_ID + ".chunkloader.max_chunks";
+	//public static final String CHUNKLOADER_OFFLINE_TIMER = FTBUFinals.MOD_ID + ".chunkloader.offline_timer";
+	public static final String CHUNKLOADER_LOAD_OFFLINE = FTBUFinals.MOD_ID + ".chunkloader.load_offline";
 
 	@SubscribeEvent
 	public static void registerPermissions(PermissionRegistryEvent event)

@@ -7,8 +7,6 @@ import java.util.List;
  */
 public interface IGuideTitlePage extends IGuidePage
 {
-	GuideType getType();
-
 	List<String> getAuthors();
 
 	List<String> getGuideAuthors();

@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.config.ConfigDouble;
 import com.feed_the_beast.ftbl.lib.config.ConfigInt;
 import com.feed_the_beast.ftbl.lib.config.ConfigString;
@@ -24,6 +22,8 @@ import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
 import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
+import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.net.MessageEditNBTResponse;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;

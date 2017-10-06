@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
+import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbu.api.guide.IGuideGui;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
 import net.minecraft.client.renderer.GlStateManager;

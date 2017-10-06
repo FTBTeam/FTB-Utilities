@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.api;
 
-import com.feed_the_beast.ftbl.lib.FinalIDObject;
+import com.feed_the_beast.ftbl.lib.util.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 

@@ -4,9 +4,7 @@ import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.ISidebarButton;
 import com.feed_the_beast.ftbl.api.ISidebarButtonGroup;
-import com.feed_the_beast.ftbl.api.RegisterFTBClientCommandsEvent;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -26,9 +24,6 @@ import com.feed_the_beast.ftbu.gui.guide.GuideTextLineString;
 import com.feed_the_beast.ftbu.gui.guide.GuideTitlePage;
 import com.feed_the_beast.ftbu.gui.guide.Guides;
 import com.feed_the_beast.ftbu.gui.guide.IconAnimationLine;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -40,37 +35,6 @@ import net.minecraftforge.fml.relauncher.Side;
 @EventHandler(Side.CLIENT)
 public class FTBUClientEventHandler
 {
-	@SubscribeEvent
-	public static void registerFTBClientCommands(RegisterFTBClientCommandsEvent event)
-	{
-		event.add(new CmdBase("refresh_guide", CmdBase.Level.ALL)
-		{
-			@Override
-			public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-			{
-				Guides.refresh();
-			}
-		});
-
-		event.add(new CmdBase("open_guide", CmdBase.Level.ALL)
-		{
-			@Override
-			public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-			{
-				ClientUtils.MC.addScheduledTask(Guides.OPEN_GUI);
-			}
-		});
-
-		event.add(new CmdBase("toggle_gamemode", CmdBase.Level.ALL)
-		{
-			@Override
-			public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-			{
-				ClientUtils.execClientCommand("/gamemode " + (ClientUtils.MC.player.capabilities.isCreativeMode ? "survival" : "creative"));
-			}
-		});
-	}
-
 	@SubscribeEvent
 	public static void registerGuideLineProviders(RegisterGuideLineProvidersEvent event)
 	{

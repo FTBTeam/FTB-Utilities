@@ -24,7 +24,7 @@ minecraft {
 	mappings = "${mappings_version}"
 
 	replace "@VERSION@", project.version
-	replaceIn "FTBUFinals.java"
+	replaceIn "${mod_reference}"
 }
 
 repositories {

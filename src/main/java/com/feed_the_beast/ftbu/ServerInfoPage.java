@@ -9,15 +9,14 @@ import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbl.lib.util.text_components.TextComponentCountdown;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
-import com.feed_the_beast.ftbu.api.guide.ServerInfoEvent;
 import com.feed_the_beast.ftbu.gui.guide.GuidePage;
 import com.feed_the_beast.ftbu.ranks.CmdOverride;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import com.feed_the_beast.ftbu.util.backups.Backups;
-import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.command.ICommand;
@@ -35,8 +34,11 @@ import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ServerInfoPage
@@ -54,7 +56,7 @@ public class ServerInfoPage
 	{
 		if (serverGuide == null)
 		{
-			serverGuide = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbu/server_guide.json"));
+			serverGuide = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbutilities/server_guide.json"));
 		}
 
 		return serverGuide;
@@ -62,62 +64,57 @@ public class ServerInfoPage
 
 	public static JsonObject getCommands(EntityPlayerMP player)
 	{
-		return new JsonObject();
+		JsonObject o = COMMAND_CACHE.get(player.getUniqueID());
+
+		if (o == null)
+		{
+			o = new JsonObject();
+
+			COMMAND_CACHE.put(player.getUniqueID(), o);
+		}
+
+		return o;
 	}
 
-	public static JsonObject getPage(EntityPlayerMP player)
+	public static List<ITextComponent> getMainPage(EntityPlayerMP player, long now)
 	{
-		return new JsonObject();
+		List<ITextComponent> list = new ArrayList<>();
+
+		if (FTBUUniverseData.shutdownTime > 0L)
+		{
+			list.add(FTBULang.TIMER_SHUTDOWN.textComponent(new TextComponentCountdown(FTBUUniverseData.shutdownTime)));
+		}
+
+		if (FTBUConfig.backups.enabled)
+		{
+			list.add(FTBULang.TIMER_BACKUP.textComponent(new TextComponentCountdown(Backups.INSTANCE.nextBackup)));
+		}
+
+		if (FTBUConfig.server_info.difficulty)
+		{
+			list.add(FTBLibLang.DIFFICULTY.textComponent(StringUtils.firstUppercase(player.world.getDifficulty().toString().toLowerCase())));
+		}
+
+		if (FTBUConfig.server_info.motd && !FTBUConfig.login.getMOTD().isEmpty())
+		{
+			list.add(null);
+			list.addAll(FTBUConfig.login.getMOTD());
+		}
+
+		return list;
 	}
 
 	public static GuidePage getPageForPlayer(EntityPlayerMP player)
 	{
 		IUniverse universe = FTBLibAPI.API.getUniverse();
-		Preconditions.checkNotNull(universe, "World can't be null!");
+		Objects.requireNonNull(universe, "World can't be null!");
 		IForgePlayer self = universe.getPlayer(player);
-		Preconditions.checkNotNull(self, "Player can't be null!");
+		Objects.requireNonNull(self, "Player can't be null!");
 
 		//FIXME
 		GuidePage page = new GuidePage("server_info", null);
 
 		MinecraftServer server = ServerUtils.getServer();
-
-		boolean isDedi = server.isDedicatedServer();
-		boolean isOP = !isDedi || PermissionAPI.hasPermission(player, FTBUPermissions.DISPLAY_ADMIN_INFO);
-
-		//List<IForgePlayer> players = new ArrayList<>();
-		//players.addAll(universe.getPlayers());
-		long now = ServerUtils.getWorldTime();
-
-		if (FTBUUniverseData.shutdownTime > 0L)
-		{
-			page.println(FTBULang.TIMER_SHUTDOWN.textComponent(StringUtils.getTimeStringTicks(FTBUUniverseData.shutdownTime - now)));
-		}
-
-		if (FTBUConfig.backups.enabled)
-		{
-			page.println(FTBULang.TIMER_BACKUP.textComponent(StringUtils.getTimeStringTicks(Backups.INSTANCE.nextBackup - now)));
-		}
-
-		if (FTBUConfig.server_info.difficulty)
-		{
-			page.println(FTBLibLang.DIFFICULTY.textComponent(StringUtils.firstUppercase(player.world.getDifficulty().toString().toLowerCase())));
-		}
-
-		if (FTBUConfig.server_info.motd && !FTBUConfig.login.getMOTD().isEmpty())
-		{
-			page.println(null);
-
-			for (ITextComponent component : FTBUConfig.login.getMOTD())
-			{
-				page.println(component);
-			}
-		}
-
-		//if (FTBUConfig.server_info.admin_quick_access)
-		//{
-		//FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS
-		//}
 
 		IGuidePage page1 = page.getSub("leaderboards").setTitle(StringUtils.color(FTBULang.LEADERBOARDS.textComponent(), TextFormatting.RED));
 		page1.setIcon(new ItemIcon(new ItemStack(Items.SIGN)));
@@ -173,8 +170,6 @@ public class ServerInfoPage
 			}
 		}
 		*/
-
-		new ServerInfoEvent(page, self, isOP).post();
 
 		page1 = page.getSub("commands").setTitle(FTBLibLang.COMMANDS.textComponent());
 		page1.setIcon(new ItemIcon(new ItemStack(Blocks.COMMAND_BLOCK)));

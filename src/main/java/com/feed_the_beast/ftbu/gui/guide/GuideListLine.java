@@ -1,15 +1,15 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.NameMap;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
+import com.feed_the_beast.ftbl.lib.icon.BulletIcon;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.icon.IconBullet;
 import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
+import com.feed_the_beast.ftbl.lib.util.misc.NameMap;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
 import com.feed_the_beast.ftbu.api.guide.IGuideTextLine;
 import com.google.gson.JsonElement;
@@ -171,7 +171,7 @@ public class GuideListLine extends EmptyGuidePageLine
 		private final GuiBase gui;
 		private final PanelScrollBar scrollBar;
 		private final WidgetLayout layout;
-		private IconBullet bullet;
+		private BulletIcon bullet;
 
 		private PanelList(GuiBase g, boolean unicodeFont)
 		{
@@ -196,7 +196,7 @@ public class GuideListLine extends EmptyGuidePageLine
 			}
 
 			layout = type.plane == EnumFacing.Plane.VERTICAL ? new WidgetLayout.Vertical(0, spacing, 0) : new WidgetLayout.Horizontal(0, spacing, 0);
-			bullet = new IconBullet().setColor(g.getContentColor());
+			bullet = new BulletIcon().setColor(g.getContentColor());
 		}
 
 		@Override

@@ -1,36 +1,40 @@
 package com.feed_the_beast.ftbu.api.guide;
 
 import com.feed_the_beast.ftbl.api.FTBLibEvent;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.text.ITextComponent;
+
+import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 /**
  * @author LatvianModder
  */
 public class ServerInfoEvent extends FTBLibEvent
 {
-	private final IGuidePage page;
-	private final IForgePlayer player;
-	private final boolean isOP;
+	private final EntityPlayerMP player;
+	private final long now;
+	private final Consumer<ITextComponent> callback;
 
-	public ServerInfoEvent(IGuidePage p, IForgePlayer pl, boolean o)
+	public ServerInfoEvent(EntityPlayerMP p, long t, Consumer<ITextComponent> c)
 	{
-		page = p;
-		player = pl;
-		isOP = o;
+		player = p;
+		now = t;
+		callback = c;
 	}
 
-	public IGuidePage getPage()
-	{
-		return page;
-	}
-
-	public IForgePlayer getPlayer()
+	public EntityPlayerMP getPlayer()
 	{
 		return player;
 	}
 
-	public boolean isOP()
+	public long getTime()
 	{
-		return isOP;
+		return now;
+	}
+
+	public void println(@Nullable ITextComponent component)
+	{
+		callback.accept(component);
 	}
 }

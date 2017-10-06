@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.cmd;
+package com.feed_the_beast.ftbu.cmd.client;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;

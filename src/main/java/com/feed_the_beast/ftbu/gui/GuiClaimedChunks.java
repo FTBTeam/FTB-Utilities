@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.gui;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
-import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
@@ -13,6 +12,7 @@ import com.feed_the_beast.ftbl.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiChunkSelectorBase;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrades;
@@ -287,14 +287,11 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			list.add(data.team.formattedName);
 			list.add(TextFormatting.GREEN + FTBULang.CHUNKS_CLAIMED_AREA.translate());
 
-			if (data.team.isAlly)
+			for (ChunkUpgrade upgrade : FTBUUniverseData.CHUNK_UPGRADES.values())
 			{
-				for (ChunkUpgrade upgrade : FTBUUniverseData.CHUNK_UPGRADES.values())
+				if (!upgrade.isInternal() && data.hasUpgrade(upgrade))
 				{
-					if (!upgrade.isInternal() && data.hasUpgrade(upgrade))
-					{
-						list.add(TextFormatting.RED + upgrade.getLangKey().translate());
-					}
+					list.add(TextFormatting.RED + upgrade.getLangKey().translate());
 				}
 			}
 		}

@@ -56,7 +56,7 @@ public class FTBUConfig
 	{
 		public boolean difficulty = true;
 
-		@Config.LangKey("ftbu.config.login.motd")
+		@Config.LangKey(FTBUFinals.MOD_ID + ".config.login.motd")
 		public boolean motd = true;
 
 		//public boolean admin_quick_access = true;

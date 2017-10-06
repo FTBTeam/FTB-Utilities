@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.config.ConfigValue;
 import com.feed_the_beast.ftbl.lib.config.RankConfigValueInfo;
+import com.feed_the_beast.ftbl.lib.util.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.google.gson.JsonArray;

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.api.guide;
 
-import com.feed_the_beast.ftbl.lib.NameMap;
+import com.feed_the_beast.ftbl.lib.util.misc.NameMap;
 import net.minecraft.util.IStringSerializable;
 
 /**
@@ -9,8 +9,8 @@ import net.minecraft.util.IStringSerializable;
 public enum GuideType implements IStringSerializable
 {
 	SERVER_INFO("server_info"),
-	MOD("mod"),
 	MODPACK("modpack"),
+	MOD("mod"),
 	OTHER("other");
 
 	public static final NameMap<GuideType> NAME_MAP = NameMap.create(OTHER, values());

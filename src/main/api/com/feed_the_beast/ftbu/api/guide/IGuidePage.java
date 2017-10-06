@@ -19,7 +19,16 @@ import java.util.Map;
  */
 public interface IGuidePage extends IStringSerializable
 {
-	Comparator<Map.Entry<String, IGuidePage>> COMPARATOR = (o1, o2) -> o1.getValue().getDisplayName().getUnformattedText().compareToIgnoreCase(o2.getValue().getDisplayName().getUnformattedText());
+	Comparator<Map.Entry<String, IGuidePage>> COMPARATOR = (o1, o2) ->
+	{
+		int i = o1.getValue().getType().compareTo(o2.getValue().getType());
+		return i == 0 ? o1.getValue().getDisplayName().getUnformattedText().compareToIgnoreCase(o2.getValue().getDisplayName().getUnformattedText()) : i;
+	};
+
+	default GuideType getType()
+	{
+		return GuideType.OTHER;
+	}
 
 	void fromJson(JsonObject json);
 

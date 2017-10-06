@@ -1,27 +1,33 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
 import com.feed_the_beast.ftbu.api.guide.GuideType;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
 import com.feed_the_beast.ftbu.api.guide.IGuideTitlePage;
 import com.feed_the_beast.ftbu.api.guide.SpecialGuideButton;
+import com.feed_the_beast.ftbu.net.MessageRequestServerInfo;
+import com.feed_the_beast.ftbu.net.MessageServerInfo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -51,8 +57,17 @@ public enum Guides implements IResourceManagerReloadListener
 			return "";
 		}
 	}.addSpecialButton(new SpecialGuideButton(GuiLang.REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftbc refresh_guide")));
-	public static final IGuidePage SERVER_INFO_PAGE = new GuidePage("server_info", INFO_PAGE).setTitle(new TextComponentTranslation("sidebar_button.ftbu.server_info"));
 
+	public static final IGuidePage SERVER_INFO_PAGE = new GuidePage("server_info", INFO_PAGE)
+	{
+		@Override
+		public GuideType getType()
+		{
+			return GuideType.SERVER_INFO;
+		}
+	}.setTitle(new TextComponentTranslation("sidebar_button." + FTBUFinals.MOD_ID + ".server_info")).setIcon(GuiIcons.BOOK_RED);
+
+	public static String pageToOpen = "";
 	private static boolean isReloading = false;
 	private static Thread reloadingThread = null;
 	private static GuiGuide cachedGui = null;
@@ -69,8 +84,36 @@ public enum Guides implements IResourceManagerReloadListener
 		OPEN_GUI.run();
 	}
 
+	public static void readServerInfoPage(MessageServerInfo m)
+	{
+		SERVER_INFO_PAGE.clear();
+
+		if (m.serverGuide.isJsonObject())
+		{
+			SERVER_INFO_PAGE.fromJson(m.serverGuide.getAsJsonObject());
+		}
+
+		for (JsonElement element : m.mainPage)
+		{
+			ITextComponent component = JsonUtils.deserializeTextComponent(element);
+			SERVER_INFO_PAGE.println(component);
+		}
+
+		IGuidePage commandPage = SERVER_INFO_PAGE.getSub("commands");
+		commandPage.fromJson(m.commands);
+		commandPage.setTitle(new TextComponentString("Commands")); //LANG
+		commandPage.setIcon(new ItemIcon(new ItemStack(Blocks.COMMAND_BLOCK)));
+
+		if (cachedGui != null && cachedGui.getSelectedPage() == SERVER_INFO_PAGE)
+		{
+			cachedGui.refreshWidgets();
+		}
+	}
+
 	public static final Runnable OPEN_GUI = () ->
 	{
+		new MessageRequestServerInfo().sendToServer();
+
 		if (cachedGui == null)
 		{
 			if (!isReloading)
@@ -115,9 +158,9 @@ public enum Guides implements IResourceManagerReloadListener
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager)
 	{
-		FTBUFinals.LOGGER.info("Reloading guides...");
+		FTBUFinals.LOGGER.info("Reloading guides..."); //LANG
 		INFO_PAGE.clear();
-		INFO_PAGE.setTitle(new TextComponentTranslation("sidebar_button.ftbu.guide"));
+		INFO_PAGE.setTitle(new TextComponentTranslation("sidebar_button." + FTBUFinals.MOD_ID + ".guide"));
 
 		List<IGuideTitlePage> guides = new ArrayList<>();
 
@@ -212,6 +255,7 @@ public enum Guides implements IResourceManagerReloadListener
 		}
 
 		INFO_PAGE.cleanup();
+		INFO_PAGE.addSub(SERVER_INFO_PAGE);
 		INFO_PAGE.sort(false);
 	}
 

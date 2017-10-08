@@ -7,11 +7,13 @@ import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
+import com.feed_the_beast.ftbl.lib.gui.Theme;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.ColoredIcon;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
+import com.feed_the_beast.ftbl.lib.icon.PartIcon;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.guide.IGuideGui;
@@ -31,44 +33,56 @@ public class GuiGuide extends GuiBase implements IGuideGui
 	private static final Icon TEX_BACK = Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/button_back.png").withUVfromCoords(0, 0, 14, 11, 16, 16);
 	private static final Icon TEX_CLOSE = Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/button_close.png").withUVfromCoords(0, 0, 14, 11, 16, 16);
 
-	private static final Icon TEXTURE_SCROLL = Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/scroll.png");
-	private static final Icon TEX_SCROLL_V = TEXTURE_SCROLL.withUVfromCoords(0, 14, 12, 18, 32, 32);
-	private static final Icon TEX_SCROLL_H = TEXTURE_SCROLL.withUVfromCoords(14, 0, 18, 12, 32, 32);
-
-	private static final Icon TEXTURE_FRAME = Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/frame.png");
-	private static final Icon TEX_BG_MU = TEXTURE_FRAME.withUVfromCoords(14, 0, 1, 13, 32, 32);
-	private static final Icon TEX_BG_MD = TEXTURE_FRAME.withUVfromCoords(14, 16, 1, 13, 32, 32);
-	private static final Icon TEX_BG_ML = TEXTURE_FRAME.withUVfromCoords(0, 14, 13, 1, 32, 32);
-	private static final Icon TEX_BG_MR = TEXTURE_FRAME.withUVfromCoords(16, 14, 13, 1, 32, 32);
-	private static final Icon TEX_BG_NN = TEXTURE_FRAME.withUVfromCoords(0, 0, 13, 13, 32, 32);
-	private static final Icon TEX_BG_PN = TEXTURE_FRAME.withUVfromCoords(16, 0, 13, 13, 32, 32);
-	private static final Icon TEX_BG_NP = TEXTURE_FRAME.withUVfromCoords(0, 16, 13, 13, 32, 32);
-	private static final Icon TEX_BG_PP = TEXTURE_FRAME.withUVfromCoords(16, 16, 13, 13, 32, 32);
-
-	public static final Icon FILLING = new Icon()
+	private static final Icon FILLING = new Icon()
 	{
 		@Override
 		public void draw(int x, int y, int w, int h, Color4I col)
 		{
-			GuiHelper.drawBlankRect(x + 4, y + 4, w - 8, h - 8, col.hasColor() ? col : GuideConfig.colors.getBackground());
+			GuideConfig.colors.getBackground().draw(x + 4, y + 4, w - 8, h - 8);
 		}
 	};
 
-	public static final Icon BORDERS = new Icon()
+	private static final Theme GUIDE_THEME = new Theme()
 	{
-		@Override
-		public void draw(int x, int y, int w, int h, Color4I col)
-		{
-			Color4I c = col.hasColor() ? col : Color4I.WHITE;
-			TEX_BG_MU.draw(x + 13, y, w - 24, 13, c);
-			TEX_BG_MR.draw(x + w - 13, y + 13, 13, h - 25, c);
-			TEX_BG_MD.draw(x + 13, y + h - 13, w - 24, 13, c);
-			TEX_BG_ML.draw(x, y + 13, 13, h - 25, c);
+		private final Icon GUI = new PartIcon(Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/frame.png"), 32, 12, 1);
+		private final Icon TEXTURE_SCROLL = Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/scroll.png");
+		private final Icon TEX_SCROLL_V = TEXTURE_SCROLL.withUVfromCoords(0, 14, 12, 18, 32, 32);
+		private final Icon TEX_SCROLL_H = TEXTURE_SCROLL.withUVfromCoords(14, 0, 18, 12, 32, 32);
 
-			TEX_BG_NN.draw(x, y, 13, 13, c);
-			TEX_BG_NP.draw(x, y + h - 13, 13, 13, c);
-			TEX_BG_PN.draw(x + w - 13, y, 13, 13, c);
-			TEX_BG_PP.draw(x + w - 13, y + h - 13, 13, 13, c);
+		@Override
+		public Color4I getContentColor(boolean dark)
+		{
+			return GuideConfig.colors.getText();
+		}
+
+		@Override
+		public Icon getGui(boolean mouseOver)
+		{
+			return GUI;
+		}
+
+		@Override
+		public Icon getWidget(boolean mouseOver)
+		{
+			return Icon.EMPTY;
+		}
+
+		@Override
+		public Icon getSlot(boolean mouseOver)
+		{
+			return Icon.EMPTY;
+		}
+
+		@Override
+		public Icon getScrollBarBackground()
+		{
+			return Icon.EMPTY;
+		}
+
+		@Override
+		public Icon getScrollBar(boolean grabbed, boolean vertical)
+		{
+			return vertical ? TEX_SCROLL_V : TEX_SCROLL_H;
 		}
 	};
 
@@ -76,15 +90,15 @@ public class GuiGuide extends GuiBase implements IGuideGui
 	{
 		private final SpecialGuideButton specialInfoButton;
 
-		public ButtonSpecial(SpecialGuideButton b)
+		public ButtonSpecial(GuiBase gui, SpecialGuideButton b)
 		{
-			super(0, 0, 16, 16);
+			super(gui, 0, 0, 16, 16);
 			specialInfoButton = b;
 			setTitle(specialInfoButton.title.getFormattedText());
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, MouseButton button)
+		public void onClicked(MouseButton button)
 		{
 			if (GuiHelper.onClickEvent(specialInfoButton.clickEvent))
 			{
@@ -93,9 +107,9 @@ public class GuiGuide extends GuiBase implements IGuideGui
 		}
 
 		@Override
-		public void renderWidget(GuiBase gui)
+		public void renderWidget()
 		{
-			specialInfoButton.icon.draw(getAX(), getAY(), width, height, Color4I.NONE);
+			specialInfoButton.icon.draw(this);
 		}
 	}
 
@@ -113,27 +127,27 @@ public class GuiGuide extends GuiBase implements IGuideGui
 		super(0, 0);
 		selectedPage = pageTree = tree;
 
-		buttonBack = new Button(12, 12, 14, 11)
+		buttonBack = new Button(this, 12, 12, 14, 11)
 		{
 			@Override
-			public void onClicked(GuiBase gui, MouseButton button)
+			public void onClicked(MouseButton button)
 			{
 				GuiHelper.playClickSound();
-				sliderPages.setValue(gui, 0D);
-				sliderTextV.setValue(gui, 0D);
+				sliderPages.setValue(0D);
+				sliderTextV.setValue(0D);
 				setSelectedPage(selectedPage.getParent());
 			}
 
 			@Override
-			public String getTitle(GuiBase gui)
+			public String getTitle()
 			{
 				return (selectedPage.getParent() == null) ? GuiLang.CLOSE.translate() : GuiLang.BACK.translate();
 			}
 		};
 
-		buttonBack.setIcon(new ColoredIcon(TEX_CLOSE, GuideConfig.colors.getText()));
+		buttonBack.setIcon(new ColoredIcon(TEX_CLOSE, GuideConfig.colors.getText(), 0));
 
-		panelPages = new Panel(0, 0, 0, 0)
+		panelPages = new Panel(this, 0, 0, 0, 0)
 		{
 			@Override
 			public void addWidgets()
@@ -156,9 +170,9 @@ public class GuiGuide extends GuiBase implements IGuideGui
 			}
 		};
 
-		panelPages.addFlags(Panel.FLAG_DEFAULTS);
+		panelPages.addFlags(Panel.DEFAULTS);
 
-		panelText = new Panel(0, 0, 0, 0)
+		panelText = new Panel(this, 0, 0, 0, 0)
 		{
 			private final WidgetLayout LAYOUT = new WidgetLayout.Vertical(2, 0, 4);
 
@@ -169,19 +183,19 @@ public class GuiGuide extends GuiBase implements IGuideGui
 				{
 					if (w instanceof ButtonGuidePage)
 					{
-						((ButtonGuidePage) w).updateTitle(GuiGuide.this);
+						((ButtonGuidePage) w).updateTitle();
 					}
 				}
 
-				boolean uni = getFont().getUnicodeFlag();
-				getFont().setUnicodeFlag(true);
+				gui.getFontUnicode().push();
+				gui.getFontUnicode().set(true);
 
 				for (IGuideTextLine line : selectedPage.getText())
 				{
-					add(line == null ? new Widget(0, 0, panelText.width, getFont().FONT_HEIGHT + 1) : line.createWidget(GuiGuide.this, panelText));
+					add(line == null ? new Widget(gui, 0, 0, panelText.width, gui.getFontHeight() + 1) : line.createWidget(GuiGuide.this, panelText));
 				}
 
-				getFont().setUnicodeFlag(uni);
+				gui.getFontUnicode().pop();
 			}
 
 			@Override
@@ -196,35 +210,29 @@ public class GuiGuide extends GuiBase implements IGuideGui
 			}
 		};
 
-		panelText.addFlags(Panel.FLAG_DEFAULTS | Panel.FLAG_UNICODE_FONT);
+		panelText.addFlags(Panel.DEFAULTS | Panel.UNICODE);
 
-		panelTitle = new Panel(0, 0, 0, 0)
+		panelTitle = new Panel(this, 0, 0, 0, 0)
 		{
 			@Override
 			public void addWidgets()
 			{
 				add(buttonBack);
-				buttonBack.setIcon(new ColoredIcon((selectedPage.getParent() == null) ? TEX_CLOSE : TEX_BACK, getContentColor()));
+				buttonBack.setIcon(new ColoredIcon((selectedPage.getParent() == null) ? TEX_CLOSE : TEX_BACK, gui.getTheme().getContentColor(false), 0));
 
 				specialButtons.clear();
 
 				for (SpecialGuideButton button : selectedPage.getSpecialButtons())
 				{
-					specialButtons.add(new ButtonSpecial(button));
+					specialButtons.add(new ButtonSpecial(gui, button));
 				}
 
 				addAll(specialButtons);
 			}
 		};
 
-		sliderPages = new PanelScrollBar(0, 0, 12, 0, 18, panelPages);
-		sliderPages.slider = TEX_SCROLL_V;
-		sliderPages.background = Icon.EMPTY;
-
-		sliderTextV = new PanelScrollBar(0, 0, 12, 0, 18, panelText);
-		sliderTextV.slider = TEX_SCROLL_V;
-		sliderTextV.background = Icon.EMPTY;
-
+		sliderPages = new PanelScrollBar(this, 0, 0, 12, 0, 18, panelPages);
+		sliderTextV = new PanelScrollBar(this, 0, 0, 12, 0, 18, panelText);
 		specialButtons = new ArrayList<>();
 	}
 
@@ -237,7 +245,7 @@ public class GuiGuide extends GuiBase implements IGuideGui
 	@Override
 	public void setSelectedPage(@Nullable IGuidePage p)
 	{
-		sliderTextV.setValue(this, 0D);
+		sliderTextV.setValue(0D);
 
 		if (selectedPage != p)
 		{
@@ -256,7 +264,7 @@ public class GuiGuide extends GuiBase implements IGuideGui
 				}
 				else
 				{
-					sliderPages.setValue(this, 0);
+					sliderPages.setValue(0D);
 					refreshWidgets();
 				}
 			}
@@ -274,7 +282,7 @@ public class GuiGuide extends GuiBase implements IGuideGui
 		add(panelTitle);
 		add(sliderPages);
 
-		panelPages.setWidth(panelWidth - (sliderPages.isEnabled(this) ? 32 : 17));
+		panelPages.setWidth(panelWidth - (sliderPages.isEnabled() ? 32 : 17));
 
 		for (int i = 0; i < specialButtons.size(); i++)
 		{
@@ -325,10 +333,9 @@ public class GuiGuide extends GuiBase implements IGuideGui
 	@Override
 	public void drawBackground()
 	{
-		TEXTURE_FRAME.bindTexture();
-		FILLING.draw(posX + panelWidth, posY, width - panelWidth, height, Color4I.NONE);
-		FILLING.draw(posX, posY + 36, panelWidth, height - 36, Color4I.NONE);
-		FILLING.draw(posX, posY, panelWidth, 36, Color4I.NONE);
+		FILLING.draw(posX + panelWidth, posY, width - panelWidth, height);
+		FILLING.draw(posX, posY + 36, panelWidth, height - 36);
+		FILLING.draw(posX, posY, panelWidth, 36);
 
 		GuiHelper.pushScissor(getScreen(), posX, posY, panelWidth, 36);
 		drawString(selectedPage.getDisplayName().getFormattedText(), buttonBack.getAX() + buttonBack.width + 5, posY + 14);
@@ -340,17 +347,16 @@ public class GuiGuide extends GuiBase implements IGuideGui
 	public void drawForeground()
 	{
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		BORDERS.draw(posX + panelWidth, posY, width - panelWidth, height, Color4I.NONE);
-		BORDERS.draw(posX, posY + 36, panelWidth, height - 36, Color4I.NONE);
-		BORDERS.draw(posX, posY, panelWidth, 36, Color4I.NONE);
-
+		getTheme().getGui(false).draw(posX + panelWidth, posY + 1, width - panelWidth - 1, height - 2);
+		getTheme().getGui(false).draw(posX + 1, posY + 36, panelWidth - 2, height - 37);
+		getTheme().getGui(false).draw(posX + 1, posY + 1, panelWidth - 2, 34);
 		super.drawForeground();
 	}
 
 	@Override
-	public Color4I getContentColor()
+	public Theme getTheme()
 	{
-		return GuideConfig.colors.getText();
+		return GUIDE_THEME;
 	}
 
 	@Override
@@ -382,5 +388,11 @@ public class GuiGuide extends GuiBase implements IGuideGui
 	public GuiScreen getPrevScreen()
 	{
 		return null;
+	}
+
+	@Override
+	public Icon getIcon()
+	{
+		return Icon.EMPTY;
 	}
 }

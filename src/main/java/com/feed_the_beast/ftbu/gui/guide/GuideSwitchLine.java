@@ -126,12 +126,9 @@ public class GuideSwitchLine extends EmptyGuidePageLine
 
 	private class PanelList extends Panel
 	{
-		private final GuiBase gui;
-
 		private PanelList(GuiBase g)
 		{
-			super(0, 0, 0, 0);
-			gui = g;
+			super(g, 0, 0, 0, 0);
 		}
 
 		@Override

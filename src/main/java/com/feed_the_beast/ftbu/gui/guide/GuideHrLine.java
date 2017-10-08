@@ -1,11 +1,10 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
-import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
-import com.feed_the_beast.ftbl.lib.util.misc.MutableColor4I;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
+import com.feed_the_beast.ftbl.lib.icon.MutableColor4I;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -34,7 +33,7 @@ public class GuideHrLine extends EmptyGuidePageLine
 	@Override
 	public Widget createWidget(GuiBase gui, Panel parent)
 	{
-		return new WidgetGuideHr(parent);
+		return new WidgetGuideHr(gui, parent);
 	}
 
 	@Override
@@ -45,15 +44,15 @@ public class GuideHrLine extends EmptyGuidePageLine
 
 	private class WidgetGuideHr extends Widget
 	{
-		private WidgetGuideHr(Panel parent)
+		private WidgetGuideHr(GuiBase gui, Panel parent)
 		{
-			super(0, 1, parent.width, GuideHrLine.this.height + 2);
+			super(gui, 0, 1, parent.width, GuideHrLine.this.height + 2);
 		}
 
 		@Override
-		public void renderWidget(GuiBase gui)
+		public void renderWidget()
 		{
-			GuiHelper.drawBlankRect(getAX(), getAY() + 1, width, GuideHrLine.this.height, color.hasColor() ? color : gui.getContentColor());
+			(color.isEmpty() ? gui.getTheme().getContentColor(false) : color).draw(getAX(), getAY() + 1, width, height - 2);
 		}
 	}
 

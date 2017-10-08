@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -61,7 +60,7 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 			GlStateManager.scale(0.2D, 0.2D, 0.125D);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			GlStateManager.disableCull();
-			tex.draw(0, 0, 1, 1, Color4I.NONE);
+			tex.draw(0, 0, 1, 1);
 			GlStateManager.enableCull();
 			ClientUtils.popBrightness();
 			GlStateManager.popMatrix();

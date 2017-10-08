@@ -39,12 +39,12 @@ public class GuideContentsLine extends EmptyGuidePageLine
 
 		private PanelGuideContents(GuiBase gui)
 		{
-			super(0, 0, 10, 10);
+			super(gui, 0, 0, 10, 10);
 			buttons = new ArrayList<>();
-			addButtons(gui, page, 0);
+			addButtons(page, 0);
 		}
 
-		private void addButtons(GuiBase gui, IGuidePage from, int level)
+		private void addButtons(IGuidePage from, int level)
 		{
 			setWidth(10000);
 
@@ -54,7 +54,7 @@ public class GuideContentsLine extends EmptyGuidePageLine
 				w.posX = level * 12;
 				w.width = 1000;
 				buttons.add(w);
-				addButtons(gui, p, level + 1);
+				addButtons(p, level + 1);
 			}
 		}
 

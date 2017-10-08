@@ -6,9 +6,10 @@ import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.icon.LoadingIcon;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbu.net.MessageSendWarpList;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -37,7 +38,7 @@ public class GuiWarps extends GuiBase
 	private static final CachedVertexData CIRCLE_OUT = new CachedVertexData(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
 	private static final CachedVertexData CENTER = new CachedVertexData(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
 
-	private final ArcButton BUTTON_CANCEL = new ArcButton(MessageSendWarpList.WarpItem.CANCEL, -1);
+	private final ArcButton buttonCancel;
 
 	static
 	{
@@ -67,9 +68,9 @@ public class GuiWarps extends GuiBase
 		private final int index;
 		private int textX = -1, textY = -1;
 
-		public ArcButton(MessageSendWarpList.WarpItem w, int i)
+		public ArcButton(GuiBase gui, MessageSendWarpList.WarpItem w, int i)
 		{
-			super(0, 0, 0, 0);
+			super(gui, 0, 0, 0, 0);
 			setTitle(w.cmd);
 			warpItem = w;
 			index = i;
@@ -82,7 +83,7 @@ public class GuiWarps extends GuiBase
 		}
 
 		@Override
-		public void renderWidget(GuiBase gui)
+		public void renderWidget()
 		{
 			if (index == -1)
 			{
@@ -99,11 +100,11 @@ public class GuiWarps extends GuiBase
 				textY = (int) (Math.sin(i * MathUtils.RAD) * d) - 2;
 			}
 
-			gui.drawCenteredString(warpItem.name, gui.posX + gui.width / 2F + textX, gui.posY + gui.height / 2F + textY);
+			gui.drawString(warpItem.name, gui.posX + gui.width / 2 + textX, gui.posY + gui.height / 2 + textY, DARK | CENTERED);
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, MouseButton button)
+		public void onClicked(MouseButton button)
 		{
 			if (!warpItem.cmd.isEmpty())
 			{
@@ -123,6 +124,7 @@ public class GuiWarps extends GuiBase
 	public GuiWarps()
 	{
 		super(SIZE, SIZE);
+		buttonCancel = new ArcButton(this, MessageSendWarpList.WarpItem.CANCEL, -1);
 	}
 
 	@Override
@@ -132,7 +134,7 @@ public class GuiWarps extends GuiBase
 		{
 			addAll(buttonsIn);
 			addAll(buttonsOut);
-			add(BUTTON_CANCEL);
+			add(buttonCancel);
 		}
 	}
 
@@ -174,7 +176,7 @@ public class GuiWarps extends GuiBase
 			lines.draw(tessellator, buffer);
 		}
 
-		buttonOver = BUTTON_CANCEL;
+		buttonOver = buttonCancel;
 		double dist = MathUtils.dist(ax, ay, getMouseX(), getMouseY());
 		double rotation = Math.atan2(getMouseY() - ay, getMouseX() - ax) * MathUtils.DEG;
 
@@ -192,7 +194,7 @@ public class GuiWarps extends GuiBase
 		{
 			if (dist < SIZE_I || dist > SIZE_2)
 			{
-				drawCenteredString(TextFormatting.BOLD + GuiLang.CANCEL.translate(), ax, ay);
+				drawString(TextFormatting.BOLD + GuiLang.CANCEL.translate(), ax, ay, DARK | CENTERED);
 			}
 			else
 			{
@@ -208,20 +210,14 @@ public class GuiWarps extends GuiBase
 
 			if (buttonOver.warpItem.isSpecial())
 			{
-				drawCenteredString(TextFormatting.BOLD + buttonOver.warpItem.name, ax, ay);
+				drawString(TextFormatting.BOLD + buttonOver.warpItem.name, ax, ay, DARK | CENTERED);
 			}
 			else
 			{
-				drawCenteredString(TextFormatting.BOLD + (buttonOver.warpItem.innerCircle() ? "Home" : "Warp"), ax, ay - 5);
-				drawCenteredString(buttonOver.warpItem.name, ax, ay + 5);
+				drawString(TextFormatting.BOLD + (buttonOver.warpItem.innerCircle() ? "Home" : "Warp"), ax, ay - 5, DARK | CENTERED);
+				drawString(buttonOver.warpItem.name, ax, ay + 5, DARK | CENTERED);
 			}
 		}
-	}
-
-	@Override
-	public Color4I getContentColor()
-	{
-		return Color4I.WHITE;
 	}
 
 	public void setData(List<MessageSendWarpList.WarpItem> list)
@@ -232,7 +228,7 @@ public class GuiWarps extends GuiBase
 		for (MessageSendWarpList.WarpItem w : list)
 		{
 			List<ArcButton> l = (w.innerCircle() ? buttonsIn : buttonsOut);
-			l.add(new ArcButton(w, l.size()));
+			l.add(new ArcButton(this, w, l.size()));
 		}
 
 		lines = new CachedVertexData(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
@@ -271,5 +267,11 @@ public class GuiWarps extends GuiBase
 	public boolean drawDefaultBackground()
 	{
 		return false;
+	}
+
+	@Override
+	public Icon getIcon()
+	{
+		return Icon.EMPTY;
 	}
 }

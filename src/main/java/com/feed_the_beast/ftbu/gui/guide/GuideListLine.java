@@ -6,9 +6,8 @@ import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.icon.BulletIcon;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.NameMap;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
 import com.feed_the_beast.ftbu.api.guide.IGuideTextLine;
@@ -25,8 +24,8 @@ import java.util.List;
  */
 public class GuideListLine extends EmptyGuidePageLine
 {
-	private static final Icon CODE_BACKGROUND = new TexturelessRectangle(0x33AAAAAA);
-	private static final Icon SCROLL_BAR_BACKGROUND = new TexturelessRectangle(0x33333333);
+	private static final Icon CODE_BACKGROUND = Color4I.rgba(0x33AAAAAA);
+	private static final Icon SCROLL_BAR_BACKGROUND = Color4I.rgba(0x33333333);
 
 	public enum Ordering implements IStringSerializable
 	{
@@ -138,7 +137,7 @@ public class GuideListLine extends EmptyGuidePageLine
 	@Override
 	public Widget createWidget(GuiBase gui, Panel parent)
 	{
-		return new PanelList(gui, parent.hasFlag(Panel.FLAG_UNICODE_FONT));
+		return new PanelList(gui, parent.hasFlag(Panel.UNICODE));
 	}
 
 	@Override
@@ -168,35 +167,37 @@ public class GuideListLine extends EmptyGuidePageLine
 
 	private class PanelList extends Panel
 	{
-		private final GuiBase gui;
 		private final PanelScrollBar scrollBar;
 		private final WidgetLayout layout;
 		private BulletIcon bullet;
 
-		private PanelList(GuiBase g, boolean unicodeFont)
+		private PanelList(GuiBase gui, boolean unicodeFont)
 		{
-			super(ordering.size, 0, 0, 0);
-			gui = g;
-			//addFlags(FLAG_DEFAULTS);
+			super(gui, ordering.size, 0, 0, 0);
+			//addFlags(DEFAULTS);
 
-			scrollBar = new PanelScrollBar(0, 0, 1, 4, 0, this)
+			scrollBar = new PanelScrollBar(gui, 0, 0, 1, 4, 0, this)
 			{
 				@Override
 				public EnumFacing.Plane getPlane()
 				{
 					return EnumFacing.Plane.HORIZONTAL;
 				}
-			};
 
-			scrollBar.background = SCROLL_BAR_BACKGROUND;
+				@Override
+				public Icon getBackground()
+				{
+					return SCROLL_BAR_BACKGROUND;
+				}
+			};
 
 			if (unicodeFont)
 			{
-				addFlags(FLAG_UNICODE_FONT);
+				addFlags(UNICODE);
 			}
 
 			layout = type.plane == EnumFacing.Plane.VERTICAL ? new WidgetLayout.Vertical(0, spacing, 0) : new WidgetLayout.Horizontal(0, spacing, 0);
-			bullet = new BulletIcon().setColor(g.getContentColor());
+			bullet = new BulletIcon().setColor(gui.getTheme().getContentColor(false));
 		}
 
 		@Override
@@ -266,9 +267,9 @@ public class GuideListLine extends EmptyGuidePageLine
 		}
 
 		@Override
-		protected void renderWidget(GuiBase gui, Widget widget, int index, int ax, int ay, int w, int h)
+		protected void renderWidget(Widget widget, int index, int ax, int ay, int w, int h)
 		{
-			widget.renderWidget(gui);
+			widget.renderWidget();
 
 			if (ordering.size > 0 && widget.getClass() != Widget.class && !(widget instanceof PanelList))
 			{
@@ -276,11 +277,11 @@ public class GuideListLine extends EmptyGuidePageLine
 				switch (ordering)
 				{
 					case BULLET:
-						bullet.draw(ax - 7, widget.getAY() + 3, 4, 4, Color4I.NONE);
+						bullet.draw(ax - 7, widget.getAY() + 3, 4, 4);
 						break;
 					case NUMBER:
 						n = Integer.toString(index + 1);
-						gui.drawString(n, ax - 1 - gui.getFont().getStringWidth(n), widget.getAY() + 1, gui.getContentColor());
+						gui.drawString(n, ax - 1 - gui.getStringWidth(n), widget.getAY() + 1);
 						break;
 					case LETTER:
 						char c = (char) ('a' + index);
@@ -294,18 +295,18 @@ public class GuideListLine extends EmptyGuidePageLine
 						}
 
 						n = Character.toString(c);
-						gui.drawString(n, ax - 1 - gui.getFont().getStringWidth(n), widget.getAY() + 1, gui.getContentColor());
+						gui.drawString(n, ax - 1 - gui.getStringWidth(n), widget.getAY() + 1);
 						break;
 				}
 			}
 		}
 
 		@Override
-		protected void renderPanelBackground(GuiBase gui, int ax, int ay)
+		protected void renderPanelBackground(int ax, int ay)
 		{
 			if (type == Type.CODE)
 			{
-				CODE_BACKGROUND.draw(ax - ordering.size, ay, width + ordering.size, height, Color4I.NONE);
+				CODE_BACKGROUND.draw(ax - ordering.size, ay, width + ordering.size, height);
 			}
 		}
 	}

@@ -1,11 +1,12 @@
 package com.feed_the_beast.ftbu.integration;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.icon.IconAnimation;
 import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
 import com.feed_the_beast.ftbu.api.guide.IGuideTitlePage;
@@ -26,6 +27,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import slimeknights.tconstruct.library.TinkerRegistry;
 import slimeknights.tconstruct.library.materials.IMaterialStats;
@@ -42,15 +44,20 @@ import java.util.Collections;
 /**
  * @author LatvianModder
  */
-@EventHandler(value = Side.CLIENT, requiredMods = "tconstruct")
+@GameRegistry.ObjectHolder(FTBLibFinals.TINKERS_CONSTRUCT)
+@EventHandler(value = Side.CLIENT, requiredMods = FTBLibFinals.TINKERS_CONSTRUCT)
 public class TiCIntegration
 {
+	public static final Item TOOLFORGE = Items.AIR;
+	public static final Item TOOLTABLES = Items.AIR;
+	public static final Item TOOLSTATION = Items.AIR;
+
 	@SubscribeEvent
 	public static void onGuideEvent(ClientGuideEvent event)
 	{
-		IGuideTitlePage page = event.getModGuide("tconstruct");
-		page.setIcon(new ItemIcon("tconstruct:toolforge"));
-		page.println(new GuideHrLine(1, Color4I.NONE));
+		IGuideTitlePage page = event.getModGuide(FTBLibFinals.TINKERS_CONSTRUCT);
+		page.setIcon(new ItemIcon(new ItemStack(TOOLFORGE)));
+		page.println(new GuideHrLine(1, Icon.EMPTY));
 		page.println(new GuideContentsLine(page));
 
 		IGuidePage pageIntro = loadPage(event, "intro", page);
@@ -58,7 +65,7 @@ public class TiCIntegration
 		if (pageIntro != null)
 		{
 			pageIntro.setTitle(new TextComponentString("Introduction")); //LANG
-			pageIntro.setIcon(new ItemIcon("tconstruct:tooltables"));
+			pageIntro.setIcon(new ItemIcon(new ItemStack(TOOLTABLES)));
 			page.addSub(pageIntro);
 		}
 
@@ -126,7 +133,7 @@ public class TiCIntegration
 
 			try
 			{
-				IResource resource = event.getResourceManager().getResource(new ResourceLocation("tconstruct", "book/en_US/modifiers/" + modifier.getIdentifier() + ".json"));
+				IResource resource = event.getResourceManager().getResource(new ResourceLocation(FTBLibFinals.TINKERS_CONSTRUCT, "book/en_US/modifiers/" + modifier.getIdentifier() + ".json"));
 				JsonElement json = JsonUtils.fromJson(new InputStreamReader(resource.getInputStream()));
 
 				if (json.isJsonObject())
@@ -188,7 +195,7 @@ public class TiCIntegration
 		if (pageSmeltry != null)
 		{
 			pageSmeltry.setTitle(new TextComponentString("Smeltry")); //LANG
-			pageSmeltry.setIcon(new ItemIcon("tconstruct:toolstation"));
+			pageSmeltry.setIcon(new ItemIcon(new ItemStack(TOOLSTATION)));
 			page.addSub(pageSmeltry);
 		}
 
@@ -212,7 +219,7 @@ public class TiCIntegration
 		try
 		{
 			//FIXME
-			IResource resource = event.getResourceManager().getResource(new ResourceLocation("tconstruct", "book/en_US/sections/" + id + ".json"));
+			IResource resource = event.getResourceManager().getResource(new ResourceLocation(FTBLibFinals.TINKERS_CONSTRUCT, "book/en_US/sections/" + id + ".json"));
 			JsonElement json = JsonUtils.fromJson(new InputStreamReader(resource.getInputStream()));
 
 			if (json.isJsonArray())

@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.lib.config.ConfigString;
 import com.feed_the_beast.ftbl.lib.config.ConfigValue;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
-import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
@@ -17,18 +16,17 @@ import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiEditConfig;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
 import com.feed_the_beast.ftbl.lib.gui.misc.IGuiFieldCallback;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.CombinedIcon;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.IconWithOutline;
 import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
-import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.net.MessageEditNBTResponse;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
@@ -59,7 +57,7 @@ public class GuiEditNBT extends GuiBase
 {
 	private static Icon getIcon(String name)
 	{
-		return new CombinedIcon(TexturelessRectangle.BUTTON_ROUND_GRAY, Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/nbt/" + name + ".png"));
+		return new CombinedIcon(IconWithOutline.BUTTON_ROUND_GRAY, Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/nbt/" + name + ".png"));
 	}
 
 	public static final Icon NBT_BYTE = getIcon("byte");
@@ -87,9 +85,9 @@ public class GuiEditNBT extends GuiBase
 		public final ButtonNBTCollection parent;
 		public String key;
 
-		public ButtonNBT(@Nullable ButtonNBTCollection b, String k)
+		public ButtonNBT(GuiBase gui, @Nullable ButtonNBTCollection b, String k)
 		{
-			super(b == null ? 0 : b.posX + 10, 0, 10, 10);
+			super(gui, b == null ? 0 : b.posX + 10, 0, 10, 10);
 			parent = b;
 			key = k;
 			setTitle(key);
@@ -109,23 +107,23 @@ public class GuiEditNBT extends GuiBase
 		}
 
 		@Override
-		public void addMouseOverText(GuiBase gui, List<String> list)
+		public void addMouseOverText(List<String> list)
 		{
 		}
 
 		@Override
-		public void renderWidget(GuiBase gui)
+		public void renderWidget()
 		{
 			int ax = getAX();
 			int ay = getAY();
 
 			if (selected == this)
 			{
-				GuiHelper.drawBlankRect(ax, ay, width, height, Color4I.WHITE_A[33]);
+				Color4I.WHITE_A[33].draw(ax, ay, width, height);
 			}
 
-			getIcon(gui).draw(ax + 1, ay + 1, 8, 8, Color4I.NONE);
-			gui.drawString(getTitle(gui), ax + 11, ay + 1);
+			getIcon().draw(ax + 1, ay + 1, 8, 8);
+			gui.drawString(getTitle(), ax + 11, ay + 1);
 		}
 	}
 
@@ -133,9 +131,9 @@ public class GuiEditNBT extends GuiBase
 	{
 		private NBTBase nbt;
 
-		public ButtonNBTPrimitive(ButtonNBTCollection b, String k, NBTBase n)
+		public ButtonNBTPrimitive(GuiBase gui, ButtonNBTCollection b, String k, NBTBase n)
 		{
-			super(b, k);
+			super(gui, b, k);
 			nbt = n;
 
 			switch (nbt.getId())
@@ -193,11 +191,11 @@ public class GuiEditNBT extends GuiBase
 			}
 
 			setTitle(key + ": " + title);
-			setWidth(12 + getFont().getStringWidth(key + ": " + title));
+			setWidth(12 + getStringWidth(key + ": " + title));
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, MouseButton button)
+		public void onClicked(MouseButton button)
 		{
 			selected = this;
 			panelTopLeft.refreshWidgets();
@@ -270,13 +268,13 @@ public class GuiEditNBT extends GuiBase
 		public final Map<String, ButtonNBT> children;
 		public final Icon iconOpen, iconClosed;
 
-		public ButtonNBTCollection(@Nullable ButtonNBTCollection b, String key, Icon open, Icon closed)
+		public ButtonNBTCollection(GuiBase gui, @Nullable ButtonNBTCollection b, String key, Icon open, Icon closed)
 		{
-			super(b, key);
+			super(gui, b, key);
 			iconOpen = open;
 			iconClosed = closed;
 			setCollapsed(false);
-			setWidth(width + 2 + getFont().getStringWidth(key));
+			setWidth(width + 2 + getStringWidth(key));
 			children = new LinkedHashMap<>();
 		}
 
@@ -294,7 +292,7 @@ public class GuiEditNBT extends GuiBase
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, MouseButton button)
+		public void onClicked(MouseButton button)
 		{
 			if (gui.getMouseX() <= getAX() + height)
 			{
@@ -324,9 +322,9 @@ public class GuiEditNBT extends GuiBase
 		private NBTTagCompound map;
 		private Icon hoverIcon = Icon.EMPTY;
 
-		public ButtonNBTMap(@Nullable ButtonNBTCollection b, String key, NBTTagCompound m)
+		public ButtonNBTMap(GuiBase gui, @Nullable ButtonNBTCollection b, String key, NBTTagCompound m)
 		{
-			super(b, key, NBT_MAP_OPEN, NBT_MAP_CLOSED);
+			super(gui, b, key, NBT_MAP_OPEN, NBT_MAP_CLOSED);
 			map = m;
 		}
 
@@ -362,11 +360,11 @@ public class GuiEditNBT extends GuiBase
 				hoverIcon = new ItemIcon(stack);
 			}
 
-			setWidth(12 + getFont().getStringWidth(getTitle(GuiEditNBT.this)) + (hoverIcon.isEmpty() ? 0 : 10));
+			setWidth(12 + getStringWidth(getTitle()) + (hoverIcon.isEmpty() ? 0 : 10));
 		}
 
 		@Override
-		public void addMouseOverText(GuiBase gui, List<String> list)
+		public void addMouseOverText(List<String> list)
 		{
 			if (!hoverIcon.isEmpty())
 			{
@@ -378,15 +376,15 @@ public class GuiEditNBT extends GuiBase
 		}
 
 		@Override
-		public void renderWidget(GuiBase gui)
+		public void renderWidget()
 		{
-			super.renderWidget(gui);
+			super.renderWidget();
 
 			if (!hoverIcon.isEmpty())
 			{
 				int ax = getAX();
 				int ay = getAY();
-				hoverIcon.draw(ax + 12 + getFont().getStringWidth(getTitle(gui)), ay + 1, 8, 8, Color4I.NONE);
+				hoverIcon.draw(ax + 12 + getStringWidth(getTitle()), ay + 1, 8, 8);
 			}
 		}
 
@@ -427,9 +425,9 @@ public class GuiEditNBT extends GuiBase
 	{
 		private NBTTagList list;
 
-		public ButtonNBTList(ButtonNBTCollection p, String key, NBTTagList l)
+		public ButtonNBTList(GuiBase gui, ButtonNBTCollection p, String key, NBTTagList l)
 		{
-			super(p, key, NBT_LIST_OPEN, NBT_LIST_CLOSED);
+			super(gui, p, key, NBT_LIST_OPEN, NBT_LIST_CLOSED);
 			list = l;
 		}
 
@@ -490,9 +488,9 @@ public class GuiEditNBT extends GuiBase
 	{
 		private ByteArrayList list;
 
-		public ButtonNBTByteArray(ButtonNBTCollection p, String key, NBTTagByteArray l)
+		public ButtonNBTByteArray(GuiBase gui, ButtonNBTCollection p, String key, NBTTagByteArray l)
 		{
-			super(p, key, NBT_BYTE_ARRAY_OPEN, NBT_BYTE_ARRAY_CLOSED);
+			super(gui, p, key, NBT_BYTE_ARRAY_OPEN, NBT_BYTE_ARRAY_CLOSED);
 			list = new ByteArrayList(l.getByteArray());
 		}
 
@@ -553,9 +551,9 @@ public class GuiEditNBT extends GuiBase
 	{
 		private IntArrayList list;
 
-		public ButtonNBTIntArray(ButtonNBTCollection p, String key, NBTTagIntArray l)
+		public ButtonNBTIntArray(GuiBase gui, ButtonNBTCollection p, String key, NBTTagIntArray l)
 		{
-			super(p, key, NBT_INT_ARRAY_OPEN, NBT_INT_ARRAY_CLOSED);
+			super(gui, p, key, NBT_INT_ARRAY_OPEN, NBT_INT_ARRAY_CLOSED);
 			list = new IntArrayList(l.getIntArray());
 		}
 
@@ -619,21 +617,21 @@ public class GuiEditNBT extends GuiBase
 		switch (nbt.getId())
 		{
 			case Constants.NBT.TAG_COMPOUND:
-				return new ButtonNBTMap(b, key, (NBTTagCompound) nbt);
+				return new ButtonNBTMap(this, b, key, (NBTTagCompound) nbt);
 			case Constants.NBT.TAG_LIST:
-				return new ButtonNBTList(b, key, (NBTTagList) nbt);
+				return new ButtonNBTList(this, b, key, (NBTTagList) nbt);
 			case Constants.NBT.TAG_BYTE_ARRAY:
-				return new ButtonNBTByteArray(b, key, (NBTTagByteArray) nbt);
+				return new ButtonNBTByteArray(this, b, key, (NBTTagByteArray) nbt);
 			case Constants.NBT.TAG_INT_ARRAY:
-				return new ButtonNBTIntArray(b, key, (NBTTagIntArray) nbt);
+				return new ButtonNBTIntArray(this, b, key, (NBTTagIntArray) nbt);
 			default:
-				return new ButtonNBTPrimitive(b, key, nbt);
+				return new ButtonNBTPrimitive(this, b, key, nbt);
 		}
 	}
 
 	public SimpleButton newTag(String t, Icon icon, Supplier<NBTBase> supplier)
 	{
-		return new SimpleButton(t, icon, (gui, button) ->
+		return new SimpleButton(this, t, icon, (gui, button) ->
 		{
 			if (selected instanceof ButtonNBTMap)
 			{
@@ -669,16 +667,16 @@ public class GuiEditNBT extends GuiBase
 	{
 		super(0, 0);
 		info = i;
-		buttonNBTRoot = new ButtonNBTMap(null, "ROOT", nbt);
+		buttonNBTRoot = new ButtonNBTMap(this, null, "ROOT", nbt);
 		buttonNBTRoot.updateChildren(true);
 		selected = buttonNBTRoot;
 
-		panelTopLeft = new Panel(0, 2, 0, 16)
+		panelTopLeft = new Panel(this, 0, 2, 0, 16)
 		{
 			@Override
 			public void addWidgets()
 			{
-				add(new SimpleButton(GuiLang.DELETE, selected == buttonNBTRoot ? GuiIcons.REMOVE_GRAY : GuiIcons.REMOVE, (gui, button) ->
+				add(new SimpleButton(gui, GuiLang.DELETE, selected == buttonNBTRoot ? GuiIcons.REMOVE_GRAY : GuiIcons.REMOVE, (gui, button) ->
 				{
 					if (selected != buttonNBTRoot)
 					{
@@ -692,7 +690,7 @@ public class GuiEditNBT extends GuiBase
 
 				boolean canRename = selected.parent instanceof ButtonNBTMap;
 
-				add(new SimpleButton("Rename", canRename ? GuiIcons.INFO : GuiIcons.INFO_GRAY, (gui, button) ->
+				add(new SimpleButton(gui, "Rename", canRename ? GuiIcons.INFO : GuiIcons.INFO_GRAY, (gui, button) ->
 				{
 					if (canRename)
 					{
@@ -715,14 +713,14 @@ public class GuiEditNBT extends GuiBase
 								}
 							}
 
-							GuiEditNBT.this.openGui();
+							gui.openGui();
 						});
 					}
 				}));
 
 				if (selected instanceof ButtonNBTPrimitive)
 				{
-					add(new SimpleButton(GuiLang.EDIT, GuiIcons.FEATHER, (gui, button) -> ((ButtonNBTPrimitive) selected).edit()));
+					add(new SimpleButton(gui, GuiLang.EDIT, GuiIcons.FEATHER, (gui, button) -> ((ButtonNBTPrimitive) selected).edit()));
 				}
 
 				if (selected.canCreateNew(Constants.NBT.TAG_COMPOUND))
@@ -788,14 +786,14 @@ public class GuiEditNBT extends GuiBase
 			}
 		};
 
-		panelTopLeft.addFlags(Panel.FLAG_DEFAULTS);
+		panelTopLeft.addFlags(Panel.DEFAULTS);
 
-		panelTopRight = new Panel(0, 2, 0, 16)
+		panelTopRight = new Panel(this, 0, 2, 0, 16)
 		{
 			@Override
 			public void addWidgets()
 			{
-				add(new SimpleButton(GuiLang.COLLAPSE_ALL, GuiIcons.REMOVE, (gui, button) ->
+				add(new SimpleButton(gui, GuiLang.COLLAPSE_ALL, GuiIcons.REMOVE, (gui, button) ->
 				{
 					for (Widget w : panelNbt.widgets)
 					{
@@ -805,11 +803,11 @@ public class GuiEditNBT extends GuiBase
 						}
 					}
 
-					scroll.setValue(gui, 0);
+					scroll.setValue(0D);
 					panelNbt.refreshWidgets();
 				}));
 
-				add(new SimpleButton(GuiLang.EXPAND_ALL, GuiIcons.ADD, (gui, button) ->
+				add(new SimpleButton(gui, GuiLang.EXPAND_ALL, GuiIcons.ADD, (gui, button) ->
 				{
 					for (Widget w : panelNbt.widgets)
 					{
@@ -819,17 +817,17 @@ public class GuiEditNBT extends GuiBase
 						}
 					}
 
-					scroll.setValue(gui, 0);
+					scroll.setValue(0D);
 					panelNbt.refreshWidgets();
 				}));
 
-				add(new SimpleButton(GuiLang.CANCEL, GuiIcons.CANCEL, (gui, button) ->
+				add(new SimpleButton(gui, GuiLang.CANCEL, GuiIcons.CANCEL, (gui, button) ->
 				{
 					shouldClose = 2;
 					gui.closeGui();
 				}));
 
-				add(new SimpleButton(GuiLang.ACCEPT, GuiIcons.ACCEPT, (gui, button) ->
+				add(new SimpleButton(gui, GuiLang.ACCEPT, GuiIcons.ACCEPT, (gui, button) ->
 				{
 					shouldClose = 1;
 					gui.closeGui();
@@ -845,9 +843,9 @@ public class GuiEditNBT extends GuiBase
 			}
 		};
 
-		panelTopRight.addFlags(Panel.FLAG_DEFAULTS);
+		panelTopRight.addFlags(Panel.DEFAULTS);
 
-		panelNbt = new Panel(0, 21, 0, 0)
+		panelNbt = new Panel(this, 0, 21, 0, 0)
 		{
 			@Override
 			public void addWidgets()
@@ -864,12 +862,12 @@ public class GuiEditNBT extends GuiBase
 			}
 		};
 
-		panelNbt.addFlags(Panel.FLAG_DEFAULTS);
+		panelNbt.addFlags(Panel.DEFAULTS);
 
-		scroll = new PanelScrollBar(0, 20, 16, 0, 0, panelNbt)
+		scroll = new PanelScrollBar(this, 0, 20, 16, 0, 0, panelNbt)
 		{
 			@Override
-			public boolean shouldRender(GuiBase gui)
+			public boolean shouldRender()
 			{
 				return true;
 			}
@@ -914,7 +912,6 @@ public class GuiEditNBT extends GuiBase
 	@Override
 	public void drawBackground()
 	{
-		GuiHelper.drawBlankRect(0, 0, width, 20, GuiEditConfig.COLOR_BACKGROUND);
-		GlStateManager.color(1F, 1F, 1F, 1F);
+		GuiEditConfig.COLOR_BACKGROUND.draw(0, 0, width, 20);
 	}
 }

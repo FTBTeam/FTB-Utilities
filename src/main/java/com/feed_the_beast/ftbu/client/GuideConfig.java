@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.lib.config.ConfigRGB;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;

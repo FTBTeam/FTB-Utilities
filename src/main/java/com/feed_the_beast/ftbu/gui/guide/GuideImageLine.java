@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
 import com.google.gson.JsonElement;
@@ -96,7 +95,7 @@ public class GuideImageLine extends EmptyGuidePageLine
 	@Override
 	public Widget createWidget(GuiBase gui, Panel parent)
 	{
-		return new ButtonInfoImage(parent);
+		return new ButtonInfoImage(gui, parent);
 	}
 
 	@Override
@@ -122,9 +121,9 @@ public class GuideImageLine extends EmptyGuidePageLine
 	{
 		private final Panel parent;
 
-		private ButtonInfoImage(Panel p)
+		private ButtonInfoImage(GuiBase gui, Panel p)
 		{
-			super(0, 0, 0, 0);
+			super(gui, 0, 0, 0, 0);
 			parent = p;
 			checkSize();
 		}
@@ -148,14 +147,14 @@ public class GuideImageLine extends EmptyGuidePageLine
 		}
 
 		@Override
-		public void renderWidget(GuiBase gui)
+		public void renderWidget()
 		{
 			checkSize();
-			icon.draw(this, Color4I.NONE);
+			icon.draw(this);
 		}
 
 		@Override
-		public void addMouseOverText(GuiBase gui, List<String> list)
+		public void addMouseOverText(List<String> list)
 		{
 			if (!hover.isEmpty())
 			{
@@ -164,7 +163,7 @@ public class GuideImageLine extends EmptyGuidePageLine
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, MouseButton button)
+		public void onClicked(MouseButton button)
 		{
 			if (GuiHelper.onClickEvent(clickEvent))
 			{

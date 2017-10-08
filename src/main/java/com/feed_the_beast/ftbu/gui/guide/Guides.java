@@ -10,7 +10,6 @@ import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
 import com.feed_the_beast.ftbu.api.guide.GuideType;
@@ -205,7 +204,7 @@ public enum Guides implements IResourceManagerReloadListener
 
 					if (guide.getChildren().size() > 0)
 					{
-						guide.println(new GuideHrLine(1, Color4I.NONE));
+						guide.println(new GuideHrLine(1, Icon.EMPTY));
 						guide.println(new GuideContentsLine(guide));
 					}
 

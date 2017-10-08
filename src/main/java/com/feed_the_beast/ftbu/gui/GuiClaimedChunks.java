@@ -172,15 +172,15 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	public GuiClaimedChunks()
 	{
 		currentDimName = ServerUtils.getDimensionName(ClientUtils.MC.world.provider.getDimension());
-		buttonClose = new SimpleButton(GuiLang.CLOSE.translate(), GuiIcons.ACCEPT, (gui, button) -> gui.closeGui());
+		buttonClose = new SimpleButton(this, GuiLang.CLOSE.translate(), GuiIcons.ACCEPT, (gui, button) -> gui.closeGui());
 
-		buttonRefresh = new SimpleButton(0, 0, GuiLang.REFRESH.translate(), GuiIcons.REFRESH, (gui, button) ->
+		buttonRefresh = new SimpleButton(this, 0, 0, GuiLang.REFRESH.translate(), GuiIcons.REFRESH, (gui, button) ->
 		{
 			new MessageClaimedChunksRequest(startX, startZ).sendToServer();
 			ChunkSelectorMap.getMap().resetMap(startX, startZ);
 		});
 
-		buttonUnclaimDim = new SimpleButton(0, 0, FTBULang.CHUNKS_UNCLAIM_ALL_DIM.translate(currentDimName), GuiIcons.REMOVE, (gui, button) ->
+		buttonUnclaimDim = new SimpleButton(this, 0, 0, FTBULang.CHUNKS_UNCLAIM_ALL_DIM.translate(currentDimName), GuiIcons.REMOVE, (gui, button) ->
 		{
 			String s = FTBULang.CHUNKS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
 			ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
@@ -195,7 +195,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			}, s, "", 0));
 		});
 
-		buttonUnclaimAll = new SimpleButton(0, 0, FTBULang.CHUNKS_UNCLAIM_ALL.translate(), GuiIcons.REMOVE, (gui, button) ->
+		buttonUnclaimAll = new SimpleButton(this, 0, 0, FTBULang.CHUNKS_UNCLAIM_ALL.translate(), GuiIcons.REMOVE, (gui, button) ->
 		{
 			String s = FTBULang.CHUNKS_UNCLAIM_ALL_Q.translate();
 			ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
@@ -210,13 +210,13 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			}, s, "", 1));
 		});
 
-		buttonInfo = new SimpleButton(0, 0, GuiLang.INFO.translate(), GuiIcons.INFO, (gui, button) -> ClientUtils.execClientCommand("/ftbc open_guide ftbu.chunk_claiming"));
+		buttonInfo = new SimpleButton(this, 0, 0, GuiLang.INFO.translate(), GuiIcons.INFO, (gui, button) -> ClientUtils.execClientCommand("/ftbc open_guide ftbu.chunk_claiming"));
 	}
 
 	@Override
 	public void onInit()
 	{
-		buttonRefresh.onClicked(this, MouseButton.LEFT);
+		buttonRefresh.onClicked(MouseButton.LEFT);
 	}
 
 	@Override

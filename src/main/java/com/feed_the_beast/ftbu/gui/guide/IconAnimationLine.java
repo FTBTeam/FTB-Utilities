@@ -59,7 +59,7 @@ public class IconAnimationLine extends EmptyGuidePageLine
 	@Override
 	public Widget createWidget(GuiBase gui, Panel parent)
 	{
-		return new IconAnimationButton(0, 0, list, cols);
+		return new IconAnimationButton(gui, 0, 0, list, cols);
 	}
 
 	@Override

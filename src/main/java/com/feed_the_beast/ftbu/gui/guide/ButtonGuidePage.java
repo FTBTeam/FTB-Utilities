@@ -3,11 +3,9 @@ package com.feed_the_beast.ftbu.gui.guide;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbu.api.guide.IGuideGui;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
@@ -23,23 +21,23 @@ public class ButtonGuidePage extends Button
 	private boolean prevMouseOver = false;
 	private boolean isSmall;
 
-	public ButtonGuidePage(GuiBase g, IGuidePage p, boolean small)
+	public ButtonGuidePage(GuiBase gui, IGuidePage p, boolean small)
 	{
-		super(0, 0, 0, 0);
+		super(gui, 0, 0, 0, 0);
 		page = p;
 		isSmall = small;
 		setHeight((p.getIcon().isEmpty() || isSmall) ? 13 : 18);
-		updateTitle(g);
+		updateTitle();
 	}
 
 	@Override
-	public void onClicked(GuiBase gui, MouseButton button)
+	public void onClicked(MouseButton button)
 	{
 		GuiHelper.playClickSound();
 		((IGuideGui) gui).setSelectedPage(page);
 	}
 
-	public void updateTitle(GuiBase gui)
+	public void updateTitle()
 	{
 		ITextComponent titleC = page.getDisplayName().createCopy();
 
@@ -50,7 +48,7 @@ public class ButtonGuidePage extends Button
 
 		setTitle(titleC.getFormattedText());
 		hover = null;
-		setWidth(gui.getFont().getStringWidth(getTitle(gui)) + (page.getIcon().isEmpty() ? 0 : height));
+		setWidth(gui.getStringWidth(getTitle()) + (page.getIcon().isEmpty() ? 0 : height));
 
 		if (width > getParentPanel().width)
 		{
@@ -59,7 +57,7 @@ public class ButtonGuidePage extends Button
 	}
 
 	@Override
-	public void addMouseOverText(GuiBase gui, List<String> list)
+	public void addMouseOverText(List<String> list)
 	{
 		if (hover != null)
 		{
@@ -68,7 +66,7 @@ public class ButtonGuidePage extends Button
 	}
 
 	@Override
-	public void renderWidget(GuiBase gui)
+	public void renderWidget()
 	{
 		mouseOver = gui.isMouseOver(this);
 
@@ -81,35 +79,33 @@ public class ButtonGuidePage extends Button
 
 		if (prevMouseOver != mouseOver)
 		{
-			updateTitle(gui);
+			updateTitle();
 			prevMouseOver = mouseOver;
 		}
 
 		int ay = getAY();
 		int ax = getAX();
+		boolean selected = gui instanceof IGuideGui && ((IGuideGui) gui).getSelectedPage() == page;
 
 		if (!page.getIcon().isEmpty())
 		{
-			GlStateManager.color(1F, 1F, 1F, 1F);
-			page.getIcon().draw(ax + 1, ay + 1, isSmall ? 8 : 16, isSmall ? 8 : 16, Color4I.NONE);
-			gui.drawString(getTitle(gui), ax + (isSmall ? 13 : 19), ay + (isSmall ? 1 : 6));
+			page.getIcon().draw(ax + 1, ay + 1, isSmall ? 8 : 16, isSmall ? 8 : 16);
 
-			if (gui instanceof IGuideGui && ((IGuideGui) gui).getSelectedPage() == page)
+			if (selected)
 			{
-				gui.drawString(getTitle(gui), ax + (isSmall ? 14 : 20), ay + (isSmall ? 1 : 6));
+				gui.drawString(getTitle(), ax + (isSmall ? 14 : 20), ay + (isSmall ? 2 : 7), gui.getTheme().getContentColor(false).mutable().addBrightness(-30), 0);
 			}
+
+			gui.drawString(getTitle(), ax + (isSmall ? 13 : 19), ay + (isSmall ? 1 : 6));
 		}
 		else
 		{
-			GlStateManager.color(1F, 1F, 1F, 1F);
-			gui.drawString(getTitle(gui), ax + 1, ay + 1);
-
-			if (gui instanceof IGuideGui && ((IGuideGui) gui).getSelectedPage() == page)
+			if (selected)
 			{
-				gui.drawString(getTitle(gui), ax + 2, ay + 1);
+				gui.drawString(getTitle(), ax + 2, ay + 2, gui.getTheme().getContentColor(false).mutable().addBrightness(-30), 0);
 			}
-		}
 
-		GlStateManager.color(1F, 1F, 1F, 1F);
+			gui.drawString(getTitle(), ax + 1, ay + 1);
+		}
 	}
 }

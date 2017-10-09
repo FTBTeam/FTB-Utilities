@@ -14,7 +14,6 @@ import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
-import com.feed_the_beast.ftbu.api.chunks.RegisterChunkUpgradesEvent;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
 import com.feed_the_beast.ftbu.util.backups.Backups;
@@ -97,17 +96,6 @@ public class FTBUUniverseData
 	public static ChunkUpgrade getUpgradeFromId(int id)
 	{
 		return id == 0 ? null : ID_TO_UPGRADE.get(id);
-	}
-
-	private static void registerChunkUpgrade(ChunkUpgrade upgrade)
-	{
-		CHUNK_UPGRADES.put(upgrade.getName(), upgrade);
-	}
-
-	@SubscribeEvent
-	public static void onUniversePreLoaded(ForgeUniverseLoadedEvent.Pre event)
-	{
-		new RegisterChunkUpgradesEvent(FTBUUniverseData::registerChunkUpgrade).post();
 	}
 
 	@SubscribeEvent

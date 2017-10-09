@@ -3,9 +3,11 @@ package com.feed_the_beast.ftbu;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api.RegisterCustomPermissionPrefixesEvent;
+import com.feed_the_beast.ftbu.api.chunks.RegisterChunkUpgradesEvent;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.net.FTBUNetHandler;
+import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import net.minecraftforge.common.ForgeChunkManager;
 
 import java.util.Collection;
@@ -38,5 +40,6 @@ public class FTBUCommon
 
 	public void postInit()
 	{
+		new RegisterChunkUpgradesEvent(upgrade -> FTBUUniverseData.CHUNK_UPGRADES.put(upgrade.getName(), upgrade)).post();
 	}
 }

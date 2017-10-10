@@ -137,6 +137,7 @@ public class FTBUConfig
 		public boolean set_hour = true;
 		public boolean killall = true;
 		public boolean nbtedit = true;
+		public boolean view_crash = true;
 	}
 
 	public static class Login

@@ -118,6 +118,11 @@ public class FTBUCommands
 		{
 			event.add(new CmdEditNBT());
 		}
+
+		if (FTBUConfig.commands.view_crash)
+		{
+			event.add(new CmdViewCrash());
+		}
 	}
 
 	@SubscribeEvent

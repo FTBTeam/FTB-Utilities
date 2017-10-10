@@ -116,7 +116,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.NET;
+		return FTBUNetHandler.CLAIMS;
 	}
 
 	@Override

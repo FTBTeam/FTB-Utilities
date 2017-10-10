@@ -31,7 +31,7 @@ public class MessageClaimedChunksRequest extends MessageToServer<MessageClaimedC
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.NET;
+		return FTBUNetHandler.CLAIMS;
 	}
 
 	@Override

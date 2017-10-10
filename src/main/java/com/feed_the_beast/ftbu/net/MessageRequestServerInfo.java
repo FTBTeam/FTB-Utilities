@@ -13,7 +13,7 @@ public class MessageRequestServerInfo extends MessageToServer<MessageRequestServ
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.NET;
+		return FTBUNetHandler.GENERAL;
 	}
 
 	@Override

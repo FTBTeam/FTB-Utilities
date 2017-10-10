@@ -187,15 +187,14 @@ public class GuiGuide extends GuiBase implements IGuideGui
 					}
 				}
 
-				gui.getFontUnicode().push();
-				gui.getFontUnicode().set(true);
+				gui.pushFontUnicode(true);
 
 				for (IGuideTextLine line : selectedPage.getText())
 				{
 					add(line == null ? new Widget(gui, 0, 0, panelText.width, gui.getFontHeight() + 1) : line.createWidget(GuiGuide.this, panelText));
 				}
 
-				gui.getFontUnicode().pop();
+				gui.popFontUnicode();
 			}
 
 			@Override
@@ -339,7 +338,7 @@ public class GuiGuide extends GuiBase implements IGuideGui
 
 		GuiHelper.pushScissor(getScreen(), posX, posY, panelWidth, 36);
 		drawString(selectedPage.getDisplayName().getFormattedText(), buttonBack.getAX() + buttonBack.width + 5, posY + 14);
-		GuiHelper.popScissor();
+		GuiHelper.popScissor(getScreen());
 		GlStateManager.color(1F, 1F, 1F, 1F);
 	}
 

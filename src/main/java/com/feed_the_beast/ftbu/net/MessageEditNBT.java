@@ -34,7 +34,7 @@ public class MessageEditNBT extends MessageToClient<MessageEditNBT>
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.NET;
+		return FTBUNetHandler.NBTEDIT;
 	}
 
 	@Override

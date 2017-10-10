@@ -50,7 +50,7 @@ public class MessageServerInfo extends MessageToClient<MessageServerInfo>
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.NET;
+		return FTBUNetHandler.GENERAL;
 	}
 
 	@Override

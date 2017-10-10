@@ -105,7 +105,7 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.NET;
+		return FTBUNetHandler.GENERAL;
 	}
 
 	@Override

@@ -13,7 +13,7 @@ public class MessageOpenClaimedChunksGui extends MessageToClient<MessageOpenClai
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.NET;
+		return FTBUNetHandler.CLAIMS;
 	}
 
 	@Override

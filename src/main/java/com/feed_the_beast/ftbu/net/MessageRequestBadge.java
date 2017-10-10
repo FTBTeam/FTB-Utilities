@@ -45,7 +45,7 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.NET;
+		return FTBUNetHandler.BADGES;
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.cmd.chunks;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
-import com.feed_the_beast.ftbl.net.MessageCloseGui;
 import com.feed_the_beast.ftbu.net.MessageOpenClaimedChunksGui;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -29,7 +29,7 @@ public class CmdGui extends CmdBase
 		if (p.getTeam() == null)
 		{
 			FTBLibNotifications.NO_TEAM.send(player);
-			new MessageCloseGui().sendTo(player);
+			FTBLibAPI.API.sendCloseGuiPacket(player);
 			return;
 		}
 

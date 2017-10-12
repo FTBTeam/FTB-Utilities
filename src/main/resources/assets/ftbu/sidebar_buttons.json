@@ -119,5 +119,17 @@
 		"required_server_mods": ["ftbu"],
 		"hide_with_nei": true,
 		"requires_op": true
+	},
+	"view_crash": {
+		"group": "ftbu:util",
+		"icon": "item:minecraft:barrier",
+		"x": 600,
+		"click": {
+			"action": "run_command",
+			"value": "/ftb view_crash"
+		},
+		"config": false,
+		"required_mods": ["ftbu"],
+		"loading_screen": true
 	}
 }

@@ -17,7 +17,6 @@ import com.feed_the_beast.ftbl.lib.gui.misc.GuiEditConfig;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
 import com.feed_the_beast.ftbl.lib.gui.misc.IGuiFieldCallback;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
-import com.feed_the_beast.ftbl.lib.icon.CombinedIcon;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.icon.IconWithOutline;
 import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
@@ -57,7 +56,7 @@ public class GuiEditNBT extends GuiBase
 {
 	private static Icon getIcon(String name)
 	{
-		return new CombinedIcon(IconWithOutline.BUTTON_ROUND_GRAY, Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/nbt/" + name + ".png"));
+		return IconWithOutline.BUTTON_ROUND_GRAY.combineWith(Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/nbt/" + name + ".png"));
 	}
 
 	public static final Icon NBT_BYTE = getIcon("byte");

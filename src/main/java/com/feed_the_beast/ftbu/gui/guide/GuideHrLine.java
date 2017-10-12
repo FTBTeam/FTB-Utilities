@@ -52,7 +52,7 @@ public class GuideHrLine extends EmptyGuidePageLine
 		@Override
 		public void renderWidget()
 		{
-			(color.isEmpty() ? gui.getTheme().getContentColor(false) : color).draw(getAX(), getAY() + 1, width, height - 2);
+			(color.isEmpty() ? gui.getTheme().getContentColor() : color).draw(getAX(), getAY() + 1, width, height - 2);
 		}
 	}
 

@@ -20,7 +20,6 @@ import com.feed_the_beast.ftbu.api.guide.IGuideGui;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
 import com.feed_the_beast.ftbu.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbu.api.guide.SpecialGuideButton;
-import com.feed_the_beast.ftbu.client.GuideConfig;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -30,17 +29,11 @@ import java.util.List;
 
 public class GuiGuide extends GuiBase implements IGuideGui
 {
-	private static final Icon TEX_BACK = Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/button_back.png").withUVfromCoords(0, 0, 14, 11, 16, 16);
-	private static final Icon TEX_CLOSE = Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/button_close.png").withUVfromCoords(0, 0, 14, 11, 16, 16);
-
-	private static final Icon FILLING = new Icon()
-	{
-		@Override
-		public void draw(int x, int y, int w, int h, Color4I col)
-		{
-			GuideConfig.colors.getBackground().draw(x + 4, y + 4, w - 8, h - 8);
-		}
-	};
+	private static final Color4I COLOR_BACKGROUND = Color4I.rgb(0xF7F4DA);
+	private static final Color4I COLOR_TEXT = Color4I.rgb(0x7B6534);
+	private static final Icon TEX_BACK = new ColoredIcon(Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/button_back.png").withUVfromCoords(0, 0, 14, 11, 16, 16), COLOR_TEXT, 0);
+	private static final Icon TEX_CLOSE = new ColoredIcon(Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/button_close.png").withUVfromCoords(0, 0, 14, 11, 16, 16), COLOR_TEXT, 0);
+	private static final Icon FILLING = new ColoredIcon(COLOR_BACKGROUND, Icon.EMPTY, 4);
 
 	private static final Theme GUIDE_THEME = new Theme()
 	{
@@ -50,9 +43,9 @@ public class GuiGuide extends GuiBase implements IGuideGui
 		private final Icon TEX_SCROLL_H = TEXTURE_SCROLL.withUVfromCoords(14, 0, 18, 12, 32, 32);
 
 		@Override
-		public Color4I getContentColor(boolean dark)
+		public Color4I getContentColor()
 		{
-			return GuideConfig.colors.getText();
+			return COLOR_TEXT;
 		}
 
 		@Override
@@ -145,7 +138,7 @@ public class GuiGuide extends GuiBase implements IGuideGui
 			}
 		};
 
-		buttonBack.setIcon(new ColoredIcon(TEX_CLOSE, GuideConfig.colors.getText(), 0));
+		buttonBack.setIcon(TEX_CLOSE);
 
 		panelPages = new Panel(this, 0, 0, 0, 0)
 		{
@@ -209,7 +202,7 @@ public class GuiGuide extends GuiBase implements IGuideGui
 			}
 		};
 
-		panelText.addFlags(Panel.DEFAULTS | Panel.UNICODE);
+		panelText.addFlags(Panel.DEFAULTS | Widget.UNICODE);
 
 		panelTitle = new Panel(this, 0, 0, 0, 0)
 		{
@@ -217,7 +210,7 @@ public class GuiGuide extends GuiBase implements IGuideGui
 			public void addWidgets()
 			{
 				add(buttonBack);
-				buttonBack.setIcon(new ColoredIcon((selectedPage.getParent() == null) ? TEX_CLOSE : TEX_BACK, gui.getTheme().getContentColor(false), 0));
+				buttonBack.setIcon(selectedPage.getParent() == null ? TEX_CLOSE : TEX_BACK);
 
 				specialButtons.clear();
 
@@ -300,8 +293,8 @@ public class GuiGuide extends GuiBase implements IGuideGui
 	@Override
 	public void onInit()
 	{
-		posX = GuideConfig.border.width;
-		posY = GuideConfig.border.height;
+		posX = 15;
+		posY = 15;
 		setWidth(getScreen().getScaledWidth() - posX * 2);
 		setHeight(getScreen().getScaledHeight() - posY * 2);
 

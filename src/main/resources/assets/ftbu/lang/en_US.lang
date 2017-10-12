@@ -60,12 +60,6 @@ ftbu.config.ranks.override_commands=Override Commands
 ftbu_client.config.general.render_badges=Show Badges
 ftbu_client.config.general.journeymap_overlay=Enable Journeymap Integration
 
-guide=Guide
-guide.config.border=Border
-guide.config.colors=Colors
-guide.config.colors.background=Background
-guide.config.colors.text=Text
-
 # Server Settings
 my_server_settings.ftbu=FTBUtilities
 my_server_settings.ftbu.render_badge=Render My Badge
@@ -118,6 +112,7 @@ sidebar_button.ftbu.trash_can=Trash Can
 sidebar_button.ftbu.trash_can.tooltip=Opens a trash can. Items from it disappear after you close the GUI, but will remain there as long as it's open
 sidebar_button.ftbu.shop=Shop
 sidebar_button.ftbu.mail=Mail
+sidebar_button.ftbu.view_crash=View Crash Reports
 
 # Keys
 key.categories.ftbu=FTBMods
@@ -135,6 +130,8 @@ ftbu.lang.guide.unsupported_format=Unsupported format! Please update FTBUtilitie
 ftbu.lang.guide.commands_failed=Failed to load commands
 ftbu.lang.kickme=You kicked yourself!
 ftbu.lang.perm_for=%s for %s is %s
+ftbu.lang.upload_crash=Upload Crash Report
+ftbu.lang.uploaded_crash=Crash Report Uploaded! %s
 
 ftbu.stat.dph=Deaths Per Hour
 

@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.gui.guide;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
+import com.feed_the_beast.ftbl.lib.gui.ScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.icon.BulletIcon;
@@ -13,7 +14,6 @@ import com.feed_the_beast.ftbu.api.guide.IGuidePage;
 import com.feed_the_beast.ftbu.api.guide.IGuideTextLine;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 
 import java.util.ArrayList;
@@ -54,17 +54,17 @@ public class GuideListLine extends EmptyGuidePageLine
 
 	public enum Type implements IStringSerializable
 	{
-		NONE("none", EnumFacing.Plane.VERTICAL, Ordering.BULLET),
-		CODE("code", EnumFacing.Plane.VERTICAL, Ordering.NONE),
-		HORIZONTAL("horizontal", EnumFacing.Plane.HORIZONTAL, Ordering.NONE);
+		NONE("none", ScrollBar.Plane.VERTICAL, Ordering.BULLET),
+		CODE("code", ScrollBar.Plane.VERTICAL, Ordering.NONE),
+		HORIZONTAL("horizontal", ScrollBar.Plane.HORIZONTAL, Ordering.NONE);
 
 		public static final NameMap<Type> NAME_MAP = NameMap.create(NONE, values());
 
 		private final String name;
-		public final EnumFacing.Plane plane;
+		public final ScrollBar.Plane plane;
 		public final Ordering defaultOrdering;
 
-		Type(String s, EnumFacing.Plane d, Ordering o)
+		Type(String s, ScrollBar.Plane d, Ordering o)
 		{
 			name = s;
 			plane = d;
@@ -137,7 +137,7 @@ public class GuideListLine extends EmptyGuidePageLine
 	@Override
 	public Widget createWidget(GuiBase gui, Panel parent)
 	{
-		return new PanelList(gui, parent.hasFlag(Panel.UNICODE));
+		return new PanelList(gui, parent.hasFlag(Widget.UNICODE));
 	}
 
 	@Override
@@ -179,15 +179,21 @@ public class GuideListLine extends EmptyGuidePageLine
 			scrollBar = new PanelScrollBar(gui, 0, 0, 1, 4, 0, this)
 			{
 				@Override
-				public EnumFacing.Plane getPlane()
+				public Plane getPlane()
 				{
-					return EnumFacing.Plane.HORIZONTAL;
+					return Plane.HORIZONTAL;
 				}
 
 				@Override
 				public Icon getBackground()
 				{
 					return SCROLL_BAR_BACKGROUND;
+				}
+
+				@Override
+				public boolean canMouseScroll()
+				{
+					return gui.isMouseOver(getParentPanel());
 				}
 			};
 
@@ -196,8 +202,8 @@ public class GuideListLine extends EmptyGuidePageLine
 				addFlags(UNICODE);
 			}
 
-			layout = type.plane == EnumFacing.Plane.VERTICAL ? new WidgetLayout.Vertical(0, spacing, 0) : new WidgetLayout.Horizontal(0, spacing, 0);
-			bullet = new BulletIcon().setColor(gui.getTheme().getContentColor(false));
+			layout = type.plane.isVertical() ? new WidgetLayout.Vertical(0, spacing, 0) : new WidgetLayout.Horizontal(0, spacing, 0);
+			bullet = new BulletIcon().setColor(gui.getTheme().getContentColor());
 		}
 
 		@Override
@@ -210,7 +216,7 @@ public class GuideListLine extends EmptyGuidePageLine
 				return;
 			}
 
-			setWidth((type == Type.CODE) ? 10000 : (getParentPanel().width - ordering.size));
+			setWidth((type == Type.CODE) ? 0 : (getParentPanel().width - ordering.size));
 
 			for (IGuideTextLine line : textLines)
 			{
@@ -235,7 +241,7 @@ public class GuideListLine extends EmptyGuidePageLine
 			Widget last = widgets.get(widgets.size() - 1);
 			int s;
 
-			if (type.plane == EnumFacing.Plane.HORIZONTAL)
+			if (!type.plane.isVertical())
 			{
 				setHeight(0);
 

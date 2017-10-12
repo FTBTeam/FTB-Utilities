@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.lib.gui.ExtendedTextField;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
+import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
 import com.google.gson.JsonElement;
@@ -37,7 +38,7 @@ public class GuideExtendedTextLine extends EmptyGuidePageLine
 	@Override
 	public Widget createWidget(GuiBase gui, Panel parent)
 	{
-		return new ExtendedTextField(gui, 0, 0, parent.width, -1, textComponent);
+		return new ExtendedTextField(gui, 0, 0, parent.width, 0, textComponent, Bits.setFlag(0, Widget.UNICODE, parent.hasFlag(Widget.UNICODE)));
 	}
 
 	@Override

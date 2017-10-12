@@ -1,19 +1,34 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftbl.lib.io.RequestMethod;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.net.MessageViewCrash;
 import com.feed_the_beast.ftbu.net.MessageViewCrashList;
+import com.google.gson.JsonElement;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,7 +46,21 @@ public class CmdViewCrash extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, new File(CommonUtils.folderMinecraft, "crash-reports").list());
+			File folder = new File(CommonUtils.folderMinecraft, "crash-reports");
+			if (folder.exists() && folder.isDirectory())
+			{
+				String[] files = folder.list();
+
+				if (files != null && files.length > 0)
+				{
+					if (files.length > 1)
+					{
+						Arrays.sort(files, StringUtils.IGNORE_CASE_COMPARATOR.reversed());
+					}
+
+					return getListOfStringsMatchingLastWord(args, files);
+				}
+			}
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -54,14 +83,75 @@ public class CmdViewCrash extends CmdBase
 
 			if (file.exists())
 			{
+				if (args.length >= 2 && args[1].equals("upload"))
+				{
+					new ThreadUploadCrash(file, sender).start();
+					return;
+				}
+
 				try
 				{
-					new MessageViewCrash(StringUtils.readStringList(new FileReader(file))).sendTo(player);
+					new MessageViewCrash(file.getName(), StringUtils.readStringList(new FileReader(file))).sendTo(player);
 				}
 				catch (Exception e)
 				{
 					e.printStackTrace();
 				}
+			}
+		}
+	}
+
+	public static class ThreadUploadCrash extends Thread
+	{
+		private final File file;
+		private final ICommandSender sender;
+
+		public ThreadUploadCrash(File f, ICommandSender s)
+		{
+			file = f;
+			sender = s;
+		}
+
+		@Override
+		public void run()
+		{
+			try
+			{
+				List<String> text = StringUtils.readStringList(new FileInputStream(file));
+				//{"url":"http://hastebin.com/documents","headers":{"User-Agent":"atom-rest-client","Content-Type":"text/plain; charset=utf-8"},"method":"POST","body":"some text"}
+
+				HttpURLConnection con = (HttpURLConnection) new URL("https://hastebin.com/documents").openConnection();
+				con.setRequestMethod(RequestMethod.POST.name());
+				con.setRequestProperty("User-Agent", "HTTP/1.1");
+				con.setRequestProperty("Content-Type", "text/plain; charset=utf-8");
+				con.setDoOutput(true);
+				con.setDoInput(true);
+
+				OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream(), StringUtils.UTF_8);
+
+				for (String s : text)
+				{
+					writer.write(s);
+					writer.write('\n');
+				}
+
+				writer.close();
+
+				con.getResponseCode();
+				JsonElement response = JsonUtils.fromJson(new InputStreamReader(con.getInputStream(), StringUtils.UTF_8));
+
+				if (response.isJsonObject() && response.getAsJsonObject().has("key"))
+				{
+					ITextComponent link = FTBLibLang.CLICK_HERE.textComponent();
+					String url = "https://hastebin.com/" + response.getAsJsonObject().get("key").getAsString();
+					link.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(url)));
+					link.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
+					FTBULang.UPLOADED_CRASH.sendMessage(sender, link);
+				}
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
 			}
 		}
 	}

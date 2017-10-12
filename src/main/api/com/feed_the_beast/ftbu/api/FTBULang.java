@@ -16,6 +16,8 @@ public interface FTBULang
 	LangKey GUIDE_COMMANDS_FAILED = FTBUFinals.lang("lang.guide.commands_failed");
 	LangKey KICKME = FTBUFinals.lang("lang.kickme");
 	LangKey PERM_FOR = FTBUFinals.lang("lang.perm_for", String.class, String.class, String.class);
+	LangKey UPLOAD_CRASH = FTBUFinals.lang("lang.upload_crash");
+	LangKey UPLOADED_CRASH = FTBUFinals.lang("lang.uploaded_crash", String.class);
 
 	LangKey CHUNKS_UNLOADED_FOR = FTBUFinals.lang("lang.chunks.unloaded_for");
 	LangKey CHUNKS_UNCLAIM_ALL_Q = FTBUFinals.lang("lang.chunks.unclaim_all_q");

@@ -93,7 +93,7 @@ public class ButtonGuidePage extends Button
 
 			if (selected)
 			{
-				gui.drawString(getTitle(), ax + (isSmall ? 14 : 20), ay + (isSmall ? 2 : 7), gui.getTheme().getContentColor(false).mutable().addBrightness(-30), 0);
+				gui.drawString(getTitle(), ax + (isSmall ? 14 : 20), ay + (isSmall ? 2 : 7), gui.getTheme().getContentColor().mutable().addBrightness(-30), 0);
 			}
 
 			gui.drawString(getTitle(), ax + (isSmall ? 13 : 19), ay + (isSmall ? 1 : 6));
@@ -102,7 +102,7 @@ public class ButtonGuidePage extends Button
 		{
 			if (selected)
 			{
-				gui.drawString(getTitle(), ax + 2, ay + 2, gui.getTheme().getContentColor(false).mutable().addBrightness(-30), 0);
+				gui.drawString(getTitle(), ax + 2, ay + 2, gui.getTheme().getContentColor().mutable().addBrightness(-30), 0);
 			}
 
 			gui.drawString(getTitle(), ax + 1, ay + 1);

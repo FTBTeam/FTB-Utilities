@@ -15,14 +15,16 @@ import java.util.List;
  */
 public class MessageViewCrash extends MessageToClient<MessageViewCrash>
 {
+	private String name;
 	private Collection<String> text;
 
 	public MessageViewCrash()
 	{
 	}
 
-	public MessageViewCrash(List<String> l)
+	public MessageViewCrash(String n, List<String> l)
 	{
+		name = n;
 		text = l;
 	}
 
@@ -35,18 +37,20 @@ public class MessageViewCrash extends MessageToClient<MessageViewCrash>
 	@Override
 	public void writeData(DataOut data)
 	{
+		data.writeString(name);
 		data.writeCollection(text, DataOut.STRING);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
+		name = data.readString();
 		text = data.readCollection(DataIn.STRING);
 	}
 
 	@Override
 	public void onMessage(MessageViewCrash m, EntityPlayer player)
 	{
-		new GuiViewCrash(m.text).openGui();
+		new GuiViewCrash(m.name, m.text).openGui();
 	}
 }

@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiButtonListBase;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 
 import java.util.ArrayList;
@@ -47,7 +48,13 @@ public class GuiViewCrashList extends GuiButtonListBase
 	public GuiViewCrashList(Collection<String> l)
 	{
 		files = new ArrayList<>(l);
-		files.sort(null);
+		files.sort(StringUtils.IGNORE_CASE_COMPARATOR.reversed());
+	}
+
+	@Override
+	public boolean scrollToEnd()
+	{
+		return false;
 	}
 
 	@Override

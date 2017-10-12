@@ -3,10 +3,5 @@
 		"id": "ftbu_client",
 		"name": "FTBUtilities",
 		"icon": "ftbu:textures/logo_guide.png"
-	},
-	{
-		"id": "guide",
-		"name": {"translate": "guide"},
-		"icon": "minecraft:items/book_normal"
 	}
 ]

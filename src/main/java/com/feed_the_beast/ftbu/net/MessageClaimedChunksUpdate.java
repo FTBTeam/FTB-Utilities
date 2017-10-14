@@ -150,7 +150,8 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 		loadedChunks = data.readInt();
 		maxClaimedChunks = data.readInt();
 		maxLoadedChunks = data.readInt();
-		data.readMap(null, DataIn.INT, ClientClaimedChunks.ChunkData.UPGRADE_NAME_DESERIALIZER).forEach(FTBUUniverseData.SET_UPGRADE_ID);
+		ClientClaimedChunks.ID_TO_UPGRADE.clear();
+		data.readMap(null, DataIn.INT, ClientClaimedChunks.ChunkData.UPGRADE_NAME_DESERIALIZER).forEach(ClientClaimedChunks.ID_TO_UPGRADE::put);
 
 		teams = new HashMap<>();
 

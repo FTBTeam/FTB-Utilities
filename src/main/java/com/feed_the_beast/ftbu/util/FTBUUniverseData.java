@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 /**
  * @author LatvianModder
@@ -41,13 +40,7 @@ public class FTBUUniverseData
 	public static final ChatHistory GENERAL_CHAT = new ChatHistory(() -> FTBUConfig.chat.general_history_limit);
 	public static final Map<String, ChunkUpgrade> CHUNK_UPGRADES = new HashMap<>();
 	public static final Int2ObjectOpenHashMap<ChunkUpgrade> ID_TO_UPGRADE = new Int2ObjectOpenHashMap<>();
-	public static final Map<ChunkUpgrade, Integer> UPGRADE_TO_ID = new HashMap<>();
-
-	public static final BiConsumer<Integer, ChunkUpgrade> SET_UPGRADE_ID = (id, upgrade) ->
-	{
-		UPGRADE_TO_ID.put(upgrade, id);
-		ID_TO_UPGRADE.put(id.intValue(), upgrade);
-	};
+	private static final Map<ChunkUpgrade, Integer> UPGRADE_TO_ID = new HashMap<>();
 
 	public static boolean isInSpawn(ChunkDimPos pos)
 	{
@@ -86,7 +79,8 @@ public class FTBUUniverseData
 			}
 
 			id++;
-			SET_UPGRADE_ID.accept(id, upgrade);
+			UPGRADE_TO_ID.put(upgrade, id);
+			ID_TO_UPGRADE.put(id.intValue(), upgrade);
 		}
 
 		return id;
@@ -116,7 +110,8 @@ public class FTBUUniverseData
 
 			if (upgrade != null)
 			{
-				SET_UPGRADE_ID.accept(id, upgrade);
+				UPGRADE_TO_ID.put(upgrade, id);
+				ID_TO_UPGRADE.put(id, upgrade);
 			}
 		}
 

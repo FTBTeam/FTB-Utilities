@@ -8,7 +8,8 @@
 			"value": "/ftbc open_chats"
 		},
 		"required_server_mods": ["ftbu"],
-		"config": true
+		"config": true,
+		"dev_only": true
 	},
 	"guide": {
 		"group": "ftbl:info",

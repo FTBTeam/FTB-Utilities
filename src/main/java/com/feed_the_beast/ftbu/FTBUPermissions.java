@@ -33,7 +33,6 @@ public class FTBUPermissions
 {
 	// Display //
 	public static final String DISPLAY_ADMIN_INFO = FTBUFinals.MOD_ID + ".display.admin_info";
-	public static final String DISPLAY_PERMISSIONS = FTBUFinals.MOD_ID + ".display.permissions";
 	public static final String BADGE = FTBUFinals.MOD_ID + ".badge";
 
 	// Homes //
@@ -60,7 +59,6 @@ public class FTBUPermissions
 	public static void registerPermissions(PermissionRegistryEvent event)
 	{
 		event.registerNode(DISPLAY_ADMIN_INFO, DefaultPermissionLevel.OP, "Display 'Admin' in Server Info");
-		event.registerNode(DISPLAY_PERMISSIONS, DefaultPermissionLevel.OP, "Display 'My Permissions' in Server Info");
 		event.registerNode(HOMES_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /home to teleport to/from another dimension");
 		event.registerNode(CLAIMS_CHUNKS_MODIFY_OTHERS, DefaultPermissionLevel.OP, "Allow player to modify other team chunks");
 		event.registerNode(CLAIMS_ALLOW_DISABLE_EXPLOSIONS, DefaultPermissionLevel.ALL, "Allow teams to disable explosions in claimed chunks");

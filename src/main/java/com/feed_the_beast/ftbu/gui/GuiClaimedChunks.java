@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu.gui;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
+import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
@@ -16,7 +17,6 @@ import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrades;
-import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksModify;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksRequest;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksUpdate;
@@ -28,6 +28,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -37,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@EventHandler(Side.CLIENT)
 public class GuiClaimedChunks extends GuiChunkSelectorBase
 {
 	public static GuiClaimedChunks instance;
@@ -63,8 +66,10 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 		return (!data.upgrades.equals(with.upgrades) || data.team != with.team) && !with.hasUpgrade(ChunkUpgrades.LOADED);
 	}
 
-	public static void setData(MessageClaimedChunksUpdate m)
+	@SubscribeEvent
+	public static void onChunkDataUpdate(UpdateClientDataEvent event)
 	{
+		MessageClaimedChunksUpdate m = event.getMessage();
 		claimedChunks = m.claimedChunks;
 		loadedChunks = m.loadedChunks;
 		maxClaimedChunks = m.maxClaimedChunks;
@@ -78,17 +83,6 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 				int x = entry.getKey() % ChunkSelectorMap.TILES_GUI;
 				int z = entry.getKey() / ChunkSelectorMap.TILES_GUI;
 				chunkData[x + z * ChunkSelectorMap.TILES_GUI] = entry.getValue();
-			}
-		}
-
-		if (FTBUClient.JM_INTEGRATION != null)
-		{
-			for (int z = 0; z < ChunkSelectorMap.TILES_GUI; z++)
-			{
-				for (int x = 0; x < ChunkSelectorMap.TILES_GUI; x++)
-				{
-					FTBUClient.JM_INTEGRATION.chunkChanged(new ChunkPos(m.startX + x, m.startZ + z), chunkData[x + z * ChunkSelectorMap.TILES_GUI]);
-				}
 			}
 		}
 

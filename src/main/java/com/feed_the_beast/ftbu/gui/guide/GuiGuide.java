@@ -11,7 +11,6 @@ import com.feed_the_beast.ftbl.lib.gui.Theme;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
-import com.feed_the_beast.ftbl.lib.icon.ColoredIcon;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.icon.PartIcon;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
@@ -31,9 +30,9 @@ public class GuiGuide extends GuiBase implements IGuideGui
 {
 	private static final Color4I COLOR_BACKGROUND = Color4I.rgb(0xF7F4DA);
 	private static final Color4I COLOR_TEXT = Color4I.rgb(0x7B6534);
-	private static final Icon TEX_BACK = new ColoredIcon(Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/button_back.png").withUVfromCoords(0, 0, 14, 11, 16, 16), COLOR_TEXT, 0);
-	private static final Icon TEX_CLOSE = new ColoredIcon(Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/button_close.png").withUVfromCoords(0, 0, 14, 11, 16, 16), COLOR_TEXT, 0);
-	private static final Icon FILLING = new ColoredIcon(COLOR_BACKGROUND, Icon.EMPTY, 4);
+	private static final Icon TEX_BACK = Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/button_back.png").withUVfromCoords(0, 0, 14, 11, 16, 16).withColor(COLOR_TEXT);
+	private static final Icon TEX_CLOSE = Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/button_close.png").withUVfromCoords(0, 0, 14, 11, 16, 16).withColor(COLOR_TEXT);
+	private static final Icon FILLING = COLOR_BACKGROUND.withBorder(4);
 
 	private static final Theme GUIDE_THEME = new Theme()
 	{
@@ -285,7 +284,7 @@ public class GuiGuide extends GuiBase implements IGuideGui
 
 		if (!Guides.pageToOpen.isEmpty())
 		{
-			setSelectedPage(pageTree.getSub(Guides.pageToOpen));
+			setSelectedPage(pageTree.getSubRaw(Guides.pageToOpen));
 			Guides.pageToOpen = "";
 		}
 	}
@@ -293,8 +292,8 @@ public class GuiGuide extends GuiBase implements IGuideGui
 	@Override
 	public void onInit()
 	{
-		posX = 15;
-		posY = 15;
+		posX = 3;
+		posY = 3;
 		setWidth(getScreen().getScaledWidth() - posX * 2);
 		setHeight(getScreen().getScaledHeight() - posY * 2);
 

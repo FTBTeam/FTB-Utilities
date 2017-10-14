@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.api_impl;
 
+import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.gui.misc.ChunkSelectorMap;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
@@ -424,13 +424,13 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 		return ClaimResult.SUCCESS;
 	}
 
-	public boolean unclaimChunk(IForgePlayer player, ChunkDimPos pos)
+	public boolean unclaimChunk(IForgeTeam team, ChunkDimPos pos)
 	{
 		ClaimedChunk chunk = map.get(pos);
 
 		if (chunk != null && !chunk.isInvalid())
 		{
-			setLoaded(player, pos, false);
+			setLoaded(team, pos, false);
 			new ChunkModifiedEvent.Unclaimed(chunk).post();
 			removeChunk(pos);
 			return true;
@@ -439,47 +439,42 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 		return false;
 	}
 
-	public void unclaimAllChunks(IForgePlayer player, @Nullable Integer dim)
+	public void unclaimAllChunks(IForgeTeam team, @Nullable Integer dim)
 	{
-		for (ClaimedChunk chunk : getTeamChunks(player.getTeam()))
+		for (ClaimedChunk chunk : getTeamChunks(team))
 		{
 			ChunkDimPos pos = chunk.getPos();
 			if (dim == null || dim == pos.dim)
 			{
-				setLoaded(player, pos, false);
+				setLoaded(team, pos, false);
 				new ChunkModifiedEvent.Unclaimed(chunk).post();
 				removeChunk(pos);
 			}
 		}
 	}
 
-	public boolean setLoaded(IForgePlayer player, ChunkDimPos pos, boolean loaded)
+	public boolean setLoaded(IForgeTeam team, ChunkDimPos pos, boolean loaded)
 	{
 		ClaimedChunk chunk = getChunk(pos);
 
-		if (chunk == null || loaded == chunk.hasUpgrade(ChunkUpgrades.LOADED) || !chunk.getTeam().equalsTeam(player.getTeam()))
+		if (chunk == null || loaded == chunk.hasUpgrade(ChunkUpgrades.LOADED) || !chunk.getTeam().equalsTeam(team))
 		{
 			return false;
 		}
 
 		if (loaded)
 		{
-			if (player.getTeam() == null)
-			{
-				if (player.isOnline())
-				{
-					FTBLibNotifications.NO_TEAM.send(player.getPlayer());
-				}
-
-				return false;
-			}
-
 			if (!FTBUConfig.world.allowDimension(pos.dim))
 			{
 				return false;
 			}
 
-			int max = FTBUtilitiesAPI.API.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+			int max = 0;
+
+			for (IForgePlayer member : team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER))
+			{
+				max += FTBUtilitiesAPI.API.getRankConfig(member.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+			}
 
 			if (max == 0)
 			{
@@ -488,7 +483,7 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 
 			int loadedChunks = 0;
 
-			for (ClaimedChunk c : getTeamChunks(player.getTeam()))
+			for (ClaimedChunk c : getTeamChunks(team))
 			{
 				if (c.hasUpgrade(ChunkUpgrades.LOADED))
 				{

@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.io.RequestMethod;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
+import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
@@ -28,6 +29,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -117,33 +119,48 @@ public class CmdViewCrash extends CmdBase
 		{
 			try
 			{
-				List<String> text = StringUtils.readStringList(new FileInputStream(file));
-				//{"url":"http://hastebin.com/documents","headers":{"User-Agent":"atom-rest-client","Content-Type":"text/plain; charset=utf-8"},"method":"POST","body":"some text"}
+				File urlFile = new File(CommonUtils.folderLocal, "ftbutilities/uploaded_crash_reports/" + file.getName());
+				String url = "";
 
-				HttpURLConnection con = (HttpURLConnection) new URL("https://hastebin.com/documents").openConnection();
-				con.setRequestMethod(RequestMethod.POST.name());
-				con.setRequestProperty("User-Agent", "HTTP/1.1");
-				con.setRequestProperty("Content-Type", "text/plain; charset=utf-8");
-				con.setDoOutput(true);
-				con.setDoInput(true);
-
-				OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream(), StringUtils.UTF_8);
-
-				for (String s : text)
+				if (urlFile.exists())
 				{
-					writer.write(s);
-					writer.write('\n');
+					url = FileUtils.loadAsText(urlFile);
+				}
+				else
+				{
+					List<String> text = StringUtils.readStringList(new FileInputStream(file));
+					//{"url":"http://hastebin.com/documents","headers":{"User-Agent":"atom-rest-client","Content-Type":"text/plain; charset=utf-8"},"method":"POST","body":"some text"}
+
+					HttpURLConnection con = (HttpURLConnection) new URL("https://hastebin.com/documents").openConnection();
+					con.setRequestMethod(RequestMethod.POST.name());
+					con.setRequestProperty("User-Agent", "HTTP/1.1");
+					con.setRequestProperty("Content-Type", "text/plain; charset=utf-8");
+					con.setDoOutput(true);
+					con.setDoInput(true);
+
+					OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream(), StandardCharsets.UTF_8);
+
+					for (String s : text)
+					{
+						writer.write(s);
+						writer.write('\n');
+					}
+
+					writer.close();
+
+					con.getResponseCode();
+					JsonElement response = JsonUtils.fromJson(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+
+					if (response.isJsonObject() && response.getAsJsonObject().has("key"))
+					{
+						url = "https://hastebin.com/" + response.getAsJsonObject().get("key").getAsString() + ".md";
+						FileUtils.save(urlFile, url);
+					}
 				}
 
-				writer.close();
-
-				con.getResponseCode();
-				JsonElement response = JsonUtils.fromJson(new InputStreamReader(con.getInputStream(), StringUtils.UTF_8));
-
-				if (response.isJsonObject() && response.getAsJsonObject().has("key"))
+				if (!url.isEmpty())
 				{
 					ITextComponent link = FTBLibLang.CLICK_HERE.textComponent();
-					String url = "https://hastebin.com/" + response.getAsJsonObject().get("key").getAsString();
 					link.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(url)));
 					link.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
 					FTBULang.UPLOADED_CRASH.sendMessage(sender, link);

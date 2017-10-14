@@ -94,7 +94,10 @@ team_config.ftbu.explosions=Enable Explosions in Claimed Chunks
 team_config.ftbu.fake_players=Allow Fake Players to Interact With Blocks
 
 # Action Buttons
-sidebar_button.ftbu.chats=Chats [WIP]
+sidebar_button.ftbu.chats=Chats
+sidebar_button.ftbu.chats.general=General Chat
+sidebar_button.ftbu.chats.admin=Admin Chat
+sidebar_button.ftbu.chats.team=Team Chat
 sidebar_button.ftbu.toggle.gamemode=Toggle Gamemode
 sidebar_button.ftbu.toggle.gamemode.tooltip=Toggles between survival and creative mode
 sidebar_button.ftbu.toggle.rain=Toggle Rain

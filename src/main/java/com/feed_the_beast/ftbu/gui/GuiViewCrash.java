@@ -11,7 +11,6 @@ import com.feed_the_beast.ftbl.lib.gui.SimpleButton;
 import com.feed_the_beast.ftbl.lib.gui.TextField;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
-import com.feed_the_beast.ftbl.lib.icon.ColoredIcon;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
@@ -44,7 +43,7 @@ public class GuiViewCrash extends GuiBase
 			{
 				for (String s : text)
 				{
-					add(new TextField(gui, 0, 0, 0, 0, StringUtils.fixTabs(s, 2), Widget.UNICODE));
+					add(new TextField(gui, 2, 0, 0, 0, StringUtils.fixTabs(s, 2), Widget.UNICODE));
 				}
 
 				updateWidgetPositions();
@@ -59,7 +58,7 @@ public class GuiViewCrash extends GuiBase
 					wi = Math.max(wi, w.width);
 				}
 
-				scrollH.setElementSize(wi);
+				scrollH.setElementSize(wi + 4);
 				scrollH.setScrollStep(scrollH.getScrollStep() * 5D);
 				scrollV.setElementSize(align(WidgetLayout.VERTICAL));
 				scrollV.setScrollStep(scrollV.getScrollStep() * 3D);
@@ -68,7 +67,7 @@ public class GuiViewCrash extends GuiBase
 			@Override
 			public Icon getIcon()
 			{
-				return new ColoredIcon(gui.getTheme().getSlot(false), Icon.EMPTY, -1);
+				return gui.getTheme().getSlot(false).withBorder(-1);
 			}
 		};
 
@@ -115,7 +114,7 @@ public class GuiViewCrash extends GuiBase
 			@Override
 			public Icon getIcon()
 			{
-				return new ColoredIcon(getButtonBackground(), Icon.EMPTY, -2).combineWith(super.getIcon());
+				return getButtonBackground().withBorder(-2).combineWith(super.getIcon());
 			}
 		};
 
@@ -128,7 +127,7 @@ public class GuiViewCrash extends GuiBase
 			@Override
 			public Icon getIcon()
 			{
-				return new ColoredIcon(getButtonBackground(), Icon.EMPTY, -2).combineWith(super.getIcon());
+				return getButtonBackground().withBorder(-2).combineWith(super.getIcon());
 			}
 		};
 

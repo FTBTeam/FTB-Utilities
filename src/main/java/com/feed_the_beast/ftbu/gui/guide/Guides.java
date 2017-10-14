@@ -99,13 +99,44 @@ public enum Guides implements IResourceManagerReloadListener
 		}
 
 		IGuidePage commandPage = SERVER_INFO_PAGE.getSub("commands");
-		commandPage.fromJson(m.commands);
+
+		for (MessageServerInfo.CommandInfo info : m.commands.subcommands)
+		{
+			addCommandTree(commandPage, info);
+		}
+
 		commandPage.setTitle(new TextComponentString("Commands")); //LANG
 		commandPage.setIcon(new ItemIcon(new ItemStack(Blocks.COMMAND_BLOCK)));
 
 		if (cachedGui != null && cachedGui.getSelectedPage() == SERVER_INFO_PAGE)
 		{
 			cachedGui.refreshWidgets();
+		}
+	}
+
+	private static void addCommandTree(IGuidePage page, MessageServerInfo.CommandInfo info)
+	{
+		IGuidePage subPage = page.getSub(info.name);
+
+		if (!subPage.getName().equals(info.name))
+		{
+			subPage.setTitle(new TextComponentString(info.name));
+		}
+
+		if (!info.info.isEmpty())
+		{
+			for (ITextComponent component : info.info)
+			{
+				subPage.println(component);
+			}
+		}
+
+		if (!info.subcommands.isEmpty())
+		{
+			for (MessageServerInfo.CommandInfo info1 : info.subcommands)
+			{
+				addCommandTree(subPage, info1);
+			}
 		}
 	}
 

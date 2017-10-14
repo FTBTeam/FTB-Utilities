@@ -91,14 +91,14 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 				case UNCLAIM:
 					if (canUnclaim || team.equalsTeam(ClaimedChunks.INSTANCE.getChunkTeam(pos)))
 					{
-						ClaimedChunks.INSTANCE.unclaimChunk(p, pos);
+						ClaimedChunks.INSTANCE.unclaimChunk(team, pos);
 					}
 					break;
 				case LOAD:
-					ClaimedChunks.INSTANCE.setLoaded(p, pos, true);
+					ClaimedChunks.INSTANCE.setLoaded(team, pos, true);
 					break;
 				case UNLOAD:
-					ClaimedChunks.INSTANCE.setLoaded(p, pos, false);
+					ClaimedChunks.INSTANCE.setLoaded(team, pos, false);
 					break;
 			}
 		}

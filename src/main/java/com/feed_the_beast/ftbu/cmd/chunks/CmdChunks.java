@@ -10,9 +10,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
  */
 public class CmdChunks extends CmdTreeBase
 {
-	static void updateChunk(EntityPlayerMP ep, ChunkDimPos pos)
+	static void updateChunk(EntityPlayerMP player, ChunkDimPos pos)
 	{
-		FTBUPlayerEventHandler.updateChunkMessage(ep, pos);
+		FTBUPlayerEventHandler.updateChunkMessage(player, pos);
 	}
 
 	public CmdChunks()

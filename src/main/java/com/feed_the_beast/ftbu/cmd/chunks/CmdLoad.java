@@ -34,7 +34,7 @@ public class CmdLoad extends CmdBase
 		IForgePlayer p = getForgePlayer(player);
 		ChunkDimPos pos = new ChunkDimPos(player);
 
-		if (ClaimedChunks.INSTANCE.setLoaded(p, pos, true))
+		if (p.getTeam() != null && ClaimedChunks.INSTANCE.setLoaded(p.getTeam(), pos, true))
 		{
 			FTBUNotifications.CHUNK_LOADED.send(player);
 			CmdChunks.updateChunk(player, pos);

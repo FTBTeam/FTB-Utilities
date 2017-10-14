@@ -1,13 +1,20 @@
 package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.team.ForgeTeamConfigEvent;
 import com.feed_the_beast.ftbl.api.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftbl.api.team.ForgeTeamOwnerChangedEvent;
 import com.feed_the_beast.ftbl.api.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api.team.ForgeTeamPlayerLeftEvent;
+import com.feed_the_beast.ftbl.api.team.RegisterTeamGuiActionsEvent;
+import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
+import com.feed_the_beast.ftbl.lib.util.misc.TeamGuiAction;
+import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -60,6 +67,7 @@ public class FTBUTeamEventHandler
 	public static void onTeamDeleted(ForgeTeamDeletedEvent event)
 	{
 		//printMessage(FTBLibLang.TEAM_DELETED.textComponent(getTitle()));
+		ClaimedChunks.INSTANCE.unclaimAllChunks(event.getTeam(), null);
 	}
 
 	@SubscribeEvent
@@ -72,12 +80,29 @@ public class FTBUTeamEventHandler
 	public static void onPlayerLeft(ForgeTeamPlayerLeftEvent event)
 	{
 		//printMessage(FTBLibLang.TEAM_MEMBER_LEFT.textComponent(player.getName()));
-		ClaimedChunks.INSTANCE.unclaimAllChunks(event.getPlayer(), null);
 	}
 
 	@SubscribeEvent
 	public static void onOwnerChanged(ForgeTeamOwnerChangedEvent event)
 	{
 		//printMessage(FTBLibLang.TEAM_TRANSFERRED_OWNERSHIP.textComponent(p1.getName()));
+	}
+
+	@SubscribeEvent
+	public static void registerTeamGuiActions(RegisterTeamGuiActionsEvent event)
+	{
+		event.register(new TeamGuiAction(FTBUFinals.get("chat"), new TextComponentTranslation("sidebar_button.ftbu.chats.team"), GuiIcons.CHAT, -10)
+		{
+			@Override
+			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
+			{
+				return false;
+			}
+
+			@Override
+			public void onAction(IForgeTeam team, IForgePlayer player)
+			{
+			}
+		});
 	}
 }

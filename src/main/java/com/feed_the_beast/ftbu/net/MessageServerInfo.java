@@ -10,11 +10,11 @@ import com.feed_the_beast.ftbu.api.guide.ServerInfoEvent;
 import com.feed_the_beast.ftbu.gui.guide.Guides;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -22,8 +22,39 @@ import java.util.List;
  */
 public class MessageServerInfo extends MessageToClient<MessageServerInfo>
 {
+	public static class CommandInfo
+	{
+		private static final DataOut.Serializer<CommandInfo> SERIALIZER = (data, object) -> object.writeData(data);
+		private static final DataIn.Deserializer<CommandInfo> DESERIALIZER = CommandInfo::new;
+
+		public final String name;
+		public final Collection<ITextComponent> info;
+		public final Collection<CommandInfo> subcommands;
+
+		private CommandInfo(DataIn data)
+		{
+			name = data.readString();
+			info = data.readCollection(DataIn.TEXT_COMPONENT);
+			subcommands = data.readCollection(null, DESERIALIZER);
+		}
+
+		public CommandInfo(String n, Collection<ITextComponent> t, Collection<CommandInfo> c)
+		{
+			name = n;
+			info = t;
+			subcommands = c;
+		}
+
+		public void writeData(DataOut data)
+		{
+			data.writeString(name);
+			data.writeCollection(info, DataOut.TEXT_COMPONENT);
+			data.writeCollection(subcommands, SERIALIZER);
+		}
+	}
+
 	public JsonArray mainPage;
-	public JsonObject commands;
+	public CommandInfo commands;
 	public JsonElement serverGuide;
 
 	public MessageServerInfo()
@@ -57,7 +88,7 @@ public class MessageServerInfo extends MessageToClient<MessageServerInfo>
 	public void writeData(DataOut data)
 	{
 		data.writeJson(mainPage);
-		data.writeJson(commands);
+		data.write(CommandInfo.SERIALIZER, commands);
 		data.writeJson(serverGuide);
 	}
 
@@ -65,7 +96,7 @@ public class MessageServerInfo extends MessageToClient<MessageServerInfo>
 	public void readData(DataIn data)
 	{
 		mainPage = data.readJson().getAsJsonArray();
-		commands = data.readJson().getAsJsonObject();
+		commands = data.read(CommandInfo.DESERIALIZER);
 		serverGuide = data.readJson();
 	}
 

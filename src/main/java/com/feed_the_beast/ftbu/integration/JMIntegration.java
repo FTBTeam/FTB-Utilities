@@ -1,12 +1,15 @@
 package com.feed_the_beast.ftbu.integration;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
+import com.feed_the_beast.ftbl.lib.gui.misc.ChunkSelectorMap;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
 import com.feed_the_beast.ftbu.gui.ClientClaimedChunks;
+import com.feed_the_beast.ftbu.gui.UpdateClientDataEvent;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksRequest;
+import com.feed_the_beast.ftbu.net.MessageClaimedChunksUpdate;
 import journeymap.client.api.ClientPlugin;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
@@ -18,6 +21,9 @@ import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.util.PolygonHelper;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -28,7 +34,7 @@ import java.util.Map;
  * @author LatvianModder
  */
 @ClientPlugin
-public class JMIntegration implements IClientPlugin, IJMIntegration
+public class JMIntegration implements IClientPlugin
 {
 	private static IClientAPI clientAPI;
 	private static final Map<ChunkPos, PolygonOverlay> POLYGONS = new HashMap<>();
@@ -38,8 +44,8 @@ public class JMIntegration implements IClientPlugin, IJMIntegration
 	public void initialize(IClientAPI api)
 	{
 		clientAPI = api;
-		FTBUClient.JM_INTEGRATION = this;
 		api.subscribe(getModId(), EnumSet.of(ClientEvent.Type.DISPLAY_UPDATE, ClientEvent.Type.MAPPING_STOPPED));
+		MinecraftForge.EVENT_BUS.register(JMIntegration.class);
 	}
 
 	@Override
@@ -65,8 +71,7 @@ public class JMIntegration implements IClientPlugin, IJMIntegration
 		}
 	}
 
-	@Override
-	public void clearData()
+	private static void clearData()
 	{
 		if (!POLYGONS.isEmpty())
 		{
@@ -75,8 +80,7 @@ public class JMIntegration implements IClientPlugin, IJMIntegration
 		}
 	}
 
-	@Override
-	public void chunkChanged(ChunkPos pos, @Nullable ClientClaimedChunks.ChunkData chunk)
+	static void chunkChanged(ChunkPos pos, @Nullable ClientClaimedChunks.ChunkData chunk)
 	{
 		if (!POLYGONS.isEmpty() && (!FTBUClientConfig.general.journeymap_overlay || !clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon)))
 		{
@@ -119,6 +123,46 @@ public class JMIntegration implements IClientPlugin, IJMIntegration
 		catch (Exception ex)
 		{
 			ex.printStackTrace();
+		}
+	}
+
+	@SubscribeEvent
+	public static void onEnteringChunk(EntityEvent.EnteringChunk event)
+	{
+		if (!FTBUClientConfig.general.journeymap_overlay || event.getEntity() != ClientUtils.MC.player)
+		{
+			return;
+		}
+
+		if (JMIntegration.lastPosition == null || MathUtils.dist(event.getNewChunkX(), event.getNewChunkZ(), JMIntegration.lastPosition.x, JMIntegration.lastPosition.z) >= 3D)
+		{
+			JMIntegration.lastPosition = new ChunkPos(event.getNewChunkX(), event.getNewChunkZ());
+			new MessageClaimedChunksRequest(ClientUtils.MC.player).sendToServer();
+		}
+	}
+
+	@SubscribeEvent
+	public static void onDataReceived(UpdateClientDataEvent event)
+	{
+		MessageClaimedChunksUpdate m = event.getMessage();
+		ClientClaimedChunks.ChunkData data[] = new ClientClaimedChunks.ChunkData[ChunkSelectorMap.TILES_GUI * ChunkSelectorMap.TILES_GUI];
+
+		for (ClientClaimedChunks.Team team : m.teams.values())
+		{
+			for (Map.Entry<Integer, ClientClaimedChunks.ChunkData> entry : team.chunks.entrySet())
+			{
+				int x = entry.getKey() % ChunkSelectorMap.TILES_GUI;
+				int z = entry.getKey() / ChunkSelectorMap.TILES_GUI;
+				data[x + z * ChunkSelectorMap.TILES_GUI] = entry.getValue();
+			}
+		}
+
+		for (int z = 0; z < ChunkSelectorMap.TILES_GUI; z++)
+		{
+			for (int x = 0; x < ChunkSelectorMap.TILES_GUI; x++)
+			{
+				JMIntegration.chunkChanged(new ChunkPos(m.startX + x, m.startZ + z), data[x + z * ChunkSelectorMap.TILES_GUI]);
+			}
 		}
 	}
 }

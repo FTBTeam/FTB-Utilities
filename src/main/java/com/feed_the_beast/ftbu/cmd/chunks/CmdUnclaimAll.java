@@ -46,7 +46,7 @@ public class CmdUnclaimAll extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 
 		checkArgs(sender, args, 1);
 
@@ -54,7 +54,7 @@ public class CmdUnclaimAll extends CmdBase
 
 		if (args.length >= 2)
 		{
-			if (!PermissionAPI.hasPermission(ep, FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS))
+			if (!PermissionAPI.hasPermission(player, FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS))
 			{
 				throw FTBLibLang.COMMAND_PERMISSION.commandError();
 			}
@@ -63,10 +63,13 @@ public class CmdUnclaimAll extends CmdBase
 		}
 		else
 		{
-			p = getForgePlayer(ep);
+			p = getForgePlayer(player);
 		}
 
-		ClaimedChunks.INSTANCE.unclaimAllChunks(p, parseBoolean(args[0]) ? null : ep.dimension);
-		FTBUNotifications.UNCLAIMED_ALL.send(ep);
+		if (p.getTeam() != null)
+		{
+			ClaimedChunks.INSTANCE.unclaimAllChunks(p.getTeam(), parseBoolean(args[0]) ? null : player.dimension);
+			FTBUNotifications.UNCLAIMED_ALL.send(player);
+		}
 	}
 }

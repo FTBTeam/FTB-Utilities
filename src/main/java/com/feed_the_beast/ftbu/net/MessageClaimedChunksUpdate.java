@@ -18,12 +18,13 @@ import com.feed_the_beast.ftbu.api_impl.ChunkUpgrades;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.gui.ClientClaimedChunks;
-import com.feed_the_beast.ftbu.gui.GuiClaimedChunks;
+import com.feed_the_beast.ftbu.gui.UpdateClientDataEvent;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
 import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.server.permission.PermissionAPI;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,7 +54,6 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 		Collection<ClaimedChunk> chunks = teamData != null ? ClaimedChunks.INSTANCE.getTeamChunks(teamData.team) : Collections.emptyList();
 
 		claimedChunks = chunks.size();
-
 		loadedChunks = 0;
 
 		for (IClaimedChunk c : chunks)
@@ -64,8 +64,17 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 			}
 		}
 
-		maxClaimedChunks = FTBUtilitiesAPI.API.getRankConfig(player, FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
-		maxLoadedChunks = FTBUtilitiesAPI.API.getRankConfig(player, FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+		maxClaimedChunks = 0;
+		maxLoadedChunks = 0;
+
+		if (teamData != null)
+		{
+			for (IForgePlayer member : teamData.team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER))
+			{
+				maxClaimedChunks += FTBUtilitiesAPI.API.getRankConfig(member.getProfile(), FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
+				maxLoadedChunks += FTBUtilitiesAPI.API.getRankConfig(member.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+			}
+		}
 
 		teams = new HashMap<>();
 
@@ -154,6 +163,6 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 	@Override
 	public void onMessage(MessageClaimedChunksUpdate m, EntityPlayer player)
 	{
-		GuiClaimedChunks.setData(m);
+		new UpdateClientDataEvent(m).post();
 	}
 }

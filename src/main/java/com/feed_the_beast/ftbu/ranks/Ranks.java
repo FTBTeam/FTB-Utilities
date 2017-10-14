@@ -2,8 +2,6 @@ package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.config.RankConfigValueInfo;
-import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
@@ -15,8 +13,6 @@ import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api.NodeEntry;
-import com.feed_the_beast.ftbu.api.guide.IGuidePage;
-import com.feed_the_beast.ftbu.gui.guide.GuidePage;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -24,13 +20,8 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
@@ -53,7 +44,6 @@ public class Ranks
 	private static final Map<String, Rank> RANKS = new LinkedHashMap<>();
 	private static final Collection<String> RANK_NAMES = new ArrayList<>();
 	private static final Map<UUID, IRank> PLAYER_MAP = new HashMap<>();
-	public static final IGuidePage INFO_PAGE = new GuidePage("ranks_info", null).setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent()).setIcon(new ItemIcon(new ItemStack(Items.DIAMOND_SWORD)));
 	private static IRank defaultPlayerRank, defaultOPRank;
 	public static final Collection<String> CMD_PERMISSION_NODES = new HashSet<>();
 
@@ -419,46 +409,6 @@ public class Ranks
 		catch (Exception ex)
 		{
 			ex.printStackTrace();
-		}
-
-		INFO_PAGE.clear();
-		ITextComponent txt = new TextComponentString("");
-		ITextComponent txt1 = new TextComponentString("NONE");
-		txt1.getStyle().setColor(TextFormatting.DARK_RED);
-		txt.appendSibling(txt1);
-		txt.appendText(" | ");
-		txt1 = new TextComponentString("ALL");
-		txt1.getStyle().setColor(TextFormatting.DARK_GREEN);
-		txt.appendSibling(txt1);
-		txt.appendText(" | ");
-		txt1 = new TextComponentString("OP");
-		txt1.getStyle().setColor(TextFormatting.BLUE);
-		txt.appendSibling(txt1);
-		INFO_PAGE.println(txt);
-		INFO_PAGE.println(null);
-
-		for (NodeEntry node : allNodes)
-		{
-			txt = new TextComponentString(node.getName());
-
-			switch (node.getLevel())
-			{
-				case ALL:
-					txt.getStyle().setColor(TextFormatting.DARK_GREEN);
-					break;
-				case OP:
-					txt.getStyle().setColor(TextFormatting.BLUE);
-					break;
-				default:
-					txt.getStyle().setColor(TextFormatting.DARK_RED);
-			}
-
-			if (node.getDescription() != null && !node.getDescription().isEmpty())
-			{
-				txt.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(node.getDescription())));
-			}
-
-			INFO_PAGE.println(txt);
 		}
 	}
 }

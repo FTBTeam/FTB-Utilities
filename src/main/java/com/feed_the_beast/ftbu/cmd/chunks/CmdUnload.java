@@ -27,7 +27,7 @@ public class CmdUnload extends CmdBase
 		IForgePlayer p = getForgePlayer(player);
 		ChunkDimPos pos = new ChunkDimPos(player);
 
-		if (ClaimedChunks.INSTANCE.setLoaded(p, pos, false))
+		if (p.getTeam() != null && ClaimedChunks.INSTANCE.setLoaded(p.getTeam(), pos, false))
 		{
 			FTBUNotifications.CHUNK_UNLOADED.send(player);
 			CmdChunks.updateChunk(player, pos);

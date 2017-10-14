@@ -48,7 +48,7 @@ public class CmdUnclaim extends CmdBase
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
 
-		if (ClaimedChunks.INSTANCE.unclaimChunk(p, pos))
+		if (ClaimedChunks.INSTANCE.unclaimChunk(p.getTeam(), pos))
 		{
 			FTBUNotifications.CHUNK_UNCLAIMED.send(player);
 			CmdChunks.updateChunk(player, pos);

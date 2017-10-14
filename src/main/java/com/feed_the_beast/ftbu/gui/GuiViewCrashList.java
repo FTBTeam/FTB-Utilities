@@ -1,10 +1,11 @@
 package com.feed_the_beast.ftbu.gui;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
+import com.feed_the_beast.ftbl.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiButtonListBase;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 
@@ -17,29 +18,17 @@ import java.util.List;
  */
 public class GuiViewCrashList extends GuiButtonListBase
 {
-	private static class ButtonFile extends Button
+	private static class ButtonFile extends SimpleTextButton
 	{
 		public ButtonFile(GuiBase gui, String title)
 		{
-			super(gui, 0, 0, gui.getStringWidth(title) + 8, 20, title);
+			super(gui, 0, 0, title, Icon.EMPTY);
 		}
 
 		@Override
 		public void onClicked(MouseButton button)
 		{
 			ClientUtils.execClientCommand("/ftb view_crash " + getTitle());
-		}
-
-		@Override
-		public void addMouseOverText(List<String> list)
-		{
-		}
-
-		@Override
-		public void renderWidget()
-		{
-			getIcon().draw(this);
-			gui.drawString(getTitle(), getAX() + 4, getAY() + (height - gui.getFontHeight()) / 2, SHADOW);
 		}
 	}
 
@@ -52,9 +41,9 @@ public class GuiViewCrashList extends GuiButtonListBase
 	}
 
 	@Override
-	public boolean scrollToEnd()
+	public String getTitle()
 	{
-		return false;
+		return StringUtils.translate("sidebar_button.ftbu.view_crash");
 	}
 
 	@Override

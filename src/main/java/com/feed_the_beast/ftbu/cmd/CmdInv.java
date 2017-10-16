@@ -62,7 +62,7 @@ public class CmdInv extends CmdTreeBase
 		{
 			checkArgs(sender, args, 2);
 			EntityPlayerMP ep = getPlayer(server, sender, args[0]);
-			File file = new File(CommonUtils.folderLocal, "ftbu/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+			File file = new File(CommonUtils.folderLocal, "ftbutilities/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
 			try
 			{
@@ -126,7 +126,7 @@ public class CmdInv extends CmdTreeBase
 		{
 			checkArgs(sender, args, 2);
 			EntityPlayerMP ep = getPlayer(server, sender, args[0]);
-			File file = new File(CommonUtils.folderLocal, "ftbu/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+			File file = new File(CommonUtils.folderLocal, "ftbutilities/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
 			try
 			{

@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.lib.icon.ImageIcon;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.google.gson.JsonElement;
@@ -61,7 +62,7 @@ public class Badges
 		{
 			return "";
 		}
-		else if (!data.disableGlobalBadge.getBoolean())
+		else if (FTBUConfig.login.enable_global_badges && !data.disableGlobalBadge.getBoolean())
 		{
 			try
 			{
@@ -88,7 +89,7 @@ public class Badges
 		{
 			BADGE_CACHE.clear();
 			LOCAL_BADGES.clear();
-			File file = new File(CommonUtils.folderLocal, "ftbu/server_badges.json");
+			File file = new File(CommonUtils.folderLocal, "ftbutilities/server_badges.json");
 
 			if (!file.exists())
 			{

@@ -146,6 +146,9 @@ public class FTBUConfig
 		public boolean enable_motd = false;
 		public boolean enable_starting_items = false;
 
+		@Config.Comment("Set to false to disable global badges completely, only server-wide badges will be available")
+		public boolean enable_global_badges = true;
+
 		@Config.Comment("Message of the day. This will be displayed when player joins the server")
 		public String[] motd = {"\"Hello player!\""};
 

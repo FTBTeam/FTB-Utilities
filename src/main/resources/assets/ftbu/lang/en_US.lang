@@ -42,6 +42,7 @@ ftbu.config.commands.shrug=/shrug
 ftbu.config.login=Login
 ftbu.config.login.enable_motd=Enable MOTD
 ftbu.config.login.enable_starting_items=Enable Starting Items
+ftbu.config.login.enable_global_badges=Enable Global Badges
 ftbu.config.login.motd=MOTD
 ftbu.config.login.starting_items=Starting Items
 

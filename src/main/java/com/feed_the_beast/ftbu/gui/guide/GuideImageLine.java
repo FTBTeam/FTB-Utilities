@@ -130,18 +130,17 @@ public class GuideImageLine extends EmptyGuidePageLine
 
 		private void checkSize()
 		{
-			icon.bindTexture();
+			GuideImageLine.this.icon.bindTexture();
 
-			if (width == 1 || height == 1)
+			if (width <= 0 || height <= 0)
 			{
-				width = Math.max(imageWidth == 0 ? GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH) : imageWidth, 2);
-				height = Math.max(imageHeight == 0 ? GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT) : imageHeight, 2);
+				width = Math.max(imageWidth == 0 ? GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH) : imageWidth, 1);
+				height = Math.max(imageHeight == 0 ? GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT) : imageHeight, 1);
 				double scale = imageScale < 0 ? (1D / -imageScale) : imageScale;
 				double w = Math.min(parent.width, width * scale);
 				double h = height * (w / (width * scale));
-
-				setWidth((int) w);
-				setHeight((int) h);
+				setWidth(Math.max((int) w, 0));
+				setHeight(Math.max((int) h, 0));
 				parent.updateWidgetPositions();
 			}
 		}
@@ -150,7 +149,7 @@ public class GuideImageLine extends EmptyGuidePageLine
 		public void renderWidget()
 		{
 			checkSize();
-			icon.draw(this);
+			GuideImageLine.this.icon.draw(this);
 		}
 
 		@Override

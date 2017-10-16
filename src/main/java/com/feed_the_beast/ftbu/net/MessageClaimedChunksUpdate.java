@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
@@ -11,7 +10,6 @@ import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrades;
@@ -24,7 +22,6 @@ import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.server.permission.PermissionAPI;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -64,18 +61,8 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 			}
 		}
 
-		maxClaimedChunks = 0;
-		maxLoadedChunks = 0;
-
-		if (teamData != null)
-		{
-			for (IForgePlayer member : teamData.team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER))
-			{
-				maxClaimedChunks += FTBUtilitiesAPI.API.getRankConfig(member.getProfile(), FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
-				maxLoadedChunks += FTBUtilitiesAPI.API.getRankConfig(member.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
-			}
-		}
-
+		maxClaimedChunks = teamData == null ? 0 : teamData.getMaxClaimChunks();
+		maxLoadedChunks = teamData == null ? 0 : teamData.getMaxChunkloaderChunks();
 		teams = new HashMap<>();
 
 		boolean canSeeChunkInfo = PermissionAPI.hasPermission(player, FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS);
@@ -97,13 +84,13 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 						team = new ClientClaimedChunks.Team(chunkTeam.getOwner().getId());
 						team.color = chunkTeam.getColor();
 						team.formattedName = chunkTeam.getColor().getTextFormatting() + chunkTeam.getTitle();
-						team.isAlly = chunkTeam.hasStatus(player.getGameProfile().getId(), EnumTeamStatus.ALLY);
+						team.isAlly = chunkTeam.isAlly(p);
 						teams.put(team.ownerId, team);
 					}
 
 					ClientClaimedChunks.ChunkData data = new ClientClaimedChunks.ChunkData(team);
 
-					boolean member = chunkTeam.hasStatus(p, EnumTeamStatus.MEMBER);
+					boolean member = chunkTeam.isMember(p);
 
 					if (canSeeChunkInfo || member)
 					{

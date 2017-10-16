@@ -138,6 +138,7 @@ public class FTBUConfig
 		public boolean killall = true;
 		public boolean nbtedit = true;
 		public boolean view_crash = true;
+		public boolean fly = true;
 	}
 
 	public static class Login

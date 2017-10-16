@@ -14,12 +14,14 @@ import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrades;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.cmd.CmdShutdown;
+import com.feed_the_beast.ftbu.util.FTBUPlayerData;
 import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import com.feed_the_beast.ftbu.util.backups.Backups;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -85,6 +87,20 @@ public class FTBUWorldEventHandler
 		}
 		else
 		{
+			for (EntityPlayerMP player : server.getPlayerList().getPlayers())
+			{
+				if (!player.capabilities.isCreativeMode && FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(player)).fly)
+				{
+					boolean fly = player.capabilities.allowFlying;
+					player.capabilities.allowFlying = true;
+
+					if (!fly)
+					{
+						player.sendPlayerAbilities();
+					}
+				}
+			}
+
 			if (FTBUUniverseData.shutdownTime > 0L)
 			{
 				long t = FTBUUniverseData.shutdownTime - now;

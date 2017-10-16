@@ -21,7 +21,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,16 +29,17 @@ import java.util.Map;
  */
 public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 {
+	public static FTBUTeamData get(IForgeTeam team)
+	{
+		return team.getData().get(FTBLibIntegration.FTBU_DATA);
+	}
+
 	public final IForgeTeam team;
 	public final ConfigEnum<EnumTeamStatus> editBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	public final ConfigEnum<EnumTeamStatus> interactWithBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	public final ConfigBoolean explosions = new ConfigBoolean(false);
 	public final ConfigBoolean fakePlayers = new ConfigBoolean(true);
-
-	public static FTBUTeamData get(IForgeTeam team)
-	{
-		return team.getData().get(FTBLibIntegration.FTBU_DATA);
-	}
+	public boolean canForceChunks = false;
 
 	public FTBUTeamData(IForgeTeam t)
 	{
@@ -143,7 +143,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 	{
 		int p = 0;
 
-		for (IForgePlayer player : team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER))
+		for (IForgePlayer player : team.getMembers())
 		{
 			p += FTBUtilitiesAPI.API.getRankConfig(player.getProfile(), FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
 		}
@@ -155,7 +155,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 	{
 		int p = 0;
 
-		for (IForgePlayer player : team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER))
+		for (IForgePlayer player : team.getMembers())
 		{
 			p += FTBUtilitiesAPI.API.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
 		}

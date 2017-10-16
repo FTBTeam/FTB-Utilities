@@ -17,11 +17,11 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 	INSTANCE;
 
 	@Override
-	public void doRenderLayer(AbstractClientPlayer ep, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
+	public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
 	{
-		if (FTBUClientConfig.general.render_badges && !ep.isInvisible())
+		if (FTBUClientConfig.general.render_badges && !player.isInvisible())
 		{
-			UUID id = ep.getGameProfile().getId();
+			UUID id = player.getGameProfile().getId();
 			Icon tex = CachedClientData.getBadge(id);
 
 			if (tex.isEmpty())
@@ -40,18 +40,18 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 
 			GlStateManager.translate(0.04F, 0.01F, 0.86F);
 
-			if (ep.isSneaking())
+			if (player.isSneaking())
 			{
 				GlStateManager.rotate(25F, 1F, 0F, 0F);
 				GlStateManager.translate(0F, -0.18F, 0F);
 			}
 
-			ItemStack armor = ep.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-			if (!armor.isEmpty() && armor.getItem().isValidArmor(armor, EntityEquipmentSlot.CHEST, ep))
+			ItemStack armor = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+			if (!armor.isEmpty() && armor.getItem().isValidArmor(armor, EntityEquipmentSlot.CHEST, player))
 			{
 				GlStateManager.translate(0F, 0F, -0.0625F);
 			}
-			else if (ep.isWearing(EnumPlayerModelParts.JACKET))
+			else if (player.isWearing(EnumPlayerModelParts.JACKET))
 			{
 				GlStateManager.translate(0F, 0F, -0.02125F);
 			}

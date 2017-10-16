@@ -11,7 +11,6 @@ import com.feed_the_beast.ftbu.cmd.client.CmdSetbadge;
 import com.feed_the_beast.ftbu.cmd.client.CmdShrug;
 import com.feed_the_beast.ftbu.cmd.client.CmdToggleGamemode;
 import com.feed_the_beast.ftbu.cmd.ranks.CmdRanks;
-import com.feed_the_beast.ftbu.cmd.tp.CmdAdminHome;
 import com.feed_the_beast.ftbu.cmd.tp.CmdBack;
 import com.feed_the_beast.ftbu.cmd.tp.CmdDelHome;
 import com.feed_the_beast.ftbu.cmd.tp.CmdDelWarp;
@@ -58,7 +57,6 @@ public class FTBUCommands
 
 		if (FTBUConfig.commands.home)
 		{
-			event.add(new CmdAdminHome());
 			event.add(new CmdHome());
 			event.add(new CmdSetHome());
 			event.add(new CmdDelHome());
@@ -122,6 +120,11 @@ public class FTBUCommands
 		if (FTBUConfig.commands.view_crash)
 		{
 			event.add(new CmdViewCrash());
+		}
+
+		if (FTBUConfig.commands.fly)
+		{
+			event.add(new CmdFly());
 		}
 	}
 

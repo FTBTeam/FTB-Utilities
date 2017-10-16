@@ -1,19 +1,14 @@
 package com.feed_the_beast.ftbu.api_impl;
 
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
 import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import net.minecraftforge.server.permission.PermissionAPI;
-
-import java.util.ArrayList;
 
 /**
  * @author LatvianModder
@@ -116,24 +111,6 @@ public final class ClaimedChunk implements IClaimedChunk
 		{
 			return pos.equalsChunkDimPos(((ClaimedChunk) o).pos);
 		}
-		return false;
-	}
-
-	public boolean shouldForce()
-	{
-		if (!FTBUConfig.world.chunk_loading || !hasUpgrade(ChunkUpgrades.LOADED))
-		{
-			return false;
-		}
-
-		for (IForgePlayer player : teamData.team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER))
-		{
-			if (player.isOnline() || PermissionAPI.hasPermission(player.getProfile(), FTBUPermissions.CHUNKLOADER_LOAD_OFFLINE, null))
-			{
-				return true;
-			}
-		}
-
 		return false;
 	}
 }

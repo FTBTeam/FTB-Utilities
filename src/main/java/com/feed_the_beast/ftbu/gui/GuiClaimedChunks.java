@@ -5,12 +5,13 @@ import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
-import com.feed_the_beast.ftbl.lib.gui.SimpleButton;
 import com.feed_the_beast.ftbl.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiChunkSelectorBase;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
@@ -160,51 +161,91 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 		}
 	}
 
+	private static abstract class ButtonSide extends Button
+	{
+		public ButtonSide(GuiBase gui, String text, Icon icon)
+		{
+			super(gui, 0, 0, 20, 20, text, icon);
+		}
+
+		@Override
+		public Icon getIcon()
+		{
+			return getButtonBackground().combineWith(icon.withBorder(2));
+		}
+	}
+
 	private final String currentDimName;
 	private final Button buttonRefresh, buttonClose, buttonUnclaimDim, buttonUnclaimAll, buttonInfo;
 
 	public GuiClaimedChunks()
 	{
 		currentDimName = ServerUtils.getDimensionName(ClientUtils.MC.world.provider.getDimension());
-		buttonClose = new SimpleButton(this, GuiLang.CLOSE.translate(), GuiIcons.ACCEPT, (gui, button) -> gui.closeGui());
-
-		buttonRefresh = new SimpleButton(this, 0, 0, GuiLang.REFRESH.translate(), GuiIcons.REFRESH, (gui, button) ->
+		buttonClose = new ButtonSide(this, GuiLang.CLOSE.translate(), GuiIcons.ACCEPT)
 		{
-			new MessageClaimedChunksRequest(startX, startZ).sendToServer();
-			ChunkSelectorMap.getMap().resetMap(startX, startZ);
-		});
-
-		buttonUnclaimDim = new SimpleButton(this, 0, 0, FTBULang.CHUNKS_UNCLAIM_ALL_DIM.translate(currentDimName), GuiIcons.REMOVE, (gui, button) ->
-		{
-			String s = FTBULang.CHUNKS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
-			ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
+			@Override
+			public void onClicked(MouseButton button)
 			{
-				if (set)
-				{
-					ClientUtils.execClientCommand("/ftb chunks unclaim_all false");
-				}
+				gui.closeGui();
+			}
+		};
 
-				gui.openGui();
-				gui.refreshWidgets();
-			}, s, "", 0));
-		});
-
-		buttonUnclaimAll = new SimpleButton(this, 0, 0, FTBULang.CHUNKS_UNCLAIM_ALL.translate(), GuiIcons.REMOVE, (gui, button) ->
+		buttonRefresh = new ButtonSide(this, GuiLang.REFRESH.translate(), GuiIcons.REFRESH)
 		{
-			String s = FTBULang.CHUNKS_UNCLAIM_ALL_Q.translate();
-			ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
+			@Override
+			public void onClicked(MouseButton button)
 			{
-				if (set)
+				new MessageClaimedChunksRequest(startX, startZ).sendToServer();
+				ChunkSelectorMap.getMap().resetMap(startX, startZ);
+			}
+		};
+
+		buttonUnclaimDim = new ButtonSide(this, FTBULang.CHUNKS_UNCLAIM_ALL_DIM.translate(currentDimName), GuiIcons.REMOVE)
+		{
+			@Override
+			public void onClicked(MouseButton button)
+			{
+				String s = FTBULang.CHUNKS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
+				ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
 				{
-					ClientUtils.execClientCommand("/ftb chunks unclaim_all true");
-				}
+					if (set)
+					{
+						ClientUtils.execClientCommand("/ftb chunks unclaim_all false");
+					}
 
-				gui.openGui();
-				gui.refreshWidgets();
-			}, s, "", 1));
-		});
+					gui.openGui();
+					gui.refreshWidgets();
+				}, s, "", 0));
+			}
+		};
 
-		buttonInfo = new SimpleButton(this, 0, 0, GuiLang.INFO.translate(), GuiIcons.INFO, (gui, button) -> ClientUtils.execClientCommand("/ftbc open_guide ftbu.chunk_claiming"));
+		buttonUnclaimAll = new ButtonSide(this, FTBULang.CHUNKS_UNCLAIM_ALL.translate(), GuiIcons.REMOVE)
+		{
+			@Override
+			public void onClicked(MouseButton button)
+			{
+				String s = FTBULang.CHUNKS_UNCLAIM_ALL_Q.translate();
+				ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
+				{
+					if (set)
+					{
+						ClientUtils.execClientCommand("/ftb chunks unclaim_all true");
+					}
+
+					gui.openGui();
+					gui.refreshWidgets();
+				}, s, "", 1));
+			}
+		};
+
+		buttonInfo = new ButtonSide(this, GuiLang.INFO.translate(), GuiIcons.INFO)
+		{
+			@Override
+			public void onClicked(MouseButton button)
+			{
+				ClientUtils.execClientCommand("/ftbc open_guide ftbu.chunk_claiming");
+			}
+		};
 	}
 
 	@Override

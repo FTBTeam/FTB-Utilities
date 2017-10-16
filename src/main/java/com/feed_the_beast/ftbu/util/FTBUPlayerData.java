@@ -32,6 +32,7 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 	public BlockDimPos lastDeath, lastSafePos;
 	public IForgeTeam lastChunkTeam;
 	public final BlockDimPosStorage homes;
+	public boolean fly;
 
 	public FTBUPlayerData(IForgePlayer p)
 	{
@@ -53,6 +54,7 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 		nbt.setBoolean("ChatLinks", chatLinks.getBoolean());
 		nbt.setBoolean("DisableGlobalBadges", disableGlobalBadge.getBoolean());
 		nbt.setTag("Homes", homes.serializeNBT());
+		nbt.setBoolean("AllowFlying", fly);
 
 		if (lastDeath != null)
 		{
@@ -74,6 +76,7 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 		chatLinks.setBoolean(nbt.getBoolean("ChatLinks"));
 		disableGlobalBadge.setBoolean(nbt.getBoolean("DisableGlobalBadges"));
 		homes.deserializeNBT(nbt.getCompoundTag("Homes"));
+		fly = nbt.getBoolean("AllowFlying");
 
 		lastDeath = null;
 		if (nbt.hasKey("LastDeath"))

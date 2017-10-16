@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.api_impl;
 
-import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
@@ -13,7 +12,6 @@ import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api.chunks.ChunkModifiedEvent;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunks;
@@ -28,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -245,6 +244,29 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 		}
 	}
 
+	private boolean canForceChunks(IForgeTeam team)
+	{
+		Collection<IForgePlayer> members = team.getMembers();
+
+		for (IForgePlayer player : members)
+		{
+			if (player.isOnline())
+			{
+				return true;
+			}
+		}
+
+		for (IForgePlayer player : members)
+		{
+			if (PermissionAPI.hasPermission(player.getProfile(), FTBUPermissions.CHUNKLOADER_LOAD_OFFLINE, null))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public void update(MinecraftServer server, long now)
 	{
 		if (nextChunkloaderUpdate <= now)
@@ -259,9 +281,14 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 
 			if (FTBUConfig.world.chunk_claiming && FTBUConfig.world.chunk_loading)
 			{
+				for (IForgeTeam team : FTBLibAPI.API.getUniverse().getTeams())
+				{
+					FTBUTeamData.get(team).canForceChunks = canForceChunks(team);
+				}
+
 				for (ClaimedChunk chunk : getAllChunks())
 				{
-					boolean force = chunk.shouldForce();
+					boolean force = chunk.getData().canForceChunks && chunk.hasUpgrade(ChunkUpgrades.LOADED);
 
 					if (chunk.forced == null || chunk.forced != force)
 					{
@@ -375,7 +402,7 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 
 		IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(player);
 
-		if (chunk.getTeam().getOwner().equalsPlayer(p))
+		if (chunk.getTeam().isOwner(p))
 		{
 			return true;
 		}
@@ -385,7 +412,7 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 			return chunk.getData().fakePlayers.getBoolean();
 		}
 
-		return chunk.getTeam().hasStatus(p.getId(), (type == BlockInteractionType.INTERACT ? chunk.getData().interactWithBlocks : chunk.getData().editBlocks).getValue());
+		return chunk.getTeam().hasStatus(p, (type == BlockInteractionType.INTERACT ? chunk.getData().interactWithBlocks : chunk.getData().editBlocks).getValue());
 	}
 
 	public ClaimResult claimChunk(@Nullable FTBUTeamData data, ChunkDimPos pos)
@@ -469,12 +496,7 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 				return false;
 			}
 
-			int max = 0;
-
-			for (IForgePlayer member : team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER))
-			{
-				max += FTBUtilitiesAPI.API.getRankConfig(member.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
-			}
+			int max = FTBUTeamData.get(team).getMaxChunkloaderChunks();
 
 			if (max == 0)
 			{

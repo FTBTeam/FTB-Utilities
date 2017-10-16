@@ -14,6 +14,7 @@ import com.feed_the_beast.ftbl.lib.util.misc.TeamGuiAction;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -94,13 +95,13 @@ public class FTBUTeamEventHandler
 		event.register(new TeamGuiAction(FTBUFinals.get("chat"), new TextComponentTranslation("sidebar_button.ftbu.chats.team"), GuiIcons.CHAT, -10)
 		{
 			@Override
-			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
+			public boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data)
 			{
 				return false;
 			}
 
 			@Override
-			public void onAction(IForgeTeam team, IForgePlayer player)
+			public void onAction(IForgeTeam team, IForgePlayer player, NBTTagCompound data)
 			{
 			}
 		});

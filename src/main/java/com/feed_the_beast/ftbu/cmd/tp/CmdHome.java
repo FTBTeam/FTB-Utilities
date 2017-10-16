@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu.cmd.tp;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
@@ -112,7 +111,7 @@ public class CmdHome extends CmdBase
 		}
 		else if (args[0].equals("list_all"))
 		{
-			for (IForgePlayer p : Universe.INSTANCE.getPlayers())
+			for (IForgePlayer p : FTBLibAPI.API.getUniverse().getPlayers())
 			{
 				if (!p.isFake())
 				{

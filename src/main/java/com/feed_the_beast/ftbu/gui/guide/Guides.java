@@ -105,6 +105,7 @@ public enum Guides implements IResourceManagerReloadListener
 			addCommandTree(commandPage, info);
 		}
 
+		commandPage.sort(true);
 		commandPage.setTitle(new TextComponentString("Commands")); //LANG
 		commandPage.setIcon(new ItemIcon(new ItemStack(Blocks.COMMAND_BLOCK)));
 
@@ -117,11 +118,7 @@ public enum Guides implements IResourceManagerReloadListener
 	private static void addCommandTree(IGuidePage page, MessageServerInfo.CommandInfo info)
 	{
 		IGuidePage subPage = page.getSub(info.name);
-
-		if (!subPage.getName().equals(info.name))
-		{
-			subPage.setTitle(new TextComponentString(info.name));
-		}
+		subPage.setTitle(new TextComponentString("/" + info.name));
 
 		if (!info.info.isEmpty())
 		{

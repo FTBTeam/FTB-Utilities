@@ -44,6 +44,12 @@ public class CmdViewCrash extends CmdBase
 	}
 
 	@Override
+	public boolean checkPermission(MinecraftServer server, ICommandSender sender)
+	{
+		return !server.isDedicatedServer() || super.checkPermission(server, sender);
+	}
+
+	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
 	{
 		if (args.length == 1)

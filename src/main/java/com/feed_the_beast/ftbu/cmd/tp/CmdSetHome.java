@@ -37,8 +37,8 @@ public class CmdSetHome extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-		FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(ep));
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(player));
 
 		if (args.length == 0)
 		{
@@ -47,7 +47,7 @@ public class CmdSetHome extends CmdBase
 
 		args[0] = args[0].toLowerCase();
 
-		int maxHomes = FTBUtilitiesAPI.API.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt();
+		int maxHomes = FTBUtilitiesAPI.API.getRankConfig(player, FTBUPermissions.HOMES_MAX).getInt();
 
 		if (maxHomes <= 0 || data.homes.size() >= maxHomes)
 		{
@@ -57,7 +57,7 @@ public class CmdSetHome extends CmdBase
 			}
 		}
 
-		data.homes.set(args[0], new BlockDimPos(ep));
+		data.homes.set(args[0], new BlockDimPos(player));
 		FTBULang.HOME_SET.sendMessage(sender, args[0]);
 	}
 }

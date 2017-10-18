@@ -21,7 +21,7 @@ public class CmdSetWarp extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		checkArgs(sender, args, 1);
-		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 		BlockPos c;
 
 		args[0] = args[0].toLowerCase();
@@ -35,10 +35,10 @@ public class CmdSetWarp extends CmdBase
 		}
 		else
 		{
-			c = ep.getPosition();
+			c = player.getPosition();
 		}
 
-		FTBUUniverseData.WARPS.set(args[0], new BlockDimPos(c, ep.dimension));
+		FTBUUniverseData.WARPS.set(args[0], new BlockDimPos(c, player.dimension));
 		FTBULang.WARP_SET.sendMessage(sender, args[0]);
 	}
 }

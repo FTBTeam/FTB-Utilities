@@ -22,8 +22,8 @@ public class CmdBack extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-		IForgePlayer p = getForgePlayer(ep);
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		IForgePlayer p = getForgePlayer(player);
 
 		FTBUPlayerData data = FTBUPlayerData.get(p);
 
@@ -32,9 +32,9 @@ public class CmdBack extends CmdBase
 			throw FTBULang.WARP_NO_DP.commandError();
 		}
 
-		ServerUtils.teleportPlayer(ep, data.lastDeath);
+		ServerUtils.teleportPlayer(player, data.lastDeath);
 
-		if (!PermissionAPI.hasPermission(ep, FTBUPermissions.INFINITE_BACK_USAGE))
+		if (!PermissionAPI.hasPermission(player, FTBUPermissions.INFINITE_BACK_USAGE))
 		{
 			data.lastDeath = null;
 		}

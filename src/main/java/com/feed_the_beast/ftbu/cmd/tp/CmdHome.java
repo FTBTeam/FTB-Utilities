@@ -111,12 +111,9 @@ public class CmdHome extends CmdBase
 		}
 		else if (args[0].equals("list_all"))
 		{
-			for (IForgePlayer p : FTBLibAPI.API.getUniverse().getPlayers())
+			for (IForgePlayer p : FTBLibAPI.API.getUniverse().getRealPlayers())
 			{
-				if (!p.isFake())
-				{
-					execute(server, sender, new String[] {"list", p.getName()});
-				}
+				execute(server, sender, new String[] {"list", p.getName()});
 			}
 
 			return;

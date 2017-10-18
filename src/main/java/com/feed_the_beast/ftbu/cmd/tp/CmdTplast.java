@@ -33,11 +33,11 @@ public class CmdTplast extends CmdBase
 
 		if (args.length >= 3)
 		{
-			EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-			double x = parseDouble(ep.posX, args[0], -30000000, 30000000, true);
-			double y = parseDouble(ep.posY, args[1], -30000000, 30000000, true);
-			double z = parseDouble(ep.posZ, args[2], -30000000, 30000000, true);
-			ServerUtils.teleportPlayer(ep, new Vec3d(x, y, z), ep.dimension);
+			EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+			double x = parseDouble(player.posX, args[0], -30000000, 30000000, true);
+			double y = parseDouble(player.posY, args[1], -30000000, 30000000, true);
+			double z = parseDouble(player.posZ, args[2], -30000000, 30000000, true);
+			ServerUtils.teleportPlayer(player, new Vec3d(x, y, z), player.dimension);
 			return;
 		}
 
@@ -59,7 +59,7 @@ public class CmdTplast extends CmdBase
 
 		if (to.isOnline())
 		{
-			p = new BlockDimPos(to.getPlayer());
+			p = new BlockDimPos(to.getCommandPlayer());
 		}
 		else
 		{

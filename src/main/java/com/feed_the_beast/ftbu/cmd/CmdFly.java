@@ -18,9 +18,15 @@ public class CmdFly extends CmdBase
 	}
 
 	@Override
+	public boolean isUsernameIndex(String[] args, int index)
+	{
+		return index == 0;
+	}
+
+	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		EntityPlayerMP player = getSelfOrOther(sender, args, 0);
 		FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(player));
 		data.fly = !data.fly;
 		player.capabilities.allowFlying = data.fly;

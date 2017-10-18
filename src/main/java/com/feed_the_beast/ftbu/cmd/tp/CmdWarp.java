@@ -50,11 +50,11 @@ public class CmdWarp extends CmdBase
 			return;
 		}
 
-		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 
 		if (args[0].equals("gui"))
 		{
-			new MessageSendWarpList(ep).sendTo(ep);
+			new MessageSendWarpList(player).sendTo(player);
 			return;
 		}
 
@@ -64,7 +64,7 @@ public class CmdWarp extends CmdBase
 			throw FTBULang.WARP_NOT_SET.commandError(args[0]);
 		}
 
-		ServerUtils.teleportPlayer(ep, p);
+		ServerUtils.teleportPlayer(player, p);
 		FTBULang.WARP_TP.sendMessage(sender, args[0]);
 	}
 }

@@ -146,8 +146,7 @@ public class CmdEditNBT extends CmdTreeBase
 	{
 		if (args.length == 0)
 		{
-			EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-			RayTraceResult ray = MathUtils.rayTrace(player, false);
+			RayTraceResult ray = MathUtils.rayTrace(getCommandSenderAsPlayer(sender), false);
 
 			if (ray != null)
 			{
@@ -168,8 +167,7 @@ public class CmdEditNBT extends CmdTreeBase
 		}
 		if (args.length == 1 && args[0].equals("me"))
 		{
-			EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-			getCommandMap().get("player").execute(server, sender, new String[] {player.getName()});
+			getCommandMap().get("player").execute(server, sender, new String[] {getCommandSenderAsPlayer(sender).getName()});
 			return;
 		}
 

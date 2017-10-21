@@ -109,11 +109,11 @@ public class ServerInfoPage
 
 		if (!command.getAliases().isEmpty())
 		{
-			info.add(new TextComponentString(command.getName()));
+			info.add(new TextComponentString("/" + command.getName()));
 
 			for (String s : command.getAliases())
 			{
-				info.add(new TextComponentString(s));
+				info.add(new TextComponentString("/" + s));
 			}
 
 			info.add(null);

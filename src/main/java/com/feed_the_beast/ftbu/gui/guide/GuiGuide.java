@@ -30,8 +30,8 @@ public class GuiGuide extends GuiBase implements IGuideGui
 {
 	private static final Color4I COLOR_BACKGROUND = Color4I.rgb(0xF7F4DA);
 	private static final Color4I COLOR_TEXT = Color4I.rgb(0x7B6534);
-	private static final Icon TEX_BACK = Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/button_back.png").withUVfromCoords(0, 0, 14, 11, 16, 16).withColor(COLOR_TEXT);
-	private static final Icon TEX_CLOSE = Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/button_close.png").withUVfromCoords(0, 0, 14, 11, 16, 16).withColor(COLOR_TEXT);
+	private static final Icon TEX_BACK = Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/button_back.png").withUVfromCoords(0, 0, 14, 11, 16, 16).withTint(COLOR_TEXT);
+	private static final Icon TEX_CLOSE = Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/guide/button_close.png").withUVfromCoords(0, 0, 14, 11, 16, 16).withTint(COLOR_TEXT);
 	private static final Icon FILLING = COLOR_BACKGROUND.withBorder(4);
 
 	private static final Theme GUIDE_THEME = new Theme()

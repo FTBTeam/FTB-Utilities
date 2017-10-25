@@ -13,7 +13,6 @@ import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.SimpleButton;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiEditConfig;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
 import com.feed_the_beast.ftbl.lib.gui.misc.IGuiFieldCallback;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
@@ -54,6 +53,8 @@ import java.util.function.Supplier;
  */
 public class GuiEditNBT extends GuiBase
 {
+	private static final Color4I COLOR_BACKGROUND = Color4I.rgba(0x99333333);
+
 	private static Icon getIcon(String name)
 	{
 		return IconWithOutline.BUTTON_ROUND_GRAY.combineWith(Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/nbt/" + name + ".png"));
@@ -912,6 +913,6 @@ public class GuiEditNBT extends GuiBase
 	@Override
 	public void drawBackground()
 	{
-		GuiEditConfig.COLOR_BACKGROUND.draw(0, 0, width, 20);
+		COLOR_BACKGROUND.draw(0, 0, width, 20);
 	}
 }

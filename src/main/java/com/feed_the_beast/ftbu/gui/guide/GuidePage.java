@@ -228,7 +228,20 @@ public class GuidePage extends FinalIDObject implements IGuidePage
 			JsonObject o = json.getAsJsonObject();
 			IGuideTextLineProvider provider = null;
 
-			if (o.has("h1"))
+			if (o.has("id"))
+			{
+				String id = o.get("id").getAsString();
+				provider = LINE_PROVIDERS.get(id);
+
+				if (provider == null)
+				{
+					ITextComponent component = FTBLibLang.ERROR.textComponent(null, id);
+					component.getStyle().setColor(TextFormatting.DARK_RED);
+					component.getStyle().setBold(true);
+					return new GuideExtendedTextLine(component);
+				}
+			}
+			else if (o.has("h1"))
 			{
 				ITextComponent component = JsonUtils.deserializeTextComponent(o.get("h1"));
 
@@ -253,18 +266,9 @@ public class GuidePage extends FinalIDObject implements IGuidePage
 			{
 				provider = LINE_PROVIDERS.get("list");
 			}
-			else if (o.has("id"))
+			else if (o.has("image") || o.has("img"))
 			{
-				String id = o.get("id").getAsString();
-				provider = LINE_PROVIDERS.get(id);
-
-				if (provider == null)
-				{
-					ITextComponent component = FTBLibLang.ERROR.textComponent(id);
-					component.getStyle().setColor(TextFormatting.DARK_RED);
-					component.getStyle().setBold(true);
-					return new GuideExtendedTextLine(component);
-				}
+				provider = LINE_PROVIDERS.get("image");
 			}
 			/*
 			else

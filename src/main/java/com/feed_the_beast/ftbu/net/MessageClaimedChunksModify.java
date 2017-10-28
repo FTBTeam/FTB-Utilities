@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.net;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.io.DataIn;
 import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
@@ -70,12 +71,18 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 	{
 		IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(player);
 
-		if (!FTBUConfig.world.chunk_claiming || p.getTeam() == null)
+		if (!FTBUConfig.world.chunk_claiming)
 		{
 			return;
 		}
 
 		IForgeTeam team = p.getTeam();
+
+		if (team == null)
+		{
+			FTBLibNotifications.NO_TEAM.send(player);
+			return;
+		}
 
 		boolean canUnclaim = m.action == UNCLAIM && PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS, null);
 

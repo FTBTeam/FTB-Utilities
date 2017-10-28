@@ -38,6 +38,6 @@ public final class ChunkUpgrade extends FinalIDObject implements ICustomName
 	@Override
 	public ITextComponent getCustomDisplayName()
 	{
-		return getLangKey().textComponent();
+		return getLangKey().textComponent(null);
 	}
 }

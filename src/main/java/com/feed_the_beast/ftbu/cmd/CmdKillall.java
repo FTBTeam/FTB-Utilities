@@ -119,6 +119,6 @@ public class CmdKillall extends CmdBase
 			}
 		}
 
-		sender.sendMessage(FTBULang.KILLED_ENTITIES.textComponent(killed, type));
+		sender.sendMessage(FTBULang.KILLED_ENTITIES.textComponent(sender, killed, type));
 	}
 }

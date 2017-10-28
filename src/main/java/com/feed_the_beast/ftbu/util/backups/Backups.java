@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.function.Function;
 
 public enum Backups
 {
@@ -95,37 +96,33 @@ public enum Backups
 		FTBUFinals.LOGGER.info("Backups folder - " + backupsFolder.getAbsolutePath());
 	}
 
-	public static void notifyAll(ITextComponent component, boolean error)
+	public static void notifyAll(Function<ICommandSender, ITextComponent> function, boolean error)
 	{
-		if (error)
+		for (EntityPlayerMP player : ServerUtils.getPlayers())
 		{
-			component.getStyle().setColor(TextFormatting.DARK_RED);
+			ITextComponent component = function.apply(player);
+			component.getStyle().setColor(error ? TextFormatting.DARK_RED : TextFormatting.LIGHT_PURPLE);
 			Notification.of(NOTIFICATION_ID, component).send(null);
-			FTBUFinals.LOGGER.info(component.getUnformattedText());
 		}
-		else
-		{
-			component.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-			Notification.of(NOTIFICATION_ID, component).send(null);
-			FTBUFinals.LOGGER.info(component.getUnformattedText());
-		}
+
+		FTBUFinals.LOGGER.info(function.apply(null).getUnformattedText());
 	}
 
-	public boolean run(MinecraftServer server, ICommandSender ics, String customName)
+	public boolean run(MinecraftServer server, ICommandSender sender, String customName)
 	{
 		if (thread != null)
 		{
 			return false;
 		}
 
-		boolean auto = !(ics instanceof EntityPlayerMP);
+		boolean auto = !(sender instanceof EntityPlayerMP);
 
 		if (auto && !FTBUConfig.backups.enabled)
 		{
 			return false;
 		}
 
-		Backups.notifyAll(FTBULang.BACKUP_START.textComponent(ics.getName()), false);
+		notifyAll(player -> FTBULang.BACKUP_START.textComponent(player, sender.getName()), false);
 		nextBackup = CommonUtils.getWorldTime() + FTBUConfig.backups.ticks();
 
 		try
@@ -149,7 +146,7 @@ public enum Backups
 			}
 			catch (Exception ex1)
 			{
-				notifyAll(FTBULang.BACKUP_SAVING_FAILED.textComponent(), true);
+				notifyAll(FTBULang.BACKUP_SAVING_FAILED::textComponent, true);
 			}
 		}
 		catch (Exception ex)

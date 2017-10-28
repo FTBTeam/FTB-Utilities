@@ -154,11 +154,11 @@ public class ThreadBackup extends Thread
 				{
 					String sizeB = FileUtils.getSizeS(dstFile);
 					String sizeT = FileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
-					Backups.notifyAll(FTBULang.BACKUP_END_2.textComponent(getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT))), false);
+					Backups.notifyAll(player -> FTBULang.BACKUP_END_2.textComponent(player, getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT))), false);
 				}
 				else
 				{
-					Backups.notifyAll(FTBULang.BACKUP_END_1.textComponent(getDoneTime(time.getTimeInMillis())), false);
+					Backups.notifyAll(player -> FTBULang.BACKUP_END_1.textComponent(player, getDoneTime(time.getTimeInMillis())), false);
 				}
 			}
 		}
@@ -166,7 +166,7 @@ public class ThreadBackup extends Thread
 		{
 			if (!FTBUConfig.backups.silent)
 			{
-				Backups.notifyAll(FTBULang.BACKUP_FAIL.textComponent(ex.getClass().getName()), true);
+				Backups.notifyAll(player -> FTBULang.BACKUP_FAIL.textComponent(player, ex.getClass().getName()), true);
 			}
 
 			ex.printStackTrace();

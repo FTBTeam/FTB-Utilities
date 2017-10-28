@@ -20,7 +20,8 @@
 					"icon": "ftbl:textures/icons/settings.png"
 				},
 				"commands": {
-					"icon": "item:minecraft:command_block"
+					"icon": "item:minecraft:command_block",
+					"name": {"translate": "commands"}
 				},
 				"badges": {
 					"icon": "item:minecraft:diamond_chestplate"

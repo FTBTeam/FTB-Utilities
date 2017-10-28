@@ -180,7 +180,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 
 	public GuiClaimedChunks()
 	{
-		currentDimName = ServerUtils.getDimensionName(ClientUtils.MC.world.provider.getDimension());
+		currentDimName = ServerUtils.getDimensionName(null, ClientUtils.MC.world.provider.getDimension()).getFormattedText();
 		buttonClose = new ButtonSide(this, GuiLang.CLOSE.translate(), GuiIcons.ACCEPT)
 		{
 			@Override

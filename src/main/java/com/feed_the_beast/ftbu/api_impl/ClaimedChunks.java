@@ -12,6 +12,7 @@ import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
+import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api.chunks.ChunkModifiedEvent;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunks;
@@ -209,7 +210,7 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 
 		if (FTBUConfig.world.log_chunkloading)
 		{
-			FTBUFinals.LOGGER.info(chunk.getTeam().getTitle() + " forced " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(pos.dim)); //LANG
+			FTBUFinals.LOGGER.info(FTBULang.CHUNKS_CHUNKLOADER_FORCED.translate(chunk.getTeam().getTitle(), pos.posX, pos.posZ, ServerUtils.getDimensionName(null, pos.dim)));
 		}
 	}
 
@@ -240,7 +241,7 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 
 		if (FTBUConfig.world.log_chunkloading)
 		{
-			FTBUFinals.LOGGER.info(chunk.getTeam().getTitle() + " unforced " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(pos.dim)); //LANG
+			FTBUFinals.LOGGER.info(FTBULang.CHUNKS_CHUNKLOADER_UNFORCED.translate(chunk.getTeam().getTitle(), pos.posX, pos.posZ, ServerUtils.getDimensionName(null, pos.dim)));
 		}
 	}
 
@@ -304,7 +305,7 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 				}
 			}
 
-			for (EntityPlayerMP player : ServerUtils.getServer().getPlayerList().getPlayers())
+			for (EntityPlayerMP player : ServerUtils.getPlayers())
 			{
 				ChunkDimPos playerPos = new ChunkDimPos(player);
 				int startX = playerPos.posX - ChunkSelectorMap.TILES_GUI2;

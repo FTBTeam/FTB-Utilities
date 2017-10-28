@@ -55,7 +55,7 @@ public enum Guides implements IResourceManagerReloadListener
 		{
 			return "";
 		}
-	}.addSpecialButton(new SpecialGuideButton(GuiLang.REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftbc refresh_guide")));
+	}.addSpecialButton(new SpecialGuideButton(GuiLang.REFRESH.textComponent(null), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftbc refresh_guide")));
 
 	public static final IGuidePage SERVER_INFO_PAGE = new GuidePage("server_info", INFO_PAGE)
 	{
@@ -106,7 +106,7 @@ public enum Guides implements IResourceManagerReloadListener
 		}
 
 		commandPage.sort(true);
-		commandPage.setTitle(new TextComponentString("Commands")); //LANG
+		commandPage.setTitle(new TextComponentTranslation("commands"));
 		commandPage.setIcon(new ItemIcon(new ItemStack(Blocks.COMMAND_BLOCK)));
 
 		if (cachedGui != null && cachedGui.getSelectedPage() == SERVER_INFO_PAGE)
@@ -326,7 +326,7 @@ public enum Guides implements IResourceManagerReloadListener
 				}
 				catch (Exception ex)
 				{
-					sub.println(StringUtils.color(FTBLibLang.ERROR.textComponent().appendText(ex.toString()), TextFormatting.RED));
+					sub.println(StringUtils.color(FTBLibLang.ERROR.textComponent(null).appendText(ex.toString()), TextFormatting.RED));
 					ex.printStackTrace();
 				}
 			}
@@ -340,7 +340,7 @@ public enum Guides implements IResourceManagerReloadListener
 			}
 			catch (Exception ex)
 			{
-				page.println(StringUtils.color(FTBLibLang.ERROR.textComponent().appendText(ex.toString()), TextFormatting.RED));
+				page.println(StringUtils.color(FTBLibLang.ERROR.textComponent(null).appendText(ex.toString()), TextFormatting.RED));
 				page.println(StringUtils.color(new TextComponentString(element.toString()), TextFormatting.DARK_RED));
 				ex.printStackTrace();
 			}

@@ -14,7 +14,8 @@ import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbu.FTBUConfig;
-import com.feed_the_beast.ftbu.FTBUNotifications;
+import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
@@ -30,6 +31,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -132,8 +134,7 @@ public class FTBUPlayerEventHandler
 
 			if (team != null)
 			{
-				Notification notification = Notification.of(FTBUNotifications.WILDERNESS.getId());
-				notification.addLine(StringUtils.color(new TextComponentString(team.getTitle()), team.getColor().getTextFormatting()));
+				Notification notification = Notification.of(FTBUFinals.get("chunk_changed"), StringUtils.color(new TextComponentString(team.getTitle()), team.getColor().getTextFormatting()));
 
 				if (!team.getDesc().isEmpty())
 				{
@@ -144,7 +145,7 @@ public class FTBUPlayerEventHandler
 			}
 			else
 			{
-				FTBUNotifications.WILDERNESS.send(player);
+				Notification.of(FTBUFinals.get("chunk_changed"), StringUtils.color(FTBULang.CHUNKS_WILDERNESS.textComponent(player), TextFormatting.DARK_GREEN)).send(player);
 			}
 		}
 	}

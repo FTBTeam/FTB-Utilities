@@ -18,7 +18,7 @@ public class CmdKickme extends CmdBase
 	{
 		if (server.isDedicatedServer())
 		{
-			getCommandSenderAsPlayer(sender).connection.disconnect(FTBULang.KICKME.textComponent());
+			getCommandSenderAsPlayer(sender).connection.disconnect(FTBULang.KICKME.textComponent(sender));
 		}
 		else
 		{

@@ -81,17 +81,17 @@ public class ServerInfoPage
 
 		if (FTBUUniverseData.shutdownTime > 0L)
 		{
-			list.add(FTBULang.TIMER_SHUTDOWN.textComponent(new TextComponentCountdown(FTBUUniverseData.shutdownTime)));
+			list.add(FTBULang.TIMER_SHUTDOWN.textComponent(player, new TextComponentCountdown(FTBUUniverseData.shutdownTime)));
 		}
 
 		if (FTBUConfig.backups.enabled)
 		{
-			list.add(FTBULang.TIMER_BACKUP.textComponent(new TextComponentCountdown(Backups.INSTANCE.nextBackup)));
+			list.add(FTBULang.TIMER_BACKUP.textComponent(player, new TextComponentCountdown(Backups.INSTANCE.nextBackup)));
 		}
 
 		if (FTBUConfig.server_info.difficulty)
 		{
-			list.add(FTBLibLang.DIFFICULTY.textComponent(StringUtils.firstUppercase(player.world.getDifficulty().toString().toLowerCase())));
+			list.add(FTBLibLang.DIFFICULTY.textComponent(player, StringUtils.firstUppercase(player.world.getDifficulty().toString().toLowerCase())));
 		}
 
 		if (FTBUConfig.server_info.motd && !FTBUConfig.login.getMOTD().isEmpty())
@@ -123,11 +123,11 @@ public class ServerInfoPage
 		{
 			if (line.indexOf('%') != -1 || line.indexOf('/') != -1)
 			{
-				info.add(FTBLibLang.COMMAND_USAGE.textComponent(line));
+				info.add(FTBLibLang.COMMAND_USAGE.textComponent(sender, line));
 			}
 			else
 			{
-				info.add(FTBLibLang.COMMAND_USAGE.textComponent(new TextComponentTranslation(line)));
+				info.add(FTBLibLang.COMMAND_USAGE.textComponent(sender, new TextComponentTranslation(line)));
 			}
 		}
 

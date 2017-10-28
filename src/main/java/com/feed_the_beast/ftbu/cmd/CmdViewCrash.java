@@ -166,7 +166,7 @@ public class CmdViewCrash extends CmdBase
 
 				if (!url.isEmpty())
 				{
-					ITextComponent link = FTBLibLang.CLICK_HERE.textComponent();
+					ITextComponent link = FTBLibLang.CLICK_HERE.textComponent(sender);
 					link.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(url)));
 					link.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
 					FTBULang.UPLOADED_CRASH.sendMessage(sender, link);

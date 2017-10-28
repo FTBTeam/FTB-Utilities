@@ -7,6 +7,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.server.command.CommandTreeBase;
+import net.minecraftforge.server.command.ForgeCommand;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -22,6 +23,11 @@ public class CmdOverride implements ICommand
 
 	public CmdOverride(ICommand c, String pn)
 	{
+		if (c instanceof ForgeCommand)
+		{
+			c = new CmdForgeOverride((ForgeCommand) c);
+		}
+
 		parent = c;
 		if (c instanceof ICustomPermission)
 		{

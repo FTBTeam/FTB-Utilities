@@ -30,6 +30,7 @@ public class FTBUConfig
 	public static final Backups backups = new Backups();
 
 	@Config.RequiresWorldRestart
+	@Config.LangKey("commands")
 	public static final Commands commands = new Commands();
 
 	public static final Login login = new Login();

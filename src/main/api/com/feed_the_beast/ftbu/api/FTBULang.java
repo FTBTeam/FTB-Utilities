@@ -28,6 +28,8 @@ public interface FTBULang
 	LangKey CHUNKS_LOADED_COUNT = FTBUFinals.lang("lang.chunks.loaded_count", Integer.class, Integer.class);
 	LangKey CHUNKS_CLAIMED_AREA = FTBUFinals.lang("lang.chunks.claimed_area");
 	LangKey CHUNKS_WILDERNESS = FTBUFinals.lang("lang.chunks.wilderness");
+	LangKey CHUNKS_CHUNKLOADER_FORCED = FTBUFinals.lang("lang.chunks.chunkloader.forced", String.class, Integer.class, Integer.class, String.class);
+	LangKey CHUNKS_CHUNKLOADER_UNFORCED = FTBUFinals.lang("lang.chunks.chunkloader.unforced", String.class, Integer.class, Integer.class, String.class);
 
 	LangKey WARP_SET = FTBUFinals.lang("lang.warps.set", String.class);
 	LangKey WARP_DEL = FTBUFinals.lang("lang.warps.del", String.class);

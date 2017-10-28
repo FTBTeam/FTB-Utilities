@@ -147,6 +147,8 @@ ftbu.lang.chunks.chunk_unclaimed=Chunk unclaimed
 ftbu.lang.chunks.chunk_loaded=Chunk loaded
 ftbu.lang.chunks.chunk_unloaded=Chunk unloaded
 ftbu.lang.chunks.unloaded_for=Unloaded %s's chunks
+ftbu.lang.chunks.chunkloader.forced=%s forced %d,%d in %s
+ftbu.lang.chunks.chunkloader.unforced=%s unforced %d,%d in %s
 
 ftbu.lang.chunks.unclaim_all=Unclaim all chunks
 ftbu.lang.chunks.unclaim_all_dim=Unclaim all chunks in %s
@@ -264,7 +266,6 @@ guide.ftbu.ranks.config.chat=Chat Formatting (syntax)
 guide.ftbu.ranks.config.chat.info=This section allows you to change how a player name will be displayed in chat. You can set Prefixes, Suffixes or change the name color of a player. The placeholder for the playername is always $name, Minecraft chat formatting codes are fully supported.
 guide.ftbu.ranks.config.chat.colors=[Click Here to open Colors page]
 
-guide.ftbu.ranks.commands=Commands
 guide.ftbu.ranks.commands.info=There are a few utility commands for ranks, so you don't have to do everything in the configs.
 guide.ftbu.ranks.commands.set=Sets or removes player's rank
 guide.ftbu.ranks.commands.get=Prints player's rank

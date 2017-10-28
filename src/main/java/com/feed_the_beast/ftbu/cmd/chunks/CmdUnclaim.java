@@ -4,7 +4,9 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbu.FTBUConfig;
+import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
@@ -12,6 +14,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.server.command.TextComponentHelper;
 import net.minecraftforge.server.permission.PermissionAPI;
 import net.minecraftforge.server.permission.context.BlockPosContext;
 
@@ -50,12 +53,12 @@ public class CmdUnclaim extends CmdBase
 
 		if (ClaimedChunks.INSTANCE.unclaimChunk(p.getTeam(), pos))
 		{
-			FTBUNotifications.CHUNK_UNCLAIMED.send(player);
+			Notification.of(FTBUFinals.get("chunk_modified"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.chunk_unclaimed")).send(player);
 			CmdChunks.updateChunk(player, pos);
 		}
 		else
 		{
-			FTBUNotifications.CANT_MODIFY_CHUNK.send(player);
+			FTBUNotifications.sendCantModifyChunk(player);
 		}
 	}
 }

@@ -3,7 +3,8 @@ package com.feed_the_beast.ftbu.cmd.chunks;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbu.FTBUNotifications;
+import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
+import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import net.minecraft.command.CommandException;
@@ -11,6 +12,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.server.command.TextComponentHelper;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
@@ -69,7 +71,7 @@ public class CmdUnclaimAll extends CmdBase
 		if (p.getTeam() != null)
 		{
 			ClaimedChunks.INSTANCE.unclaimAllChunks(p.getTeam(), parseBoolean(args[0]) ? null : player.dimension);
-			FTBUNotifications.UNCLAIMED_ALL.send(player);
+			Notification.of(FTBUFinals.get("unclaimed_all"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.unclaimed_all")).send(player);
 		}
 	}
 }

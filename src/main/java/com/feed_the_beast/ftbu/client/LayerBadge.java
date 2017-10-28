@@ -2,16 +2,13 @@ package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
+import com.feed_the_beast.ftbu.FTBUItems;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.lwjgl.opengl.GL11;
 
 import java.util.UUID;
@@ -19,9 +16,6 @@ import java.util.UUID;
 public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 {
 	INSTANCE;
-
-	@GameRegistry.ObjectHolder(FTBLibFinals.SILENTGEMS + ":chestplate")
-	public static final Item SILENTGEMS_CHESTPLATE = Items.AIR;
 
 	@Override
 	public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
@@ -54,7 +48,7 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 			}
 
 			ItemStack armor = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-			if (armor.getItem() == SILENTGEMS_CHESTPLATE)
+			if (armor.getItem() == FTBUItems.SILENTGEMS_CHESTPLATE)
 			{
 				GlStateManager.translate(0F, 0F, -0.1F);
 			}

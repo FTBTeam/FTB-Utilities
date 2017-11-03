@@ -7,6 +7,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
@@ -48,7 +49,7 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 			}
 
 			ItemStack armor = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-			if (armor.getItem() == FTBUItems.SILENTGEMS_CHESTPLATE)
+			if (FTBUItems.SILENTGEMS_CHESTPLATE != Items.AIR && armor.getItem() == FTBUItems.SILENTGEMS_CHESTPLATE)
 			{
 				GlStateManager.translate(0F, 0F, -0.1F);
 			}

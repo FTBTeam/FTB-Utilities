@@ -48,15 +48,11 @@ import java.util.Collections;
 @EventHandler(value = Side.CLIENT, requiredMods = FTBLibFinals.TINKERS_CONSTRUCT)
 public class TiCIntegration
 {
-	public static final Item TOOLFORGE = Items.AIR;
-	public static final Item TOOLTABLES = Items.AIR;
-	public static final Item TOOLSTATION = Items.AIR;
-
 	@SubscribeEvent
 	public static void onGuideEvent(ClientGuideEvent event)
 	{
 		IGuideTitlePage page = event.getModGuide(FTBLibFinals.TINKERS_CONSTRUCT);
-		page.setIcon(new ItemIcon(new ItemStack(TOOLFORGE)));
+		page.setIcon(ItemIcon.getItemIcon(FTBLibFinals.TINKERS_CONSTRUCT + ":toolforge"));
 		page.println(new GuideHrLine(1, Icon.EMPTY));
 		page.println(new GuideContentsLine(page));
 
@@ -65,13 +61,13 @@ public class TiCIntegration
 		if (pageIntro != null)
 		{
 			pageIntro.setTitle(new TextComponentString("Introduction")); //LANG
-			pageIntro.setIcon(new ItemIcon(new ItemStack(TOOLTABLES)));
+			pageIntro.setIcon(ItemIcon.getItemIcon(FTBLibFinals.TINKERS_CONSTRUCT + ":tooltables"));
 			page.addSub(pageIntro);
 		}
 
 		IGuidePage toolMaterials = page.getSub("materials");
 		toolMaterials.setTitle(new TextComponentString("Materials")); //LANG
-		toolMaterials.setIcon(new ItemIcon(new ItemStack(Items.IRON_PICKAXE)));
+		toolMaterials.setIcon(ItemIcon.getItemIcon(new ItemStack(Items.IRON_PICKAXE)));
 
 		ImmutableList mats = ImmutableList.of(TinkerMaterials.wood, TinkerMaterials.cobalt, TinkerMaterials.ardite, TinkerMaterials.manyullyn);
 
@@ -83,7 +79,7 @@ public class TiCIntegration
 			}
 
 			IGuidePage page1 = toolMaterials.getSub(material.getIdentifier());
-			page1.setIcon(new ItemIcon(material.getRepresentativeItem()));
+			page1.setIcon(ItemIcon.getItemIcon(material.getRepresentativeItem()));
 			page1.setTitle(new TextComponentString(material.getLocalizedName()));
 
 			for (IMaterialStats stats : material.getAllStats())
@@ -100,7 +96,7 @@ public class TiCIntegration
 				{
 					if (part.hasUseForStat(stats.getIdentifier()))
 					{
-						parts.list.add(new ItemIcon(part.getItemstackWithMaterial(material)));
+						parts.list.add(ItemIcon.getItemIcon(part.getItemstackWithMaterial(material)));
 					}
 				}
 
@@ -122,7 +118,7 @@ public class TiCIntegration
 
 		IGuidePage modifiers = page.getSub("modifiers");
 		modifiers.setTitle(new TextComponentString("Modifiers")); //LANG
-		modifiers.setIcon(new ItemIcon(new ItemStack(Items.REDSTONE)));
+		modifiers.setIcon(ItemIcon.getItemIcon(new ItemStack(Items.REDSTONE)));
 
 		for (IModifier modifier : TinkerRegistry.getAllModifiers())
 		{
@@ -171,7 +167,7 @@ public class TiCIntegration
 
 							if (item instanceof ToolCore)
 							{
-								displayItems.list.add(new ItemIcon(((ToolCore) item).buildItemForRendering(mats.subList(0, ((ToolCore) item).getRequiredComponents().size()))));
+								displayItems.list.add(ItemIcon.getItemIcon(((ToolCore) item).buildItemForRendering(mats.subList(0, ((ToolCore) item).getRequiredComponents().size()))));
 							}
 						}
 
@@ -195,7 +191,7 @@ public class TiCIntegration
 		if (pageSmeltry != null)
 		{
 			pageSmeltry.setTitle(new TextComponentString("Smeltry")); //LANG
-			pageSmeltry.setIcon(new ItemIcon(new ItemStack(TOOLSTATION)));
+			pageSmeltry.setIcon(ItemIcon.getItemIcon(FTBLibFinals.TINKERS_CONSTRUCT + ":toolstation"));
 			page.addSub(pageSmeltry);
 		}
 

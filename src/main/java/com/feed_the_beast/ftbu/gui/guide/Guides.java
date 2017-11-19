@@ -107,7 +107,7 @@ public enum Guides implements IResourceManagerReloadListener
 
 		commandPage.sort(true);
 		commandPage.setTitle(new TextComponentTranslation("commands"));
-		commandPage.setIcon(new ItemIcon(new ItemStack(Blocks.COMMAND_BLOCK)));
+		commandPage.setIcon(ItemIcon.getItemIcon(new ItemStack(Blocks.COMMAND_BLOCK)));
 
 		if (cachedGui != null && cachedGui.getSelectedPage() == SERVER_INFO_PAGE)
 		{

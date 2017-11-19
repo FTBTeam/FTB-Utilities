@@ -10,10 +10,12 @@ import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
+import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.ChunkPos;
@@ -21,7 +23,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -35,10 +36,10 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 	}
 
 	public final IForgeTeam team;
-	public final ConfigEnum<EnumTeamStatus> editBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
-	public final ConfigEnum<EnumTeamStatus> interactWithBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
+	private final ConfigEnum<EnumTeamStatus> editBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
+	private final ConfigEnum<EnumTeamStatus> interactWithBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
+	private final ConfigEnum<EnumTeamStatus> attackEntities = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	public final ConfigBoolean explosions = new ConfigBoolean(false);
-	public final ConfigBoolean fakePlayers = new ConfigBoolean(true);
 	public boolean canForceChunks = false;
 
 	public FTBUTeamData(IForgeTeam t)
@@ -50,12 +51,25 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setBoolean("Explosions", explosions.getBoolean());
-		nbt.setBoolean("FakePlayers", fakePlayers.getBoolean());
-		nbt.setString("EditBlocks", editBlocks.getString());
-		nbt.setString("InteractWithBlocks", interactWithBlocks.getString());
 
-		Map<Integer, NBTTagList> claimedChunks = new HashMap<>();
+		if (explosions.getBoolean())
+		{
+			nbt.setBoolean("Explosions", explosions.getBoolean());
+		}
+
+		nbt.setString("EditBlocks", editBlocks.getString());
+
+		if (interactWithBlocks.getBoolean())
+		{
+			nbt.setString("InteractWithBlocks", interactWithBlocks.getString());
+		}
+
+		if (attackEntities.getBoolean())
+		{
+			nbt.setString("AttackEntities", attackEntities.getString());
+		}
+
+		Int2ObjectOpenHashMap<NBTTagList> claimedChunks = new Int2ObjectOpenHashMap<>();
 
 		for (ClaimedChunk chunk : ClaimedChunks.INSTANCE.getTeamChunks(team))
 		{
@@ -91,7 +105,10 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 			claimedChunksTag.setTag(entry.getKey().toString(), entry.getValue());
 		}
 
-		nbt.setTag("ClaimedChunks", claimedChunksTag);
+		if (!claimedChunksTag.hasNoTags())
+		{
+			nbt.setTag("ClaimedChunks", claimedChunksTag);
+		}
 
 		return nbt;
 	}
@@ -100,9 +117,9 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
 		explosions.setBoolean(nbt.getBoolean("Explosions"));
-		fakePlayers.setBoolean(nbt.getBoolean("FakePlayers"));
 		editBlocks.setValueFromString(nbt.getString("EditBlocks"), false);
 		interactWithBlocks.setValueFromString(nbt.getString("InteractWithBlocks"), false);
+		attackEntities.setValueFromString(nbt.getString("AttackEntities"), false);
 
 		NBTTagCompound claimedChunksTag = nbt.getCompoundTag("ClaimedChunks");
 
@@ -129,14 +146,29 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 		}
 	}
 
+	public EnumTeamStatus getStatusFromType(BlockInteractionType type)
+	{
+		if (type == BlockInteractionType.INTERACT)
+		{
+			return interactWithBlocks.getValue();
+		}
+
+		return editBlocks.getValue();
+	}
+
+	public EnumTeamStatus getAttackEntitiesStatus()
+	{
+		return attackEntities.getValue();
+	}
+
 	public void addConfig(ForgeTeamConfigEvent event)
 	{
 		String group = FTBUFinals.MOD_ID;
 		event.getConfig().setGroupName(group, new TextComponentString(FTBUFinals.MOD_NAME));
 		event.getConfig().add(group, "explosions", explosions);
-		event.getConfig().add(group, "fake_players", fakePlayers);
 		event.getConfig().add(group, "blocks_edit", editBlocks);
 		event.getConfig().add(group, "blocks_interact", interactWithBlocks);
+		event.getConfig().add(group, "attack_entities", attackEntities);
 	}
 
 	public int getMaxClaimChunks()

@@ -2,17 +2,22 @@ package com.feed_the_beast.ftbu.util;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.icon.ImageIcon;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUConfig;
+import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.apache.commons.io.IOUtils;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.net.HttpURLConnection;
+import java.net.Socket;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +28,9 @@ import java.util.UUID;
  */
 public class Badges
 {
-	private static final String BADGE_BASE_URL = "http://api.latmod.com/badges/get?id=";
+	public static final String MAIN_ADDRESS = "badges.latmod.com";
+	public static final int MAIN_PORT = 25566;
+	private static final String FALLBACK_URL = "http://badges.latmod.com/get?id=";
 
 	public static final Map<UUID, String> BADGE_CACHE = new HashMap<>();
 	public static final Map<UUID, String> LOCAL_BADGES = new HashMap<>();
@@ -35,16 +42,16 @@ public class Badges
 
 	public static String get(UUID playerId)
 	{
-		String b = BADGE_CACHE.get(playerId);
+		String badge = BADGE_CACHE.get(playerId);
 
-		if (b != null)
+		if (badge != null)
 		{
-			return b;
+			return badge;
 		}
 
-		b = getRaw(playerId);
-		BADGE_CACHE.put(playerId, b);
-		return b;
+		badge = getRaw(playerId);
+		BADGE_CACHE.put(playerId, badge);
+		return badge;
 	}
 
 	private static String getRaw(UUID playerId)
@@ -64,23 +71,57 @@ public class Badges
 		}
 		else if (FTBUConfig.login.enable_global_badges && !data.disableGlobalBadge.getBoolean())
 		{
+			Socket socket = null;
+			DataOutputStream output = null;
+			DataInputStream input = null;
+
 			try
 			{
-				String s = StringUtils.readString(new URL(BADGE_BASE_URL + StringUtils.fromUUID(playerId)).openStream());
+				socket = new Socket(MAIN_ADDRESS, MAIN_PORT);
+				output = new DataOutputStream(socket.getOutputStream());
+				output.writeLong(playerId.getMostSignificantBits());
+				output.writeLong(playerId.getLeastSignificantBits());
+				output.flush();
+				input = new DataInputStream(socket.getInputStream());
+				String badge = input.readUTF();
+				boolean event = input.readBoolean();
 
-				if (!s.isEmpty())
+				if (!badge.isEmpty() && (FTBUConfig.login.enable_event_badges || !event))
 				{
-					return s;
+					return badge;
 				}
+
+				IOUtils.closeQuietly(input);
+				IOUtils.closeQuietly(output);
+				IOUtils.closeQuietly(socket);
 			}
 			catch (Exception ex)
 			{
-				return ImageIcon.MISSING_IMAGE.toString();
+				IOUtils.closeQuietly(input);
+				IOUtils.closeQuietly(output);
+				IOUtils.closeQuietly(socket);
+
+				FTBUFinals.LOGGER.warn("Main Badge API errored, using fallback: " + ex);
+
+				try
+				{
+					HttpURLConnection connection = (HttpURLConnection) new URL(FALLBACK_URL + StringUtils.fromUUID(playerId)).openConnection();
+					String badge = StringUtils.readString(connection.getInputStream());
+
+					if (!badge.isEmpty())
+					{
+						return badge;
+					}
+				}
+				catch (Exception ex2)
+				{
+					FTBUFinals.LOGGER.warn("Fallback Badge API errored: " + ex2);
+				}
 			}
 		}
 
-		String s = LOCAL_BADGES.get(playerId);
-		return (s == null || s.isEmpty()) ? FTBUtilitiesAPI.API.getRankConfig(player.getProfile(), FTBUPermissions.BADGE).getString() : s;
+		String badge = LOCAL_BADGES.get(playerId);
+		return (badge == null || badge.isEmpty()) ? FTBUtilitiesAPI.API.getRankConfig(player.getProfile(), FTBUPermissions.BADGE).getString() : badge;
 	}
 
 	public static boolean reloadServerBadges()
@@ -95,18 +136,18 @@ public class Badges
 			{
 				JsonObject o = new JsonObject();
 				o.addProperty("uuid", "url_to.png");
-				o.addProperty("uuid2", "url2_to.png");
-				JsonUtils.toJson(file, o);
+				o.addProperty("username", "url2_to.png");
+				JsonUtils.toJson(o, file);
 			}
 			else
 			{
 				for (Map.Entry<String, JsonElement> entry : JsonUtils.fromJson(file).getAsJsonObject().entrySet())
 				{
-					UUID id = StringUtils.fromString(entry.getKey());
+					IForgePlayer player = FTBLibAPI.API.getUniverse().getPlayer(entry.getKey());
 
-					if (id != null)
+					if (player != null)
 					{
-						LOCAL_BADGES.put(id, entry.getValue().getAsString());
+						LOCAL_BADGES.put(player.getId(), entry.getValue().getAsString());
 					}
 				}
 			}

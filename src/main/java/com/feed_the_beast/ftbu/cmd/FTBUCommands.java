@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.cmd.chunks.CmdChunks;
 import com.feed_the_beast.ftbu.cmd.client.CmdOpenGuide;
 import com.feed_the_beast.ftbu.cmd.client.CmdRefreshGuide;
-import com.feed_the_beast.ftbu.cmd.client.CmdSetbadge;
 import com.feed_the_beast.ftbu.cmd.client.CmdShrug;
 import com.feed_the_beast.ftbu.cmd.client.CmdToggleGamemode;
 import com.feed_the_beast.ftbu.cmd.ranks.CmdRanks;
@@ -132,7 +131,6 @@ public class FTBUCommands
 	@SideOnly(Side.CLIENT)
 	public static void registerClientCommands(RegisterFTBClientCommandsEvent event)
 	{
-		event.add(new CmdSetbadge());
 		event.add(new CmdShrug());
 		event.add(new CmdRefreshGuide());
 		event.add(new CmdOpenGuide());

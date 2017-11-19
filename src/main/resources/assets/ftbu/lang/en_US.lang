@@ -43,6 +43,7 @@ ftbu.config.login=Login
 ftbu.config.login.enable_motd=Enable MOTD
 ftbu.config.login.enable_starting_items=Enable Starting Items
 ftbu.config.login.enable_global_badges=Enable Global Badges
+ftbu.config.login.enable_event_badges=Enable Event Badges
 ftbu.config.login.motd=MOTD
 ftbu.config.login.starting_items=Starting Items
 
@@ -66,7 +67,6 @@ my_server_settings.ftbu=FTBUtilities
 my_server_settings.ftbu.render_badge=Render My Badge
 my_server_settings.ftbu.chat_links=Chat Links
 my_server_settings.ftbu.explosions=Explosions
-my_server_settings.ftbu.fake_players=Allow Fake Players
 my_server_settings.ftbu.security_level=Block Security Level
 
 # Rank Config
@@ -91,6 +91,7 @@ player_config.ftbu.render_badge=Render My Badge
 # Team Settings
 team_config.ftbu.blocks_edit=Required Level for Block Editing
 team_config.ftbu.blocks_interact=Required Level for Block Interactions
+team_config.ftbu.attack_entities=Required Level for Attacking Entities
 team_config.ftbu.explosions=Enable Explosions in Claimed Chunks
 team_config.ftbu.fake_players=Allow Fake Players to Interact With Blocks
 

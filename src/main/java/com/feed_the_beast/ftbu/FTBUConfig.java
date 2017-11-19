@@ -27,7 +27,7 @@ public class FTBUConfig
 
 	public static final ServerInfo server_info = new ServerInfo();
 	public static final Chat chat = new Chat();
-	public static final Backups backups = new Backups();
+	public static final BackupsConfig backups = new BackupsConfig();
 
 	@Config.RequiresWorldRestart
 	@Config.LangKey("commands")
@@ -36,9 +36,9 @@ public class FTBUConfig
 	public static final Login login = new Login();
 
 	@Config.RequiresWorldRestart
-	public static final Ranks ranks = new Ranks();
+	public static final RanksConfig ranks = new RanksConfig();
 
-	public static final World world = new World();
+	public static final WorldConfig world = new WorldConfig();
 
 	public static class AutoShutdown
 	{
@@ -75,7 +75,7 @@ public class FTBUConfig
 		public int admin_history_limit = 10000;
 	}
 
-	public static class Backups
+	public static class BackupsConfig
 	{
 		@Config.LangKey(GuiLang.LANG_ENABLED)
 		public boolean enabled = true;
@@ -150,6 +150,9 @@ public class FTBUConfig
 		@Config.Comment("Set to false to disable global badges completely, only server-wide badges will be available")
 		public boolean enable_global_badges = true;
 
+		@Config.Comment("Set to false to disable event badges, e.g. Halloween")
+		public boolean enable_event_badges = true;
+
 		@Config.Comment("Message of the day. This will be displayed when player joins the server")
 		public String[] motd = {"\"Hello player!\""};
 
@@ -173,7 +176,7 @@ public class FTBUConfig
 		}
 	}
 
-	public static class Ranks
+	public static class RanksConfig
 	{
 		@Config.LangKey(GuiLang.LANG_ENABLED)
 		@Config.RequiresMcRestart
@@ -183,7 +186,7 @@ public class FTBUConfig
 		public boolean override_commands = true;
 	}
 
-	public static class World
+	public static class WorldConfig
 	{
 		public boolean chunk_claiming = true;
 		public boolean chunk_loading = true;

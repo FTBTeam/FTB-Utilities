@@ -67,7 +67,7 @@ public class GuiViewCrash extends GuiBase
 			@Override
 			public Icon getIcon()
 			{
-				return gui.getTheme().getSlot(false).withBorder(-1);
+				return gui.getTheme().getContainerSlot();
 			}
 		};
 

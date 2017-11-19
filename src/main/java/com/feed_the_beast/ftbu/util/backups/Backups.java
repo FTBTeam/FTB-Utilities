@@ -102,7 +102,7 @@ public enum Backups
 		{
 			ITextComponent component = function.apply(player);
 			component.getStyle().setColor(error ? TextFormatting.DARK_RED : TextFormatting.LIGHT_PURPLE);
-			Notification.of(NOTIFICATION_ID, component).send(null);
+			Notification.of(NOTIFICATION_ID, component).setImportant(true).send(null);
 		}
 
 		FTBUFinals.LOGGER.info(function.apply(null).getUnformattedText());
@@ -212,7 +212,7 @@ public enum Backups
 			}
 		}
 
-		JsonUtils.toJson(new File(backupsFolder, "backups.json"), a);
+		JsonUtils.toJson(a, new File(backupsFolder, "backups.json"));
 	}
 
 	public void postBackup()

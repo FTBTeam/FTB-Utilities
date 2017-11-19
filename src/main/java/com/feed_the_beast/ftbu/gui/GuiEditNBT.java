@@ -357,7 +357,7 @@ public class GuiEditNBT extends GuiBase
 
 			if (!stack.isEmpty())
 			{
-				hoverIcon = new ItemIcon(stack);
+				hoverIcon = ItemIcon.getItemIcon(stack);
 			}
 
 			setWidth(12 + getStringWidth(getTitle()) + (hoverIcon.isEmpty() ? 0 : 10));

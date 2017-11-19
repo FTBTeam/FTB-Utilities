@@ -12,7 +12,7 @@ public class IChunUtilIntegration
 	/*@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onBlockPickupEventEvent(BlockPickupEvent event)
 	{
-		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunks.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.INTERACT))
+		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunks.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), InteractionType.INTERACT))
 		{
 			event.setCanceled(true);
 		}

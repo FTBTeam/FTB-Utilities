@@ -31,9 +31,10 @@ public final class ClaimedChunk implements IClaimedChunk
 	}
 
 	@Override
+	@SuppressWarnings("ConstantConditions")
 	public boolean isInvalid()
 	{
-		return invalid;
+		return invalid || teamData == null || teamData.team == null || teamData.team.getOwner() == null;
 	}
 
 	public void setInvalid()

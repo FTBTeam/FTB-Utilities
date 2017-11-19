@@ -21,10 +21,7 @@ import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.util.Badges;
 import com.feed_the_beast.ftbu.util.FTBUPlayerData;
-import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import com.google.common.base.Objects;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -32,10 +29,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -151,35 +147,13 @@ public class FTBUPlayerEventHandler
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onPlayerAttacked(LivingAttackEvent event)
+	public static void onEntityAttacked(AttackEntityEvent event)
 	{
-		if (event.getEntity().world.isRemote || event.getEntity().dimension != 0 || !(event.getEntity() instanceof EntityPlayerMP) || event.getEntity() instanceof FakePlayer)
+		EntityPlayer player = event.getEntityPlayer();
+
+		if (player instanceof EntityPlayerMP && !ClaimedChunks.INSTANCE.canPlayerAttackEntity((EntityPlayerMP) player, event.getEntity()))
 		{
-			return;
-		}
-
-		Entity entity = event.getSource().getTrueSource();
-
-		if (entity != null && (entity instanceof EntityPlayerMP || entity instanceof IMob))
-		{
-			if (entity instanceof FakePlayer)
-			{
-				return;
-			}
-			/*else if(entity instanceof EntityPlayerMP && PermissionAPI.hasPermission(((EntityPlayerMP) entity).getGameProfile(), FTBLibPermissions.INTERACT_SECURE, false, new Context(entity)))
-			{
-                return;
-            }*/
-
-			if ((FTBUConfig.world.safe_spawn && FTBUUniverseData.isInSpawn(new ChunkDimPos(event.getEntity()))))
-			{
-				event.setCanceled(true);
-			}
-			/*else
-			{
-				ClaimedChunk c = Claims.getMode(dim, cx, cz);
-				if(c != null && c.claims.settings.isSafe()) event.setCanceled(true);
-			}*/
+			event.setCanceled(true);
 		}
 	}
 

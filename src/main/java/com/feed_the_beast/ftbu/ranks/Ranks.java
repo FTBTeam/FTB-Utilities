@@ -151,13 +151,7 @@ public class Ranks
 			{
 				JsonObject o = e.getAsJsonObject();
 
-				if (o.has("default_rank"))
-				{
-					FileUtils.delete(new File(CommonUtils.folderLocal, "ftbutilities/readme.txt"));
-					FileUtils.delete(new File(CommonUtils.folderLocal, "ftbutilities/ranks_example.json"));
-					FileUtils.delete(new File(CommonUtils.folderLocal, "ftbutilities/default_rank_config.json"));
-				}
-				else if (o.has("default_ranks") && o.has("ranks"))
+				if (o.has("default_ranks") && o.has("ranks"))
 				{
 					for (Map.Entry<String, JsonElement> entry : o.get("ranks").getAsJsonObject().entrySet())
 					{
@@ -229,11 +223,11 @@ public class Ranks
 
 		o.add("ranks", o1);
 
-		JsonUtils.toJson(new File(CommonUtils.folderLocal, "ftbutilities/ranks.json"), o);
+		JsonUtils.toJson(o, new File(CommonUtils.folderLocal, "ftbutilities/ranks.json"));
 
 		final JsonObject o2 = new JsonObject();
 		PLAYER_MAP.forEach((key, value) -> o2.add(StringUtils.fromUUID(key), new JsonPrimitive(value.getName())));
-		JsonUtils.toJson(new File(CommonUtils.folderLocal, "ftbutilities/player_ranks.json"), o2);
+		JsonUtils.toJson(o2, new File(CommonUtils.folderLocal, "ftbutilities/player_ranks.json"));
 	}
 
 	static boolean checkCommandPermission(MinecraftServer server, ICommandSender sender, ICommand parent, String permission)
@@ -293,7 +287,7 @@ public class Ranks
 			list.add("td.all{background-color:#72FF85;}");
 			list.add("td.op{background-color:#42A3FF;}");
 			list.add("td.none{background-color:#FF4242;}");
-			list.add("</style></head><body><h1>Permissions</h1><table>");
+			list.add("</style></head><body><h1>Permissions</h1><h3>Modifying this file won't have any effect!</h3><table>");
 			list.add("<tr><th>Permission Node</th><th></th><th>Info</th></tr>");
 
 			for (NodeEntry entry : allNodes)
@@ -327,7 +321,7 @@ public class Ranks
 			list.clear();
 			list.add("<html><head><title>Rank Configs</title>");
 			list.add("<style>table{font-family: arial, sans-serif;border-collapse: collapse;}td,th{border:1px solid #666666;text-align: left;padding:8px;}p,ul{margin:4px;}</style>");
-			list.add("</head><body><h1>Rank Configs</h1><table>");
+			list.add("</head><body><h1>Rank Configs</h1><h3>Modifying this file won't have any effect!</h3><table>");
 			list.add("<tr><th>Rank Config</th><th>Def Value</th><th>Info</th></tr>");
 
 			List<String> infoList = new ArrayList<>();
@@ -403,6 +397,7 @@ public class Ranks
 			list.addAll(CMD_PERMISSION_NODES);
 			Collections.sort(list);
 			list.add(0, "");
+			list.add(0, "Modifying this file won't have any effect!");
 			list.add(0, PermissionAPI.getPermissionHandler().getRegisteredNodes().size() + " nodes in total");
 			FileUtils.save(new File(CommonUtils.folderLocal, "ftbutilities/all_permissions_full_list.txt"), list);
 		}

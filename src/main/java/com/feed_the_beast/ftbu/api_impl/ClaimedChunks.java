@@ -19,6 +19,10 @@ import com.feed_the_beast.ftbu.api.chunks.IClaimedChunks;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksUpdate;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
+import com.feed_the_beast.ftbu.util.FTBUUniverseData;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumHand;
@@ -27,10 +31,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,6 +43,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author LatvianModder
@@ -361,24 +366,41 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 	}
 
 	@Override
-	public Collection<ClaimedChunk> getTeamChunks(@Nullable IForgeTeam team)
+	public Set<ClaimedChunk> getTeamChunks(@Nullable IForgeTeam team, boolean includePending)
 	{
 		if (team == null)
 		{
-			return Collections.emptyList();
+			return Collections.emptySet();
 		}
 
-		Collection<ClaimedChunk> c = new ArrayList<>();
+		Set<ClaimedChunk> set = new HashSet<>();
 
 		for (ClaimedChunk chunk : map.values())
 		{
 			if (!chunk.isInvalid() && team.equalsTeam(chunk.getTeam()))
 			{
-				c.add(chunk);
+				set.add(chunk);
 			}
 		}
 
-		return c;
+		if (includePending)
+		{
+			for (ClaimedChunk chunk : pendingChunks)
+			{
+				if (team.equalsTeam(chunk.getTeam()))
+				{
+					set.add(chunk);
+				}
+			}
+		}
+
+		return set;
+	}
+
+	@Override
+	public Set<ClaimedChunk> getTeamChunks(@Nullable IForgeTeam team)
+	{
+		return getTeamChunks(team, false);
 	}
 
 	@Override
@@ -395,25 +417,31 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 		}
 
 		ClaimedChunk chunk = getChunk(new ChunkDimPos(block.getPos(), player.dimension));
+		return chunk == null || chunk.getTeam().hasStatus(FTBLibAPI.API.getUniverse().getPlayer(player), chunk.getData().getStatusFromType(type));
+	}
 
-		if (chunk == null)
+	@Override
+	public boolean canPlayerAttackEntity(EntityPlayerMP player, Entity entity)
+	{
+		if (player.dimension != 0 || player instanceof FakePlayer)
 		{
 			return true;
 		}
 
-		IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(player);
+		ChunkDimPos pos = new ChunkDimPos(entity);
 
-		if (chunk.getTeam().isOwner(p))
+		if (entity instanceof EntityPlayer && FTBUConfig.world.safe_spawn && FTBUUniverseData.isInSpawn(pos))
 		{
-			return true;
+			return false;
 		}
 
-		if (p.isFake())
+		if (!(entity instanceof IMob))
 		{
-			return chunk.getData().fakePlayers.getBoolean();
+			ClaimedChunk chunk = getChunk(pos);
+			return chunk == null || chunk.getTeam().hasStatus(FTBLibAPI.API.getUniverse().getPlayer(player), chunk.getData().getAttackEntitiesStatus());
 		}
 
-		return chunk.getTeam().hasStatus(p, (type == BlockInteractionType.INTERACT ? chunk.getData().interactWithBlocks : chunk.getData().editBlocks).getValue());
+		return true;
 	}
 
 	public ClaimResult claimChunk(@Nullable FTBUTeamData data, ChunkDimPos pos)
@@ -429,12 +457,7 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 		}
 
 		int max = data.getMaxClaimChunks();
-		if (max == 0)
-		{
-			return ClaimResult.NO_POWER;
-		}
-
-		if (getTeamChunks(data.team).size() >= max)
+		if (max == 0 || getTeamChunks(data.team, true).size() >= max)
 		{
 			return ClaimResult.NO_POWER;
 		}

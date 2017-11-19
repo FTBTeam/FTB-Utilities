@@ -25,7 +25,6 @@ import net.minecraftforge.common.util.INBTSerializable;
 public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 {
 	public final ConfigBoolean renderBadge = new ConfigBoolean(true);
-	public final ConfigBoolean chatLinks = new ConfigBoolean(true);
 	public final ConfigBoolean disableGlobalBadge = new ConfigBoolean(false);
 
 	public final IForgePlayer player;
@@ -50,11 +49,27 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 
-		nbt.setBoolean("RenderBadge", renderBadge.getBoolean());
-		nbt.setBoolean("ChatLinks", chatLinks.getBoolean());
-		nbt.setBoolean("DisableGlobalBadges", disableGlobalBadge.getBoolean());
-		nbt.setTag("Homes", homes.serializeNBT());
-		nbt.setBoolean("AllowFlying", fly);
+		if (!renderBadge.getBoolean())
+		{
+			nbt.setBoolean("RenderBadge", false);
+		}
+
+		if (disableGlobalBadge.getBoolean())
+		{
+			nbt.setBoolean("DisableGlobalBadges", true);
+		}
+
+		NBTTagCompound homesTag = homes.serializeNBT();
+
+		if (!homesTag.hasNoTags())
+		{
+			nbt.setTag("Homes", homesTag);
+		}
+
+		if (fly)
+		{
+			nbt.setBoolean("AllowFlying", true);
+		}
 
 		if (lastDeath != null)
 		{
@@ -72,8 +87,7 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 			return;
 		}
 
-		renderBadge.setBoolean(nbt.getBoolean("RenderBadge"));
-		chatLinks.setBoolean(nbt.getBoolean("ChatLinks"));
+		renderBadge.setBoolean(!nbt.hasKey("RenderBadge") || nbt.getBoolean("RenderBadge"));
 		disableGlobalBadge.setBoolean(nbt.getBoolean("DisableGlobalBadges"));
 		homes.deserializeNBT(nbt.getCompoundTag("Homes"));
 		fly = nbt.getBoolean("AllowFlying");
@@ -133,7 +147,6 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 		String group = FTBUFinals.MOD_ID;
 		event.getConfig().setGroupName(group, new TextComponentString(FTBUFinals.MOD_NAME));
 		event.getConfig().add(group, "render_badge", renderBadge);
-		event.getConfig().add(group, "chat_links", chatLinks);
 		event.getConfig().add(group, "disable_global_badge", disableGlobalBadge);
 	}
 }

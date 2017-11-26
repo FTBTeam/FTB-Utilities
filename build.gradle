@@ -34,12 +34,13 @@ repositories {
 }
 
 dependencies {
-	compile "com.latmod.mods:FTBLib:${ftblib_version}:api"
-	compile "com.latmod.mods:iChunUtil:${ichunutil_version}:api"
-	compile "info.journeymap:journeymap-api:${journeymap_version}"
-	deobfCompile "mod.chiselsandbits:chiselsandbits:${chiselsandbits_version}:api"
-	deobfCompile "slimeknights.mantle:Mantle:${mantle_version}"
-	deobfCompile "slimeknights:TConstruct:${tconstruct_version}"
+	provided "com.latmod.mods:FTBLib:${ftblib_version}:api"
+	runtime "com.latmod.mods:FTBLib:${ftblib_version}"
+	provided "com.latmod.mods:iChunUtil:${ichunutil_version}:api"
+	provided "info.journeymap:journeymap-api:${journeymap_version}"
+	deobfProvided "mod.chiselsandbits:chiselsandbits:${chiselsandbits_version}:api"
+	deobfProvided "slimeknights.mantle:Mantle:${mantle_version}"
+	deobfProvided "slimeknights:TConstruct:${tconstruct_version}"
 }
 
 sourceSets {

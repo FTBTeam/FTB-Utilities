@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
+import com.feed_the_beast.ftbu.api.Leaderboard;
 import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api.RegisterCustomPermissionPrefixesEvent;
 import com.feed_the_beast.ftbu.api.chunks.RegisterChunkUpgradesEvent;
@@ -12,6 +13,7 @@ import com.feed_the_beast.ftbu.net.FTBUNetHandler;
 import com.feed_the_beast.ftbu.ranks.FTBUPermissionHandler;
 import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.io.File;
@@ -21,6 +23,7 @@ import java.util.HashSet;
 public class FTBUCommon
 {
 	public static final Collection<NodeEntry> CUSTOM_PERM_PREFIX_REGISTRY = new HashSet<>();
+	public static IForgeRegistry<Leaderboard> LEADERBOARDS;
 
 	public void preInit()
 	{

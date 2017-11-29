@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
@@ -31,6 +30,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -43,7 +43,7 @@ import java.util.function.Function;
 /**
  * @author LatvianModder
  */
-@EventHandler
+@Mod.EventBusSubscriber(modid = FTBUFinals.MOD_ID)
 public class FTBUWorldEventHandler
 {
 	private static final ResourceLocation RESTART_TIMER_ID = FTBUFinals.get("restart_timer");
@@ -55,8 +55,13 @@ public class FTBUWorldEventHandler
 		}
 		else
 		{
-			IClaimedChunk chunk = ClaimedChunks.INSTANCE.getChunk(pos);
-			return chunk == null || !chunk.hasUpgrade(ChunkUpgrades.NO_EXPLOSIONS);
+			if (FTBUConfig.world.enable_explosions.isDefault())
+			{
+				IClaimedChunk chunk = ClaimedChunks.INSTANCE.getChunk(pos);
+				return chunk == null || !chunk.hasUpgrade(ChunkUpgrades.NO_EXPLOSIONS);
+			}
+
+			return FTBUConfig.world.enable_explosions.isTrue();
 		}
 	};
 

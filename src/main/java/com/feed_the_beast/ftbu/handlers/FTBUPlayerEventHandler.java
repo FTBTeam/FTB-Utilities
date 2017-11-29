@@ -1,32 +1,23 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.player.ForgePlayerConfigEvent;
-import com.feed_the_beast.ftbl.api.player.ForgePlayerLoggedInEvent;
-import com.feed_the_beast.ftbl.api.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
-import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
-import com.feed_the_beast.ftbu.util.Badges;
 import com.feed_the_beast.ftbu.util.FTBUPlayerData;
 import com.google.common.base.Objects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -34,54 +25,16 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * @author LatvianModder
  */
-@EventHandler
+@Mod.EventBusSubscriber(modid = FTBUFinals.MOD_ID)
 public class FTBUPlayerEventHandler
 {
-	@SubscribeEvent
-	public static void onLoggedIn(ForgePlayerLoggedInEvent event)
-	{
-		if (event.getPlayer().isFake())
-		{
-			return;
-		}
-
-		EntityPlayerMP ep = event.getPlayer().getPlayer();
-
-		if (event.isFirstLogin())
-		{
-			if (FTBUConfig.login.enable_starting_items)
-			{
-				for (ItemStack stack : FTBUConfig.login.getStartingItems())
-				{
-					InvUtils.giveItem(ep, stack.copy());
-				}
-			}
-		}
-
-		if (FTBUConfig.login.enable_motd)
-		{
-			for (ITextComponent t : FTBUConfig.login.getMOTD())
-			{
-				ep.sendMessage(t);
-			}
-		}
-
-		ClaimedChunks.INSTANCE.markDirty();
-	}
-
-	@SubscribeEvent
-	public static void onLoggedOut(ForgePlayerLoggedOutEvent event)
-	{
-		ClaimedChunks.INSTANCE.markDirty();
-		Badges.update(event.getPlayer().getId());
-	}
-
 	@SubscribeEvent
 	public static void onDeath(LivingDeathEvent event)
 	{
@@ -89,12 +42,6 @@ public class FTBUPlayerEventHandler
 		{
 			FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(event.getEntity())).lastDeath = new BlockDimPos(event.getEntity());
 		}
-	}
-
-	@SubscribeEvent
-	public static void getSettings(ForgePlayerConfigEvent event)
-	{
-		FTBUPlayerData.get(event.getPlayer()).addConfig(event);
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

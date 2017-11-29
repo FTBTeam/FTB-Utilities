@@ -21,6 +21,17 @@
 		},
 		"config": true
 	},
+	"leaderboards": {
+		"group": "ftbl:info",
+		"icon": "item:minecraft:sign",
+		"x": 700,
+		"click": {
+			"action": "run_command",
+			"value": "/ftb leaderboards gui"
+		},
+		"required_server_mods": ["ftbu"],
+		"config": true
+	},
 	"claimed_chunks": {
 		"group": "ftbu:util",
 		"icon": "ftbl:icons/map",

@@ -125,6 +125,11 @@ public class FTBUCommands
 		{
 			event.add(new CmdFly());
 		}
+
+		if (FTBUConfig.commands.leaderboard)
+		{
+			event.add(new CmdLeaderboard());
+		}
 	}
 
 	@SubscribeEvent

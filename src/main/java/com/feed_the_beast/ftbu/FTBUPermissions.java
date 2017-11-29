@@ -44,7 +44,6 @@ public class FTBUPermissions
 	// Claims //
 	public static final String CLAIMS_CHUNKS_MODIFY_OTHERS = FTBUFinals.MOD_ID + ".claims.modify.others";
 	public static final String CLAIMS_MAX_CHUNKS = FTBUFinals.MOD_ID + ".claims.max_chunks";
-	public static final String CLAIMS_ALLOW_DISABLE_EXPLOSIONS = FTBUFinals.MOD_ID + ".claims.allow_disable_explosions";
 	public static final String CLAIMS_BLOCK_CNB = FTBUFinals.MOD_ID + ".claims.block.cnb";
 	private static final String CLAIMS_BLOCK_EDIT_PREFIX = FTBUFinals.MOD_ID + ".claims.block.edit.";
 	private static final String CLAIMS_BLOCK_INTERACT_PREFIX = FTBUFinals.MOD_ID + ".claims.block.interact.";
@@ -65,7 +64,6 @@ public class FTBUPermissions
 		event.registerNode(HOMES_LIST_OTHER, DefaultPermissionLevel.ALL, "");
 		event.registerNode(HOMES_TELEPORT_OTHER, DefaultPermissionLevel.ALL, "");
 		event.registerNode(CLAIMS_CHUNKS_MODIFY_OTHERS, DefaultPermissionLevel.OP, "Allow player to modify other team chunks");
-		event.registerNode(CLAIMS_ALLOW_DISABLE_EXPLOSIONS, DefaultPermissionLevel.ALL, "Allow teams to disable explosions in claimed chunks");
 		event.registerNode(CLAIMS_BLOCK_CNB, DefaultPermissionLevel.OP, "Allow to edit C&B bits in claimed chunks");
 		event.registerNode(INFINITE_BACK_USAGE, DefaultPermissionLevel.NONE, "Allow to use 'back' command infinite times");
 		event.registerNode(CHUNKLOADER_LOAD_OFFLINE, DefaultPermissionLevel.ALL, "Keep loaded chunks working when player goes offline");

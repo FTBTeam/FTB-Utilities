@@ -87,6 +87,7 @@ rank_config.ftbu.chunkloader.offline_timer.tooltip=Max hours player can be offli
 player_config.ftbu.chat_links=Chat Links
 player_config.ftbu.disable_global_badge=Disable Global Badge
 player_config.ftbu.render_badge=Render My Badge
+player_config.ftbu.enable_pvp=Enable PVP
 
 # Team Settings
 team_config.ftbu.blocks_edit=Required Level for Block Editing
@@ -100,6 +101,7 @@ sidebar_button.ftbu.chats=Chats
 sidebar_button.ftbu.chats.general=General Chat
 sidebar_button.ftbu.chats.admin=Admin Chat
 sidebar_button.ftbu.chats.team=Team Chat
+sidebar_button.ftbu.leaderboards=Leaderboards
 sidebar_button.ftbu.toggle.gamemode=Toggle Gamemode
 sidebar_button.ftbu.toggle.gamemode.tooltip=Toggles between survival and creative mode
 sidebar_button.ftbu.toggle.rain=Toggle Rain
@@ -129,7 +131,6 @@ key.ftbu.warp=Warp GUI
 # Misc
 ftbu.lang.timer.shutdown=Server shuts down in %s
 ftbu.lang.timer.backup=Server backup in: %s
-ftbu.lang.leaderboards=Leaderboards
 ftbu.lang.killed_entities=Killed %d entities with type '%s'
 ftbu.lang.guide.unsupported_format=Unsupported format! Please update FTBUtilities or contact mod author!
 ftbu.lang.guide.commands_failed=Failed to load commands

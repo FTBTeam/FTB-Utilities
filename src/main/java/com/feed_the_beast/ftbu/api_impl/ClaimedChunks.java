@@ -18,6 +18,7 @@ import com.feed_the_beast.ftbu.api.chunks.ChunkModifiedEvent;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunks;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksUpdate;
+import com.feed_the_beast.ftbu.util.FTBUPlayerData;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
 import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import net.minecraft.entity.Entity;
@@ -31,7 +32,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
@@ -423,21 +423,26 @@ public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingC
 	@Override
 	public boolean canPlayerAttackEntity(EntityPlayerMP player, Entity entity)
 	{
-		if (player.dimension != 0 || player instanceof FakePlayer)
+		if (entity instanceof EntityPlayer)
 		{
-			return true;
-		}
+			if (FTBUConfig.world.safe_spawn && player.dimension == 0 && FTBUUniverseData.isInSpawn(new ChunkDimPos(entity)))
+			{
+				return false;
+			}
 
-		ChunkDimPos pos = new ChunkDimPos(entity);
+			if (FTBUConfig.world.enable_pvp.isDefault())
+			{
+				boolean pvp1 = FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(player)).enablePVP.getBoolean();
+				boolean pvp2 = FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(entity)).enablePVP.getBoolean();
+				return pvp1 && pvp2;
+			}
 
-		if (entity instanceof EntityPlayer && FTBUConfig.world.safe_spawn && FTBUUniverseData.isInSpawn(pos))
-		{
-			return false;
+			return FTBUConfig.world.enable_pvp.isTrue();
 		}
 
 		if (!(entity instanceof IMob))
 		{
-			ClaimedChunk chunk = getChunk(pos);
+			ClaimedChunk chunk = getChunk(new ChunkDimPos(entity));
 			return chunk == null || chunk.getTeam().hasStatus(FTBLibAPI.API.getUniverse().getPlayer(player), chunk.getData().getAttackEntitiesStatus());
 		}
 

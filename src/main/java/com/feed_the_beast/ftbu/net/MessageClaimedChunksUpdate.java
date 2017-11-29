@@ -138,7 +138,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 		maxClaimedChunks = data.readInt();
 		maxLoadedChunks = data.readInt();
 		ClientClaimedChunks.ID_TO_UPGRADE.clear();
-		data.readMap(null, DataIn.INT, ClientClaimedChunks.ChunkData.UPGRADE_NAME_DESERIALIZER).forEach(ClientClaimedChunks.ID_TO_UPGRADE::put);
+		data.readMap(DataIn.INT, ClientClaimedChunks.ChunkData.UPGRADE_NAME_DESERIALIZER).forEach(ClientClaimedChunks.ID_TO_UPGRADE::put);
 
 		teams = new HashMap<>();
 

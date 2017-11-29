@@ -1,9 +1,7 @@
 package com.feed_the_beast.ftbu.api_impl;
 
-import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
@@ -64,7 +62,7 @@ public final class ClaimedChunk implements IClaimedChunk
 	{
 		if (upgrade == ChunkUpgrades.NO_EXPLOSIONS)
 		{
-			return !teamData.explosions.getBoolean() && teamData.team.anyPlayerHasPermission(FTBUPermissions.CLAIMS_ALLOW_DISABLE_EXPLOSIONS, EnumTeamStatus.MEMBER);
+			return !teamData.explosions.getBoolean();
 		}
 
 		return !upgrade.isInternal() && upgrades.contains(FTBUUniverseData.getUpgradeId(upgrade));

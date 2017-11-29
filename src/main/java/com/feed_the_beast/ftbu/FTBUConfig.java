@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu;
 
+import com.feed_the_beast.ftbl.lib.config.EnumTristate;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
@@ -140,6 +141,7 @@ public class FTBUConfig
 		public boolean nbtedit = true;
 		public boolean view_crash = true;
 		public boolean fly = true;
+		public boolean leaderboard = true;
 	}
 
 	public static class Login
@@ -202,6 +204,14 @@ public class FTBUConfig
 
 		@Config.Comment("Dimensions where chunk claiming isn't allowed")
 		public int[] blocked_claiming_dimensions = { };
+
+		@Config.Comment("If set to DEFAULT, then players can decide their PVP status")
+		@Config.LangKey("player_config.ftbu.enable_pvp")
+		public EnumTristate enable_pvp = EnumTristate.DEFAULT;
+
+		@Config.Comment("If set to DEFAULT, then teams can decide their Explosion setting")
+		@Config.LangKey("team_config.ftbu.explosions")
+		public EnumTristate enable_explosions = EnumTristate.DEFAULT;
 
 		public boolean allowDimension(int dimension)
 		{

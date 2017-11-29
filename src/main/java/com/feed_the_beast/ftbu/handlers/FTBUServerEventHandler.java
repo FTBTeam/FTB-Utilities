@@ -1,24 +1,34 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.FTBUConfig;
+import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.IRank;
+import com.feed_the_beast.ftbu.api.Leaderboard;
 import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.ServerChatEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.registries.RegistryBuilder;
+
+import java.util.Comparator;
 
 /**
  * @author LatvianModder
  */
-@EventHandler
+@Mod.EventBusSubscriber(modid = FTBUFinals.MOD_ID)
 public class FTBUServerEventHandler
 {
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -54,5 +64,26 @@ public class FTBUServerEventHandler
 
 			event.setComponent(main);
 		}
+	}
+
+	@SubscribeEvent
+	public static void registerRegistries(RegistryEvent.NewRegistry event)
+	{
+		FTBUCommon.LEADERBOARDS = new RegistryBuilder<Leaderboard>().setName(FTBUFinals.get("leaderboards")).setType(Leaderboard.class).setMaxID(255).create();
+	}
+
+	@SubscribeEvent
+	public static void registerLeaderboards(RegistryEvent.Register<Leaderboard> event)
+	{
+		event.getRegistry().registerAll(new Leaderboard.FromStat(StatList.DEATHS, false).setRegistryName(FTBUFinals.MOD_ID + ":deaths"));
+		event.getRegistry().registerAll(new Leaderboard.FromStat(StatList.MOB_KILLS, false).setRegistryName(FTBUFinals.MOD_ID + ":mob_kills"));
+		event.getRegistry().registerAll(new Leaderboard(new TextComponentTranslation("ftbu.stat.dph"), player -> new TextComponentString(String.format("%.2f", getDPH(player))), Comparator.comparingDouble(FTBUServerEventHandler::getDPH)).setRegistryName(FTBUFinals.MOD_ID + ":deaths_per_hour"));
+		event.getRegistry().registerAll(new Leaderboard.FromStat(StatList.PLAY_ONE_MINUTE, false).setRegistryName(FTBUFinals.MOD_ID + ":time_played"));
+	}
+
+	private static double getDPH(IForgePlayer player)
+	{
+		int deaths = player.stats().readStat(StatList.PLAY_ONE_MINUTE);
+		return deaths == 0 ? 0D : (player.stats().readStat(StatList.DEATHS) * 60D / (double) deaths);
 	}
 }

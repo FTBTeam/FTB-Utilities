@@ -10,7 +10,7 @@ public interface FTBULang
 {
 	LangKey TIMER_SHUTDOWN = FTBUFinals.lang("lang.timer.shutdown", String.class);
 	LangKey TIMER_BACKUP = FTBUFinals.lang("lang.timer.backup", String.class);
-	LangKey LEADERBOARDS = FTBUFinals.lang("lang.leaderboards");
+	LangKey LEADERBOARDS = LangKey.of("sidebar_button.ftbu.leaderboards");
 	LangKey KILLED_ENTITIES = FTBUFinals.lang("lang.killed_entities", Integer.class, String.class);
 	LangKey GUIDE_UNSUPPORTED_FORMAT = FTBUFinals.lang("lang.guide.unsupported_format");
 	LangKey GUIDE_COMMANDS_FAILED = FTBUFinals.lang("lang.guide.commands_failed");

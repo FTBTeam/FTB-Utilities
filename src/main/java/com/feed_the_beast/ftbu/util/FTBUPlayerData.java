@@ -26,6 +26,7 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 {
 	public final ConfigBoolean renderBadge = new ConfigBoolean(true);
 	public final ConfigBoolean disableGlobalBadge = new ConfigBoolean(false);
+	public final ConfigBoolean enablePVP = new ConfigBoolean(true);
 
 	public final IForgePlayer player;
 	public BlockDimPos lastDeath, lastSafePos;
@@ -59,6 +60,11 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 			nbt.setBoolean("DisableGlobalBadges", true);
 		}
 
+		if (!enablePVP.getBoolean())
+		{
+			nbt.setBoolean("EnablePVP", false);
+		}
+
 		NBTTagCompound homesTag = homes.serializeNBT();
 
 		if (!homesTag.hasNoTags())
@@ -89,6 +95,7 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 
 		renderBadge.setBoolean(!nbt.hasKey("RenderBadge") || nbt.getBoolean("RenderBadge"));
 		disableGlobalBadge.setBoolean(nbt.getBoolean("DisableGlobalBadges"));
+		enablePVP.setBoolean(!nbt.hasKey("EnablePVP") || nbt.getBoolean("EnablePVP"));
 		homes.deserializeNBT(nbt.getCompoundTag("Homes"));
 		fly = nbt.getBoolean("AllowFlying");
 
@@ -148,5 +155,6 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 		event.getConfig().setGroupName(group, new TextComponentString(FTBUFinals.MOD_NAME));
 		event.getConfig().add(group, "render_badge", renderBadge);
 		event.getConfig().add(group, "disable_global_badge", disableGlobalBadge);
+		event.getConfig().add(group, "enable_pvp", enablePVP);
 	}
 }

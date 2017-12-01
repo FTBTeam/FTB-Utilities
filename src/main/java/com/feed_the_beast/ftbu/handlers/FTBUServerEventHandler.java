@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.lib.gui.GuiLang;
+import com.feed_the_beast.ftbl.lib.util.text_components.TextComponentCountdown;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
@@ -13,6 +15,7 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.ForgeHooks;
@@ -75,15 +78,41 @@ public class FTBUServerEventHandler
 	@SubscribeEvent
 	public static void registerLeaderboards(RegistryEvent.Register<Leaderboard> event)
 	{
-		event.getRegistry().registerAll(new Leaderboard.FromStat(StatList.DEATHS, false).setRegistryName(FTBUFinals.MOD_ID + ":deaths"));
-		event.getRegistry().registerAll(new Leaderboard.FromStat(StatList.MOB_KILLS, false).setRegistryName(FTBUFinals.MOD_ID + ":mob_kills"));
-		event.getRegistry().registerAll(new Leaderboard(new TextComponentTranslation("ftbu.stat.dph"), player -> new TextComponentString(String.format("%.2f", getDPH(player))), Comparator.comparingDouble(FTBUServerEventHandler::getDPH)).setRegistryName(FTBUFinals.MOD_ID + ":deaths_per_hour"));
-		event.getRegistry().registerAll(new Leaderboard.FromStat(StatList.PLAY_ONE_MINUTE, false).setRegistryName(FTBUFinals.MOD_ID + ":time_played"));
+		event.getRegistry().register(new Leaderboard.FromStat(StatList.DEATHS, false).setRegistryName(FTBUFinals.MOD_ID + ":deaths"));
+		event.getRegistry().register(new Leaderboard.FromStat(StatList.MOB_KILLS, false).setRegistryName(FTBUFinals.MOD_ID + ":mob_kills"));
+		event.getRegistry().register(new Leaderboard.FromStat(StatList.PLAY_ONE_MINUTE, false).setRegistryName(FTBUFinals.MOD_ID + ":time_played"));
+
+		event.getRegistry().register(new Leaderboard(
+				new TextComponentTranslation("ftbu.stat.dph"),
+				player -> new TextComponentString(String.format("%.2f", getDPH(player))),
+				Comparator.comparingDouble(FTBUServerEventHandler::getDPH).reversed(),
+				player -> getDPH(player) > 0D)
+				.setRegistryName(FTBUFinals.MOD_ID + ":deaths_per_hour"));
+
+		event.getRegistry().register(new Leaderboard(
+				new TextComponentTranslation("ftbu.stat.last_seen"),
+				player ->
+				{
+					if (player.isOnline())
+					{
+						ITextComponent component = GuiLang.ONLINE.textComponent(null);
+						component.getStyle().setColor(TextFormatting.GREEN);
+						return component;
+					}
+					else
+					{
+						return new TextComponentCountdown(player.getLastTimeSeen());
+					}
+				},
+				Comparator.comparingLong(IForgePlayer::getLastTimeSeen),
+				player -> player.getLastTimeSeen() != 0L)
+				.setRegistryName(FTBUFinals.MOD_ID + ":last_seen"));
 	}
 
 	private static double getDPH(IForgePlayer player)
 	{
-		int deaths = player.stats().readStat(StatList.PLAY_ONE_MINUTE);
-		return deaths == 0 ? 0D : (player.stats().readStat(StatList.DEATHS) * 60D / (double) deaths);
+		int deaths = player.stats().readStat(StatList.DEATHS);
+		int playTime = player.stats().readStat(StatList.PLAY_ONE_MINUTE);
+		return deaths > 0 && playTime > 0 ? (deaths / (playTime / 60D)) : 0D;
 	}
 }

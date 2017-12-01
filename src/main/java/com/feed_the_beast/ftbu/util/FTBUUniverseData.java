@@ -17,13 +17,11 @@ import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
 import com.feed_the_beast.ftbu.util.backups.Backups;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -39,8 +37,6 @@ public class FTBUUniverseData
 	public static final BlockDimPosStorage WARPS = new BlockDimPosStorage();
 	public static final ChatHistory GENERAL_CHAT = new ChatHistory(() -> FTBUConfig.chat.general_history_limit);
 	public static final Map<String, ChunkUpgrade> CHUNK_UPGRADES = new HashMap<>();
-	public static final Int2ObjectOpenHashMap<ChunkUpgrade> ID_TO_UPGRADE = new Int2ObjectOpenHashMap<>();
-	private static final Map<ChunkUpgrade, Integer> UPGRADE_TO_ID = new HashMap<>();
 
 	public static boolean isInSpawn(ChunkDimPos pos)
 	{
@@ -65,60 +61,11 @@ public class FTBUUniverseData
 		return pos.posX >= minX && pos.posX <= maxX && pos.posZ >= minZ && pos.posZ <= maxZ;
 	}
 
-	public static int getUpgradeId(ChunkUpgrade upgrade)
-	{
-		Integer id = UPGRADE_TO_ID.get(upgrade);
-
-		if (id == null)
-		{
-			id = 0;
-
-			for (Integer id0 : UPGRADE_TO_ID.values())
-			{
-				id = Math.max(id, id0);
-			}
-
-			id++;
-			UPGRADE_TO_ID.put(upgrade, id);
-			ID_TO_UPGRADE.put(id.intValue(), upgrade);
-		}
-
-		return id;
-	}
-
-	@Nullable
-	public static ChunkUpgrade getUpgradeFromId(int id)
-	{
-		return id == 0 ? null : ID_TO_UPGRADE.get(id);
-	}
-
 	@SubscribeEvent
 	public static void onUniversePostLoaded(ForgeUniverseLoadedEvent.Post event)
 	{
 		NBTTagCompound nbt = event.getData(FTBLibIntegration.FTBU_DATA);
 		FTBUUniverseData.WARPS.deserializeNBT(nbt.getCompoundTag("Warps"));
-
-		ID_TO_UPGRADE.clear();
-		UPGRADE_TO_ID.clear();
-
-		NBTTagCompound upgrades = nbt.getCompoundTag("ChunkUpgrades");
-
-		for (String name : upgrades.getKeySet())
-		{
-			int id = upgrades.getInteger(name);
-			ChunkUpgrade upgrade = CHUNK_UPGRADES.get(name);
-
-			if (upgrade != null)
-			{
-				UPGRADE_TO_ID.put(upgrade, id);
-				ID_TO_UPGRADE.put(id, upgrade);
-			}
-		}
-
-		for (ChunkUpgrade upgrade : CHUNK_UPGRADES.values())
-		{
-			getUpgradeId(upgrade);
-		}
 	}
 
 	@SubscribeEvent
@@ -169,15 +116,6 @@ public class FTBUUniverseData
 
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setTag("Warps", FTBUUniverseData.WARPS.serializeNBT());
-
-		NBTTagCompound upgrades = new NBTTagCompound();
-
-		for (Map.Entry<ChunkUpgrade, Integer> entry : UPGRADE_TO_ID.entrySet())
-		{
-			upgrades.setInteger(entry.getKey().getName(), entry.getValue());
-		}
-
-		nbt.setTag("ChunkUpgrades", upgrades);
 
 		//TODO: Save chat as json
 

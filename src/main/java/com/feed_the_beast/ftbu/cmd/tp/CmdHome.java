@@ -149,7 +149,7 @@ public class CmdHome extends CmdBase
 			throw FTBULang.HOME_CROSS_DIM.commandError();
 		}
 
-		ServerUtils.teleportPlayer(player, pos);
+		ServerUtils.teleportEntity(player, pos);
 		FTBULang.WARP_TP.sendMessage(sender, args[0]);
 	}
 }

@@ -5,8 +5,9 @@ import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
-import com.feed_the_beast.ftbu.util.FTBUUniverseData;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+
+import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * @author LatvianModder
@@ -15,7 +16,7 @@ public final class ClaimedChunk implements IClaimedChunk
 {
 	private final ChunkDimPos pos;
 	private final FTBUTeamData teamData;
-	private final IntOpenHashSet upgrades;
+	private ChunkUpgrade[] upgrades;
 	private boolean invalid;
 	public Boolean forced;
 
@@ -23,7 +24,7 @@ public final class ClaimedChunk implements IClaimedChunk
 	{
 		pos = c;
 		teamData = t;
-		upgrades = new IntOpenHashSet();
+		upgrades = null;
 		invalid = false;
 		forced = null;
 	}
@@ -65,7 +66,18 @@ public final class ClaimedChunk implements IClaimedChunk
 			return !teamData.explosions.getBoolean();
 		}
 
-		return !upgrade.isInternal() && upgrades.contains(FTBUUniverseData.getUpgradeId(upgrade));
+		if (upgrades != null && !upgrade.isInternal())
+		{
+			for (ChunkUpgrade upgrade1 : upgrades)
+			{
+				if (upgrade1 == upgrade)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	@Override
@@ -76,19 +88,27 @@ public final class ClaimedChunk implements IClaimedChunk
 			return false;
 		}
 
+		HashSet<ChunkUpgrade> upgradeSet = new HashSet<>();
+
+		if (upgrades != null)
+		{
+			upgradeSet.addAll(Arrays.asList(upgrades));
+		}
+
 		boolean changed;
 
 		if (v)
 		{
-			changed = upgrades.add(FTBUUniverseData.getUpgradeId(upgrade));
+			changed = upgradeSet.add(upgrade);
 		}
 		else
 		{
-			changed = upgrades.remove(FTBUUniverseData.getUpgradeId(upgrade));
+			changed = upgradeSet.remove(upgrade);
 		}
 
 		if (changed)
 		{
+			upgrades = upgradeSet.isEmpty() ? null : upgradeSet.toArray(new ChunkUpgrade[0]);
 			ClaimedChunks.INSTANCE.markDirty();
 		}
 

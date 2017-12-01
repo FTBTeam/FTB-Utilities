@@ -10,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.Constants;
 
 public class CmdTplast extends CmdBase
@@ -37,7 +36,7 @@ public class CmdTplast extends CmdBase
 			double x = parseDouble(player.posX, args[0], -30000000, 30000000, true);
 			double y = parseDouble(player.posY, args[1], -30000000, 30000000, true);
 			double z = parseDouble(player.posZ, args[2], -30000000, 30000000, true);
-			ServerUtils.teleportPlayer(player, new Vec3d(x, y, z), player.dimension);
+			ServerUtils.teleportEntity(player, new BlockDimPos(x, y, z, player.dimension));
 			return;
 		}
 
@@ -68,6 +67,6 @@ public class CmdTplast extends CmdBase
 			p = new BlockDimPos(posList.getDoubleAt(0), posList.getDoubleAt(1), posList.getDoubleAt(2), nbt.getInteger("Dimension"));
 		}
 
-		ServerUtils.teleportPlayer(who, p);
+		ServerUtils.teleportEntity(who, p);
 	}
 }

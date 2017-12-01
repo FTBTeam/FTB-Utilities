@@ -4,19 +4,11 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
-import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
-import com.feed_the_beast.ftbu.api_impl.ChunkUpgrades;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 /**
@@ -104,48 +96,6 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 		{
 			int[] ai = nbt.getIntArray("LastDeath");
 			lastDeath = (ai.length == 4) ? new BlockDimPos(ai) : null;
-		}
-
-		FTBUTeamData team = player.getTeam() == null ? null : FTBUTeamData.get(player.getTeam());
-
-		if (team != null)
-		{
-			NBTTagList list = nbt.getTagList("ClaimedChunks", Constants.NBT.TAG_INT_ARRAY);
-
-			for (int i = 0; i < list.tagCount(); i++)
-			{
-				int[] ai = list.getIntArrayAt(i);
-
-				if (ai.length >= 3)
-				{
-					ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(ai[1], ai[2], ai[0]), team);
-
-					if (ai.length >= 4)
-					{
-						if (ai[3] == -1)
-						{
-							for (int j = 4; j < ai.length; j++)
-							{
-								ChunkUpgrade upgrade = FTBUUniverseData.getUpgradeFromId(ai[j]);
-
-								if (upgrade != null)
-								{
-									chunk.setHasUpgrade(upgrade, true);
-								}
-							}
-						}
-						else
-						{
-							if (Bits.getFlag(ai[3], 1))
-							{
-								chunk.setHasUpgrade(ChunkUpgrades.LOADED, true);
-							}
-						}
-					}
-
-					ClaimedChunks.INSTANCE.addChunk(chunk);
-				}
-			}
 		}
 	}
 

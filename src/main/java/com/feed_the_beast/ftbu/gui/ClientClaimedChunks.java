@@ -18,8 +18,6 @@ import java.util.UUID;
  */
 public class ClientClaimedChunks
 {
-	public static final Int2ObjectOpenHashMap<ChunkUpgrade> ID_TO_UPGRADE = new Int2ObjectOpenHashMap<>();
-
 	public static class Team
 	{
 		private static Team currentTeam;
@@ -58,16 +56,14 @@ public class ClientClaimedChunks
 
 	public static class ChunkData
 	{
-		public static final DataOut.Serializer<ChunkUpgrade> UPGRADE_NAME_SERIALIZER = (data, upgrade) -> data.writeString(upgrade.getName());
-		public static final DataIn.Deserializer<ChunkUpgrade> UPGRADE_NAME_DESERIALIZER = data -> FTBUUniverseData.CHUNK_UPGRADES.get(data.readString());
-		public static final DataOut.Serializer<ChunkUpgrade> UPGRADE_ID_SERIALIZER = (data, upgrade) -> data.writeInt(FTBUUniverseData.getUpgradeId(upgrade));
-		public static final DataIn.Deserializer<ChunkUpgrade> UPGRADE_ID_DESERIALIZER = data -> ID_TO_UPGRADE.get(data.readInt());
+		public static final DataOut.Serializer<ChunkUpgrade> UPGRADE_SERIALIZER = (data, upgrade) -> data.writeString(upgrade.getName());
+		public static final DataIn.Deserializer<ChunkUpgrade> UPGRADE_DESERIALIZER = data -> FTBUUniverseData.CHUNK_UPGRADES.get(data.readString());
 
-		public static final DataOut.Serializer<ChunkData> SERIALIZER = (data, d) -> data.writeCollection(d.upgrades, UPGRADE_ID_SERIALIZER);
+		public static final DataOut.Serializer<ChunkData> SERIALIZER = (data, d) -> data.writeCollection(d.upgrades, UPGRADE_SERIALIZER);
 		public static final DataIn.Deserializer<ChunkData> DESERIALIZER = data ->
 		{
 			ChunkData d = new ChunkData(Team.currentTeam);
-			data.readCollection(d.upgrades, UPGRADE_ID_DESERIALIZER);
+			data.readCollection(d.upgrades, UPGRADE_DESERIALIZER);
 			return d;
 		};
 

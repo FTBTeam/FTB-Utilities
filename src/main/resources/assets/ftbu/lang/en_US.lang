@@ -140,6 +140,7 @@ ftbu.lang.upload_crash=Upload Crash Report
 ftbu.lang.uploaded_crash=Crash Report Uploaded! %s
 
 ftbu.stat.dph=Deaths Per Hour
+ftbu.stat.last_seen=Last Seen
 
 # Chunks
 ftbu.lang.chunks.cant_modify_chunk=Can't modify this chunk!

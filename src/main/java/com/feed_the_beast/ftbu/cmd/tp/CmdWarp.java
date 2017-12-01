@@ -64,7 +64,7 @@ public class CmdWarp extends CmdBase
 			throw FTBULang.WARP_NOT_SET.commandError(args[0]);
 		}
 
-		ServerUtils.teleportPlayer(player, p);
+		ServerUtils.teleportEntity(player, p);
 		FTBULang.WARP_TP.sendMessage(sender, args[0]);
 	}
 }

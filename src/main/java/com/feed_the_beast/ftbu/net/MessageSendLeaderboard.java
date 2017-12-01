@@ -7,45 +7,74 @@ import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.api.Leaderboard;
+import com.feed_the_beast.ftbu.api.LeaderboardValue;
 import com.feed_the_beast.ftbu.gui.GuiLeaderboard;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MessageSendLeaderboard extends MessageToClient<MessageSendLeaderboard>
 {
+	private static final DataOut.Serializer<LeaderboardValue> VALUE_SERIALIZER = (data, object) -> {
+		data.writeString(object.username);
+		data.writeTextComponent(object.value);
+		data.writeByte(object.color.ordinal());
+	};
+
+	private static final DataIn.Deserializer<LeaderboardValue> VALUE_DESERIALIZER = data ->
+	{
+		LeaderboardValue value = new LeaderboardValue();
+		value.username = data.readString();
+		value.value = data.readTextComponent();
+		value.color = TextFormatting.values()[data.readUnsignedByte()];
+		return value;
+	};
+
 	private ITextComponent title;
-	private Map<String, ITextComponent> values;
+	private List<LeaderboardValue> values;
 
 	public MessageSendLeaderboard()
 	{
 	}
 
-	public MessageSendLeaderboard(Leaderboard leaderboard)
+	public MessageSendLeaderboard(EntityPlayerMP player, Leaderboard leaderboard)
 	{
 		title = leaderboard.getTitle();
-		values = new LinkedHashMap<>();
+		values = new ArrayList<>();
 
-		List<Map.Entry<IForgePlayer, ITextComponent>> list = new ArrayList<>();
+		IForgePlayer p0 = FTBLibAPI.API.getUniverse().getPlayer(player);
+		List<IForgePlayer> players = FTBLibAPI.API.getUniverse().getRealPlayers();
+		players.sort(leaderboard.getComparator());
 
-		for (IForgePlayer p : FTBLibAPI.API.getUniverse().getRealPlayers())
+		for (int i = 0; i < players.size(); i++)
 		{
-			list.add(new AbstractMap.SimpleEntry<>(p, leaderboard.createValue(p)));
-		}
+			IForgePlayer p = players.get(i);
+			LeaderboardValue value = new LeaderboardValue();
+			value.username = p.getName();
+			value.value = leaderboard.createValue(p);
 
-		list.sort((o1, o2) -> {
-			int o = leaderboard.getComparator().compare(o1.getKey(), o2.getKey());
-			return o == 0 ? o1.getKey().getName().compareToIgnoreCase(o2.getKey().getName()) : o;
-		});
+			if (p == p0)
+			{
+				value.color = TextFormatting.DARK_GREEN;
+			}
+			else if (!leaderboard.hasValidValue(p))
+			{
+				value.color = TextFormatting.DARK_GRAY;
+			}
+			else if (i < 3)
+			{
+				value.color = TextFormatting.GOLD;
+			}
+			else
+			{
+				value.color = TextFormatting.RESET;
+			}
 
-		for (Map.Entry<IForgePlayer, ITextComponent> entry : list)
-		{
-			values.put(entry.getKey().getName(), entry.getValue());
+			values.add(value);
 		}
 	}
 
@@ -59,14 +88,15 @@ public class MessageSendLeaderboard extends MessageToClient<MessageSendLeaderboa
 	public void writeData(DataOut data)
 	{
 		data.writeTextComponent(title);
-		data.writeMap(values, DataOut.STRING, DataOut.TEXT_COMPONENT);
+		data.writeCollection(values, VALUE_SERIALIZER);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
 		title = data.readTextComponent();
-		values = data.readMap(DataIn.STRING, DataIn.TEXT_COMPONENT);
+		values = new ArrayList<>();
+		data.readCollection(values, VALUE_DESERIALIZER);
 	}
 
 	@Override

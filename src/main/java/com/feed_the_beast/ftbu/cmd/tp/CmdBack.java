@@ -32,7 +32,7 @@ public class CmdBack extends CmdBase
 			throw FTBULang.WARP_NO_DP.commandError();
 		}
 
-		ServerUtils.teleportPlayer(player, data.lastDeath);
+		ServerUtils.teleportEntity(player, data.lastDeath);
 
 		if (!PermissionAPI.hasPermission(player, FTBUPermissions.INFINITE_BACK_USAGE))
 		{

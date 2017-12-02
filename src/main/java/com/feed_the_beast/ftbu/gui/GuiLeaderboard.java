@@ -144,13 +144,13 @@ public class GuiLeaderboard extends GuiBase
 	{
 		add(panelButtons);
 
-		if (panelButtons.widgets.size() > 7)
+		if (panelButtons.widgets.size() > 10)
 		{
 			add(scrollBar);
 		}
 
 		scrollBar.setX(panelButtons.posX + panelButtons.width + 6);
-		setWidth(scrollBar.posX + (panelButtons.widgets.size() > 7 ? scrollBar.width + 8 : 4));
+		setWidth(scrollBar.posX + (panelButtons.widgets.size() > 10 ? scrollBar.width + 8 : 4));
 		posX = (getScreen().getScaledWidth() - width) / 2;
 	}
 

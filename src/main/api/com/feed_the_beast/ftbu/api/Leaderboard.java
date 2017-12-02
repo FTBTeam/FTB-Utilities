@@ -7,7 +7,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
-import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -54,29 +53,7 @@ public class Leaderboard extends IForgeRegistryEntry.Impl<Leaderboard>
 	public static class FromStat extends Leaderboard
 	{
 		public static final IntFunction<ITextComponent> DEFAULT = value -> new TextComponentString(value <= 0 ? "0" : Integer.toString(value));
-		private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("########0.00");
-		public static final IntFunction<ITextComponent> TIME = value -> {
-			double seconds = value / 20D;
-			double minutes = seconds / 60D;
-			double hours = minutes / 60D;
-			double days = hours / 24D;
-			double years = days / 365D;
-
-			if (years > 0.5D)
-			{
-				return new TextComponentString(DECIMAL_FORMAT.format(years) + " y");
-			}
-			else if (days > 0.5D)
-			{
-				return new TextComponentString(DECIMAL_FORMAT.format(days) + " d");
-			}
-			else if (hours > 0.5D)
-			{
-				return new TextComponentString(DECIMAL_FORMAT.format(hours) + " h");
-			}
-
-			return new TextComponentString(minutes > 0.5D ? DECIMAL_FORMAT.format(minutes) + " m" : seconds + " s");
-		};
+		public static final IntFunction<ITextComponent> TIME = value -> new TextComponentString("[" + (int) (value / 72000D + 0.5D) + "h] " + StringUtils.getTimeStringTicks(value));
 
 		public FromStat(ITextComponent t, StatBase statBase, boolean from0to1, IntFunction<ITextComponent> valueToString)
 		{

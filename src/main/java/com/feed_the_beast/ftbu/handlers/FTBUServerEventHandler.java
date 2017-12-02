@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.handlers;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
-import com.feed_the_beast.ftbl.lib.util.text_components.TextComponentCountdown;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
@@ -106,10 +105,15 @@ public class FTBUServerEventHandler
 					}
 					else
 					{
-						return new TextComponentCountdown(player.getLastTimeSeen());
+						return Leaderboard.FromStat.TIME.apply((int) player.getLastTimeSeen());
 					}
 				},
-				Comparator.comparingLong(IForgePlayer::getLastTimeSeen),
+				(o1, o2) ->
+				{
+					long ao1 = o1.isOnline() ? 0 : o1.getLastTimeSeen();
+					long ao2 = o2.isOnline() ? 0 : o2.getLastTimeSeen();
+					return Long.compare(ao1, ao2);
+				},
 				player -> player.getLastTimeSeen() != 0L)
 				.setRegistryName(FTBUFinals.MOD_ID + ":last_seen"));
 	}

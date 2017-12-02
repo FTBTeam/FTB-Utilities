@@ -23,23 +23,24 @@ public class GuiLeaderboard extends GuiBase
 	private final PanelScrollBar scrollBar;
 	private final String title;
 	private final List<LeaderboardValue> leaderboard;
+	private int rankSize, usernameSize, valueSize;
 
 	private class LeaderboardEntry extends Widget
 	{
 		private final LeaderboardValue value;
-		private String title;
+		private final String rank;
 
 		public LeaderboardEntry(GuiBase g, LeaderboardValue v)
 		{
 			super(g, 0, 0, 0, 14);
 			value = v;
-			title = value.color + "#" + StringUtils.add0s(v.rank, leaderboard.size()) + " " + value.username + ": ";
-			setWidth(gui.getStringWidth(title + value.value.getFormattedText()) + 8);
-		}
+			rank = value.color + "#" + StringUtils.add0s(v.rank, leaderboard.size());
 
-		public boolean renderTitleInCenter()
-		{
-			return false;
+			rankSize = Math.max(rankSize, gui.getStringWidth(rank) + 4);
+			usernameSize = Math.max(usernameSize, gui.getStringWidth(v.username) + 8);
+			valueSize = Math.max(valueSize, gui.getStringWidth(value.value.getFormattedText()) + 8);
+
+			setWidth(rankSize + usernameSize + valueSize);
 		}
 
 		@Override
@@ -53,22 +54,16 @@ public class GuiLeaderboard extends GuiBase
 			int ax = getAX();
 			int ay = getAY();
 
-			(value.color == TextFormatting.DARK_GRAY ? gui.getTheme().getDisabledButton() : gui.getTheme().getButton(gui.isMouseOver(this))).draw(ax, ay, width, height);
-			int textX = ax;
+			Icon widget = value.color == TextFormatting.DARK_GRAY ? gui.getTheme().getDisabledButton() : gui.getTheme().getButton(gui.isMouseOver(this));
 			int textY = ay + (height - gui.getFontHeight() + 1) / 2;
+			widget.draw(ax, ay, rankSize, height);
+			gui.drawString(rank, ax + 2, textY, SHADOW);
 
-			String text = title + value.value.getFormattedText();
+			widget.draw(ax + rankSize, ay, usernameSize, height);
+			gui.drawString(value.color + value.username, ax + 4 + rankSize, textY, SHADOW);
 
-			if (renderTitleInCenter())
-			{
-				textX += (width - gui.getStringWidth(text)) / 2;
-			}
-			else
-			{
-				textX += 4;
-			}
-
-			gui.drawString(text, textX, textY, SHADOW);
+			widget.draw(ax + rankSize + usernameSize, ay, valueSize, height);
+			gui.drawString(value.color + value.value.getFormattedText(), ax + 4 + rankSize + usernameSize, textY, SHADOW);
 		}
 	}
 
@@ -85,6 +80,9 @@ public class GuiLeaderboard extends GuiBase
 			{
 				width = 0;
 				int i = 0;
+				rankSize = 0;
+				usernameSize = 0;
+				valueSize = 0;
 
 				for (LeaderboardValue value : leaderboard)
 				{

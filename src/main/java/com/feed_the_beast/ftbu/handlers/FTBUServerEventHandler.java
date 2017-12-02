@@ -79,15 +79,19 @@ public class FTBUServerEventHandler
 	@SubscribeEvent
 	public static void registerLeaderboards(RegistryEvent.Register<Leaderboard> event)
 	{
-		event.getRegistry().register(new Leaderboard.FromStat(StatList.DEATHS, false).setRegistryName(FTBUFinals.MOD_ID + ":deaths"));
-		event.getRegistry().register(new Leaderboard.FromStat(StatList.MOB_KILLS, false).setRegistryName(FTBUFinals.MOD_ID + ":mob_kills"));
-		event.getRegistry().register(new Leaderboard.FromStat(StatList.PLAY_ONE_MINUTE, false).setRegistryName(FTBUFinals.MOD_ID + ":time_played"));
+		event.getRegistry().register(new Leaderboard.FromStat(StatList.DEATHS, false, Leaderboard.FromStat.DEFAULT).setRegistryName(FTBUFinals.MOD_ID + ":deaths"));
+		event.getRegistry().register(new Leaderboard.FromStat(StatList.MOB_KILLS, false, Leaderboard.FromStat.DEFAULT).setRegistryName(FTBUFinals.MOD_ID + ":mob_kills"));
+		event.getRegistry().register(new Leaderboard.FromStat(StatList.PLAY_ONE_MINUTE, false, Leaderboard.FromStat.TIME).setRegistryName(FTBUFinals.MOD_ID + ":time_played"));
 
 		event.getRegistry().register(new Leaderboard(
 				new TextComponentTranslation("ftbu.stat.dph"),
-				player -> new TextComponentString(String.format("%.2f", getDPH(player))),
+				player ->
+				{
+					double d = getDPH(player);
+					return new TextComponentString(d < 0D ? "-" : String.format("%.2f", d));
+				},
 				Comparator.comparingDouble(FTBUServerEventHandler::getDPH).reversed(),
-				player -> getDPH(player) > 0D)
+				player -> getDPH(player) >= 0D)
 				.setRegistryName(FTBUFinals.MOD_ID + ":deaths_per_hour"));
 
 		event.getRegistry().register(new Leaderboard(
@@ -112,8 +116,18 @@ public class FTBUServerEventHandler
 
 	private static double getDPH(IForgePlayer player)
 	{
-		int deaths = player.stats().readStat(StatList.DEATHS);
 		int playTime = player.stats().readStat(StatList.PLAY_ONE_MINUTE);
-		return deaths > 0 && playTime > 0 ? ((double) deaths / ((double) playTime / CommonUtils.TICKS_HOUR)) : 0D;
+
+		if (playTime > 0)
+		{
+			double hours = (double) playTime / CommonUtils.TICKS_HOUR;
+
+			if (hours >= 1D)
+			{
+				return (double) player.stats().readStat(StatList.DEATHS) / hours;
+			}
+		}
+
+		return -1D;
 	}
 }

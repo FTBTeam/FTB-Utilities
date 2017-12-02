@@ -63,7 +63,8 @@ public class GuiLeaderboard extends GuiBase
 			gui.drawString(value.color + value.username, ax + 4 + rankSize, textY, SHADOW);
 
 			widget.draw(ax + rankSize + usernameSize, ay, valueSize, height);
-			gui.drawString(value.color + value.value.getFormattedText(), ax + 4 + rankSize + usernameSize, textY, SHADOW);
+			String formattedText = value.value.getFormattedText();
+			gui.drawString(value.color + formattedText, ax + rankSize + usernameSize + valueSize - gui.getStringWidth(formattedText) - 4, textY, SHADOW);
 		}
 	}
 

@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.text_components.TextComponentCountdown;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.FTBUConfig;
@@ -113,6 +114,6 @@ public class FTBUServerEventHandler
 	{
 		int deaths = player.stats().readStat(StatList.DEATHS);
 		int playTime = player.stats().readStat(StatList.PLAY_ONE_MINUTE);
-		return deaths > 0 && playTime > 0 ? (deaths / (playTime / 60D)) : 0D;
+		return deaths > 0 && playTime > 0 ? ((double) deaths / ((double) playTime / CommonUtils.TICKS_HOUR)) : 0D;
 	}
 }

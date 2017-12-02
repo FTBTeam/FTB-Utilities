@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.cmd;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.api.Leaderboard;
@@ -17,6 +18,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
@@ -49,10 +52,28 @@ public class CmdLeaderboard extends CmdBase
 	{
 		if (args.length == 0)
 		{
+			ITextComponent component = new TextComponentString("");
+			component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.CLICK_HERE.textComponent(sender)));
+			boolean first = true;
+
 			for (Leaderboard leaderboard : FTBUCommon.LEADERBOARDS)
 			{
-				sender.sendMessage(new TextComponentString(leaderboard.getRegistryName().toString()).appendText(": ").appendSibling(leaderboard.getTitle()));
+				if (first)
+				{
+					first = false;
+				}
+				else
+				{
+					component.appendText(", ");
+				}
+
+				ITextComponent component1 = leaderboard.getTitle().createCopy();
+				component1.getStyle().setColor(TextFormatting.GOLD);
+				component1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb leaderboards gui " + leaderboard.getRegistryName()));
+				component.appendSibling(component1);
 			}
+
+			sender.sendMessage(component);
 		}
 		else if (args[0].equals("gui"))
 		{
@@ -81,6 +102,8 @@ public class CmdLeaderboard extends CmdBase
 		else if (FTBUCommon.LEADERBOARDS.getValue(new ResourceLocation(args[0])) != null)
 		{
 			Leaderboard leaderboard = FTBUCommon.LEADERBOARDS.getValue(new ResourceLocation(args[0]));
+			sender.sendMessage(leaderboard.getTitle().createCopy().appendText(":"));
+
 			IForgePlayer p0 = FTBLibAPI.API.getUniverse().getPlayer(sender);
 			List<IForgePlayer> players = FTBLibAPI.API.getUniverse().getRealPlayers();
 			players.sort(leaderboard.getComparator());

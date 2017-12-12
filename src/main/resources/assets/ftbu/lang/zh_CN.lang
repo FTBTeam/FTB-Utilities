@@ -1,10 +1,8 @@
 # Buttons
 ftbu.button.explosions=爆炸
 ftbu.button.block_security=方块安全
-
 # Config
 config_group.ftbu.name=FTBUtilities
-
 config_group.ftbu.backups.name=备份
 config.ftbu.backups.silent.name=静默
 config.ftbu.backups.backups_to_keep.name=保留备份数
@@ -19,7 +17,6 @@ config.ftbu.backups.display_file_size.name=显示文件大小
 config.ftbu.backups.display_file_size.info=备份完成时显示（当前文件大小 | 总大小）
 config.ftbu.backups.use_separate_thread.name=使用单独线程
 config.ftbu.backups.use_separate_thread.info=在单独线程中备份（推荐）
-
 config_group.ftbu.commands.name=命令
 config.ftbu.commands.warp.name=/warp
 config.ftbu.commands.home.name=/home
@@ -33,7 +30,6 @@ config.ftbu.commands.chunks.name=/chunks
 config.ftbu.commands.kickme.name=/kickme
 config.ftbu.commands.ranks.name=/ranks
 config.ftbu.commands.view_crash.name=/view_crash
-
 config_group.ftbu.general.name=通用
 config.ftbu.general.auto_restart.name=自动重启
 config.ftbu.general.max_leaderboard_size.name=最大排行榜尺寸
@@ -46,7 +42,6 @@ config.ftbu.general.server_info.admin_quick_access.name=管理员快速连接
 config_group.ftbu.general.chat.name=聊天
 config.ftbu.general.chat.substitute_prefix.name=替代前缀
 config.ftbu.general.chat.substitute_list.name=替代列表
-
 config_group.ftbu.login.name=登录
 config.ftbu.login.enable_motd.name=启用欢迎语
 config.ftbu.login.enable_starting_items.name=启用初始物品
@@ -54,13 +49,11 @@ config.ftbu.login.motd.name=欢迎语
 config.ftbu.login.motd.info=每日消息。将显示于玩家加入服务器时。
 config.ftbu.login.starting_items.name=初始物品
 config.ftbu.login.starting_items.info=玩家首次加入服务器时收到的物品。\n格式："字符ID 大小 Metadata" 或 {nbt}
-
 config_group.ftbu.webapi.name=Web API
 config.ftbu.webapi.enabled.name=启用
 config.ftbu.webapi.file_location.name=文件位置
 config.ftbu.webapi.update_interval.name=内部更新
 config.ftbu.webapi.update_interval.info=在几分钟内，内部更新
-
 config_group.ftbu.world.name=世界
 config.ftbu.world.chunk_claiming.name=区块声明中
 config.ftbu.world.chunk_loading.name=区块加载中
@@ -72,17 +65,14 @@ config.ftbu.world.spawn_area_in_sp.name=单人游戏中的生成区域
 config.ftbu.world.spawn_area_in_sp.info=在单人游戏中启用生成区域
 config.ftbu.world.log_chunkloading.name=记录区块加载
 config.ftbu.world.log_chunkloading.info=每当区块被强制加载/取消强制加载，在控制台中显示信息。因为会产生垃圾信息，建议关闭
-
 config_group.ftbu.ranks.name=权限组
 config.ftbu.ranks.enabled.name=启用
 config.ftbu.ranks.override_chat.name=覆盖聊天
 config.ftbu.ranks.override_commands.name=覆盖命令
-
 # Client Settings
 client_config.ftbu=FTBUtilities
 client_config.ftbu.render_badges=显示徽章
 client_config.ftbu.journeymap_overlay.name=启用旅行者地图整合
-
 # Server Settings
 my_server_settings.ftbu=FTBUtilities
 my_server_settings.ftbu.render_badge=显示我的徽章
@@ -90,7 +80,6 @@ my_server_settings.ftbu.chat_links=聊天链接
 my_server_settings.ftbu.explosions=爆炸
 my_server_settings.ftbu.fake_players=允许Fake Players
 my_server_settings.ftbu.security_level=方块的安全等级
-
 # Rank Config
 rank_config.ftbu.badge.name=徽章
 rank_config.ftbu.badge.info=徽章（胸前的图标）。必须为URL
@@ -104,18 +93,15 @@ rank_config.ftbu.chunkloader.max_chunks.name=最多可加载区块
 rank_config.ftbu.chunkloader.max_chunks.info=玩家最多可加载区块的数量\n0 - 禁用
 rank_config.ftbu.chunkloader.offline_timer.name=区块加载器离线计时器
 rank_config.ftbu.chunkloader.offline_timer.info=玩家离线后其区块依然加载的最大小时数\n0 - 禁用，其离线后直接卸载\n-1 - 区块永远加载
-
 # Player Settings
 player_config.ftbu.chat_links.name=聊天链接
 player_config.ftbu.disable_global_badge.name=显示全局徽章
 player_config.ftbu.render_badge.name=显示我的徽章
-
 # Team Settings
 team_config.ftbu.blocks_edit.name=编辑方块
 team_config.ftbu.blocks_interact.name=与方块交互
 team_config.ftbu.explosions.name=在声明区块内允许爆炸
 team_config.ftbu.fake_players.name=允许Fake Players对方块进行交互
-
 # Action Buttons
 sidebar_button.ftbu.toggle.gamemode=切换游戏模式
 sidebar_button.ftbu.toggle.gamemode.info=在生存模式和创造模式间切换
@@ -134,14 +120,12 @@ sidebar_button.ftbu.trash_can=垃圾桶
 sidebar_button.ftbu.trash_can.info=打开一个垃圾桶。里面的物品会在关闭界面后消失
 sidebar_button.ftbu.shop=商店
 sidebar_button.ftbu.mail=邮件
-
 # Keys
 key.categories.ftbu=FTBMods
 key.ftbu.guide=打开指南
 key.ftbu.chunk_border=区块显示
 key.ftbu.light_values=亮度显示
 key.ftbu.warp=传送GUI
-
 # Misc
 ftbu.lang.timer_restart=服务器重启：%s
 ftbu.lang.timer_backup=服务器备份：%s
@@ -159,7 +143,6 @@ ftbu.label.new_friends_click=点击接受所有的请求
 ftbu.button.block_security=方块的安全
 ftbu.stat.dph=每小时死亡数
 ftbu.leaderboard.title=计分板
-
 # Warps
 ftbu.warp.set=传送点 "%s" 已经设置！
 ftbu.warp.del=传送点 "%s" 已经删除！
@@ -167,14 +150,12 @@ ftbu.warp.not_set=未知的传送点 "%s"！
 ftbu.warp.tp=传送到 "%s"！
 ftbu.warp.no_dp=你只能返回一次！
 ftbu.warp.spawn=传送到出生点
-
 # Homes
 ftbu.home.set=家 "%s" 已经设置！
 ftbu.home.del=家 "%s" 已经删除！
 ftbu.home.not_set=未知的家："%s"！
 ftbu.home.cross_dim=你不能跨世界传送！
 ftbu.home.limit=你不能设置更多的家！
-
 # Backups
 ftbu.backup.start=服务器备份开始！
 ftbu.backup.stop=服务器备份停止！
@@ -185,21 +166,17 @@ ftbu.backup.manual_launch=%s启动了一个手动备份！
 ftbu.backup.already_running=正在备份中！
 ftbu.backup.not_running=备份功能没有运行！
 ftbu.backup.size=当前世界大小：%s，总备份文件夹大小：%s
-
 # Chunk Types
 ftbu.lang.chunk.loaded=区块加载
 ftbu.lang.chunk.no_explosions=禁止爆炸
 ftbu.lang.chunk.no_pvp=禁止盟友之间PVP
-
 ftbu.lang.chunk.claimed=声明区域
 ftbu.lang.chunk.wilderness=未声明区域
-
 # Pack States
 ftbu.pack_state.download=下载
 ftbu.pack_state.downloading=下载中……
 ftbu.pack_state.remove=移除
 ftbu.pack_state.update=更新
-
 # Guide
 ftbu.guide=FTBUtilities
 ftbu.guide.info=FTBUtilities是一个关于帮助服主管理服务器的mod，包含区块保护、备份以及超多功能！
@@ -252,9 +229,8 @@ ftbu.guide.ranks.config.perms.example=允许这个权限组破坏已声明区块
 ftbu.guide.ranks.config.cfg=配置（config）
 ftbu.guide.ranks.config.cfg.info=你可以在all_configs.html中找到配置节点和它们后面的值，及其允许的值
 ftbu.guide.ranks.config.chat=聊天格式（语法）
-ftbu.guide.ranks.config.chat.info=你可以在此部分修改聊天中玩家名字的显示方式。你可以设置前缀、后缀或者改变玩家名字的颜色。缺省值为\$name，完全支持Minecraft聊天格式代码。
+ftbu.guide.ranks.config.chat.info=你可以在此部分修改聊天中玩家名字的显示方式。你可以设置前缀、后缀或者改变玩家名字的颜色。缺省值为$name，完全支持Minecraft聊天格式代码。
 ftbu.guide.ranks.config.chat.colors=[点此打开颜色界面]
-
 ftbu.guide.ranks.commands=命令
 ftbu.guide.ranks.commands.info=这里有一些权限组的实用命令，不必每次到配置中去修改。
 ftbu.guide.ranks.commands.set=设置一个玩家的权限组
@@ -295,7 +271,6 @@ ftbu.guide.tp_commands.back=将你传送到上一个死亡地点。它默认只�
 ftbu.guide.tp_commands.spawn=将你传送到世界的出生点
 ftbu.guide.tp_commands.prefix=如果命令不起作用，试着添加"/ftb [命令]"前缀，比如 /ftb home。
 ftbu.guide.tp_commands.gui=你还可以在控制界面给"传送GUI"绑定一个按键，当在游戏中时，按它将会打开传送GUI，在那里你可以通过点击来选择至家、传送点、返回地点或出生点。
-
 # Commands
 commands.ftb.restart.usage=/ftb restart
 commands.ftb.inv.usage=/ftb inv
@@ -341,3 +316,266 @@ commands.ftb.ranks.edit.usage=/ftb ranks edit
 commands.ftb.chunks.check_permission.usage=/ftb chunks check_permission <玩家> <权限>
 commands.ftb.view_crash.usage=/ftb view_crash
 commands.ftb.heal.usage=/ftb heal
+# Config
+ftbu.config.auto_shutdown=自动关闭
+ftbu.config.auto_shutdown.times=关闭时间
+ftbu.config.server_info=服务器信息
+ftbu.config.server_info.difficulty=难度
+ftbu.config.server_info.admin_quick_access=管理员快速连接
+ftbu.config.chat=聊天
+ftbu.config.chat.general_history_limit=一般聊天记录限制
+ftbu.config.chat.team_history_limit=团队聊天记录限制
+ftbu.config.chat.admin_history_limit=管理员聊天记录限制
+ftbu.config.backups=备份
+ftbu.config.backups.silent=静默
+ftbu.config.backups.backups_to_keep=保留备份数
+ftbu.config.backups.backup_timer=备份间隔
+ftbu.config.backups.compression_level=压缩等级
+ftbu.config.backups.folder=文件夹
+ftbu.config.backups.display_file_size=显示文件大小
+ftbu.config.backups.use_separate_thread=使用单独线程
+ftbu.config.commands.warp=/warp
+ftbu.config.commands.home=/home
+ftbu.config.commands.back=/back
+ftbu.config.commands.spawn=/spawn
+ftbu.config.commands.inv=/inv
+ftbu.config.commands.tpl=/tpl
+ftbu.config.commands.server_info=/server_info
+ftbu.config.commands.trash_can=/trash_can
+ftbu.config.commands.chunks=/chunks
+ftbu.config.commands.kickme=/kickme
+ftbu.config.commands.ranks=/ranks
+ftbu.config.commands.view_crash=/view_crash
+ftbu.config.commands.heal=/heal
+ftbu.config.commands.set_hour=/set_hour
+ftbu.config.commands.killall=/killall
+ftbu.config.commands.nbtedit=/nbtedit
+ftbu.config.commands.shrug=/shrug
+ftbu.config.login=登录
+ftbu.config.login.enable_motd=启用 MOTD
+ftbu.config.login.enable_starting_items=启用初始物品
+ftbu.config.login.enable_global_badges=启用全局徽章
+ftbu.config.login.enable_event_badges=启用事件徽章
+ftbu.config.login.motd=欢迎语
+ftbu.config.login.starting_items=初始物品
+ftbu.config.world=世界
+ftbu.config.world.chunk_claiming=区块声明中
+ftbu.config.world.chunk_loading=区块加载中
+ftbu.config.world.safe_spawn=安全出生点
+ftbu.config.world.spawn_area_in_sp=单人游戏中的生成区域
+ftbu.config.world.log_chunkloading=记录区块加载
+ftbu.config.ranks=权限组
+ftbu.config.ranks.enabled=启用
+ftbu.config.ranks.override_chat=覆盖聊天
+ftbu.config.ranks.override_commands=覆盖命令
+# Rank Config
+rank_config.ftbu.badge=徽章
+rank_config.ftbu.badge.tooltip=徽章（胸前的图标）。必须为 URL
+rank_config.ftbu.homes.max.tooltip=最多设置家的数量
+rank_config.ftbu.claims.max_chunks=最多可声明区块
+rank_config.ftbu.claims.max_chunks.tooltip=玩家最多可声明区块的数量\n0 - 禁用
+rank_config.ftbu.claims.blocked_dimensions=限制声明区块的维度
+rank_config.ftbu.claims.blocked_dimensions.tooltip=限制声明区块的维度
+rank_config.ftbu.chunkloader.max_chunks=最多可加载区块
+rank_config.ftbu.chunkloader.max_chunks.tooltip=玩家最多可加载区块的数量\n0 - 禁用
+rank_config.ftbu.chunkloader.offline_timer=区块加载器离线计时器
+rank_config.ftbu.chunkloader.offline_timer.tooltip=玩家离线后其区块依然加载的最大小时数\n0 - 禁用，其离线后直接卸载\n-1 - 区块永远加载
+# Player Settings
+player_config.ftbu.chat_links=聊天链接
+player_config.ftbu.disable_global_badge=显示全局徽章
+player_config.ftbu.render_badge=显示我的徽章
+player_config.ftbu.enable_pvp=启用 PVP
+# Team Settings
+team_config.ftbu.blocks_edit=编辑方块所需的级别
+team_config.ftbu.blocks_interact=交互方块所需的级别
+team_config.ftbu.attack_entities=攻击实体所需的级别
+team_config.ftbu.explosions=在已声明区块中启用爆炸
+team_config.ftbu.fake_players=允许Fake Players对方块进行交互
+# Action Buttons
+sidebar_button.ftbu.chats=聊天
+sidebar_button.ftbu.chats.general=General Chat
+sidebar_button.ftbu.chats.admin=Admin Chat
+sidebar_button.ftbu.chats.team=Team Chat
+sidebar_button.ftbu.leaderboards=排行榜
+sidebar_button.ftbu.toggle.gamemode.tooltip=在生存模式和创造模式间切换
+sidebar_button.ftbu.toggle.rain.tooltip=在晴天和雨天间切换
+sidebar_button.ftbu.toggle.day.tooltip=设置为白天
+sidebar_button.ftbu.toggle.night.tooltip=设置为黑夜
+sidebar_button.ftbu.heal.tooltip=治疗玩家至满血，并消除玩家的着火效果
+sidebar_button.ftbu.trash_can.tooltip=打开一个垃圾桶。里面的物品会在关闭界面后消失
+sidebar_button.ftbu.view_crash=查看崩溃报告
+# Misc
+ftbu.lang.timer.shutdown=服务器关闭：%s
+ftbu.lang.timer.backup=服务器备份：%s
+ftbu.lang.killed_entities=已杀死％d个类型为 "%s" 的实体
+ftbu.lang.guide.unsupported_format=不支持的格式！请更新 FTBUtilities 或联系模组作者！
+ftbu.lang.guide.commands_failed=无法加载命令
+ftbu.lang.kickme=你踢了自己！
+ftbu.lang.perm_for=%2$s 的 %1$s 为 %3$s
+ftbu.lang.upload_crash=上传崩溃报告
+ftbu.lang.uploaded_crash=崩溃报告已上传！ ％s
+ftbu.stat.last_seen=最后在线
+# Chunks
+ftbu.lang.chunks.cant_modify_chunk=无法修改此区块！
+ftbu.lang.chunks.unclaimed_all=取消声明所有区块
+ftbu.lang.chunks.chunk_claimed=区块已声明
+ftbu.lang.chunks.chunk_unclaimed=区块已取消声明
+ftbu.lang.chunks.chunk_loaded=区块已加载
+ftbu.lang.chunks.chunk_unloaded=区块已卸载
+ftbu.lang.chunks.unloaded_for=已卸载 %s 的区块
+ftbu.lang.chunks.chunkloader.forced=%1$s 设置了 %4$s 的 %2$d,%3$d 强制加载
+ftbu.lang.chunks.chunkloader.unforced=%1$s 取消了 %4$s 的 %2$d,%3$d 强制加载
+ftbu.lang.chunks.unclaim_all=取消所有声明区块
+ftbu.lang.chunks.unclaim_all_dim=取消所有在%s的声明区块
+ftbu.lang.chunks.unclaim_all_q=取消所有声明的区块？
+ftbu.lang.chunks.claims_invalid_dim=不能在此世界声明区块
+ftbu.lang.chunks.claimed_count=声明的区块：%d / %d
+ftbu.lang.chunks.loaded_count=加载的区块：%d / %d
+ftbu.lang.chunks.claimed_area=已声明区域
+ftbu.lang.chunks.wilderness=野外
+# Backups
+ftbu.lang.backup.start=服务器备份开始！
+ftbu.lang.backup.stop=服务器备份停止！
+ftbu.lang.backup.end_1=服务器备份完成，耗时%s！
+ftbu.lang.backup.end_2=服务器备份完成，耗时%s！（%s）
+ftbu.lang.backup.fail=保存世界失败！（%s）
+ftbu.lang.backup.manual_launch=%s启动了一个手动备份！
+ftbu.lang.backup.already_running=正在备份中！
+ftbu.lang.backup.not_running=备份功能没有运行！
+ftbu.lang.backup.size=当前世界大小：%s，总备份文件夹大小：%s
+ftbu.lang.backup.saving_failed=世界存储失败！
+ftbu.lang.backup.deleting_old=正在删除旧备份：％s
+ftbu.lang.backup.backing_up_files=备份％d个文件...
+ftbu.lang.backup.compressing_files=正在压缩％d个文件！
+ftbu.lang.backup.compressing_done=在 %s 秒内完成压缩（%s）！
+ftbu.lang.backup.created_from=已从 %s 创建 %s
+# Ranks
+ftbu.lang.rank.id_exists=组 "%s" 已存在!
+ftbu.lang.rank.not_found=未找到组 "%s"！
+ftbu.lang.rank.use_deop=无法将组设置为 builtin_player，请使用 /deop ％s
+ftbu.lang.rank.use_op=无法将组设置为 builtin_op，请使用 /op ％s
+ftbu.lang.rank.set=%s 现在是 %s
+ftbu.lang.rank.unset=%s 现在未设置
+# Guide
+guide.ftbu.info=FTBUtilities是一个关于帮助服主管理服务器的模组，包含区块保护、备份以及超多功能！
+guide.ftbu.faq=常见问题
+guide.ftbu.chunk_claiming=区块声明
+guide.ftbu.chunk_claiming.intro=FTBUtilities 允许你通过区块声明保护你的基地。已声明的区块默认对你的队友和盟友开放。你也可以禁止爆炸以及 fake player 交互。
+guide.ftbu.chunk_claiming.opengui=要打开GUI，你需要点击 $sidebar_button.ftbu.claimed_chunks 侧边栏按钮。
+guide.ftbu.chunk_claiming.list.left_click=左击地图上的一个区块来声明它
+guide.ftbu.chunk_claiming.list.right_click=右击取消声明一个区块
+guide.ftbu.chunk_claiming.list.shift_left_click=Shift+左击来加载一个区块
+guide.ftbu.chunk_claiming.list.shift_right_click=Shift+右击来取消加载一个区块
+guide.ftbu.chunk_claiming.dragmouse=你可以拖动鼠标一次声明/取消声明/加载/取消加载更大的区块。
+guide.ftbu.ranks=权限组
+guide.ftbu.ranks.terminology=术语
+guide.ftbu.ranks.terminology.ranks=权限组
+guide.ftbu.ranks.terminology.ranks.p1=我们取消了为每名玩家设置权限的设定，取而代之的是权限组系统，它可以一次管理整组成员。
+guide.ftbu.ranks.terminology.ranks.p2=比如，在我的"管理员"组中，我可能会添加忽视区块声明的权限，然后将用户设为管理员。这意味着他们会获得"管理员"的所有权限，再加上他们本来有的权限。
+guide.ftbu.ranks.terminology.inheritance=继承
+guide.ftbu.ranks.terminology.inheritance.p1=用户和组能够互相继承权限。比如，所有用户默认从"玩家"组继承权限。你可以在服务器设置你自己的组，然后创建你自己的机制。
+guide.ftbu.ranks.terminology.inheritance.p2=比如，我可能拥有三个组，"玩家"、"管理员" 和 "vip"。我想要让 vip 从玩家那继承权限，让管理员从内建 op 组那继承权限。
+guide.ftbu.ranks.terminology.permission=权限
+guide.ftbu.ranks.terminology.permission.p1=在你的服务器中，游戏会加入许多特性、命令、以及功能。这些动作大多数有与它们相关的权限，所以你可以控制哪个用户对该特性或命令有使用权限。
+guide.ftbu.ranks.terminology.permission.p2=权限是一个字符串，在使用时被分成几部分。比如，"ftbu.back.infinite" 是无限使用/back命令的权限。显然我们不希望所有用户都有使用权限，所以我们只将它给予某些用户。
+guide.ftbu.ranks.terminology.permission.p3=这个代表特定权限的字符串有时也被称作 "权限节点" 或者 "节点"。
+guide.ftbu.ranks.terminology.uuid=UUID
+guide.ftbu.ranks.terminology.uuid.p1=每个正版 Minecraft 用户都有 UUID（通用唯一识别码），来识别玩家的身份，即使他改变了名字。比如，这就是 LatvianModder 的 UUID：
+guide.ftbu.ranks.terminology.uuid.p2=你可以使用 namemc.com 这类网站将玩家的用户名转换成他们 UUID。注意: FTBU使用没有破折号（修整过）的UUID！
+guide.ftbu.ranks.file_structure=文件夹结构和文件描述
+guide.ftbu.ranks.file_structure.all_permissions=通常下 FTBU 所有可用权限的花哨页面
+guide.ftbu.ranks.file_structure.all_permissions_full_list=所有权限节点的纯文本列表
+guide.ftbu.ranks.file_structure.config=通用 FTBU 配置
+guide.ftbu.ranks.file_structure.player_ranks=根据UUID判断的玩家权限
+guide.ftbu.ranks.file_structure.ranks=存取权限
+guide.ftbu.ranks.file_structure.server_badges=徽章配置
+guide.ftbu.ranks.file_structure.all_configs=所有可用的 FTBU 配置节点
+guide.ftbu.ranks.config=配置
+guide.ftbu.ranks.config.enabling_ranks=启用权限组
+guide.ftbu.ranks.config.enabling_ranks.values=设置"启用"、"覆盖聊天" 和 "覆盖命令"为 true 以激活 FTBUtilities 的权限组。
+guide.ftbu.ranks.config.enabling_ranks.click=[点击这里打开 FTBUtilities 的配置 GUI]
+guide.ftbu.ranks.config.enabling_ranks.config=或者使用 Sublime 或 Notepad++ 这样的编辑器打开 config.json。
+guide.ftbu.ranks.config.features=特性
+guide.ftbu.ranks.config.builtin=内建组
+guide.ftbu.ranks.config.builtin.info=有两个内建组:
+guide.ftbu.ranks.config.builtin.perms=在所有权限和所有配置文件中，你可以找到被赋予给他们的所有权限和配置。"builtin_player" 记为所有，"builtin_op" 记为 OP。
+guide.ftbu.ranks.config.def_ranks=默认组分配
+guide.ftbu.ranks.config.def_ranks.info=在ranks.json的开头，我们可以在玩家和OP加入服务器时，自动将他们分配到某个组中。
+guide.ftbu.ranks.config.perms=权限（permissions）
+guide.ftbu.ranks.config.perms.info=你可以在这部分添加权限节点，在这个节点的减号会禁用它，加号会启用它。
+guide.ftbu.ranks.config.perms.example=允许这个权限组破坏已声明区块中的沙子，禁止这个权限组破坏已声明区块中的石头。
+guide.ftbu.ranks.config.cfg=配置（config）
+guide.ftbu.ranks.config.cfg.info=你可以在 all_configs.html 中找到配置节点和它们后面的值，及其允许的值
+guide.ftbu.ranks.config.chat=聊天格式（语法）
+guide.ftbu.ranks.config.chat.info=你可以在此部分修改聊天中玩家名字的显示方式。你可以设置前缀、后缀或者改变玩家名字的颜色。缺省值为，完全支持 Minecraft 聊天格式代码。
+guide.ftbu.ranks.config.chat.colors=[点此打开颜色界面]
+guide.ftbu.ranks.commands.info=这里有一些权限组的实用命令，不必每次到配置中去修改。
+guide.ftbu.ranks.commands.set=设置一个玩家的权限组
+guide.ftbu.ranks.commands.get=输出一个玩家的权限组
+guide.ftbu.ranks.commands.check_permission=输出指定玩家的权限值
+guide.ftbu.ranks.badges=服务器徽章
+guide.ftbu.ranks.badges.more=[点此查看更多徽章]
+guide.ftbu.ranks.badges.info=你可以给予玩家单独的全服徽章。配置文件:
+guide.ftbu.ranks.badges.values=第一个值是此玩家的 UUID，第二个值是图片的 URL（链接）。
+guide.ftbu.ranks.badges.rank=你也可以用 "ftbu.badge" 等级配置赋予基于等级的徽章。
+guide.ftbu.ranks.example_config=ranks.json 例子
+guide.ftbu.ranks.example_config.syntax=他们的用户名会如何显示在聊天中
+guide.ftbu.ranks.example_config.default.player=不是 OP 的玩家会被分配到玩家组内
+guide.ftbu.ranks.example_config.default.op=OP在管理员组内
+guide.ftbu.ranks.example_config.player.group=关于首个权限组"玩家"
+guide.ftbu.ranks.example_config.player.parent=父权限组意味着此组会从父权限组继承权限，这里继承了"builtin_player"组（可在默认组看到）
+guide.ftbu.ranks.example_config.permission.block=权限管理
+guide.ftbu.ranks.example_config.permission.plus=加号代表添加一个权限
+guide.ftbu.ranks.example_config.permission.minus=减号代表移除一个权限
+guide.ftbu.ranks.example_config.config.block=配置管理
+guide.ftbu.ranks.example_config.admin.group=这里开始介绍 "管理员" 组
+guide.ftbu.ranks.example_config.admin.parent=继承自 "builtin_op" 组
+guide.ftbu.ranks.example_config.admin.permission.all=添加所有权限，星号是通配符
+guide.ftbu.ranks.example_config.vip.group=接下来是 "VIP" 组
+guide.ftbu.ranks.example_config.vip.parent=继承自玩家组
+guide.ftbu.tp_commands=传送命令
+guide.ftbu.tp_commands.intro=你可以使用FTBU提供的一些传送命令：
+guide.ftbu.tp_commands.home.sethome=创建一个家
+guide.ftbu.tp_commands.home.home=将你传送到一个家
+guide.ftbu.tp_commands.home.list=列出你所有的家
+guide.ftbu.tp_commands.home.delhome=删除一个家
+guide.ftbu.tp_commands.warp.setwarp=创建一个传送点
+guide.ftbu.tp_commands.warp.warp=将你传送到一个传送点
+guide.ftbu.tp_commands.warp.list=列出你所有传送点
+guide.ftbu.tp_commands.warp.delwarp=删除一个传送点
+guide.ftbu.tp_commands.back=将你传送到上一个死亡地点。它默认只工作一次，所以你不可以作为另一个家来使用它
+guide.ftbu.tp_commands.spawn=将你传送到世界的出生点
+guide.ftbu.tp_commands.prefix=如果命令不起作用，试着添加 "/ftb [命令]" 前缀，比如 /ftb home。
+guide.ftbu.tp_commands.gui=你还可以在控制界面给"传送GUI"绑定一个按键，当在游戏中时，按它将会打开传送GUI，在那里你可以通过点击来选择至家、传送点、返回地点或出生点。
+# Commands
+commands.ftb.shutdown.usage=/ftb shutdown
+commands.ftb.set_hour.usage=/ftb set_hour <小时>
+commands.ftb.killall.usage=/ftb killall [类型]
+commands.ftb.nbtedit.tile.usage=/ftb nbtedit tile <x> <y> <z>
+commands.ftb.nbtedit.entity.usage=/ftb nbtedit entity <id>
+commands.ftb.nbtedit.player.usage=/ftb nbtedit player <玩家>
+commands.ftb.shrug.usage=/shrug
+commands.ftb.status.usage=/status <玩家> <原生 json...>
+ftbu.config.commands=命令
+ftbu_client.config.general.render_badges=显示徽章
+ftbu_client.config.general.journeymap_overlay=启用旅行者地图集成
+rank_config.ftbu.homes.max=最大家数量
+ftbu.lang.chunks.unclaim_all_dim_q=取消声明 %s 中的所有区块？
+# Chunk Types
+ftbu.lang.chunks.upgrade.loaded=已加载区块
+ftbu.lang.chunks.upgrade.no_explosions=爆炸被禁用
+ftbu.lang.chunks.upgrade.no_pvp=盟友 PVP 被禁用
+# Warps
+ftbu.lang.warps.set=地标 "%s" 已设置！
+ftbu.lang.warps.del=地标 "%s" 已删除！
+ftbu.lang.warps.not_set=未知的地标："%s"！
+ftbu.lang.warps.tp=传送至 "%s"！
+ftbu.lang.warps.no_dp=你只能使用一次 /back！
+ftbu.lang.warps.spawn=传送至出生点
+# Homes
+ftbu.lang.homes.set=家 "%s" 已设置！
+ftbu.lang.homes.del=家 "%s" 已删除！
+ftbu.lang.homes.not_set=未知的家："%s"！
+ftbu.lang.homes.cross_dim=你不能传送至其它维度！
+ftbu.lang.homes.limit=家数量已达到上限！
+guide.ftbu.tp_commands.home.name=当家为多个时，[名字] 可选。如果为空，则值为 "home"

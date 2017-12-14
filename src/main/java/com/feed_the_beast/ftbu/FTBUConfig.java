@@ -44,6 +44,7 @@ public class FTBUConfig
 	public static class AutoShutdown
 	{
 		@Config.LangKey(GuiLang.LANG_ENABLED)
+		@Config.Comment("Enables auto-shutdown")
 		public boolean enabled = false;
 
 		@Config.Comment({
@@ -79,8 +80,10 @@ public class FTBUConfig
 	public static class BackupsConfig
 	{
 		@Config.LangKey(GuiLang.LANG_ENABLED)
+		@Config.Comment("Enables backups")
 		public boolean enabled = true;
 
+		@Config.Comment("If set to true, no messages will be displayed in chat/status bar")
 		public boolean silent = false;
 
 		@Config.RangeInt(min = 0, max = 32000)
@@ -146,7 +149,10 @@ public class FTBUConfig
 
 	public static class Login
 	{
+		@Config.Comment("Enables message of the day")
 		public boolean enable_motd = false;
+
+		@Config.Comment("Enables starting items")
 		public boolean enable_starting_items = false;
 
 		@Config.Comment("Set to false to disable global badges completely, only server-wide badges will be available")
@@ -182,15 +188,22 @@ public class FTBUConfig
 	{
 		@Config.LangKey(GuiLang.LANG_ENABLED)
 		@Config.RequiresMcRestart
+		@Config.Comment("Enables ranks")
 		public boolean enabled = true;
 
+		@Config.Comment("Adds chat colors/rank-specific syntax")
 		public boolean override_chat = true;
+
+		@Config.Comment("Adds command.x permissions and allows ranks to control them")
 		public boolean override_commands = true;
 	}
 
 	public static class WorldConfig
 	{
+		@Config.Comment("Enables chunk claiming")
 		public boolean chunk_claiming = true;
+
+		@Config.Comment("Enables chunk loading. If chunk_claiming is set to false, changing this won't do anything")
 		public boolean chunk_loading = true;
 
 		@Config.Comment("If set to true, explosions and hostile mobs in spawn area will be disabled, players won't be able to attack each other in spawn area")
@@ -207,7 +220,7 @@ public class FTBUConfig
 
 		@Config.Comment("If set to DEFAULT, then players can decide their PVP status")
 		@Config.LangKey("player_config.ftbu.enable_pvp")
-		public EnumTristate enable_pvp = EnumTristate.DEFAULT;
+		public EnumTristate enable_pvp = EnumTristate.TRUE;
 
 		@Config.Comment("If set to DEFAULT, then teams can decide their Explosion setting")
 		@Config.LangKey("team_config.ftbu.explosions")

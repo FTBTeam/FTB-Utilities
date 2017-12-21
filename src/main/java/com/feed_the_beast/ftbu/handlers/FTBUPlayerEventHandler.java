@@ -1,18 +1,18 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
-import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
+import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
+import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
+import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
+import com.feed_the_beast.ftbu.FTBULang;
+import com.feed_the_beast.ftbu.data.BlockInteractionType;
+import com.feed_the_beast.ftbu.data.ClaimedChunk;
+import com.feed_the_beast.ftbu.data.ClaimedChunks;
 import com.feed_the_beast.ftbu.util.FTBUPlayerData;
 import com.google.common.base.Objects;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,7 +40,7 @@ public class FTBUPlayerEventHandler
 	{
 		if (event.getEntity() instanceof EntityPlayerMP)
 		{
-			FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(event.getEntity())).lastDeath = new BlockDimPos(event.getEntity());
+			FTBUPlayerData.get(Universe.get().getPlayer(event.getEntity())).lastDeath = new BlockDimPos(event.getEntity());
 		}
 	}
 
@@ -53,7 +53,7 @@ public class FTBUPlayerEventHandler
 		}
 
 		EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
-		IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(player.getGameProfile());
+		ForgePlayer p = Universe.get().getPlayer(player.getGameProfile());
 
 		if (p == null || p.isFake())
 		{
@@ -66,10 +66,10 @@ public class FTBUPlayerEventHandler
 
 	public static void updateChunkMessage(EntityPlayer player, ChunkDimPos pos)
 	{
-		ClaimedChunk chunk = ClaimedChunks.INSTANCE.getChunk(pos);
-		IForgeTeam team = chunk == null ? null : chunk.getTeam();
+		ClaimedChunk chunk = ClaimedChunks.get().getChunk(pos);
+		ForgeTeam team = chunk == null ? null : chunk.getTeam();
 
-		FTBUPlayerData data = FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(player));
+		FTBUPlayerData data = FTBUPlayerData.get(Universe.get().getPlayer(player));
 
 		if (!Objects.equal(data.lastChunkTeam, team))
 		{
@@ -98,7 +98,7 @@ public class FTBUPlayerEventHandler
 	{
 		EntityPlayer player = event.getEntityPlayer();
 
-		if (player instanceof EntityPlayerMP && !ClaimedChunks.INSTANCE.canPlayerAttackEntity((EntityPlayerMP) player, event.getEntity()))
+		if (player instanceof EntityPlayerMP && !ClaimedChunks.get().canPlayerAttackEntity((EntityPlayerMP) player, event.getEntity()))
 		{
 			event.setCanceled(true);
 		}
@@ -107,7 +107,7 @@ public class FTBUPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event)
 	{
-		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunks.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.INTERACT))
+		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunks.get().canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.INTERACT))
 		{
 			event.setCanceled(true);
 		}
@@ -116,7 +116,7 @@ public class FTBUPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onRightClickItem(PlayerInteractEvent.RightClickItem event)
 	{
-		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunks.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.ITEM))
+		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunks.get().canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.ITEM))
 		{
 			event.setCanceled(true);
 		}
@@ -125,7 +125,7 @@ public class FTBUPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onBlockBreak(BlockEvent.BreakEvent event)
 	{
-		if (event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunks.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getState()), BlockInteractionType.EDIT))
+		if (event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunks.get().canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getState()), BlockInteractionType.EDIT))
 		{
 			event.setCanceled(true);
 		}
@@ -134,7 +134,7 @@ public class FTBUPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onBlockPlace(BlockEvent.PlaceEvent event)
 	{
-		if (event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunks.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getPlacedBlock()), BlockInteractionType.EDIT))
+		if (event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunks.get().canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getPlacedBlock()), BlockInteractionType.EDIT))
 		{
 			event.setCanceled(true);
 		}
@@ -143,7 +143,7 @@ public class FTBUPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event)
 	{
-		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunks.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.EDIT))
+		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunks.get().canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.EDIT))
 		{
 			event.setCanceled(true);
 		}

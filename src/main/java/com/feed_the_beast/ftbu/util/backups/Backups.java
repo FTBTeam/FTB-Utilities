@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbu.util.backups;
 
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
-import com.feed_the_beast.ftbl.lib.util.FileUtils;
-import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.ServerUtils;
-import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.FileUtils;
+import com.feed_the_beast.ftblib.lib.util.JsonUtils;
+import com.feed_the_beast.ftblib.lib.util.ServerUtils;
+import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.FTBULang;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import net.minecraft.command.ICommandSender;

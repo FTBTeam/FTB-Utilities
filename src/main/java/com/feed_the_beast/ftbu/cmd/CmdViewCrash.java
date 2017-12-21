@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.io.RequestMethod;
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
-import com.feed_the_beast.ftbl.lib.util.FileUtils;
-import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftblib.FTBLibLang;
+import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.FileUtils;
+import com.feed_the_beast.ftblib.lib.util.JsonUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.net.MessageViewCrash;
 import com.feed_the_beast.ftbu.net.MessageViewCrashList;
 import com.google.gson.JsonElement;
@@ -138,7 +137,7 @@ public class CmdViewCrash extends CmdBase
 					//{"url":"http://hastebin.com/documents","headers":{"User-Agent":"atom-rest-client","Content-Type":"text/plain; charset=utf-8"},"method":"POST","body":"some text"}
 
 					HttpURLConnection con = (HttpURLConnection) new URL("https://hastebin.com/documents").openConnection();
-					con.setRequestMethod(RequestMethod.POST.name());
+					con.setRequestMethod("POST");
 					con.setRequestProperty("User-Agent", "HTTP/1.1");
 					con.setRequestProperty("Content-Type", "text/plain; charset=utf-8");
 					con.setDoOutput(true);

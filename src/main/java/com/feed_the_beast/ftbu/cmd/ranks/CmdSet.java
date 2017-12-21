@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.cmd.ranks;
 
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.api.IRank;
+import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.ranks.DefaultOPRank;
 import com.feed_the_beast.ftbu.ranks.DefaultPlayerRank;
+import com.feed_the_beast.ftbu.ranks.Rank;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -47,7 +47,7 @@ public class CmdSet extends CmdBase
 	{
 		checkArgs(sender, args, 2);
 
-		IRank r = (args[1].equalsIgnoreCase("none") || args[1].equals("-")) ? null : Ranks.getRank(args[1], null);
+		Rank r = (args[1].equalsIgnoreCase("none") || args[1].equals("-")) ? null : Ranks.getRank(args[1], null);
 
 		if (r == DefaultPlayerRank.INSTANCE)
 		{
@@ -64,7 +64,7 @@ public class CmdSet extends CmdBase
 			throw FTBULang.RANK_NOT_FOUND.commandError(args[1]);
 		}
 
-		IForgePlayer p = getForgePlayer(args[0]);
+		ForgePlayer p = getForgePlayer(args[0]);
 		Ranks.setRank(p.getId(), r);
 
 		if (r == null)

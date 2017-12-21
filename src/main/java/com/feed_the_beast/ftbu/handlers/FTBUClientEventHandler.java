@@ -1,10 +1,9 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.lib.client.ClientUtils;
+import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.gui.GuiWarps;
-import com.feed_the_beast.ftbu.gui.guide.Guides;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -30,11 +29,6 @@ public class FTBUClientEventHandler
 	@SubscribeEvent
 	public static void onKeyEvent(InputEvent.KeyInputEvent event)
 	{
-		if (FTBUClient.KEY_GUIDE.isPressed())
-		{
-			ClientUtils.MC.addScheduledTask(Guides.OPEN_GUI);
-		}
-
 		if (FTBUClient.KEY_WARP.isPressed())
 		{
 			GuiWarps.INSTANCE = new GuiWarps();

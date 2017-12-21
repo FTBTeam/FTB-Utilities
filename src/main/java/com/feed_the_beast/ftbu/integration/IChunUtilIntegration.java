@@ -1,12 +1,10 @@
 package com.feed_the_beast.ftbu.integration;
 
-import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 
 /**
  * @author LatvianModder
  */
-@EventHandler(requiredMods = FTBLibFinals.ICHUN_UTIL)
+//@EventHandler(requiredMods = FTBLibFinals.ICHUN_UTIL)
 public class IChunUtilIntegration
 {
 	/*@SubscribeEvent(priority = EventPriority.HIGH)

@@ -1,14 +1,14 @@
 package com.feed_the_beast.ftbu.util;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
-import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.JsonUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
+import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.commons.io.IOUtils;
@@ -56,7 +56,7 @@ public class Badges
 
 	private static String getRaw(UUID playerId)
 	{
-		IForgePlayer player = FTBLibAPI.API.getUniverse().getPlayer(playerId);
+		ForgePlayer player = Universe.get().getPlayer(playerId);
 
 		if (player == null || player.isFake())
 		{
@@ -121,7 +121,7 @@ public class Badges
 		}
 
 		String badge = LOCAL_BADGES.get(playerId);
-		return (badge == null || badge.isEmpty()) ? FTBUtilitiesAPI.API.getRankConfig(player.getProfile(), FTBUPermissions.BADGE).getString() : badge;
+		return (badge == null || badge.isEmpty()) ? Ranks.getRank(player.getProfile()).getConfig(FTBUPermissions.BADGE).getString() : badge;
 	}
 
 	public static boolean reloadServerBadges()
@@ -143,7 +143,7 @@ public class Badges
 			{
 				for (Map.Entry<String, JsonElement> entry : JsonUtils.fromJson(file).getAsJsonObject().entrySet())
 				{
-					IForgePlayer player = FTBLibAPI.API.getUniverse().getPlayer(entry.getKey());
+					ForgePlayer player = Universe.get().getPlayer(entry.getKey());
 
 					if (player != null)
 					{

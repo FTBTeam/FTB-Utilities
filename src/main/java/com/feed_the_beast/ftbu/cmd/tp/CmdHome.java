@@ -1,14 +1,14 @@
 package com.feed_the_beast.ftbu.cmd.tp;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftblib.FTBLibLang;
+import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
+import com.feed_the_beast.ftblib.lib.util.ServerUtils;
+import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
+import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.util.FTBUPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -39,7 +39,7 @@ public class CmdHome extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(sender)).homes.list());
+			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(Universe.get().getPlayer(sender)).homes.list());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -61,7 +61,7 @@ public class CmdHome extends CmdBase
 
 		if (args[0].equals("list"))
 		{
-			IForgePlayer p;
+			ForgePlayer p;
 
 			if (args.length >= 2)
 			{
@@ -80,7 +80,7 @@ public class CmdHome extends CmdBase
 			FTBUPlayerData data = FTBUPlayerData.get(p);
 
 			Collection<String> list = data.homes.list();
-			ITextComponent msg = new TextComponentString(p.getName() + ": " + list.size() + " / " + FTBUtilitiesAPI.API.getRankConfig(p.getProfile(), FTBUPermissions.HOMES_MAX).getInt() + ": ");
+			ITextComponent msg = new TextComponentString(p.getName() + ": " + list.size() + " / " + Ranks.getRank(p.getProfile()).getConfig(FTBUPermissions.HOMES_MAX).getInt() + ": ");
 
 			if (!list.isEmpty())
 			{
@@ -111,7 +111,7 @@ public class CmdHome extends CmdBase
 		}
 		else if (args[0].equals("list_all"))
 		{
-			for (IForgePlayer p : FTBLibAPI.API.getUniverse().getRealPlayers())
+			for (ForgePlayer p : Universe.get().getRealPlayers())
 			{
 				execute(server, sender, new String[] {"list", p.getName()});
 			}
@@ -120,7 +120,7 @@ public class CmdHome extends CmdBase
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-		IForgePlayer p;
+		ForgePlayer p;
 
 		if (args.length >= 2)
 		{

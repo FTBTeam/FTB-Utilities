@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.FTBUFinals;
 
 public class FTBUNetHandler
@@ -14,9 +14,7 @@ public class FTBUNetHandler
 
 	public static void init()
 	{
-		GENERAL.register(1, new MessageServerInfo());
 		GENERAL.register(2, new MessageSendWarpList());
-		GENERAL.register(3, new MessageRequestServerInfo());
 
 		BADGES.register(1, new MessageRequestBadge());
 		BADGES.register(2, new MessageSendBadge());

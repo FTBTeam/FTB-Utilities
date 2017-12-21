@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbu.cmd.chunks;
 
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
+import com.feed_the_beast.ftblib.FTBLibLang;
+import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
+import com.feed_the_beast.ftbu.data.ClaimedChunks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -52,7 +52,7 @@ public class CmdUnclaimAll extends CmdBase
 
 		checkArgs(sender, args, 1);
 
-		IForgePlayer p;
+		ForgePlayer p;
 
 		if (args.length >= 2)
 		{
@@ -70,7 +70,7 @@ public class CmdUnclaimAll extends CmdBase
 
 		if (p.getTeam() != null)
 		{
-			ClaimedChunks.INSTANCE.unclaimAllChunks(p.getTeam(), parseBoolean(args[0]) ? null : player.dimension);
+			ClaimedChunks.get().unclaimAllChunks(p.getTeam(), parseBoolean(args[0]) ? null : player.dimension);
 			Notification.of(FTBUFinals.get("unclaimed_all"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.unclaimed_all")).send(player);
 		}
 	}

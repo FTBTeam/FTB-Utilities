@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.ranks;
 
-import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.mojang.authlib.GameProfile;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
@@ -37,7 +36,7 @@ public enum FTBUPermissionHandler implements IPermissionHandler
 			return true;
 		}
 
-		switch (FTBUtilitiesAPI.API.getRank(profile).hasPermission(permission))
+		switch (Ranks.getRank(profile).hasPermission(permission))
 		{
 			case ALLOW:
 				return true;

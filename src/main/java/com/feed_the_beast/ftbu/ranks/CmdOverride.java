@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.ranks;
 
-import com.feed_the_beast.ftbl.api.ICustomPermission;
+import com.feed_the_beast.ftblib.lib.ICustomPermission;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;

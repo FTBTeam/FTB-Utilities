@@ -1,20 +1,20 @@
 package com.feed_the_beast.ftbu.util;
 
-import com.feed_the_beast.ftbl.api.EnumTeamStatus;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.team.ForgeTeamConfigEvent;
-import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
-import com.feed_the_beast.ftbl.lib.config.ConfigEnum;
-import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigEvent;
+import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
+import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
+import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
+import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
-import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
-import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
+import com.feed_the_beast.ftbu.data.BlockInteractionType;
+import com.feed_the_beast.ftbu.data.ChunkUpgrade;
+import com.feed_the_beast.ftbu.data.ClaimedChunk;
+import com.feed_the_beast.ftbu.data.ClaimedChunks;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
+import com.feed_the_beast.ftbu.ranks.Ranks;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -30,19 +30,19 @@ import java.util.Map;
  */
 public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 {
-	public static FTBUTeamData get(IForgeTeam team)
+	public static FTBUTeamData get(ForgeTeam team)
 	{
 		return team.getData().get(FTBLibIntegration.FTBU_DATA);
 	}
 
-	public final IForgeTeam team;
+	public final ForgeTeam team;
 	private final ConfigEnum<EnumTeamStatus> editBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	private final ConfigEnum<EnumTeamStatus> interactWithBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	private final ConfigEnum<EnumTeamStatus> attackEntities = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	public final ConfigBoolean explosions = new ConfigBoolean(false);
 	public boolean canForceChunks = false;
 
-	public FTBUTeamData(IForgeTeam t)
+	public FTBUTeamData(ForgeTeam t)
 	{
 		team = t;
 	}
@@ -51,27 +51,14 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-
-		if (explosions.getBoolean())
-		{
-			nbt.setBoolean("Explosions", explosions.getBoolean());
-		}
-
+		nbt.setBoolean("Explosions", explosions.getBoolean());
 		nbt.setString("EditBlocks", editBlocks.getString());
-
-		if (interactWithBlocks.getBoolean())
-		{
-			nbt.setString("InteractWithBlocks", interactWithBlocks.getString());
-		}
-
-		if (attackEntities.getBoolean())
-		{
-			nbt.setString("AttackEntities", attackEntities.getString());
-		}
+		nbt.setString("InteractWithBlocks", interactWithBlocks.getString());
+		nbt.setString("AttackEntities", attackEntities.getString());
 
 		Int2ObjectOpenHashMap<NBTTagList> claimedChunks = new Int2ObjectOpenHashMap<>();
 
-		for (ClaimedChunk chunk : ClaimedChunks.INSTANCE.getTeamChunks(team))
+		for (ClaimedChunk chunk : ClaimedChunks.get().getTeamChunks(team))
 		{
 			ChunkDimPos pos = chunk.getPos();
 
@@ -141,7 +128,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 					}
 				}
 
-				ClaimedChunks.INSTANCE.addChunk(chunk);
+				ClaimedChunks.get().addChunk(chunk);
 			}
 		}
 	}
@@ -175,9 +162,9 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 	{
 		int p = 0;
 
-		for (IForgePlayer player : team.getMembers())
+		for (ForgePlayer player : team.getMembers())
 		{
-			p += FTBUtilitiesAPI.API.getRankConfig(player.getProfile(), FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
+			p += Ranks.getRank(player.getProfile()).getConfig(FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
 		}
 
 		return p;
@@ -187,9 +174,9 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 	{
 		int p = 0;
 
-		for (IForgePlayer player : team.getMembers())
+		for (ForgePlayer player : team.getMembers())
 		{
-			p += FTBUtilitiesAPI.API.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+			p += Ranks.getRank(player.getProfile()).getConfig(FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
 		}
 
 		return p;

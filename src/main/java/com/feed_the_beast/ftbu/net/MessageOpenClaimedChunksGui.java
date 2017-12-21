@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.lib.net.MessageToClient;
-import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftblib.lib.net.MessageToClient;
+import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.gui.GuiClaimedChunks;
 import net.minecraft.entity.player.EntityPlayer;
 

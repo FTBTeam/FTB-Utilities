@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.feed_the_beast.ftbu.api.FTBUtilitiesEvent;
+import com.feed_the_beast.ftbu.events.FTBUtilitiesEvent;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksUpdate;
 
 /**

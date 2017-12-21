@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.io.DataIn;
-import com.feed_the_beast.ftbl.lib.io.DataOut;
-import com.feed_the_beast.ftbl.lib.net.MessageToClient;
-import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbu.api.Leaderboard;
-import com.feed_the_beast.ftbu.api.LeaderboardValue;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.io.DataIn;
+import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.feed_the_beast.ftblib.lib.net.MessageToClient;
+import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbu.data.Leaderboard;
+import com.feed_the_beast.ftbu.data.LeaderboardValue;
 import com.feed_the_beast.ftbu.gui.GuiLeaderboard;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -46,13 +46,13 @@ public class MessageSendLeaderboard extends MessageToClient<MessageSendLeaderboa
 		title = leaderboard.getTitle();
 		values = new ArrayList<>();
 
-		IForgePlayer p0 = FTBLibAPI.API.getUniverse().getPlayer(player);
-		List<IForgePlayer> players = FTBLibAPI.API.getUniverse().getRealPlayers();
+		ForgePlayer p0 = Universe.get().getPlayer(player);
+		List<ForgePlayer> players = Universe.get().getRealPlayers();
 		players.sort(leaderboard.getComparator());
 
 		for (int i = 0; i < players.size(); i++)
 		{
-			IForgePlayer p = players.get(i);
+			ForgePlayer p = players.get(i);
 			LeaderboardValue value = new LeaderboardValue();
 			value.username = p.getName();
 			value.value = leaderboard.createValue(p);

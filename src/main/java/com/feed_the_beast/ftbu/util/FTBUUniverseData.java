@@ -1,20 +1,19 @@
 package com.feed_the_beast.ftbu.util;
 
-import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.universe.ForgeUniverseClosedEvent;
-import com.feed_the_beast.ftbl.api.universe.ForgeUniverseLoadedEvent;
-import com.feed_the_beast.ftbl.api.universe.ForgeUniverseSavedEvent;
-import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.math.MathUtils;
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
-import com.feed_the_beast.ftbl.lib.util.ServerUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.ChatHistory;
+import com.feed_the_beast.ftblib.events.universe.UniverseClosedEvent;
+import com.feed_the_beast.ftblib.events.universe.UniverseLoadedEvent;
+import com.feed_the_beast.ftblib.events.universe.UniverseSavedEvent;
+import com.feed_the_beast.ftblib.lib.EventHandler;
+import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftblib.lib.math.MathUtils;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.ServerUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
+import com.feed_the_beast.ftbu.FTBULang;
+import com.feed_the_beast.ftbu.data.ChunkUpgrade;
+import com.feed_the_beast.ftbu.data.ClaimedChunks;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
 import com.feed_the_beast.ftbu.util.backups.Backups;
 import net.minecraft.nbt.NBTTagCompound;
@@ -35,7 +34,7 @@ public class FTBUUniverseData
 {
 	public static long shutdownTime;
 	public static final BlockDimPosStorage WARPS = new BlockDimPosStorage();
-	public static final ChatHistory GENERAL_CHAT = new ChatHistory(() -> FTBUConfig.chat.general_history_limit);
+	//public static final ChatHistory GENERAL_CHAT = new ChatHistory(() -> FTBUConfig.chat.general_history_limit);
 	public static final Map<String, ChunkUpgrade> CHUNK_UPGRADES = new HashMap<>();
 
 	public static boolean isInSpawn(ChunkDimPos pos)
@@ -62,19 +61,26 @@ public class FTBUUniverseData
 	}
 
 	@SubscribeEvent
-	public static void onUniversePostLoaded(ForgeUniverseLoadedEvent.Post event)
+	public static void onUniversePreLoaded(UniverseLoadedEvent.Pre event)
+	{
+		ClaimedChunks.close();
+		ClaimedChunks.instance = new ClaimedChunks();
+	}
+
+	@SubscribeEvent
+	public static void onUniversePostLoaded(UniverseLoadedEvent.Post event)
 	{
 		NBTTagCompound nbt = event.getData(FTBLibIntegration.FTBU_DATA);
 		FTBUUniverseData.WARPS.deserializeNBT(nbt.getCompoundTag("Warps"));
 	}
 
 	@SubscribeEvent
-	public static void onUniverseLoaded(ForgeUniverseLoadedEvent.Finished event)
+	public static void onUniverseLoaded(UniverseLoadedEvent.Finished event)
 	{
-		long start = event.getUniverse().getOverworld().getTotalWorldTime();
+		long start = event.getWorld().getTotalWorldTime();
 		Backups.INSTANCE.nextBackup = start + FTBUConfig.backups.ticks();
 
-		if (FTBUConfig.auto_shutdown.enabled && FTBUConfig.auto_shutdown.times.length > 0 && event.getUniverse().getServer().isDedicatedServer())
+		if (FTBUConfig.auto_shutdown.enabled && FTBUConfig.auto_shutdown.times.length > 0 && ServerUtils.getServer().isDedicatedServer())
 		{
 			Calendar calendar = Calendar.getInstance();
 			int currentTime = calendar.get(Calendar.HOUR_OF_DAY) * 3600 + calendar.get(Calendar.MINUTE) * 60 + calendar.get(Calendar.SECOND);
@@ -105,14 +111,17 @@ public class FTBUUniverseData
 			}
 		}
 
-		ClaimedChunks.INSTANCE.nextChunkloaderUpdate = start + 20L;
+		ClaimedChunks.get().nextChunkloaderUpdate = start + 20L;
 		Badges.LOCAL_BADGES.clear();
 	}
 
 	@SubscribeEvent
-	public static void onUniverseSaved(ForgeUniverseSavedEvent event)
+	public static void onUniverseSaved(UniverseSavedEvent event)
 	{
-		ClaimedChunks.INSTANCE.processQueue();
+		if (ClaimedChunks.instance != null)
+		{
+			ClaimedChunks.get().processQueue();
+		}
 
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setTag("Warps", FTBUUniverseData.WARPS.serializeNBT());
@@ -123,10 +132,10 @@ public class FTBUUniverseData
 	}
 
 	@SubscribeEvent
-	public static void onUniverseClosed(ForgeUniverseClosedEvent event)
+	public static void onUniverseClosed(UniverseClosedEvent event)
 	{
 		CHUNK_UPGRADES.clear();
-		ClaimedChunks.INSTANCE.clear();
+		ClaimedChunks.close();
 		Badges.BADGE_CACHE.clear();
 		Badges.LOCAL_BADGES.clear();
 	}

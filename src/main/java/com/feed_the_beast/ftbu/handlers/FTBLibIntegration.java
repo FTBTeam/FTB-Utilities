@@ -1,28 +1,27 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.RegisterDataProvidersEvent;
-import com.feed_the_beast.ftbl.api.RegisterOptionalServerModsEvent;
-import com.feed_the_beast.ftbl.api.RegisterSyncDataEvent;
-import com.feed_the_beast.ftbl.api.ServerReloadEvent;
-import com.feed_the_beast.ftbl.api.player.ForgePlayerConfigEvent;
-import com.feed_the_beast.ftbl.api.player.ForgePlayerLoggedInEvent;
-import com.feed_the_beast.ftbl.api.player.ForgePlayerLoggedOutEvent;
-import com.feed_the_beast.ftbl.api.team.ForgeTeamConfigEvent;
-import com.feed_the_beast.ftbl.api.team.ForgeTeamDeletedEvent;
-import com.feed_the_beast.ftbl.api.team.ForgeTeamOwnerChangedEvent;
-import com.feed_the_beast.ftbl.api.team.ForgeTeamPlayerJoinedEvent;
-import com.feed_the_beast.ftbl.api.team.ForgeTeamPlayerLeftEvent;
-import com.feed_the_beast.ftbl.api.team.RegisterTeamGuiActionsEvent;
-import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
-import com.feed_the_beast.ftbl.lib.util.InvUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.TeamGuiAction;
+import com.feed_the_beast.ftblib.events.RegisterDataProvidersEvent;
+import com.feed_the_beast.ftblib.events.RegisterOptionalServerModsEvent;
+import com.feed_the_beast.ftblib.events.RegisterSyncDataEvent;
+import com.feed_the_beast.ftblib.events.ServerReloadEvent;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamDeletedEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamOwnerChangedEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerLeftEvent;
+import com.feed_the_beast.ftblib.events.team.RegisterTeamGuiActionsEvent;
+import com.feed_the_beast.ftblib.lib.EventHandler;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
+import com.feed_the_beast.ftblib.lib.data.TeamGuiAction;
+import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
+import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.ServerInfoPage;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
+import com.feed_the_beast.ftbu.data.ClaimedChunks;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.util.Badges;
 import com.feed_the_beast.ftbu.util.FTBUPlayerData;
@@ -44,7 +43,6 @@ public class FTBLibIntegration
 	public static final ResourceLocation FTBU_DATA = FTBUFinals.get("data");
 	public static final ResourceLocation RELOAD_CONFIG = FTBUFinals.get("config");
 	public static final ResourceLocation RELOAD_RANKS = FTBUFinals.get("ranks");
-	public static final ResourceLocation RELOAD_SERVER_INFO = FTBUFinals.get("server_info");
 	public static final ResourceLocation RELOAD_BADGES = FTBUFinals.get("badges");
 
 	@SubscribeEvent
@@ -52,7 +50,6 @@ public class FTBLibIntegration
 	{
 		event.register(RELOAD_CONFIG);
 		event.register(RELOAD_RANKS);
-		event.register(RELOAD_SERVER_INFO);
 		event.register(RELOAD_BADGES);
 	}
 
@@ -67,11 +64,6 @@ public class FTBLibIntegration
 		if (event.reload(RELOAD_RANKS) && !Ranks.reload())
 		{
 			event.failedToReload(RELOAD_RANKS);
-		}
-
-		if (event.reload(RELOAD_SERVER_INFO))
-		{
-			ServerInfoPage.reloadCachedInfo();
 		}
 
 		if (event.reload(RELOAD_BADGES) && !Badges.reloadServerBadges())
@@ -133,13 +125,13 @@ public class FTBLibIntegration
 			}
 		}
 
-		ClaimedChunks.INSTANCE.markDirty();
+		ClaimedChunks.get().markDirty();
 	}
 
 	@SubscribeEvent
 	public static void onPlayerLoggedOut(ForgePlayerLoggedOutEvent event)
 	{
-		ClaimedChunks.INSTANCE.markDirty();
+		ClaimedChunks.get().markDirty();
 		Badges.update(event.getPlayer().getId());
 	}
 
@@ -173,7 +165,7 @@ public class FTBLibIntegration
 	public static void onTeamDeleted(ForgeTeamDeletedEvent event)
 	{
 		//printMessage(FTBLibLang.TEAM_DELETED.textComponent(getTitle()));
-		ClaimedChunks.INSTANCE.unclaimAllChunks(event.getTeam(), null);
+		ClaimedChunks.get().unclaimAllChunks(event.getTeam(), null);
 	}
 
 	@SubscribeEvent
@@ -200,13 +192,13 @@ public class FTBLibIntegration
 		event.register(new TeamGuiAction(FTBUFinals.get("chat"), new TextComponentTranslation("sidebar_button.ftbu.chats.team"), GuiIcons.CHAT, -10)
 		{
 			@Override
-			public boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data)
+			public boolean isAvailable(ForgeTeam team, ForgePlayer player, NBTTagCompound data)
 			{
 				return false;
 			}
 
 			@Override
-			public void onAction(IForgeTeam team, IForgePlayer player, NBTTagCompound data)
+			public void onAction(ForgeTeam team, ForgePlayer player, NBTTagCompound data)
 			{
 			}
 		});

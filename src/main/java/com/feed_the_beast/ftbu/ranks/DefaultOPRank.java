@@ -1,10 +1,9 @@
 package com.feed_the_beast.ftbu.ranks;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.lib.config.ConfigNull;
-import com.feed_the_beast.ftbl.lib.config.ConfigValue;
-import com.feed_the_beast.ftbl.lib.config.RankConfigValueInfo;
-import com.feed_the_beast.ftbu.api.IRank;
+import com.feed_the_beast.ftblib.FTBLibModCommon;
+import com.feed_the_beast.ftblib.lib.config.ConfigNull;
+import com.feed_the_beast.ftblib.lib.config.ConfigValue;
+import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 
 /**
  * @author LatvianModder
@@ -19,7 +18,7 @@ public class DefaultOPRank extends DefaultRank
 	}
 
 	@Override
-	public IRank getParent()
+	public Rank getParent()
 	{
 		return DefaultPlayerRank.INSTANCE;
 	}
@@ -27,7 +26,7 @@ public class DefaultOPRank extends DefaultRank
 	@Override
 	public ConfigValue getConfig(String id)
 	{
-		RankConfigValueInfo config = FTBLibAPI.API.getRankConfigRegistry().get(id);
+		RankConfigValueInfo config = FTBLibModCommon.RANK_CONFIGS_MIRROR.get(id);
 		return config == null ? ConfigNull.INSTANCE : config.defaultOPValue;
 	}
 }

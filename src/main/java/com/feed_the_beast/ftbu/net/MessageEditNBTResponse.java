@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.io.DataIn;
-import com.feed_the_beast.ftbl.lib.io.DataOut;
-import com.feed_the_beast.ftbl.lib.net.MessageToServer;
-import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.io.DataIn;
+import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.feed_the_beast.ftblib.lib.net.MessageToServer;
+import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.cmd.CmdEditNBT;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -60,7 +60,7 @@ public class MessageEditNBTResponse extends MessageToServer<MessageEditNBTRespon
 			{
 				case "player":
 				{
-					IForgePlayer player1 = FTBLibAPI.API.getUniverse().getPlayer(m.info.getUniqueId("id"));
+					ForgePlayer player1 = Universe.get().getPlayer(m.info.getUniqueId("id"));
 
 					if (player1 != null && player1.isOnline())
 					{

@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.integration;
 
-import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.gui.misc.ChunkSelectorMap;
-import com.feed_the_beast.ftbl.lib.math.MathUtils;
+import com.feed_the_beast.ftblib.lib.client.ClientUtils;
+import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
+import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
 import com.feed_the_beast.ftbu.gui.ClientClaimedChunks;
 import com.feed_the_beast.ftbu.gui.UpdateClientDataEvent;

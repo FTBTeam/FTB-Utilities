@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbu.cmd.chunks;
 
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftblib.FTBLibLang;
+import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
-import com.feed_the_beast.ftbu.api_impl.ChunkUpgrades;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
+import com.feed_the_beast.ftbu.data.ChunkUpgrades;
+import com.feed_the_beast.ftbu.data.ClaimedChunk;
+import com.feed_the_beast.ftbu.data.ClaimedChunks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -37,7 +37,7 @@ public class CmdUnloadAll extends CmdBase
 
 		checkArgs(sender, args, 1);
 
-		IForgePlayer p;
+		ForgePlayer p;
 
 		if (args.length >= 2)
 		{
@@ -56,7 +56,7 @@ public class CmdUnloadAll extends CmdBase
 		boolean allDimensions = parseBoolean(args[0]);
 		int currentDim = sender.getEntityWorld().provider.getDimension();
 
-		for (IClaimedChunk chunk : ClaimedChunks.INSTANCE.getTeamChunks(p.getTeam()))
+		for (ClaimedChunk chunk : ClaimedChunks.get().getTeamChunks(p.getTeam()))
 		{
 			if (!allDimensions || currentDim == chunk.getPos().dim)
 			{

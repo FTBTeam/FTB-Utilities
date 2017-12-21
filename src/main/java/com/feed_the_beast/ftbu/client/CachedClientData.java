@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.client;
 
-import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftbu.net.MessageRequestBadge;
 
 import java.util.HashMap;

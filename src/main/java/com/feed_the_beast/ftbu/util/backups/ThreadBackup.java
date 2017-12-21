@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.util.backups;
 
-import com.feed_the_beast.ftbl.lib.util.FileUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.FileUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.FTBULang;
 
 import java.io.File;
 import java.io.FileInputStream;

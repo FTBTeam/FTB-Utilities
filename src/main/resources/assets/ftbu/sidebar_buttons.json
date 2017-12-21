@@ -11,16 +11,6 @@
 		"config": true,
 		"dev_only": true
 	},
-	"guide": {
-		"group": "ftbl:info",
-		"icon": "minecraft:items/book_normal",
-		"x": 600,
-		"click": {
-			"action": "run_command",
-			"value": "/ftbc open_guide"
-		},
-		"config": true
-	},
 	"leaderboards": {
 		"group": "ftbl:info",
 		"icon": "item:minecraft:sign",
@@ -33,7 +23,7 @@
 		"config": true
 	},
 	"claimed_chunks": {
-		"group": "ftbu:util",
+		"group": "ftbl:util",
 		"icon": "ftbl:icons/map",
 		"x": 0,
 		"click": {
@@ -45,7 +35,7 @@
 		"loading_screen": true
 	},
 	"trash_can": {
-		"group": "ftbu:util",
+		"group": "ftbl:util",
 		"icon": "ftbl:icons/bin",
 		"x": 500,
 		"click": {
@@ -57,7 +47,7 @@
 		"loading_screen": true
 	},
 	"shop": {
-		"group": "ftbu:util",
+		"group": "ftbl:util",
 		"icon": "ftbl:icons/money_bag",
 		"x": 100,
 		"click": {
@@ -70,7 +60,7 @@
 		"loading_screen": true
 	},
 	"heal": {
-		"group": "ftbu:cheat",
+		"group": "ftbl:cheat",
 		"icon": "ftbl:icons/heart",
 		"x": 400,
 		"click": {
@@ -83,7 +73,7 @@
 		"requires_op": true
 	},
 	"toggle.gamemode": {
-		"group": "ftbu:cheat",
+		"group": "ftbl:cheat",
 		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_gamemode.png"],
 		"x": 0,
 		"click": {
@@ -95,7 +85,7 @@
 		"requires_op": true
 	},
 	"toggle.rain": {
-		"group": "ftbu:cheat",
+		"group": "ftbl:cheat",
 		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_rain.png"],
 		"x": 100,
 		"click": {
@@ -107,7 +97,7 @@
 		"requires_op": true
 	},
 	"toggle.day": {
-		"group": "ftbu:cheat",
+		"group": "ftbl:cheat",
 		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_day.png"],
 		"x": 200,
 		"click": {
@@ -120,7 +110,7 @@
 		"requires_op": true
 	},
 	"toggle.night": {
-		"group": "ftbu:cheat",
+		"group": "ftbl:cheat",
 		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_night.png"],
 		"x": 300,
 		"click": {
@@ -133,7 +123,7 @@
 		"requires_op": true
 	},
 	"view_crash": {
-		"group": "ftbu:util",
+		"group": "ftbl:util",
 		"icon": "item:minecraft:barrier",
 		"x": 600,
 		"click": {

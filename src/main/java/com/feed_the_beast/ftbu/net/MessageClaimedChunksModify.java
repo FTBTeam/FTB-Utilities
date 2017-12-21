@@ -1,17 +1,17 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
-import com.feed_the_beast.ftbl.lib.io.DataIn;
-import com.feed_the_beast.ftbl.lib.io.DataOut;
-import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.net.MessageToServer;
-import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftblib.FTBLibNotifications;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
+import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.io.DataIn;
+import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftblib.lib.net.MessageToServer;
+import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
+import com.feed_the_beast.ftbu.data.ClaimedChunks;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.ChunkPos;
@@ -69,14 +69,14 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 	@Override
 	public void onMessage(MessageClaimedChunksModify m, EntityPlayer player)
 	{
-		IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(player);
+		ForgePlayer p = Universe.get().getPlayer(player);
 
 		if (!FTBUConfig.world.chunk_claiming)
 		{
 			return;
 		}
 
-		IForgeTeam team = p.getTeam();
+		ForgeTeam team = p.getTeam();
 
 		if (team == null)
 		{
@@ -93,19 +93,19 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 			switch (m.action)
 			{
 				case CLAIM:
-					ClaimedChunks.INSTANCE.claimChunk(FTBUTeamData.get(team), pos);
+					ClaimedChunks.get().claimChunk(FTBUTeamData.get(team), pos);
 					break;
 				case UNCLAIM:
-					if (canUnclaim || team.equalsTeam(ClaimedChunks.INSTANCE.getChunkTeam(pos)))
+					if (canUnclaim || team.equalsTeam(ClaimedChunks.get().getChunkTeam(pos)))
 					{
-						ClaimedChunks.INSTANCE.unclaimChunk(team, pos);
+						ClaimedChunks.get().unclaimChunk(team, pos);
 					}
 					break;
 				case LOAD:
-					ClaimedChunks.INSTANCE.setLoaded(team, pos, true);
+					ClaimedChunks.get().setLoaded(team, pos, true);
 					break;
 				case UNLOAD:
-					ClaimedChunks.INSTANCE.setLoaded(team, pos, false);
+					ClaimedChunks.get().setLoaded(team, pos, false);
 					break;
 			}
 		}

@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.lib.config.EnumTristate;
-import com.feed_the_beast.ftbl.lib.gui.GuiLang;
-import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
-import com.feed_the_beast.ftbl.lib.util.JsonUtils;
+import com.feed_the_beast.ftblib.lib.config.EnumTristate;
+import com.feed_the_beast.ftblib.lib.gui.GuiLang;
+import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.config.Config;
@@ -20,7 +20,7 @@ import java.util.List;
  * @author LatvianModder
  */
 @Mod.EventBusSubscriber(modid = FTBUFinals.MOD_ID)
-@Config(modid = FTBUFinals.MOD_ID, category = "config", name = "../local/ftbutilities/config")
+@Config(modid = FTBUFinals.MOD_ID, category = "", name = "../local/ftbutilities/config")
 public class FTBUConfig
 {
 	@Config.RequiresWorldRestart

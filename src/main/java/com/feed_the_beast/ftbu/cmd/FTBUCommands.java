@@ -1,14 +1,9 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.RegisterFTBClientCommandsEvent;
-import com.feed_the_beast.ftbl.api.RegisterFTBCommandsEvent;
+import com.feed_the_beast.ftblib.events.RegisterFTBCommandsEvent;
+import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.cmd.chunks.CmdChunks;
-import com.feed_the_beast.ftbu.cmd.client.CmdOpenGuide;
-import com.feed_the_beast.ftbu.cmd.client.CmdRefreshGuide;
-import com.feed_the_beast.ftbu.cmd.client.CmdShrug;
-import com.feed_the_beast.ftbu.cmd.client.CmdToggleGamemode;
 import com.feed_the_beast.ftbu.cmd.ranks.CmdRanks;
 import com.feed_the_beast.ftbu.cmd.tp.CmdBack;
 import com.feed_the_beast.ftbu.cmd.tp.CmdDelHome;
@@ -20,8 +15,6 @@ import com.feed_the_beast.ftbu.cmd.tp.CmdSpawn;
 import com.feed_the_beast.ftbu.cmd.tp.CmdTplast;
 import com.feed_the_beast.ftbu.cmd.tp.CmdWarp;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author LatvianModder
@@ -130,15 +123,5 @@ public class FTBUCommands
 		{
 			event.add(new CmdLeaderboard());
 		}
-	}
-
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public static void registerClientCommands(RegisterFTBClientCommandsEvent event)
-	{
-		event.add(new CmdShrug());
-		event.add(new CmdRefreshGuide());
-		event.add(new CmdOpenGuide());
-		event.add(new CmdToggleGamemode());
 	}
 }

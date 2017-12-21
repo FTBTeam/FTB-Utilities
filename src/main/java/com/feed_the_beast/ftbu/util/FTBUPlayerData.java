@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.util;
 
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.player.ForgePlayerConfigEvent;
-import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
-import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
+import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
+import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,19 +20,19 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 	public final ConfigBoolean disableGlobalBadge = new ConfigBoolean(false);
 	public final ConfigBoolean enablePVP = new ConfigBoolean(true);
 
-	public final IForgePlayer player;
+	public final ForgePlayer player;
 	public BlockDimPos lastDeath, lastSafePos;
-	public IForgeTeam lastChunkTeam;
+	public ForgeTeam lastChunkTeam;
 	public final BlockDimPosStorage homes;
 	public boolean fly;
 
-	public FTBUPlayerData(IForgePlayer p)
+	public FTBUPlayerData(ForgePlayer p)
 	{
 		player = p;
 		homes = new BlockDimPosStorage();
 	}
 
-	public static FTBUPlayerData get(IForgePlayer player)
+	public static FTBUPlayerData get(ForgePlayer player)
 	{
 		return player.getData().get(FTBLibIntegration.FTBU_DATA);
 	}

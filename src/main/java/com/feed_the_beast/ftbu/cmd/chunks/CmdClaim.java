@@ -1,15 +1,15 @@
 package com.feed_the_beast.ftbu.cmd.chunks;
 
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
+import com.feed_the_beast.ftblib.FTBLibLang;
+import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
+import com.feed_the_beast.ftbu.data.ClaimedChunks;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -37,7 +37,7 @@ public class CmdClaim extends CmdBase
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-		IForgePlayer p;
+		ForgePlayer p;
 
 		if (args.length >= 1)
 		{
@@ -66,7 +66,7 @@ public class CmdClaim extends CmdBase
 			return;
 		}
 
-		switch (ClaimedChunks.INSTANCE.claimChunk(FTBUTeamData.get(p.getTeam()), pos))
+		switch (ClaimedChunks.get().claimChunk(FTBUTeamData.get(p.getTeam()), pos))
 		{
 			case SUCCESS:
 				Notification.of(FTBUFinals.get("chunk_modified"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.chunk_claimed")).send(player);

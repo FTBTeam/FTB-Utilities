@@ -1,12 +1,11 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
-import com.feed_the_beast.ftbl.lib.util.InvUtils;
-import com.feed_the_beast.ftbl.lib.util.NBTUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.FTBLibLang;
+import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -68,12 +67,12 @@ public class CmdInv extends CmdTreeBase
 			{
 				NBTTagCompound tag = new NBTTagCompound();
 				writeItemsToNBT(ep.inventory, tag, "Inventory");
-				IInventory baubles = InvUtils.getBaubles(ep);
+				/*IInventory baubles = InvUtils.getBaubles(ep);
 
 				if (baubles != null)
 				{
 					writeItemsToNBT(baubles, tag, "Baubles");
-				}
+				}*/
 
 				NBTUtils.writeTag(file, tag);
 			}
@@ -132,12 +131,12 @@ public class CmdInv extends CmdTreeBase
 			{
 				NBTTagCompound tag = NBTUtils.readTag(file);
 				readItemsFromNBT(ep.inventory, tag, "Inventory");
-				IInventory baubles = InvUtils.getBaubles(ep);
+				/*IInventory baubles = InvUtils.getBaubles(ep);
 
 				if (baubles != null)
 				{
 					readItemsFromNBT(baubles, tag, "Baubles");
-				}
+				}*/
 			}
 			catch (Exception ex)
 			{

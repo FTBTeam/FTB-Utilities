@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.feed_the_beast.ftbl.api.EnumTeamColor;
-import com.feed_the_beast.ftbl.lib.io.DataIn;
-import com.feed_the_beast.ftbl.lib.io.DataOut;
-import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
+import com.feed_the_beast.ftblib.lib.EnumTeamColor;
+import com.feed_the_beast.ftblib.lib.io.DataIn;
+import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.feed_the_beast.ftbu.data.ChunkUpgrade;
 import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 

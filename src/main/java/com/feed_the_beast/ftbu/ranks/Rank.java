@@ -1,11 +1,10 @@
 package com.feed_the_beast.ftbu.ranks;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.lib.config.ConfigValue;
-import com.feed_the_beast.ftbl.lib.config.RankConfigValueInfo;
-import com.feed_the_beast.ftbl.lib.util.FinalIDObject;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbu.api.IRank;
+import com.feed_the_beast.ftblib.FTBLibModCommon;
+import com.feed_the_beast.ftblib.lib.config.ConfigValue;
+import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
+import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,11 +15,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Rank extends FinalIDObject implements IRank, IJsonSerializable
+public class Rank extends FinalIDObject implements IJsonSerializable
 {
 	private static final String[] EVENT_RESULT_PREFIX = {"-", "~", "+"};
 
-	IRank parent;
+	Rank parent;
 	private final Map<String, Event.Result> permissions;
 	private final Map<String, Event.Result> cachedPermissions;
 	private final Map<String, ConfigValue> config;
@@ -37,14 +36,13 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 		syntax = null;
 	}
 
-	public Rank(String id, IRank r)
+	public Rank(String id, Rank r)
 	{
 		this(id);
 		parent = r;
 	}
 
-	@Override
-	public IRank getParent()
+	public Rank getParent()
 	{
 		return parent == null ? DefaultPlayerRank.INSTANCE : parent;
 	}
@@ -70,7 +68,6 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 		return getParent().hasPermission(permission);
 	}
 
-	@Override
 	public Event.Result hasPermission(String permission)
 	{
 		Event.Result r = cachedPermissions.get(permission);
@@ -84,7 +81,6 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 		return r;
 	}
 
-	@Override
 	public ConfigValue getConfig(String id)
 	{
 		ConfigValue e = cachedConfig.get(id);
@@ -175,7 +171,7 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 		{
 			for (Map.Entry<String, JsonElement> entry : o.get("config").getAsJsonObject().entrySet())
 			{
-				RankConfigValueInfo rconfig = FTBLibAPI.API.getRankConfigRegistry().get(entry.getKey());
+				RankConfigValueInfo rconfig = FTBLibModCommon.RANK_CONFIGS_MIRROR.get(entry.getKey());
 
 				if (rconfig != null)
 				{
@@ -187,9 +183,13 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 		}
 	}
 
-	@Override
 	public String getSyntax()
 	{
 		return syntax == null ? getParent().getSyntax() : syntax;
+	}
+
+	public String getFormattedName(String name)
+	{
+		return getSyntax().replace("$name", name);
 	}
 }

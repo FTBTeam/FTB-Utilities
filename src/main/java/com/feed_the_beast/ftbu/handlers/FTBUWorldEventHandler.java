@@ -1,18 +1,18 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
-import com.feed_the_beast.ftbl.lib.util.ServerUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
+import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.ServerUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
-import com.feed_the_beast.ftbu.api_impl.ChunkUpgrades;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
+import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.cmd.CmdShutdown;
+import com.feed_the_beast.ftbu.data.ChunkUpgrades;
+import com.feed_the_beast.ftbu.data.ClaimedChunk;
+import com.feed_the_beast.ftbu.data.ClaimedChunks;
 import com.feed_the_beast.ftbu.util.FTBUPlayerData;
 import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import com.feed_the_beast.ftbu.util.backups.Backups;
@@ -57,7 +57,7 @@ public class FTBUWorldEventHandler
 		{
 			if (FTBUConfig.world.enable_explosions.isDefault())
 			{
-				IClaimedChunk chunk = ClaimedChunks.INSTANCE.getChunk(pos);
+				ClaimedChunk chunk = ClaimedChunks.get().getChunk(pos);
 				return chunk == null || !chunk.hasUpgrade(ChunkUpgrades.NO_EXPLOSIONS);
 			}
 
@@ -78,7 +78,7 @@ public class FTBUWorldEventHandler
 	@SubscribeEvent
 	public static void onServerTickEvent(TickEvent.ServerTickEvent event)
 	{
-		if (!FTBLibAPI.API.hasUniverse())
+		if (!Universe.loaded())
 		{
 			return;
 		}
@@ -88,13 +88,13 @@ public class FTBUWorldEventHandler
 
 		if (event.phase == TickEvent.Phase.START)
 		{
-			ClaimedChunks.INSTANCE.update(server, now);
+			ClaimedChunks.get().update(server, now);
 		}
 		else
 		{
 			for (EntityPlayerMP player : server.getPlayerList().getPlayers())
 			{
-				if (!player.capabilities.isCreativeMode && FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(player)).fly)
+				if (!player.capabilities.isCreativeMode && FTBUPlayerData.get(Universe.get().getPlayer(player)).fly)
 				{
 					boolean fly = player.capabilities.allowFlying;
 					player.capabilities.allowFlying = true;
@@ -150,9 +150,9 @@ public class FTBUWorldEventHandler
 	@SubscribeEvent
 	public static void onDimensionUnload(WorldEvent.Unload event)
 	{
-		if (ClaimedChunks.INSTANCE != null)
+		if (event.getWorld().provider.getDimension() != 0)
 		{
-			ClaimedChunks.INSTANCE.markDirty();
+			ClaimedChunks.get().markDirty();
 		}
 	}
 

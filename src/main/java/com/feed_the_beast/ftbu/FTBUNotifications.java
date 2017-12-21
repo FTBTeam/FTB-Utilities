@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
+import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.server.command.TextComponentHelper;
 

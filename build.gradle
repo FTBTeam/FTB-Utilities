@@ -34,36 +34,11 @@ repositories {
 }
 
 dependencies {
-	provided "com.latmod.mods:FTBLib:${ftblib_version}:api"
-	runtime "com.latmod.mods:FTBLib:${ftblib_version}"
+	compile "com.latmod.mods:FTBLib:${ftblib_version}:deobf"
 	provided "com.latmod.mods:iChunUtil:${ichunutil_version}:api"
 	provided "info.journeymap:journeymap-api:${journeymap_version}"
 	deobfProvided "mod.chiselsandbits:chiselsandbits:${chiselsandbits_version}:api"
-	deobfProvided "slimeknights.mantle:Mantle:${mantle_version}"
-	deobfProvided "slimeknights:TConstruct:${tconstruct_version}"
 }
-
-sourceSets {
-	main {
-		java {
-			srcDir 'src/main/java'
-			srcDir 'src/main/api'
-		}
-		resources {
-			srcDir 'src/main/resources'
-		}
-	}
-}
-
-task apiJar(type: Jar) {
-	from sourceSets.main.java
-	include "com/feed_the_beast/ftbu/api/**"
-	from sourceSets.main.output
-	include "com/feed_the_beast/ftbu/api/**"
-	classifier = 'api'
-}
-
-build.dependsOn apiJar
 
 processResources {
 	inputs.property "version", project.version
@@ -78,3 +53,10 @@ processResources {
 		exclude 'mcmod.info'
 	}
 }
+
+task deobfJar(type: Jar) {
+	from sourceSets.main.output
+	classifier = 'deobf'
+}
+
+build.dependsOn deobfJar

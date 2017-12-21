@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
-import com.feed_the_beast.ftbl.lib.util.FileUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.BroadcastSender;
+import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
+import com.feed_the_beast.ftblib.lib.util.FileUtils;
+import com.feed_the_beast.ftblib.lib.util.misc.BroadcastSender;
 import com.feed_the_beast.ftbu.FTBUConfig;
-import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.util.backups.Backups;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

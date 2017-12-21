@@ -1,66 +1,49 @@
 # Config
-ftbu.config.auto_shutdown=Auto Shutdown
-ftbu.config.auto_shutdown.times=Shutdown Times
+ftbu.auto_shutdown=Auto Shutdown
+ftbu.auto_shutdown.times=Shutdown Times
 
-ftbu.config.server_info=Server Info
-ftbu.config.server_info.difficulty=Difficulty
-ftbu.config.server_info.admin_quick_access=Admin Quick Access
+ftbu.server_info=Server Info
+ftbu.server_info.difficulty=Difficulty
+ftbu.server_info.admin_quick_access=Admin Quick Access
 
-ftbu.config.chat=Chat
-ftbu.config.chat.general_history_limit=General Chat History Limit
-ftbu.config.chat.team_history_limit=Team Chat History Limit
-ftbu.config.chat.admin_history_limit=Admin Chat History Limit
+ftbu.chat=Chat
+ftbu.chat.general_history_limit=General Chat History Limit
+ftbu.chat.team_history_limit=Team Chat History Limit
+ftbu.chat.admin_history_limit=Admin Chat History Limit
 
-ftbu.config.backups=Backups
-ftbu.config.backups.silent=Silent
-ftbu.config.backups.backups_to_keep=Backups to Keep
-ftbu.config.backups.backup_timer=Backup Timer
-ftbu.config.backups.compression_level=Compression Level
-ftbu.config.backups.folder=Folder
-ftbu.config.backups.display_file_size=Display File Size
-ftbu.config.backups.use_separate_thread=Use Separate Thread
+ftbu.backups=Backups
+ftbu.backups.silent=Silent
+ftbu.backups.backups_to_keep=Backups to Keep
+ftbu.backups.backup_timer=Backup Timer
+ftbu.backups.compression_level=Compression Level
+ftbu.backups.folder=Folder
+ftbu.backups.display_file_size=Display File Size
+ftbu.backups.use_separate_thread=Use Separate Thread
 
-ftbu.config.commands=Commands
-ftbu.config.commands.warp=/warp
-ftbu.config.commands.home=/home
-ftbu.config.commands.back=/back
-ftbu.config.commands.spawn=/spawn
-ftbu.config.commands.inv=/inv
-ftbu.config.commands.tpl=/tpl
-ftbu.config.commands.server_info=/server_info
-ftbu.config.commands.trash_can=/trash_can
-ftbu.config.commands.chunks=/chunks
-ftbu.config.commands.kickme=/kickme
-ftbu.config.commands.ranks=/ranks
-ftbu.config.commands.view_crash=/view_crash
-ftbu.config.commands.heal=/heal
-ftbu.config.commands.set_hour=/set_hour
-ftbu.config.commands.killall=/killall
-ftbu.config.commands.nbtedit=/nbtedit
-ftbu.config.commands.shrug=/shrug
+ftbu.commands=Commands
 
-ftbu.config.login=Login
-ftbu.config.login.enable_motd=Enable MOTD
-ftbu.config.login.enable_starting_items=Enable Starting Items
-ftbu.config.login.enable_global_badges=Enable Global Badges
-ftbu.config.login.enable_event_badges=Enable Event Badges
-ftbu.config.login.motd=MOTD
-ftbu.config.login.starting_items=Starting Items
+ftbu.login=Login
+ftbu.login.enable_motd=Enable MOTD
+ftbu.login.enable_starting_items=Enable Starting Items
+ftbu.login.enable_global_badges=Enable Global Badges
+ftbu.login.enable_event_badges=Enable Event Badges
+ftbu.login.motd=MOTD
+ftbu.login.starting_items=Starting Items
 
-ftbu.config.world=World
-ftbu.config.world.chunk_claiming=Chunk Claiming
-ftbu.config.world.chunk_loading=Chunk Loading
-ftbu.config.world.safe_spawn=Safe Spawn
-ftbu.config.world.spawn_area_in_sp=Spawn Area In Singleplayer
-ftbu.config.world.log_chunkloading=Log Chunkloading
+ftbu.world=World
+ftbu.world.chunk_claiming=Chunk Claiming
+ftbu.world.chunk_loading=Chunk Loading
+ftbu.world.safe_spawn=Safe Spawn
+ftbu.world.spawn_area_in_sp=Spawn Area In Singleplayer
+ftbu.world.log_chunkloading=Log Chunkloading
 
-ftbu.config.ranks=Ranks
-ftbu.config.ranks.enabled=Enabled
-ftbu.config.ranks.override_chat=Override Chat
-ftbu.config.ranks.override_commands=Override Commands
+ftbu.ranks=Ranks
+ftbu.ranks.enabled=Enabled
+ftbu.ranks.override_chat=Override Chat
+ftbu.ranks.override_commands=Override Commands
 
-ftbu_client.config.general.render_badges=Show Badges
-ftbu_client.config.general.journeymap_overlay=Enable Journeymap Integration
+ftbu_client.general.render_badges=Show Badges
+ftbu_client.general.journeymap_overlay=Enable Journeymap Integration
 
 # Server Settings
 my_server_settings.ftbu=FTBUtilities

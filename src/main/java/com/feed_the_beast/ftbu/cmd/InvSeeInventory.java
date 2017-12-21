@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -15,13 +14,13 @@ public class InvSeeInventory implements IInventory
 
 	private final EntityPlayerMP player;
 	private final IInventory invPlayer;
-	private final IInventory baubles;
+	//private final IInventory baubles;
 
 	public InvSeeInventory(EntityPlayerMP ep)
 	{
 		player = ep;
 		invPlayer = ep.inventory;
-		baubles = InvUtils.getBaubles(ep);
+		//baubles = InvUtils.getBaubles(ep);
 	}
 
 	@Override
@@ -33,19 +32,24 @@ public class InvSeeInventory implements IInventory
 	@Override
 	public boolean isEmpty()
 	{
-		return invPlayer.isEmpty() && (baubles == null || baubles.isEmpty());
+		return invPlayer.isEmpty();// && (baubles == null || baubles.isEmpty());
 	}
 
 	@Nullable
 	private IInventory getInv(int slot)
 	{
+		/*
 		if (slot < 0)
 		{
 			return null;
 		}
-		if (slot >= 40)
+		else if (slot >= 40)
 		{
 			return baubles;
+		}*/
+		if (slot < 0 || slot >= 40)
+		{
+			return null;
 		}
 		return invPlayer;
 	}
@@ -121,10 +125,10 @@ public class InvSeeInventory implements IInventory
 	{
 		invPlayer.markDirty();
 		player.openContainer.detectAndSendChanges();
-		if (baubles != null)
+		/*if (baubles != null)
 		{
 			baubles.markDirty();
-		}
+		}*/
 	}
 
 	@Override
@@ -173,9 +177,9 @@ public class InvSeeInventory implements IInventory
 	{
 		invPlayer.clear();
 
-		if (baubles != null)
+		/*if (baubles != null)
 		{
 			baubles.clear();
-		}
+		}*/
 	}
 }

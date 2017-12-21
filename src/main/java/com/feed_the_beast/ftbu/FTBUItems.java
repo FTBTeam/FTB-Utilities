@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLibFinals;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;

@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.api.ATHelper;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.lib.ATHelper;
+import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftbu.ranks.CmdOverride;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.util.backups.Backups;
@@ -55,7 +55,7 @@ public class FTBU
 		{
 			ServerCommandManager manager = (ServerCommandManager) ServerUtils.getServer().getCommandManager();
 			List<ICommand> commands = new ArrayList<>(manager.getCommands().values());
-			ATHelper.INSTANCE.getCommandSet(manager).clear();
+			ATHelper.getCommandSet(manager).clear();
 			manager.getCommands().clear();
 
 			for (ICommand command : commands)

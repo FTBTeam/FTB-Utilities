@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.FTBLibLang;
+import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUCommon;
-import com.feed_the_beast.ftbu.api.Leaderboard;
+import com.feed_the_beast.ftbu.data.Leaderboard;
 import com.feed_the_beast.ftbu.net.MessageSendLeaderboard;
 import com.feed_the_beast.ftbu.net.MessageSendLeaderboardList;
 import net.minecraft.command.CommandException;
@@ -104,13 +104,13 @@ public class CmdLeaderboard extends CmdBase
 			Leaderboard leaderboard = FTBUCommon.LEADERBOARDS.getValue(new ResourceLocation(args[0]));
 			sender.sendMessage(leaderboard.getTitle().createCopy().appendText(":"));
 
-			IForgePlayer p0 = FTBLibAPI.API.getUniverse().getPlayer(sender);
-			List<IForgePlayer> players = FTBLibAPI.API.getUniverse().getRealPlayers();
+			ForgePlayer p0 = Universe.get().getPlayer(sender);
+			List<ForgePlayer> players = Universe.get().getRealPlayers();
 			players.sort(leaderboard.getComparator());
 
 			for (int i = 0; i < players.size(); i++)
 			{
-				IForgePlayer p = players.get(i);
+				ForgePlayer p = players.get(i);
 				ITextComponent component = new TextComponentString("#" + StringUtils.add0s(i + 1, players.size()) + " " + p.getName() + ": ");
 				component.appendSibling(leaderboard.createValue(p));
 

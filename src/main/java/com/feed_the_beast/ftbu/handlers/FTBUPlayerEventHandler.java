@@ -98,7 +98,7 @@ public class FTBUPlayerEventHandler
 	{
 		EntityPlayer player = event.getEntityPlayer();
 
-		if (player instanceof EntityPlayerMP && !ClaimedChunks.get().canPlayerAttackEntity((EntityPlayerMP) player, event.getEntity()))
+		if (player instanceof EntityPlayerMP && !ClaimedChunks.get().canPlayerAttackEntity((EntityPlayerMP) player, event.getTarget()))
 		{
 			event.setCanceled(true);
 		}

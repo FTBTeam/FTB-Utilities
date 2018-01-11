@@ -1,80 +1,80 @@
 {
 	"chats": {
-		"group": "ftbl:info",
-		"icon": "ftbl:icons/chat",
+		"group": "ftblib:info",
+		"icon": "ftblib:icons/chat",
 		"x": 500,
 		"click": {
 			"action": "run_command",
 			"value": "/ftbc open_chats"
 		},
-		"required_server_mods": ["ftbu"],
+		"required_server_mods": ["ftbutilities"],
 		"config": true,
 		"dev_only": true
 	},
 	"leaderboards": {
-		"group": "ftbl:info",
+		"group": "ftblib:info",
 		"icon": "item:minecraft:sign",
 		"x": 700,
 		"click": {
 			"action": "run_command",
 			"value": "/ftb leaderboards gui"
 		},
-		"required_server_mods": ["ftbu"],
+		"required_server_mods": ["ftbutilities"],
 		"config": true
 	},
 	"claimed_chunks": {
-		"group": "ftbl:util",
-		"icon": "ftbl:icons/map",
+		"group": "ftblib:util",
+		"icon": "ftblib:icons/map",
 		"x": 0,
 		"click": {
 			"action": "run_command",
 			"value": "/ftb chunks gui"
 		},
 		"config": true,
-		"required_server_mods": ["ftbu"],
+		"required_server_mods": ["ftbutilities"],
 		"loading_screen": true
 	},
 	"trash_can": {
-		"group": "ftbl:util",
-		"icon": "ftbl:icons/bin",
+		"group": "ftblib:util",
+		"icon": "ftblib:icons/bin",
 		"x": 500,
 		"click": {
 			"action": "run_command",
 			"value": "/ftb trash_can"
 		},
 		"config": true,
-		"required_mods": ["ftbu"],
+		"required_mods": ["ftbutilities"],
 		"loading_screen": true
 	},
 	"shop": {
-		"group": "ftbl:util",
-		"icon": "ftbl:icons/money_bag",
+		"group": "ftblib:util",
+		"icon": "ftblib:icons/money_bag",
 		"x": 100,
 		"click": {
 			"action": "run_command",
 			"value": "/ftb shop gui"
 		},
 		"config": true,
-		"required_server_mods": ["ftbu"],
+		"required_server_mods": ["ftbutilities"],
 		"dev_only": true,
 		"loading_screen": true
 	},
 	"heal": {
-		"group": "ftbl:cheat",
-		"icon": "ftbl:icons/heart",
+		"group": "ftblib:cheat",
+		"icon": "ftblib:icons/heart",
 		"x": 400,
 		"click": {
 			"action": "run_command",
 			"value": "/heal"
 		},
 		"config": true,
-		"required_server_mods": ["ftbu"],
+		"required_server_mods": ["ftbutilities"],
 		"hide_with_nei": true,
 		"requires_op": true
 	},
 	"toggle.gamemode": {
-		"group": "ftbl:cheat",
-		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_gamemode.png"],
+		"group": "ftblib:cheat",
+		"icon": ["ftblib:icons/blue_button", "ftblib:textures/icons/toggle_gamemode.png"],
 		"x": 0,
 		"click": {
 			"action": "run_command",
@@ -85,8 +85,8 @@
 		"requires_op": true
 	},
 	"toggle.rain": {
-		"group": "ftbl:cheat",
-		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_rain.png"],
+		"group": "ftblib:cheat",
+		"icon": ["ftblib:icons/blue_button", "ftblib:textures/icons/toggle_rain.png"],
 		"x": 100,
 		"click": {
 			"action": "run_command",
@@ -97,33 +97,33 @@
 		"requires_op": true
 	},
 	"toggle.day": {
-		"group": "ftbl:cheat",
-		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_day.png"],
+		"group": "ftblib:cheat",
+		"icon": ["ftblib:icons/blue_button", "ftblib:textures/icons/toggle_day.png"],
 		"x": 200,
 		"click": {
 			"action": "run_command",
 			"value": "/ftb set_hour 6"
 		},
 		"config": true,
-		"required_server_mods": ["ftbu"],
+		"required_server_mods": ["ftbutilities"],
 		"hide_with_nei": true,
 		"requires_op": true
 	},
 	"toggle.night": {
-		"group": "ftbl:cheat",
-		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_night.png"],
+		"group": "ftblib:cheat",
+		"icon": ["ftblib:icons/blue_button", "ftblib:textures/icons/toggle_night.png"],
 		"x": 300,
 		"click": {
 			"action": "run_command",
 			"value": "/ftb set_hour 18"
 		},
 		"config": true,
-		"required_server_mods": ["ftbu"],
+		"required_server_mods": ["ftbutilities"],
 		"hide_with_nei": true,
 		"requires_op": true
 	},
 	"view_crash": {
-		"group": "ftbl:util",
+		"group": "ftblib:util",
 		"icon": "item:minecraft:barrier",
 		"x": 600,
 		"click": {
@@ -131,7 +131,7 @@
 			"value": "/ftb view_crash"
 		},
 		"config": false,
-		"required_mods": ["ftbu"],
+		"required_mods": ["ftbutilities"],
 		"loading_screen": true
 	}
 }

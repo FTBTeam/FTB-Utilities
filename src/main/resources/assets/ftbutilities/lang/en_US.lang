@@ -42,8 +42,8 @@ ftbutilities.ranks.enabled=Enabled
 ftbutilities.ranks.override_chat=Override Chat
 ftbutilities.ranks.override_commands=Override Commands
 
-ftbu_client.general.render_badges=Show Badges
-ftbu_client.general.journeymap_overlay=Enable Journeymap Integration
+ftbutilities_client.general.render_badges=Show Badges
+ftbutilities_client.general.journeymap_overlay=Enable Journeymap Integration
 
 # Server Settings
 my_server_settings.ftbu=FTBUtilities

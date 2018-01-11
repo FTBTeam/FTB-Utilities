@@ -8,7 +8,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
-import com.feed_the_beast.ftbutilities.events.RegisterCustomPermissionPrefixesEvent;
+import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockDoor;
@@ -97,7 +97,7 @@ public class FTBUPermissions
 	}
 
 	@SubscribeEvent
-	public static void addCustomPerms(RegisterCustomPermissionPrefixesEvent event)
+	public static void addCustomPerms(CustomPermissionPrefixesRegistryEvent event)
 	{
 		event.register(new NodeEntry("command.", DefaultPermissionLevel.OP, "Permission for commands, if FTBU command overriding is enabled. If not, this node will be inactive"));
 		event.register(new NodeEntry(CLAIMS_BLOCK_EDIT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can break and place within claimed chunks"));

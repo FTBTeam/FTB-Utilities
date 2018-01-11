@@ -8,11 +8,11 @@ import java.util.function.Consumer;
 /**
  * @author LatvianModder
  */
-public class RegisterChunkUpgradesEvent extends FTBUtilitiesEvent
+public class ChunkUpgradeRegisteryEvent extends FTBUtilitiesEvent
 {
 	private final Consumer<ChunkUpgrade> callback;
 
-	public RegisterChunkUpgradesEvent(Consumer<ChunkUpgrade> c)
+	public ChunkUpgradeRegisteryEvent(Consumer<ChunkUpgrade> c)
 	{
 		callback = c;
 	}

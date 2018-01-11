@@ -7,11 +7,11 @@ import java.util.function.Consumer;
 /**
  * @author LatvianModder
  */
-public class RegisterCustomPermissionPrefixesEvent extends FTBUtilitiesEvent
+public class CustomPermissionPrefixesRegistryEvent extends FTBUtilitiesEvent
 {
 	private final Consumer<NodeEntry> callback;
 
-	public RegisterCustomPermissionPrefixesEvent(Consumer<NodeEntry> c)
+	public CustomPermissionPrefixesRegistryEvent(Consumer<NodeEntry> c)
 	{
 		callback = c;
 	}

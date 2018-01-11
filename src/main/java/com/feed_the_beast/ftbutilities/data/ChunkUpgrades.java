@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.lib.EventHandler;
-import com.feed_the_beast.ftbutilities.events.chunks.RegisterChunkUpgradesEvent;
+import com.feed_the_beast.ftbutilities.events.chunks.ChunkUpgradeRegisteryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -15,7 +15,7 @@ public class ChunkUpgrades
 	public static final ChunkUpgrade NO_PVP = new ChunkUpgrade("no_pvp", true); //TODO: Make real
 
 	@SubscribeEvent
-	public static void addUpgrades(RegisterChunkUpgradesEvent event)
+	public static void addUpgrades(ChunkUpgradeRegisteryEvent event)
 	{
 		event.register(LOADED);
 		event.register(NO_EXPLOSIONS);

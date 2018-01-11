@@ -1,7 +1,7 @@
 [
 	{
-		"id": "ftbu_client",
+		"id": "ftbutilities_client",
 		"name": "FTBUtilities",
-		"icon": "ftbu:textures/logo_small.png"
+		"icon": "ftbutilities:textures/logo_small.png"
 	}
 ]

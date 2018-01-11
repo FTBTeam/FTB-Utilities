@@ -4,15 +4,15 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
+import com.feed_the_beast.ftbutilities.events.LeaderboardRegistryEvent;
 import net.minecraft.stats.StatList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.registries.RegistryBuilder;
 
 import java.util.Comparator;
 
@@ -23,19 +23,14 @@ import java.util.Comparator;
 public class FTBULeaderboards
 {
 	@SubscribeEvent
-	public static void registerRegistries(RegistryEvent.NewRegistry event)
+	public static void registerLeaderboards(LeaderboardRegistryEvent event)
 	{
-		FTBUCommon.LEADERBOARDS = new RegistryBuilder<Leaderboard>().setName(FTBUFinals.get("leaderboards")).setType(Leaderboard.class).setMaxID(255).create();
-	}
+		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUFinals.MOD_ID + ":deaths"), StatList.DEATHS, false, Leaderboard.FromStat.DEFAULT));
+		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUFinals.MOD_ID + ":mob_kills"), StatList.MOB_KILLS, false, Leaderboard.FromStat.DEFAULT));
+		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUFinals.MOD_ID + ":time_played"), StatList.PLAY_ONE_MINUTE, false, Leaderboard.FromStat.TIME));
 
-	@SubscribeEvent
-	public static void registerLeaderboards(RegistryEvent.Register<Leaderboard> event)
-	{
-		event.getRegistry().register(new Leaderboard.FromStat(StatList.DEATHS, false, Leaderboard.FromStat.DEFAULT).setRegistryName(FTBUFinals.MOD_ID + ":deaths"));
-		event.getRegistry().register(new Leaderboard.FromStat(StatList.MOB_KILLS, false, Leaderboard.FromStat.DEFAULT).setRegistryName(FTBUFinals.MOD_ID + ":mob_kills"));
-		event.getRegistry().register(new Leaderboard.FromStat(StatList.PLAY_ONE_MINUTE, false, Leaderboard.FromStat.TIME).setRegistryName(FTBUFinals.MOD_ID + ":time_played"));
-
-		event.getRegistry().register(new Leaderboard(
+		event.register(new Leaderboard(
+				new ResourceLocation(FTBUFinals.MOD_ID + ":deaths_per_hour"),
 				new TextComponentTranslation("ftbutilities.stat.dph"),
 				player ->
 				{
@@ -43,10 +38,10 @@ public class FTBULeaderboards
 					return new TextComponentString(d < 0D ? "-" : String.format("%.2f", d));
 				},
 				Comparator.comparingDouble(FTBULeaderboards::getDPH).reversed(),
-				player -> getDPH(player) >= 0D)
-				.setRegistryName(FTBUFinals.MOD_ID + ":deaths_per_hour"));
+				player -> getDPH(player) >= 0D));
 
-		event.getRegistry().register(new Leaderboard(
+		event.register(new Leaderboard(
+				new ResourceLocation(FTBUFinals.MOD_ID + ":last_seen"),
 				new TextComponentTranslation("ftbutilities.stat.last_seen"),
 				player ->
 				{
@@ -64,8 +59,7 @@ public class FTBULeaderboards
 					}
 				},
 				Comparator.comparingLong(FTBULeaderboards::getRelativeLastSeen),
-				player -> player.getLastTimeSeen() != 0L)
-				.setRegistryName(FTBUFinals.MOD_ID + ":last_seen"));
+				player -> player.getLastTimeSeen() != 0L));
 	}
 
 	private static long getRelativeLastSeen(ForgePlayer player)

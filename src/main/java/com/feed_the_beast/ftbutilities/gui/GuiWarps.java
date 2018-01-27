@@ -83,7 +83,7 @@ public class GuiWarps extends GuiBase
 		}
 
 		@Override
-		public void renderWidget()
+		public void draw()
 		{
 			if (index == -1)
 			{
@@ -116,9 +116,9 @@ public class GuiWarps extends GuiBase
 	}
 
 	@Override
-	public boolean isMouseOver(Widget w)
+	public boolean isMouseOver(Widget widget)
 	{
-		return (w instanceof ArcButton) ? w == buttonOver : super.isMouseOver(w);
+		return (widget instanceof ArcButton) ? widget == buttonOver : super.isMouseOver(widget);
 	}
 
 	public GuiWarps()

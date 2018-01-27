@@ -112,7 +112,7 @@ public class GuiEditNBT extends GuiBase
 		}
 
 		@Override
-		public void renderWidget()
+		public void draw()
 		{
 			int ax = getAX();
 			int ay = getAY();
@@ -376,9 +376,9 @@ public class GuiEditNBT extends GuiBase
 		}
 
 		@Override
-		public void renderWidget()
+		public void draw()
 		{
-			super.renderWidget();
+			super.draw();
 
 			if (!hoverIcon.isEmpty())
 			{
@@ -777,11 +777,7 @@ public class GuiEditNBT extends GuiBase
 				{
 					add(newTag("Int Array", NBT_INT_ARRAY, () -> new NBTTagIntArray(new int[0])));
 				}
-			}
 
-			@Override
-			public void updateWidgetPositions()
-			{
 				setWidth(align(new WidgetLayout.Horizontal(2, 4, 2)));
 			}
 		};
@@ -833,12 +829,6 @@ public class GuiEditNBT extends GuiBase
 					gui.closeGui();
 				}));
 
-				updateWidgetPositions();
-			}
-
-			@Override
-			public void updateWidgetPositions()
-			{
 				setWidth(align(new WidgetLayout.Horizontal(2, 4, 2)));
 			}
 		};
@@ -852,12 +842,6 @@ public class GuiEditNBT extends GuiBase
 			{
 				add(buttonNBTRoot);
 				buttonNBTRoot.addChildren();
-				updateWidgetPositions();
-			}
-
-			@Override
-			public void updateWidgetPositions()
-			{
 				scroll.setElementSize(align(WidgetLayout.VERTICAL) + 2);
 			}
 		};
@@ -867,7 +851,7 @@ public class GuiEditNBT extends GuiBase
 		scroll = new PanelScrollBar(this, 0, 20, 16, 0, 0, panelNbt)
 		{
 			@Override
-			public boolean shouldRender()
+			public boolean shouldDraw()
 			{
 				return true;
 			}
@@ -881,17 +865,14 @@ public class GuiEditNBT extends GuiBase
 	}
 
 	@Override
-	public void onInit()
+	public boolean onInit()
 	{
-		setWidth(getScreen().getScaledWidth());
-		setHeight(getScreen().getScaledHeight());
+		return setFullscreen();
 	}
 
 	@Override
-	public void updateWidgetPositions()
+	public void onPostInit()
 	{
-		panelTopLeft.updateWidgetPositions();
-		panelTopRight.updateWidgetPositions();
 		panelTopRight.posX = width - panelTopRight.width;
 
 		panelNbt.setHeight(height - 20);

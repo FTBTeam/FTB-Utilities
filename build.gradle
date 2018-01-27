@@ -31,6 +31,7 @@ repositories {
 	ivy { name "com.latmod.mods"; artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" }
 	maven { url "https://oss.sonatype.org/content/groups/public/" }
 	maven { url "http://dvs1.progwml6.com/files/maven" }
+	ivy { name "iChunUtil"; artifactPattern "https://addons-origin.cursecdn.com/files/2510/761/[module]-[revision]-deobf.[ext]" }
 }
 
 dependencies {
@@ -38,6 +39,7 @@ dependencies {
 	provided "com.latmod.mods:iChunUtil:${ichunutil_version}:api"
 	provided "info.journeymap:journeymap-api:${journeymap_version}"
 	deobfProvided "mod.chiselsandbits:chiselsandbits:${chiselsandbits_version}:api"
+	deobfProvided "iChunUtil:iChunUtil:${ichunutil_version}"
 }
 
 processResources {

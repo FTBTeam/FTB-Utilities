@@ -41,21 +41,13 @@ public class GuiViewCrash extends GuiBase
 			@Override
 			public void addWidgets()
 			{
+				int wi = 0;
+
 				for (String s : text)
 				{
-					add(new TextField(gui, 2, 0, 0, 0, StringUtils.fixTabs(s, 2), Widget.UNICODE));
-				}
-
-				updateWidgetPositions();
-			}
-
-			@Override
-			public void updateWidgetPositions()
-			{
-				int wi = 0;
-				for (Widget w : widgets)
-				{
-					wi = Math.max(wi, w.width);
+					TextField f = new TextField(gui, 2, 0, 0, 0, StringUtils.fixTabs(s, 2), Widget.UNICODE);
+					wi = Math.max(wi, f.width);
+					add(f);
 				}
 
 				scrollH.setElementSize(wi + 4);
@@ -88,7 +80,7 @@ public class GuiViewCrash extends GuiBase
 			}
 
 			@Override
-			public boolean shouldRender()
+			public boolean shouldDraw()
 			{
 				return true;
 			}
@@ -103,7 +95,7 @@ public class GuiViewCrash extends GuiBase
 			}
 
 			@Override
-			public boolean shouldRender()
+			public boolean shouldDraw()
 			{
 				return true;
 			}
@@ -139,11 +131,14 @@ public class GuiViewCrash extends GuiBase
 	}
 
 	@Override
-	public void onInit()
+	public boolean onInit()
 	{
-		setWidth(getScreen().getScaledWidth());
-		setHeight(getScreen().getScaledHeight());
+		return setFullscreen();
+	}
 
+	@Override
+	public void onPostInit()
+	{
 		close.setX(width - 24);
 		upload.setX(width - 48);
 

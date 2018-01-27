@@ -32,7 +32,8 @@ public class GuiLeaderboard extends GuiBase
 
 		public LeaderboardEntry(GuiBase g, LeaderboardValue v)
 		{
-			super(g, 0, 0, 0, 14);
+			super(g);
+			setHeight(14);
 			value = v;
 			rank = value.color + "#" + StringUtils.add0s(v.rank, leaderboard.size());
 
@@ -49,7 +50,7 @@ public class GuiLeaderboard extends GuiBase
 		}
 
 		@Override
-		public void renderWidget()
+		public void draw()
 		{
 			int ax = getAX();
 			int ay = getAY();
@@ -101,12 +102,6 @@ public class GuiLeaderboard extends GuiBase
 					w.setWidth(width);
 				}
 
-				updateWidgetPositions();
-			}
-
-			@Override
-			public void updateWidgetPositions()
-			{
 				int size = align(WidgetLayout.VERTICAL);
 				scrollBar.setElementSize(size);
 				scrollBar.setSrollStepFromOneElementSize(14);
@@ -126,7 +121,7 @@ public class GuiLeaderboard extends GuiBase
 		scrollBar = new PanelScrollBar(this, 0, 8, 16, 146, 0, panelButtons)
 		{
 			@Override
-			public boolean shouldRender()
+			public boolean shouldDraw()
 			{
 				return true;
 			}

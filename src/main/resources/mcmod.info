@@ -1,6 +1,6 @@
 [
 	{
-		"modid": "ftbu",
+		"modid": "ftbutilities",
 		"name": "FTBUtilities",
 		"description": "FTBUtilities",
 		"version": "${version}",

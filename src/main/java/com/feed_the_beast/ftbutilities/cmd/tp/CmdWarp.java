@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import com.feed_the_beast.ftbutilities.FTBULang;
 import com.feed_the_beast.ftbutilities.net.MessageSendWarpList;
 import com.feed_the_beast.ftbutilities.util.FTBUUniverseData;
@@ -46,7 +46,7 @@ public class CmdWarp extends CmdBase
 		if (args[0].equals("list"))
 		{
 			Collection<String> list = FTBUUniverseData.WARPS.list();
-			sender.sendMessage(new TextComponentString(list.isEmpty() ? "-" : StringUtils.strip(list)));
+			sender.sendMessage(new TextComponentString(list.isEmpty() ? "-" : StringJoiner.with(", ").join(list)));
 			return;
 		}
 

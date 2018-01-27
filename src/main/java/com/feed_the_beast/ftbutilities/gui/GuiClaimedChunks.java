@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.lib.client.CachedVertexData;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
+import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
@@ -13,7 +14,6 @@ import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiChunkSelectorBase;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbutilities.FTBULang;
 import com.feed_the_beast.ftbutilities.data.ChunkUpgrade;
@@ -186,6 +186,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			@Override
 			public void onClicked(MouseButton button)
 			{
+				GuiHelper.playClickSound();
 				gui.closeGui();
 			}
 		};
@@ -195,6 +196,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			@Override
 			public void onClicked(MouseButton button)
 			{
+				GuiHelper.playClickSound();
 				new MessageClaimedChunksRequest(startX, startZ).sendToServer();
 				ChunkSelectorMap.getMap().resetMap(startX, startZ);
 			}
@@ -205,6 +207,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			@Override
 			public void onClicked(MouseButton button)
 			{
+				GuiHelper.playClickSound();
 				String s = FTBULang.CHUNKS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
 				ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
 				{
@@ -224,6 +227,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			@Override
 			public void onClicked(MouseButton button)
 			{
+				GuiHelper.playClickSound();
 				String s = FTBULang.CHUNKS_UNCLAIM_ALL_Q.translate();
 				ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
 				{
@@ -243,15 +247,17 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			@Override
 			public void onClicked(MouseButton button)
 			{
-				ClientUtils.execClientCommand("/ftbc open_guide ftbutilities.chunk_claiming");
+				GuiHelper.playClickSound();
+				ClientUtils.execClientCommand("/ftbc open_guides ftbutilities/chunk_claiming");
 			}
 		};
 	}
 
 	@Override
-	public void onInit()
+	public void onPostInit()
 	{
-		buttonRefresh.onClicked(MouseButton.LEFT);
+		new MessageClaimedChunksRequest(startX, startZ).sendToServer();
+		ChunkSelectorMap.getMap().resetMap(startX, startZ);
 	}
 
 	@Override
@@ -297,14 +303,6 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	{
 		switch (corner)
 		{
-			case TOP_LEFT:
-				list.add(StringUtils.translate("guide.ftbutilities.chunk_claiming.list.left_click"));
-				list.add(StringUtils.translate("guide.ftbutilities.chunk_claiming.list.right_click"));
-				break;
-			case BOTTOM_LEFT:
-				list.add(StringUtils.translate("guide.ftbutilities.chunk_claiming.list.shift_left_click"));
-				list.add(StringUtils.translate("guide.ftbutilities.chunk_claiming.list.shift_right_click"));
-				break;
 			case BOTTOM_RIGHT:
 				list.add(FTBULang.CHUNKS_CLAIMED_COUNT.translate(claimedChunks, maxClaimedChunks));
 				list.add(FTBULang.CHUNKS_LOADED_COUNT.translate(loadedChunks, maxLoadedChunks));

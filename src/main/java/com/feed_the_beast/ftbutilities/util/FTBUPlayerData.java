@@ -41,21 +41,9 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-
-		if (!renderBadge.getBoolean())
-		{
-			nbt.setBoolean("RenderBadge", false);
-		}
-
-		if (disableGlobalBadge.getBoolean())
-		{
-			nbt.setBoolean("DisableGlobalBadges", true);
-		}
-
-		if (!enablePVP.getBoolean())
-		{
-			nbt.setBoolean("EnablePVP", false);
-		}
+		nbt.setBoolean("RenderBadge", renderBadge.getBoolean());
+		nbt.setBoolean("DisableGlobalBadges", disableGlobalBadge.getBoolean());
+		nbt.setBoolean("EnablePVP", enablePVP.getBoolean());
 
 		NBTTagCompound homesTag = homes.serializeNBT();
 

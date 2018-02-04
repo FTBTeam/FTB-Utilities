@@ -33,7 +33,7 @@ public class CmdUnclaimAll extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return LIST_TRUE_FALSE;
+			return getListOfStringsMatchingLastWord(args, LIST_TRUE_FALSE);
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -75,7 +75,8 @@ public class CmdUnclaimAll extends CmdBase
 
 		if (p.getTeam() != null)
 		{
-			ClaimedChunks.instance.unclaimAllChunks(p.getTeam(), parseBoolean(args[0]) ? null : player.dimension);
+			boolean allDimensions = args.length == 0 || parseBoolean(args[0]);
+			ClaimedChunks.instance.unclaimAllChunks(p.getTeam(), allDimensions ? null : player.dimension);
 			Notification.of(FTBUFinals.get("unclaimed_all"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.unclaimed_all")).send(server, player);
 		}
 	}

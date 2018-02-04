@@ -61,4 +61,8 @@ public class FTBUCommon
 	{
 		new LeaderboardRegistryEvent(leaderboard -> LEADERBOARDS.put(leaderboard.id, leaderboard)).post();
 	}
+
+	public void editNBT()
+	{
+	}
 }

@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.gui;
 
+import com.feed_the_beast.ftblib.client.GuiEditConfig;
 import com.feed_the_beast.ftblib.lib.config.ConfigDouble;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
@@ -11,6 +12,7 @@ import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.SimpleButton;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiSelectors;
@@ -53,8 +55,6 @@ import java.util.function.Supplier;
  */
 public class GuiEditNBT extends GuiBase
 {
-	private static final Color4I COLOR_BACKGROUND = Color4I.rgba(0x99333333);
-
 	private static Icon getIcon(String name)
 	{
 		return IconWithOutline.BUTTON_ROUND_GRAY.combineWith(Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/nbt/" + name + ".png"));
@@ -663,7 +663,7 @@ public class GuiEditNBT extends GuiBase
 
 	private final NBTTagCompound info;
 	private final ButtonNBTMap buttonNBTRoot;
-	private ButtonNBT selected = null;
+	private ButtonNBT selected;
 	public final Panel panelTopLeft, panelTopRight, panelNbt;
 	public final PanelScrollBar scroll;
 	private int shouldClose = 0;
@@ -886,7 +886,9 @@ public class GuiEditNBT extends GuiBase
 	public void alignWidgets()
 	{
 		panelTopRight.setPosAndSize(width - panelTopRight.width, 2, 0, 16);
+		panelTopRight.alignWidgets();
 		panelNbt.setPosAndSize(0, 21, width - scroll.width, height - 20);
+		panelNbt.alignWidgets();
 		scroll.setPosAndSize(width - scroll.width, 20, 16, panelNbt.height);
 	}
 
@@ -908,6 +910,12 @@ public class GuiEditNBT extends GuiBase
 	@Override
 	public void drawBackground()
 	{
-		COLOR_BACKGROUND.draw(0, 0, width, 20);
+		GuiEditConfig.COLOR_BACKGROUND.draw(0, 0, width, 20);
+	}
+
+	@Override
+	public Theme createTheme()
+	{
+		return GuiEditConfig.THEME;
 	}
 }

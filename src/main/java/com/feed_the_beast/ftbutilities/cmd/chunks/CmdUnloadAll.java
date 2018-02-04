@@ -11,7 +11,11 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.server.permission.PermissionAPI;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author LatvianModder
@@ -24,9 +28,20 @@ public class CmdUnloadAll extends CmdBase
 	}
 
 	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+	{
+		if (args.length == 1)
+		{
+			return getListOfStringsMatchingLastWord(args, LIST_TRUE_FALSE);
+		}
+
+		return super.getTabCompletions(server, sender, args, pos);
+	}
+
+	@Override
 	public boolean isUsernameIndex(String[] args, int i)
 	{
-		return i == 0;
+		return i == 1;
 	}
 
 	@Override
@@ -38,9 +53,6 @@ public class CmdUnloadAll extends CmdBase
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-
-		checkArgs(sender, args, 1);
-
 		ForgePlayer p;
 
 		if (args.length >= 2)
@@ -57,7 +69,7 @@ public class CmdUnloadAll extends CmdBase
 			p = getForgePlayer(player);
 		}
 
-		boolean allDimensions = parseBoolean(args[0]);
+		boolean allDimensions = args.length == 0 || parseBoolean(args[0]);
 		int currentDim = sender.getEntityWorld().provider.getDimension();
 
 		for (ClaimedChunk chunk : ClaimedChunks.instance.getTeamChunks(p.getTeam()))

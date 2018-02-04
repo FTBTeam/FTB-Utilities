@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBT;
+import com.feed_the_beast.ftbutilities.net.MessageEditNBTRequest;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -12,7 +13,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -146,25 +146,10 @@ public class CmdEditNBT extends CmdTreeBase
 	{
 		if (args.length == 0)
 		{
-			RayTraceResult ray = MathUtils.rayTrace(getCommandSenderAsPlayer(sender), false);
-
-			if (ray != null)
-			{
-				switch (ray.typeOfHit)
-				{
-					case BLOCK:
-					{
-						getCommandMap().get("tile").execute(server, sender, new String[] {Integer.toString(ray.getBlockPos().getX()), Integer.toString(ray.getBlockPos().getY()), Integer.toString(ray.getBlockPos().getZ())});
-						return;
-					}
-					case ENTITY:
-					{
-						getCommandMap().get("entity").execute(server, sender, new String[] {Integer.toString(ray.entityHit.getEntityId())});
-						return;
-					}
-				}
-			}
+			new MessageEditNBTRequest().sendTo(getCommandSenderAsPlayer(sender));
+			return;
 		}
+
 		if (args.length == 1 && args[0].equals("me"))
 		{
 			getCommandMap().get("player").execute(server, sender, new String[] {getCommandSenderAsPlayer(sender).getName()});

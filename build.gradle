@@ -8,6 +8,7 @@ buildscript {
 	}
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven-publish'
 
 version = "${mod_version}"
 group = package_group
@@ -28,18 +29,17 @@ minecraft {
 }
 
 repositories {
-	ivy { name "com.latmod.mods"; artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" }
+	mavenLocal()
+	maven { url "http://maven.latmod.com/" }
 	maven { url "https://oss.sonatype.org/content/groups/public/" }
 	maven { url "http://dvs1.progwml6.com/files/maven" }
-	ivy { name "iChunUtil"; artifactPattern "https://addons-origin.cursecdn.com/files/2510/761/[module]-[revision]-deobf.[ext]" }
 }
 
 dependencies {
-	compile "com.latmod.mods:FTBLib:${ftblib_version}:deobf"
-	provided "com.latmod.mods:iChunUtil:${ichunutil_version}:api"
+	deobfCompile "com.feed_the_beast.ftblib:FTBLib:${ftblib_version}"
+	deobfProvided "me.ichun.mods.ichunutil:iChunUtil:${ichunutil_version}:api"
 	provided "info.journeymap:journeymap-api:${journeymap_version}"
 	deobfProvided "mod.chiselsandbits:chiselsandbits:${chiselsandbits_version}:api"
-	deobfProvided "iChunUtil:iChunUtil:${ichunutil_version}"
 }
 
 processResources {
@@ -56,9 +56,19 @@ processResources {
 	}
 }
 
-task deobfJar(type: Jar) {
-	from sourceSets.main.output
-	classifier = 'deobf'
+artifacts {
+	archives jar
+	archives sourceJar
 }
 
-build.dependsOn deobfJar
+publishing {
+	publications {
+		FTBUtilities(MavenPublication) {
+			groupId = project.group
+			artifactId = project.archivesBaseName
+			version = project.version
+			artifact jar
+			artifact sourceJar
+		}
+	}
+}

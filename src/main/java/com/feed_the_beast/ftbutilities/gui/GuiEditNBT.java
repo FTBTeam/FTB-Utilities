@@ -87,7 +87,8 @@ public class GuiEditNBT extends GuiBase
 
 		public ButtonNBT(GuiBase gui, @Nullable ButtonNBTCollection b, String k)
 		{
-			super(gui, b == null ? 0 : b.posX + 10, 0, 10, 10);
+			super(gui);
+			setPosAndSize(b == null ? 0 : b.posX + 10, 0, 10, 10);
 			parent = b;
 			key = k;
 			setTitle(key);
@@ -665,13 +666,12 @@ public class GuiEditNBT extends GuiBase
 
 	public GuiEditNBT(NBTTagCompound i, NBTTagCompound nbt)
 	{
-		super(0, 0);
 		info = i;
 		buttonNBTRoot = new ButtonNBTMap(this, null, "ROOT", nbt);
 		buttonNBTRoot.updateChildren(true);
 		selected = buttonNBTRoot;
 
-		panelTopLeft = new Panel(this, 0, 2, 0, 16)
+		panelTopLeft = new Panel(this)
 		{
 			@Override
 			public void addWidgets()
@@ -777,14 +777,19 @@ public class GuiEditNBT extends GuiBase
 				{
 					add(newTag("Int Array", NBT_INT_ARRAY, () -> new NBTTagIntArray(new int[0])));
 				}
+			}
 
+			@Override
+			public void alignWidgets()
+			{
 				setWidth(align(new WidgetLayout.Horizontal(2, 4, 2)));
 			}
 		};
 
+		panelTopLeft.setPosAndSize(0, 2, 0, 16);
 		panelTopLeft.addFlags(Panel.DEFAULTS);
 
-		panelTopRight = new Panel(this, 0, 2, 0, 16)
+		panelTopRight = new Panel(this)
 		{
 			@Override
 			public void addWidgets()
@@ -828,27 +833,36 @@ public class GuiEditNBT extends GuiBase
 					shouldClose = 1;
 					gui.closeGui();
 				}));
+			}
 
+			@Override
+			public void alignWidgets()
+			{
 				setWidth(align(new WidgetLayout.Horizontal(2, 4, 2)));
 			}
 		};
 
 		panelTopRight.addFlags(Panel.DEFAULTS);
 
-		panelNbt = new Panel(this, 0, 21, 0, 0)
+		panelNbt = new Panel(this)
 		{
 			@Override
 			public void addWidgets()
 			{
 				add(buttonNBTRoot);
 				buttonNBTRoot.addChildren();
+			}
+
+			@Override
+			public void alignWidgets()
+			{
 				scroll.setElementSize(align(WidgetLayout.VERTICAL) + 2);
 			}
 		};
 
 		panelNbt.addFlags(Panel.DEFAULTS);
 
-		scroll = new PanelScrollBar(this, 0, 20, 16, 0, 0, panelNbt)
+		scroll = new PanelScrollBar(this, panelNbt)
 		{
 			@Override
 			public boolean shouldDraw()
@@ -865,21 +879,17 @@ public class GuiEditNBT extends GuiBase
 	}
 
 	@Override
-	public boolean onInit()
+	public void alignWidgets()
 	{
-		return setFullscreen();
+		panelTopRight.setPosAndSize(width - panelTopRight.width, 2, 0, 16);
+		panelNbt.setPosAndSize(0, 21, width - scroll.width, height - 20);
+		scroll.setPosAndSize(width - scroll.width, 20, 16, panelNbt.height);
 	}
 
 	@Override
-	public void onPostInit()
+	public boolean onInit()
 	{
-		panelTopRight.posX = width - panelTopRight.width;
-
-		panelNbt.setHeight(height - 20);
-		panelNbt.setWidth(width - scroll.width);
-
-		scroll.posX = width - scroll.width;
-		scroll.setHeight(panelNbt.height);
+		return setFullscreen();
 	}
 
 	@Override

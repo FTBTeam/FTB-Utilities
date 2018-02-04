@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbutilities.util;
+package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
@@ -6,7 +6,7 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbutilities.FTBUFinals;
-import com.feed_the_beast.ftbutilities.handlers.FTBLibIntegration;
+import com.feed_the_beast.ftbutilities.integration.FTBLibIntegration;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.INBTSerializable;

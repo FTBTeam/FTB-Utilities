@@ -5,7 +5,6 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
-import com.feed_the_beast.ftbutilities.FTBUConfig;
 import com.feed_the_beast.ftbutilities.FTBUFinals;
 import com.feed_the_beast.ftbutilities.FTBUNotifications;
 import com.feed_the_beast.ftbutilities.FTBUPermissions;
@@ -31,7 +30,7 @@ public class CmdUnclaim extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		if (!FTBUConfig.world.chunk_claiming)
+		if (ClaimedChunks.instance == null)
 		{
 			throw FTBLibLang.FEATURE_DISABLED.commandError();
 		}
@@ -46,19 +45,19 @@ public class CmdUnclaim extends CmdBase
 
 		ChunkDimPos pos = new ChunkDimPos(player);
 
-		if (!p.getTeam().equalsTeam(ClaimedChunks.get().getChunkTeam(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS, new BlockPosContext(player, pos.getChunkPos())))
+		if (!p.getTeam().equalsTeam(ClaimedChunks.instance.getChunkTeam(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS, new BlockPosContext(player, pos.getChunkPos())))
 		{
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
 
-		if (ClaimedChunks.get().unclaimChunk(p.getTeam(), pos))
+		if (ClaimedChunks.instance.unclaimChunk(p.getTeam(), pos))
 		{
-			Notification.of(FTBUFinals.get("chunk_modified"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.chunk_unclaimed")).send(player);
+			Notification.of(FTBUFinals.get("chunk_modified"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.chunk_unclaimed")).send(server, player);
 			CmdChunks.updateChunk(player, pos);
 		}
 		else
 		{
-			FTBUNotifications.sendCantModifyChunk(player);
+			FTBUNotifications.sendCantModifyChunk(server, player);
 		}
 	}
 }

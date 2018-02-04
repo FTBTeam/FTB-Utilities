@@ -36,7 +36,7 @@ public enum FTBUPermissionHandler implements IPermissionHandler
 			return true;
 		}
 
-		switch (Ranks.getRank(profile).hasPermission(permission))
+		switch (Ranks.getRank(context != null && context.getWorld() != null ? context.getWorld().getMinecraftServer() : null, profile).hasPermission(permission))
 		{
 			case ALLOW:
 				return true;

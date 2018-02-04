@@ -9,9 +9,9 @@ import net.minecraftforge.server.command.ForgeCommand;
 /**
  * @author LatvianModder
  */
-class CmdForgeOverride extends CommandTreeBase
+public class CommandForgeOverride extends CommandTreeBase
 {
-	CmdForgeOverride(ForgeCommand cmd)
+	public CommandForgeOverride(ForgeCommand cmd)
 	{
 		for (ICommand command : cmd.getSubCommands())
 		{

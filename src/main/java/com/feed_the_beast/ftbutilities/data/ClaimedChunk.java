@@ -2,10 +2,6 @@ package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbutilities.util.FTBUTeamData;
-
-import java.util.Arrays;
-import java.util.HashSet;
 
 /**
  * @author LatvianModder
@@ -14,7 +10,7 @@ public final class ClaimedChunk
 {
 	private final ChunkDimPos pos;
 	private final FTBUTeamData teamData;
-	private ChunkUpgrade[] upgrades;
+	private boolean loaded;
 	private boolean invalid;
 	public Boolean forced;
 
@@ -22,15 +18,14 @@ public final class ClaimedChunk
 	{
 		pos = c;
 		teamData = t;
-		upgrades = null;
+		loaded = false;
 		invalid = false;
 		forced = null;
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	public boolean isInvalid()
 	{
-		return invalid || teamData == null || teamData.team == null || teamData.team.getOwner() == null;
+		return invalid || teamData.team.getOwner() == null;
 	}
 
 	public void setInvalid()
@@ -53,59 +48,34 @@ public final class ClaimedChunk
 		return teamData;
 	}
 
-	public boolean hasUpgrade(ChunkUpgrade upgrade)
+	public boolean setLoaded(boolean v)
 	{
-		if (upgrade == ChunkUpgrades.NO_EXPLOSIONS)
+		if (loaded != v)
 		{
-			return !teamData.explosions.getBoolean();
-		}
+			loaded = v;
 
-		if (upgrades != null && !upgrade.isInternal())
-		{
-			for (ChunkUpgrade upgrade1 : upgrades)
+			if (ClaimedChunks.instance != null)
 			{
-				if (upgrade1 == upgrade)
-				{
-					return true;
-				}
+				ClaimedChunks.instance.markDirty();
 			}
 		}
 
 		return false;
 	}
 
-	public boolean setHasUpgrade(ChunkUpgrade upgrade, boolean v)
+	public boolean isLoaded()
 	{
-		if (upgrade.isInternal())
-		{
-			return false;
-		}
+		return loaded;
+	}
 
-		HashSet<ChunkUpgrade> upgradeSet = new HashSet<>();
+	public boolean hasExplosions()
+	{
+		return teamData.explosions.getBoolean();
+	}
 
-		if (upgrades != null)
-		{
-			upgradeSet.addAll(Arrays.asList(upgrades));
-		}
-
-		boolean changed;
-
-		if (v)
-		{
-			changed = upgradeSet.add(upgrade);
-		}
-		else
-		{
-			changed = upgradeSet.remove(upgrade);
-		}
-
-		if (changed)
-		{
-			upgrades = upgradeSet.isEmpty() ? null : upgradeSet.toArray(new ChunkUpgrade[0]);
-			ClaimedChunks.get().markDirty();
-		}
-
-		return changed;
+	public String toString()
+	{
+		return pos.toString() + '+' + loaded;
 	}
 
 	public int hashCode()
@@ -123,6 +93,7 @@ public final class ClaimedChunk
 		{
 			return pos.equalsChunkDimPos(((ClaimedChunk) o).pos);
 		}
+
 		return false;
 	}
 }

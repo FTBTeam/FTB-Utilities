@@ -5,7 +5,6 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftbutilities.FTBULang;
 import com.feed_the_beast.ftbutilities.FTBUPermissions;
-import com.feed_the_beast.ftbutilities.data.ChunkUpgrades;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import net.minecraft.command.CommandException;
@@ -33,6 +32,11 @@ public class CmdUnloadAll extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
+		if (ClaimedChunks.instance == null)
+		{
+			throw FTBLibLang.FEATURE_DISABLED.commandError();
+		}
+
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 
 		checkArgs(sender, args, 1);
@@ -46,7 +50,7 @@ public class CmdUnloadAll extends CmdBase
 				throw FTBLibLang.COMMAND_PERMISSION.commandError();
 			}
 
-			p = getForgePlayer(args[1]);
+			p = getForgePlayer(sender, args[1]);
 		}
 		else
 		{
@@ -56,11 +60,11 @@ public class CmdUnloadAll extends CmdBase
 		boolean allDimensions = parseBoolean(args[0]);
 		int currentDim = sender.getEntityWorld().provider.getDimension();
 
-		for (ClaimedChunk chunk : ClaimedChunks.get().getTeamChunks(p.getTeam()))
+		for (ClaimedChunk chunk : ClaimedChunks.instance.getTeamChunks(p.getTeam()))
 		{
 			if (!allDimensions || currentDim == chunk.getPos().dim)
 			{
-				chunk.setHasUpgrade(ChunkUpgrades.LOADED, false);
+				chunk.setLoaded(false);
 			}
 		}
 

@@ -136,7 +136,7 @@ public class CmdEditNBT extends CmdTreeBase
 			checkArgs(player, args, 1);
 			EntityPlayerMP player1 = getPlayer(player.mcServer, player, args[0]);
 			info.setString("type", "player");
-			info.setUniqueId("id", player1.getGameProfile().getId());
+			info.setUniqueId("id", player1.getUniqueID());
 			player1.writeToNBT(nbt);
 		}
 	}

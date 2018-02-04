@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
+import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.config.Config;
@@ -26,7 +27,6 @@ public class FTBUConfig
 	@Config.RequiresWorldRestart
 	public static final AutoShutdown auto_shutdown = new AutoShutdown();
 
-	public static final ServerInfo server_info = new ServerInfo();
 	public static final Chat chat = new Chat();
 	public static final BackupsConfig backups = new BackupsConfig();
 
@@ -53,16 +53,6 @@ public class FTBUConfig
 				"It will look for closest value available that is not equal to current time"
 		})
 		public String[] times = {"04:00", "16:00"};
-	}
-
-	public static class ServerInfo
-	{
-		public boolean difficulty = true;
-
-		@Config.LangKey(FTBUFinals.MOD_ID + ".config.login.motd")
-		public boolean motd = true;
-
-		//public boolean admin_quick_access = true;
 	}
 
 	public static class Chat
@@ -201,9 +191,11 @@ public class FTBUConfig
 	public static class WorldConfig
 	{
 		@Config.Comment("Enables chunk claiming")
+		@Config.RequiresWorldRestart
 		public boolean chunk_claiming = true;
 
 		@Config.Comment("Enables chunk loading. If chunk_claiming is set to false, changing this won't do anything")
+		@Config.RequiresWorldRestart
 		public boolean chunk_loading = true;
 
 		@Config.Comment("If set to true, explosions and hostile mobs in spawn area will be disabled, players won't be able to attack each other in spawn area")
@@ -228,7 +220,7 @@ public class FTBUConfig
 
 		public boolean allowDimension(int dimension)
 		{
-			if (!FTBUConfig.world.chunk_claiming)
+			if (ClaimedChunks.instance == null)
 			{
 				return false;
 			}

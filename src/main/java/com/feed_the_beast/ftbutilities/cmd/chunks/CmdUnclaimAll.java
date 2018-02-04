@@ -48,6 +48,11 @@ public class CmdUnclaimAll extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
+		if (ClaimedChunks.instance == null)
+		{
+			throw FTBLibLang.FEATURE_DISABLED.commandError();
+		}
+
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 
 		checkArgs(sender, args, 1);
@@ -61,7 +66,7 @@ public class CmdUnclaimAll extends CmdBase
 				throw FTBLibLang.COMMAND_PERMISSION.commandError();
 			}
 
-			p = getForgePlayer(args[1]);
+			p = getForgePlayer(sender, args[1]);
 		}
 		else
 		{
@@ -70,8 +75,8 @@ public class CmdUnclaimAll extends CmdBase
 
 		if (p.getTeam() != null)
 		{
-			ClaimedChunks.get().unclaimAllChunks(p.getTeam(), parseBoolean(args[0]) ? null : player.dimension);
-			Notification.of(FTBUFinals.get("unclaimed_all"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.unclaimed_all")).send(player);
+			ClaimedChunks.instance.unclaimAllChunks(p.getTeam(), parseBoolean(args[0]) ? null : player.dimension);
+			Notification.of(FTBUFinals.get("unclaimed_all"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.unclaimed_all")).send(server, player);
 		}
 	}
 }

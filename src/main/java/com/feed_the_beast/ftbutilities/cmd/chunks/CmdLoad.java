@@ -5,7 +5,6 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
-import com.feed_the_beast.ftbutilities.FTBUConfig;
 import com.feed_the_beast.ftbutilities.FTBUFinals;
 import com.feed_the_beast.ftbutilities.FTBUNotifications;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
@@ -28,7 +27,7 @@ public class CmdLoad extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		if (!FTBUConfig.world.chunk_loading)
+		if (ClaimedChunks.instance == null)
 		{
 			throw FTBLibLang.FEATURE_DISABLED.commandError();
 		}
@@ -37,14 +36,14 @@ public class CmdLoad extends CmdBase
 		ForgePlayer p = getForgePlayer(player);
 		ChunkDimPos pos = new ChunkDimPos(player);
 
-		if (p.getTeam() != null && ClaimedChunks.get().setLoaded(p.getTeam(), pos, true))
+		if (p.getTeam() != null && ClaimedChunks.instance.setLoaded(p.getTeam(), pos, true))
 		{
-			Notification.of(FTBUFinals.get("chunk_modified"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.chunk_loaded")).send(player);
+			Notification.of(FTBUFinals.get("chunk_modified"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.chunk_loaded")).send(server, player);
 			CmdChunks.updateChunk(player, pos);
 		}
 		else
 		{
-			FTBUNotifications.sendCantModifyChunk(player);
+			FTBUNotifications.sendCantModifyChunk(server, player);
 		}
 	}
 }

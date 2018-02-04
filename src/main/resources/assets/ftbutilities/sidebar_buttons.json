@@ -3,10 +3,7 @@
 		"group": "ftblib:info",
 		"icon": "ftblib:icons/chat",
 		"x": 500,
-		"click": {
-			"action": "run_command",
-			"value": "/ftbc open_chats"
-		},
+		"click": "command:/ftbc open_chats",
 		"required_server_mods": ["ftbutilities"],
 		"config": true,
 		"dev_only": true
@@ -15,10 +12,7 @@
 		"group": "ftblib:info",
 		"icon": "item:minecraft:sign",
 		"x": 700,
-		"click": {
-			"action": "run_command",
-			"value": "/ftb leaderboards gui"
-		},
+		"click": "command:/ftb leaderboards gui",
 		"required_server_mods": ["ftbutilities"],
 		"config": true
 	},
@@ -26,10 +20,7 @@
 		"group": "ftblib:util",
 		"icon": "ftblib:icons/map",
 		"x": 0,
-		"click": {
-			"action": "run_command",
-			"value": "/ftb chunks gui"
-		},
+		"click": "command:/ftb chunks gui",
 		"config": true,
 		"required_server_mods": ["ftbutilities"],
 		"loading_screen": true
@@ -38,10 +29,7 @@
 		"group": "ftblib:util",
 		"icon": "ftblib:icons/bin",
 		"x": 500,
-		"click": {
-			"action": "run_command",
-			"value": "/ftb trash_can"
-		},
+		"click": "command:/ftb trash_can",
 		"config": true,
 		"required_mods": ["ftbutilities"],
 		"loading_screen": true
@@ -50,10 +38,7 @@
 		"group": "ftblib:util",
 		"icon": "ftblib:icons/money_bag",
 		"x": 100,
-		"click": {
-			"action": "run_command",
-			"value": "/ftb shop gui"
-		},
+		"click": "command:/ftb shop gui",
 		"config": true,
 		"required_server_mods": ["ftbutilities"],
 		"dev_only": true,
@@ -63,10 +48,7 @@
 		"group": "ftblib:cheat",
 		"icon": "ftblib:icons/heart",
 		"x": 400,
-		"click": {
-			"action": "run_command",
-			"value": "/heal"
-		},
+		"click": "command:/heal",
 		"config": true,
 		"required_server_mods": ["ftbutilities"],
 		"hide_with_nei": true,
@@ -76,10 +58,7 @@
 		"group": "ftblib:cheat",
 		"icon": ["ftblib:icons/blue_button", "ftblib:textures/icons/toggle_gamemode.png"],
 		"x": 0,
-		"click": {
-			"action": "run_command",
-			"value": "/ftbc toggle_gamemode"
-		},
+		"click": "command:/ftbc toggle_gamemode",
 		"config": true,
 		"hide_with_nei": true,
 		"requires_op": true
@@ -88,10 +67,7 @@
 		"group": "ftblib:cheat",
 		"icon": ["ftblib:icons/blue_button", "ftblib:textures/icons/toggle_rain.png"],
 		"x": 100,
-		"click": {
-			"action": "run_command",
-			"value": "/toggledownfall"
-		},
+		"click": "command:/toggledownfall",
 		"config": true,
 		"hide_with_nei": true,
 		"requires_op": true
@@ -100,10 +76,7 @@
 		"group": "ftblib:cheat",
 		"icon": ["ftblib:icons/blue_button", "ftblib:textures/icons/toggle_day.png"],
 		"x": 200,
-		"click": {
-			"action": "run_command",
-			"value": "/ftb set_hour 6"
-		},
+		"click": "command:/ftb set_hour 6",
 		"config": true,
 		"required_server_mods": ["ftbutilities"],
 		"hide_with_nei": true,
@@ -113,10 +86,7 @@
 		"group": "ftblib:cheat",
 		"icon": ["ftblib:icons/blue_button", "ftblib:textures/icons/toggle_night.png"],
 		"x": 300,
-		"click": {
-			"action": "run_command",
-			"value": "/ftb set_hour 18"
-		},
+		"click": "command:/ftb set_hour 18",
 		"config": true,
 		"required_server_mods": ["ftbutilities"],
 		"hide_with_nei": true,
@@ -126,10 +96,7 @@
 		"group": "ftblib:util",
 		"icon": "item:minecraft:barrier",
 		"x": 600,
-		"click": {
-			"action": "run_command",
-			"value": "/ftb view_crash"
-		},
+		"click": "command:/ftb view_crash",
 		"config": false,
 		"required_mods": ["ftbutilities"],
 		"loading_screen": true

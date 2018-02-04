@@ -1,9 +1,8 @@
-package com.feed_the_beast.ftbutilities.util.backups;
+package com.feed_the_beast.ftbutilities.data.backups;
 
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUConfig;
 import com.feed_the_beast.ftbutilities.FTBUFinals;
@@ -96,13 +95,13 @@ public enum Backups
 		FTBUFinals.LOGGER.info("Backups folder - " + backupsFolder.getAbsolutePath());
 	}
 
-	public static void notifyAll(Function<ICommandSender, ITextComponent> function, boolean error)
+	public static void notifyAll(MinecraftServer server, Function<ICommandSender, ITextComponent> function, boolean error)
 	{
-		for (EntityPlayerMP player : ServerUtils.getPlayers())
+		for (EntityPlayerMP player : server.getPlayerList().getPlayers())
 		{
 			ITextComponent component = function.apply(player);
 			component.getStyle().setColor(error ? TextFormatting.DARK_RED : TextFormatting.LIGHT_PURPLE);
-			Notification.of(NOTIFICATION_ID, component).setImportant(true).send(null);
+			Notification.of(NOTIFICATION_ID, component).setImportant(true).send(server, null);
 		}
 
 		FTBUFinals.LOGGER.info(function.apply(null).getUnformattedText());
@@ -122,7 +121,7 @@ public enum Backups
 			return false;
 		}
 
-		notifyAll(player -> FTBULang.BACKUP_START.textComponent(player, sender.getName()), false);
+		notifyAll(server, player -> FTBULang.BACKUP_START.textComponent(player, sender.getName()), false);
 		nextBackup = CommonUtils.getWorldTime() + FTBUConfig.backups.ticks();
 
 		try
@@ -146,7 +145,7 @@ public enum Backups
 			}
 			catch (Exception ex1)
 			{
-				notifyAll(FTBULang.BACKUP_SAVING_FAILED::textComponent, true);
+				notifyAll(server, FTBULang.BACKUP_SAVING_FAILED::textComponent, true);
 			}
 		}
 		catch (Exception ex)
@@ -158,12 +157,12 @@ public enum Backups
 
 		if (FTBUConfig.backups.use_separate_thread)
 		{
-			thread = new ThreadBackup(wd, customName);
+			thread = new ThreadBackup(server, wd, customName);
 			thread.start();
 		}
 		else
 		{
-			ThreadBackup.doBackup(wd, customName);
+			ThreadBackup.doBackup(server, wd, customName);
 		}
 
 		return true;
@@ -215,12 +214,10 @@ public enum Backups
 		JsonUtils.toJson(a, new File(backupsFolder, "backups.json"));
 	}
 
-	public void postBackup()
+	public void postBackup(MinecraftServer server)
 	{
 		try
 		{
-			MinecraftServer server = ServerUtils.getServer();
-
 			for (int i = 0; i < server.worlds.length; ++i)
 			{
 				if (server.worlds[i] != null)

@@ -4,20 +4,18 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
+import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbutilities.FTBUPermissions;
-import com.feed_the_beast.ftbutilities.data.ChunkUpgrade;
-import com.feed_the_beast.ftbutilities.data.ChunkUpgrades;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
+import com.feed_the_beast.ftbutilities.data.FTBUTeamData;
 import com.feed_the_beast.ftbutilities.gui.ClientClaimedChunks;
 import com.feed_the_beast.ftbutilities.gui.UpdateClientDataEvent;
-import com.feed_the_beast.ftbutilities.util.FTBUTeamData;
-import com.feed_the_beast.ftbutilities.util.FTBUUniverseData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.server.permission.PermissionAPI;
 
@@ -47,14 +45,14 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 		ForgePlayer p = Universe.get().getPlayer(player);
 		FTBUTeamData teamData = p.getTeam() == null ? null : FTBUTeamData.get(p.getTeam());
 
-		Collection<ClaimedChunk> chunks = teamData != null ? ClaimedChunks.get().getTeamChunks(teamData.team) : Collections.emptyList();
+		Collection<ClaimedChunk> chunks = teamData != null ? ClaimedChunks.instance.getTeamChunks(teamData.team) : Collections.emptyList();
 
 		claimedChunks = chunks.size();
 		loadedChunks = 0;
 
 		for (ClaimedChunk c : chunks)
 		{
-			if (c.hasUpgrade(ChunkUpgrades.LOADED))
+			if (c.isLoaded())
 			{
 				loadedChunks++;
 			}
@@ -71,7 +69,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 			for (int z1 = 0; z1 < ChunkSelectorMap.TILES_GUI; z1++)
 			{
 				ChunkDimPos pos = new ChunkDimPos(startX + x1, startZ + z1, player.dimension);
-				ClaimedChunk chunk = ClaimedChunks.get().getChunk(pos);
+				ClaimedChunk chunk = ClaimedChunks.instance.getChunk(pos);
 
 				if (chunk != null)
 				{
@@ -87,22 +85,18 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 						teams.put(team.ownerId, team);
 					}
 
-					ClientClaimedChunks.ChunkData data = new ClientClaimedChunks.ChunkData(team);
-
 					boolean member = chunkTeam.isMember(p);
+					int flags = 0;
 
 					if (canSeeChunkInfo || member)
 					{
-						for (ChunkUpgrade upgrade : FTBUUniverseData.CHUNK_UPGRADES.values())
+						if (chunk.isLoaded())
 						{
-							if (chunk.hasUpgrade(upgrade))
-							{
-								data.setHasUpgrade(upgrade, true);
-							}
+							flags = Bits.setFlag(flags, ClientClaimedChunks.ChunkData.LOADED, true);
 						}
 					}
 
-					team.chunks.put(x1 + z1 * ChunkSelectorMap.TILES_GUI, data);
+					team.chunks.put(x1 + z1 * ChunkSelectorMap.TILES_GUI, new ClientClaimedChunks.ChunkData(team, flags));
 				}
 			}
 		}

@@ -32,11 +32,11 @@ public class GuiViewCrash extends GuiBase
 
 	public GuiViewCrash(String n, Collection<String> l)
 	{
-		super(0, 0);
-		name = new TextField(this, 8, 12, 0, 20, n);
+		name = new TextField(this, n);
+		name.setPosAndSize(8, 12, 0, 20);
 		text = new ArrayList<>(l);
 
-		textPanel = new Panel(this, 9, 33, 0, 0)
+		textPanel = new Panel(this)
 		{
 			@Override
 			public void addWidgets()
@@ -45,7 +45,8 @@ public class GuiViewCrash extends GuiBase
 
 				for (String s : text)
 				{
-					TextField f = new TextField(gui, 2, 0, 0, 0, StringUtils.fixTabs(s, 2), Widget.UNICODE);
+					TextField f = new TextField(gui, StringUtils.fixTabs(s, 2), Widget.UNICODE);
+					f.setX(2);
 					wi = Math.max(wi, f.width);
 					add(f);
 				}
@@ -57,15 +58,22 @@ public class GuiViewCrash extends GuiBase
 			}
 
 			@Override
+			public void alignWidgets()
+			{
+
+			}
+
+			@Override
 			public Icon getIcon()
 			{
 				return gui.getTheme().getContainerSlot();
 			}
 		};
 
+		textPanel.setPos(9, 33);
 		textPanel.addFlags(Panel.DEFAULTS | Widget.UNICODE);
 
-		scrollH = new PanelScrollBar(this, 8, 0, 0, 16, 0, textPanel)
+		scrollH = new PanelScrollBar(this, textPanel)
 		{
 			@Override
 			public Plane getPlane()
@@ -86,7 +94,7 @@ public class GuiViewCrash extends GuiBase
 			}
 		};
 
-		scrollV = new PanelScrollBar(this, 0, 32, 16, 0, 0, textPanel)
+		scrollV = new PanelScrollBar(this, textPanel)
 		{
 			@Override
 			public boolean canMouseScroll()
@@ -101,7 +109,7 @@ public class GuiViewCrash extends GuiBase
 			}
 		};
 
-		close = new SimpleButton(this, 0, 8, GuiLang.CLOSE, GuiIcons.CLOSE, (gui1, button) -> gui1.closeGui())
+		close = new SimpleButton(this, GuiLang.CLOSE, GuiIcons.CLOSE, (gui1, button) -> gui1.closeGui())
 		{
 			@Override
 			public Icon getIcon()
@@ -110,7 +118,7 @@ public class GuiViewCrash extends GuiBase
 			}
 		};
 
-		upload = new SimpleButton(this, 0, 8, FTBULang.UPLOAD_CRASH, GuiIcons.UP, (gui1, button) ->
+		upload = new SimpleButton(this, FTBULang.UPLOAD_CRASH, GuiIcons.UP, (gui1, button) ->
 		{
 			ClientUtils.execClientCommand("/ftb view_crash " + name.text.get(0) + " upload");
 			gui1.closeGui(false);
@@ -123,7 +131,7 @@ public class GuiViewCrash extends GuiBase
 			}
 		};
 
-		reset = new SimpleButton(this, 0, 0, "", Icon.EMPTY, (gui1, button) ->
+		reset = new SimpleButton(this, "", Icon.EMPTY, (gui1, button) ->
 		{
 			scrollH.setValue(0D);
 			scrollV.setValue(0D);
@@ -139,17 +147,12 @@ public class GuiViewCrash extends GuiBase
 	@Override
 	public void onPostInit()
 	{
-		close.setX(width - 24);
-		upload.setX(width - 48);
-
-		scrollH.width = width - 32;
-		scrollV.height = height - 56;
-
-		textPanel.setWidth(scrollH.width - 2);
-		textPanel.setHeight(scrollV.height - 2);
-
-		reset.posX = scrollV.posX = width - 24;
-		reset.posY = scrollH.posY = height - 24;
+		close.setPos(width - 24, 8);
+		upload.setPos(width - 48, 8);
+		scrollH.setPosAndSize(8, height - 24, width - 32, 16);
+		scrollV.setPosAndSize(width - 24, 32, 16, height - 56);
+		textPanel.setSize(scrollH.width - 2, scrollV.height - 2);
+		reset.setPos(width - 24, height - 24);
 	}
 
 	@Override

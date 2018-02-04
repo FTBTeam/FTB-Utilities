@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbutilities.FTBULang;
-import com.feed_the_beast.ftbutilities.util.FTBUUniverseData;
+import com.feed_the_beast.ftbutilities.data.FTBUUniverseData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;

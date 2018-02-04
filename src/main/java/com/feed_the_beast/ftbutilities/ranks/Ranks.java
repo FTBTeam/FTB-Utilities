@@ -15,12 +15,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.command.ICommand;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -88,10 +84,10 @@ public class Ranks
 		return defaultOPRank;
 	}
 
-	public static Rank getRank(GameProfile profile)
+	public static Rank getRank(@Nullable MinecraftServer server, GameProfile profile)
 	{
 		Rank r = FTBUConfig.ranks.enabled ? PLAYER_MAP.get(profile.getId()) : null;
-		return (r == null) ? (ServerUtils.isOP(profile) ? getDefaultOPRank() : getDefaultPlayerRank()) : r;
+		return (r == null) ? (ServerUtils.isOP(server, profile) ? getDefaultOPRank() : getDefaultPlayerRank()) : r;
 	}
 
 	public static void addRank(Rank rank)
@@ -226,17 +222,6 @@ public class Ranks
 		final JsonObject o2 = new JsonObject();
 		PLAYER_MAP.forEach((key, value) -> o2.add(StringUtils.fromUUID(key), new JsonPrimitive(value.getName())));
 		JsonUtils.toJson(o2, new File(CommonUtils.folderLocal, "ftbutilities/player_ranks.json"));
-	}
-
-	static boolean checkCommandPermission(MinecraftServer server, ICommandSender sender, ICommand parent, String permission)
-	{
-		if (sender instanceof EntityPlayerMP)
-		{
-			Event.Result result = getRank(((EntityPlayerMP) sender).getGameProfile()).hasPermission(permission);
-			return result == Event.Result.DEFAULT ? parent.checkPermission(server, sender) : (result == Event.Result.ALLOW);
-		}
-
-		return parent.checkPermission(server, sender);
 	}
 
 	public static void generateExampleFiles()

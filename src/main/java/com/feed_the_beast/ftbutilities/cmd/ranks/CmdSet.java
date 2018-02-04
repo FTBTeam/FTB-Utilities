@@ -64,7 +64,7 @@ public class CmdSet extends CmdBase
 			throw FTBULang.RANK_NOT_FOUND.commandError(args[1]);
 		}
 
-		ForgePlayer p = getForgePlayer(args[0]);
+		ForgePlayer p = getForgePlayer(sender, args[0]);
 		Ranks.setRank(p.getId(), r);
 
 		if (r == null)

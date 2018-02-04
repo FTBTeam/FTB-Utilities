@@ -29,7 +29,7 @@ public class FTBUServerEventHandler
 
 		if (FTBUConfig.ranks.override_chat)
 		{
-			Rank rank = Ranks.getRank(event.getPlayer().getGameProfile());
+			Rank rank = Ranks.getRank(event.getPlayer().mcServer, event.getPlayer().getGameProfile());
 
 			ITextComponent main = new TextComponentString("");
 			ITextComponent name = new TextComponentString(rank.getFormattedName(event.getPlayer().getDisplayNameString()));

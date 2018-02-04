@@ -13,9 +13,8 @@ import com.feed_the_beast.ftbutilities.FTBULang;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
-import com.feed_the_beast.ftbutilities.util.FTBUPlayerData;
+import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
 import com.google.common.base.Objects;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentString;
@@ -64,9 +63,14 @@ public class FTBUPlayerEventHandler
 		updateChunkMessage(player, new ChunkDimPos(event.getNewChunkX(), event.getNewChunkZ(), player.dimension));
 	}
 
-	public static void updateChunkMessage(EntityPlayer player, ChunkDimPos pos)
+	public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)
 	{
-		ClaimedChunk chunk = ClaimedChunks.get().getChunk(pos);
+		if (ClaimedChunks.instance == null)
+		{
+			return;
+		}
+
+		ClaimedChunk chunk = ClaimedChunks.instance.getChunk(pos);
 		ForgeTeam team = chunk == null ? null : chunk.getTeam();
 
 		FTBUPlayerData data = FTBUPlayerData.get(Universe.get().getPlayer(player));
@@ -84,11 +88,11 @@ public class FTBUPlayerEventHandler
 					notification.addLine(StringUtils.italic(new TextComponentString(team.getDesc()), true));
 				}
 
-				notification.send(player);
+				notification.send(player.mcServer, player);
 			}
 			else
 			{
-				Notification.of(FTBUFinals.get("chunk_changed"), StringUtils.color(FTBULang.CHUNKS_WILDERNESS.textComponent(player), TextFormatting.DARK_GREEN)).send(player);
+				Notification.of(FTBUFinals.get("chunk_changed"), StringUtils.color(FTBULang.CHUNKS_WILDERNESS.textComponent(player), TextFormatting.DARK_GREEN)).send(player.mcServer, player);
 			}
 		}
 	}
@@ -96,56 +100,72 @@ public class FTBUPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onEntityAttacked(AttackEntityEvent event)
 	{
-		EntityPlayer player = event.getEntityPlayer();
-
-		if (player instanceof EntityPlayerMP && !ClaimedChunks.get().canPlayerAttackEntity((EntityPlayerMP) player, event.getTarget()))
+		if (ClaimedChunks.instance != null && event.getEntityPlayer() instanceof EntityPlayerMP)
 		{
-			event.setCanceled(true);
+			if (!ClaimedChunks.instance.canPlayerAttackEntity((EntityPlayerMP) event.getEntityPlayer(), event.getTarget()))
+			{
+				event.setCanceled(true);
+			}
 		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event)
 	{
-		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunks.get().canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.INTERACT))
+		if (ClaimedChunks.instance != null && event.getEntityPlayer() instanceof EntityPlayerMP)
 		{
-			event.setCanceled(true);
+			if (!ClaimedChunks.instance.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.INTERACT))
+			{
+				event.setCanceled(true);
+			}
 		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onRightClickItem(PlayerInteractEvent.RightClickItem event)
 	{
-		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunks.get().canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.ITEM))
+		if (ClaimedChunks.instance != null && event.getEntityPlayer() instanceof EntityPlayerMP)
 		{
-			event.setCanceled(true);
+			if (!ClaimedChunks.instance.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.ITEM))
+			{
+				event.setCanceled(true);
+			}
 		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onBlockBreak(BlockEvent.BreakEvent event)
 	{
-		if (event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunks.get().canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getState()), BlockInteractionType.EDIT))
+		if (ClaimedChunks.instance != null && event.getPlayer() instanceof EntityPlayerMP)
 		{
-			event.setCanceled(true);
+			if (!ClaimedChunks.instance.canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getState()), BlockInteractionType.EDIT))
+			{
+				event.setCanceled(true);
+			}
 		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onBlockPlace(BlockEvent.PlaceEvent event)
 	{
-		if (event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunks.get().canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getPlacedBlock()), BlockInteractionType.EDIT))
+		if (ClaimedChunks.instance != null && event.getPlayer() instanceof EntityPlayerMP)
 		{
-			event.setCanceled(true);
+			if (!ClaimedChunks.instance.canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getPlacedBlock()), BlockInteractionType.EDIT))
+			{
+				event.setCanceled(true);
+			}
 		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event)
 	{
-		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunks.get().canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.EDIT))
+		if (ClaimedChunks.instance != null && event.getEntityPlayer() instanceof EntityPlayerMP)
 		{
-			event.setCanceled(true);
+			if (!ClaimedChunks.instance.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.EDIT))
+			{
+				event.setCanceled(true);
+			}
 		}
 	}
 

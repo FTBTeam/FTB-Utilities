@@ -8,8 +8,8 @@ import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftbutilities.FTBULang;
 import com.feed_the_beast.ftbutilities.FTBUPermissions;
+import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
-import com.feed_the_beast.ftbutilities.util.FTBUPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -65,7 +65,7 @@ public class CmdHome extends CmdBase
 
 			if (args.length >= 2)
 			{
-				p = getForgePlayer(args[1]);
+				p = getForgePlayer(sender, args[1]);
 			}
 			else
 			{
@@ -80,7 +80,7 @@ public class CmdHome extends CmdBase
 			FTBUPlayerData data = FTBUPlayerData.get(p);
 
 			Collection<String> list = data.homes.list();
-			ITextComponent msg = new TextComponentString(p.getName() + ": " + list.size() + " / " + Ranks.getRank(p.getProfile()).getConfig(FTBUPermissions.HOMES_MAX).getInt() + ": ");
+			ITextComponent msg = new TextComponentString(p.getName() + ": " + list.size() + " / " + Ranks.getRank(server, p.getProfile()).getConfig(FTBUPermissions.HOMES_MAX).getInt() + ": ");
 
 			if (!list.isEmpty())
 			{
@@ -124,7 +124,7 @@ public class CmdHome extends CmdBase
 
 		if (args.length >= 2)
 		{
-			p = getForgePlayer(args[1]);
+			p = getForgePlayer(sender, args[1]);
 		}
 		else
 		{

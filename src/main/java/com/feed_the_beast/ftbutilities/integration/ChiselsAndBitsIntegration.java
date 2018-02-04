@@ -19,7 +19,7 @@ public class ChiselsAndBitsIntegration
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onChiselEvent(EventBlockBitModification event)
 	{
-		if (event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunks.get().canPlayerInteract((EntityPlayerMP) event.getPlayer(), event.getHand(), new BlockPosContainer(event.getWorld(), event.getPos(), event.getWorld().getBlockState(event.getPos())), event.isPlacing() ? BlockInteractionType.CNB_PLACE : BlockInteractionType.CNB_BREAK))
+		if (ClaimedChunks.instance != null && event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunks.instance.canPlayerInteract((EntityPlayerMP) event.getPlayer(), event.getHand(), new BlockPosContainer(event.getWorld(), event.getPos(), event.getWorld().getBlockState(event.getPos())), event.isPlacing() ? BlockInteractionType.CNB_PLACE : BlockInteractionType.CNB_BREAK))
 		{
 			event.setCanceled(true);
 		}

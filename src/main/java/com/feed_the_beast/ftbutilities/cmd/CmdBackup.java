@@ -6,7 +6,7 @@ import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.BroadcastSender;
 import com.feed_the_beast.ftbutilities.FTBUConfig;
 import com.feed_the_beast.ftbutilities.FTBULang;
-import com.feed_the_beast.ftbutilities.util.backups.Backups;
+import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -26,11 +26,11 @@ public class CmdBackup extends CmdTreeBase
 			boolean b = Backups.INSTANCE.run(server, sender, args.length == 0 ? "" : args[0]);
 			if (b)
 			{
-				FTBULang.BACKUP_MANUAL_LAUNCH.sendMessage(BroadcastSender.INSTANCE, sender.getName());
+				FTBULang.BACKUP_MANUAL_LAUNCH.sendMessage(new BroadcastSender(server), sender.getName());
 
 				if (!FTBUConfig.backups.use_separate_thread)
 				{
-					Backups.INSTANCE.postBackup();
+					Backups.INSTANCE.postBackup(server);
 				}
 			}
 			else

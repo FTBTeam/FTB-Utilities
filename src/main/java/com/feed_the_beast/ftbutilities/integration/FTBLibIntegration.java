@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbutilities.handlers;
+package com.feed_the_beast.ftbutilities.integration;
 
 import com.feed_the_beast.ftblib.events.RegisterDataProvidersEvent;
 import com.feed_the_beast.ftblib.events.RegisterOptionalServerModsEvent;
@@ -21,11 +21,12 @@ import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftbutilities.FTBUConfig;
 import com.feed_the_beast.ftbutilities.FTBUFinals;
+import com.feed_the_beast.ftbutilities.data.Badges;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
+import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
+import com.feed_the_beast.ftbutilities.data.FTBUTeamData;
+import com.feed_the_beast.ftbutilities.handlers.FTBUSyncData;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
-import com.feed_the_beast.ftbutilities.util.Badges;
-import com.feed_the_beast.ftbutilities.util.FTBUPlayerData;
-import com.feed_the_beast.ftbutilities.util.FTBUTeamData;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -66,7 +67,7 @@ public class FTBLibIntegration
 			event.failedToReload(RELOAD_RANKS);
 		}
 
-		if (event.reload(RELOAD_BADGES) && !Badges.reloadServerBadges())
+		if (event.reload(RELOAD_BADGES) && !Badges.reloadServerBadges(event.getUniverse()))
 		{
 			event.failedToReload(RELOAD_BADGES);
 		}
@@ -104,7 +105,7 @@ public class FTBLibIntegration
 			return;
 		}
 
-		EntityPlayerMP ep = event.getPlayer().getPlayer();
+		EntityPlayerMP player = event.getPlayer().getPlayer();
 
 		if (event.isFirstLogin())
 		{
@@ -112,7 +113,7 @@ public class FTBLibIntegration
 			{
 				for (ItemStack stack : FTBUConfig.login.getStartingItems())
 				{
-					InvUtils.giveItem(ep, stack.copy());
+					InvUtils.giveItem(player, stack.copy());
 				}
 			}
 		}
@@ -121,17 +122,24 @@ public class FTBLibIntegration
 		{
 			for (ITextComponent t : FTBUConfig.login.getMOTD())
 			{
-				ep.sendMessage(t);
+				player.sendMessage(t);
 			}
 		}
 
-		ClaimedChunks.get().markDirty();
+		if (ClaimedChunks.instance != null)
+		{
+			ClaimedChunks.instance.markDirty();
+		}
 	}
 
 	@SubscribeEvent
 	public static void onPlayerLoggedOut(ForgePlayerLoggedOutEvent event)
 	{
-		ClaimedChunks.get().markDirty();
+		if (ClaimedChunks.instance != null)
+		{
+			ClaimedChunks.instance.markDirty();
+		}
+
 		Badges.update(event.getPlayer().getId());
 	}
 
@@ -165,7 +173,7 @@ public class FTBLibIntegration
 	public static void onTeamDeleted(ForgeTeamDeletedEvent event)
 	{
 		//printMessage(FTBLibLang.TEAM_DELETED.textComponent(getTitle()));
-		ClaimedChunks.get().unclaimAllChunks(event.getTeam(), null);
+		ClaimedChunks.instance.unclaimAllChunks(event.getTeam(), null);
 	}
 
 	@SubscribeEvent

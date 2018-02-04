@@ -31,7 +31,7 @@ public class GuiLeaderboardList extends GuiButtonListBase
 	{
 		for (Map.Entry<ResourceLocation, ITextComponent> entry : leaderboards.entrySet())
 		{
-			panel.add(new SimpleTextButton(this, 0, 0, entry.getValue().getFormattedText(), Icon.EMPTY)
+			panel.add(new SimpleTextButton(this, entry.getValue().getFormattedText(), Icon.EMPTY)
 			{
 				@Override
 				public void onClicked(MouseButton button)

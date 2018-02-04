@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbutilities.util;
+package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
@@ -40,7 +40,7 @@ public class Badges
 		BADGE_CACHE.remove(playerId);
 	}
 
-	public static String get(UUID playerId)
+	public static String get(Universe universe, UUID playerId)
 	{
 		String badge = BADGE_CACHE.get(playerId);
 
@@ -49,14 +49,14 @@ public class Badges
 			return badge;
 		}
 
-		badge = getRaw(playerId);
+		badge = getRaw(universe, playerId);
 		BADGE_CACHE.put(playerId, badge);
 		return badge;
 	}
 
-	private static String getRaw(UUID playerId)
+	private static String getRaw(Universe universe, UUID playerId)
 	{
-		ForgePlayer player = Universe.get().getPlayer(playerId);
+		ForgePlayer player = universe.getPlayer(playerId);
 
 		if (player == null || player.isFake())
 		{
@@ -121,10 +121,10 @@ public class Badges
 		}
 
 		String badge = LOCAL_BADGES.get(playerId);
-		return (badge == null || badge.isEmpty()) ? Ranks.getRank(player.getProfile()).getConfig(FTBUPermissions.BADGE).getString() : badge;
+		return (badge == null || badge.isEmpty()) ? Ranks.getRank(universe.server, player.getProfile()).getConfig(FTBUPermissions.BADGE).getString() : badge;
 	}
 
-	public static boolean reloadServerBadges()
+	public static boolean reloadServerBadges(Universe universe)
 	{
 		try
 		{
@@ -143,7 +143,7 @@ public class Badges
 			{
 				for (Map.Entry<String, JsonElement> entry : JsonUtils.fromJson(file).getAsJsonObject().entrySet())
 				{
-					ForgePlayer player = Universe.get().getPlayer(entry.getKey());
+					ForgePlayer player = universe.getPlayer(entry.getKey());
 
 					if (player != null)
 					{

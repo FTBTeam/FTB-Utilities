@@ -3,17 +3,16 @@ package com.feed_the_beast.ftbutilities.net;
 import com.feed_the_beast.ftblib.FTBLibNotifications;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
-import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbutilities.FTBUConfig;
 import com.feed_the_beast.ftbutilities.FTBUPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
-import com.feed_the_beast.ftbutilities.util.FTBUTeamData;
+import com.feed_the_beast.ftbutilities.data.FTBUTeamData;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.server.permission.PermissionAPI;
 
@@ -69,22 +68,21 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 	@Override
 	public void onMessage(MessageClaimedChunksModify m, EntityPlayer player)
 	{
-		ForgePlayer p = Universe.get().getPlayer(player);
-
-		if (!FTBUConfig.world.chunk_claiming)
+		if (ClaimedChunks.instance == null)
 		{
 			return;
 		}
 
+		ForgePlayer p = ClaimedChunks.instance.universe.getPlayer(player);
 		ForgeTeam team = p.getTeam();
 
 		if (team == null)
 		{
-			FTBLibNotifications.NO_TEAM.send(player);
+			FTBLibNotifications.NO_TEAM.send(((EntityPlayerMP) player).mcServer, player);
 			return;
 		}
 
-		boolean canUnclaim = m.action == UNCLAIM && PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS, null);
+		boolean canUnclaim = m.action == UNCLAIM && PermissionAPI.hasPermission(player, FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS);
 
 		for (ChunkPos pos0 : m.chunks)
 		{
@@ -93,19 +91,19 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 			switch (m.action)
 			{
 				case CLAIM:
-					ClaimedChunks.get().claimChunk(FTBUTeamData.get(team), pos);
+					ClaimedChunks.instance.claimChunk(FTBUTeamData.get(team), pos);
 					break;
 				case UNCLAIM:
-					if (canUnclaim || team.equalsTeam(ClaimedChunks.get().getChunkTeam(pos)))
+					if (canUnclaim || team.equalsTeam(ClaimedChunks.instance.getChunkTeam(pos)))
 					{
-						ClaimedChunks.get().unclaimChunk(team, pos);
+						ClaimedChunks.instance.unclaimChunk(team, pos);
 					}
 					break;
 				case LOAD:
-					ClaimedChunks.get().setLoaded(team, pos, true);
+					ClaimedChunks.instance.setLoaded(team, pos, true);
 					break;
 				case UNLOAD:
-					ClaimedChunks.get().setLoaded(team, pos, false);
+					ClaimedChunks.instance.setLoaded(team, pos, false);
 					break;
 			}
 		}

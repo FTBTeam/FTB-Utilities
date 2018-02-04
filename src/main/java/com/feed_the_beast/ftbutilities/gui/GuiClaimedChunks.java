@@ -14,14 +14,12 @@ import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiChunkSelectorBase;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbutilities.FTBULang;
-import com.feed_the_beast.ftbutilities.data.ChunkUpgrade;
-import com.feed_the_beast.ftbutilities.data.ChunkUpgrades;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksModify;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksRequest;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;
-import com.feed_the_beast.ftbutilities.util.FTBUUniverseData;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -46,7 +44,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	public static GuiClaimedChunks instance;
 	private static final ClientClaimedChunks.ChunkData[] chunkData = new ClientClaimedChunks.ChunkData[ChunkSelectorMap.TILES_GUI * ChunkSelectorMap.TILES_GUI];
 	private static int claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
-	private static final ClientClaimedChunks.ChunkData NULL_CHUNK_DATA = new ClientClaimedChunks.ChunkData(new ClientClaimedChunks.Team(UUID.randomUUID()));
+	private static final ClientClaimedChunks.ChunkData NULL_CHUNK_DATA = new ClientClaimedChunks.ChunkData(new ClientClaimedChunks.Team(new UUID(0L, 0L)), 0);
 
 	private static final CachedVertexData AREA = new CachedVertexData(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 
@@ -64,7 +62,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			with = NULL_CHUNK_DATA;
 		}
 
-		return (!data.upgrades.equals(with.upgrades) || data.team != with.team) && !with.hasUpgrade(ChunkUpgrades.LOADED);
+		return (data.flags != with.flags || data.team != with.team) && !with.isLoaded();
 	}
 
 	@SubscribeEvent
@@ -130,7 +128,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			borderL = x > 0 && hasBorder(data, getAt(x - 1, y));
 			borderR = x < (ChunkSelectorMap.TILES_GUI - 1) && hasBorder(data, getAt(x + 1, y));
 
-			if (data.hasUpgrade(ChunkUpgrades.LOADED))
+			if (data.isLoaded())
 			{
 				AREA.color.set(255, 80, 80, 230);
 			}
@@ -165,7 +163,8 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	{
 		public ButtonSide(GuiBase gui, String text, Icon icon)
 		{
-			super(gui, 0, 0, 20, 20, text, icon);
+			super(gui, text, icon);
+			setSize(20, 20);
 		}
 
 		@Override
@@ -320,12 +319,9 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			list.add(data.team.formattedName);
 			list.add(TextFormatting.GREEN + FTBULang.CHUNKS_CLAIMED_AREA.translate());
 
-			for (ChunkUpgrade upgrade : FTBUUniverseData.CHUNK_UPGRADES.values())
+			if (data.isLoaded())
 			{
-				if (!upgrade.isInternal() && data.hasUpgrade(upgrade))
-				{
-					list.add(TextFormatting.RED + upgrade.getLangKey().translate());
-				}
+				list.add(TextFormatting.RED + StringUtils.translate("ftbutilities.lang.chunks.upgrade.loaded"));
 			}
 		}
 		else

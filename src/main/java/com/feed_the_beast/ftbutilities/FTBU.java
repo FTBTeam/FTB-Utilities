@@ -2,10 +2,10 @@ package com.feed_the_beast.ftbutilities;
 
 import com.feed_the_beast.ftblib.FTBLibFinals;
 import com.feed_the_beast.ftblib.lib.ATHelper;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
-import com.feed_the_beast.ftbutilities.ranks.CmdOverride;
+import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftbutilities.data.backups.Backups;
+import com.feed_the_beast.ftbutilities.ranks.CommandOverride;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
-import com.feed_the_beast.ftbutilities.util.backups.Backups;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraftforge.fml.common.Mod;
@@ -53,14 +53,19 @@ public class FTBU
 
 		if (FTBUConfig.ranks.override_commands)
 		{
-			ServerCommandManager manager = (ServerCommandManager) ServerUtils.getServer().getCommandManager();
+			ServerCommandManager manager = (ServerCommandManager) Universe.get().server.getCommandManager();
 			List<ICommand> commands = new ArrayList<>(manager.getCommands().values());
 			ATHelper.getCommandSet(manager).clear();
 			manager.getCommands().clear();
 
 			for (ICommand command : commands)
 			{
-				manager.registerCommand(new CmdOverride(command, "command." + command.getName()));
+				/*if (command instanceof ForgeCommand)
+				{
+					command = new CommandForgeOverride((ForgeCommand) c);
+				}*/
+
+				manager.registerCommand(new CommandOverride(command));
 			}
 
 			FTBUFinals.LOGGER.info("Overridden " + manager.getCommands().size() + " commands");

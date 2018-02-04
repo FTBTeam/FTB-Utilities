@@ -71,16 +71,14 @@ public class GuiLeaderboard extends GuiBase
 
 	public GuiLeaderboard(ITextComponent c, List<LeaderboardValue> l)
 	{
-		super(0, 0);
 		leaderboard = l;
 		title = FTBULang.LEADERBOARDS.translate() + " > " + c.getFormattedText();
 
-		panelButtons = new Panel(gui, 9, 9, 0, 146)
+		panelButtons = new Panel(gui)
 		{
 			@Override
 			public void addWidgets()
 			{
-				width = 0;
 				int i = 0;
 				rankSize = 0;
 				usernameSize = 0;
@@ -91,6 +89,12 @@ public class GuiLeaderboard extends GuiBase
 					value.rank = ++i;
 					add(new LeaderboardEntry(gui, value));
 				}
+			}
+
+			@Override
+			public void alignWidgets()
+			{
+				width = 0;
 
 				for (Widget w : widgets)
 				{
@@ -116,9 +120,10 @@ public class GuiLeaderboard extends GuiBase
 			}
 		};
 
+		panelButtons.setPosAndSize(9, 9, 0, 146);
 		panelButtons.addFlags(Panel.DEFAULTS);
 
-		scrollBar = new PanelScrollBar(this, 0, 8, 16, 146, 0, panelButtons)
+		scrollBar = new PanelScrollBar(this, panelButtons)
 		{
 			@Override
 			public boolean shouldDraw()
@@ -132,6 +137,8 @@ public class GuiLeaderboard extends GuiBase
 				return true;
 			}
 		};
+
+		scrollBar.setPosAndSize(0, 8, 16, 146);
 	}
 
 	@Override
@@ -143,7 +150,11 @@ public class GuiLeaderboard extends GuiBase
 		{
 			add(scrollBar);
 		}
+	}
 
+	@Override
+	public void alignWidgets()
+	{
 		scrollBar.setX(panelButtons.posX + panelButtons.width + 6);
 		setWidth(scrollBar.posX + (panelButtons.widgets.size() > 10 ? scrollBar.width + 8 : 4));
 		posX = (getScreen().getScaledWidth() - width) / 2;

@@ -10,7 +10,6 @@ import com.feed_the_beast.ftbutilities.gui.ClientClaimedChunks;
 import com.feed_the_beast.ftbutilities.gui.UpdateClientDataEvent;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksRequest;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;
-import journeymap.client.api.ClientPlugin;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.display.DisplayType;
@@ -34,8 +33,9 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-@ClientPlugin
-public class JMIntegration implements IClientPlugin
+//Disabled integration for now
+//@ClientPlugin
+public class JourneyMapIntegration implements IClientPlugin
 {
 	private static IClientAPI clientAPI;
 	private static final Map<ChunkPos, PolygonOverlay> POLYGONS = new HashMap<>();
@@ -46,7 +46,7 @@ public class JMIntegration implements IClientPlugin
 	{
 		clientAPI = api;
 		api.subscribe(getModId(), EnumSet.of(ClientEvent.Type.DISPLAY_UPDATE, ClientEvent.Type.MAPPING_STOPPED));
-		MinecraftForge.EVENT_BUS.register(JMIntegration.class);
+		MinecraftForge.EVENT_BUS.register(JourneyMapIntegration.class);
 	}
 
 	@Override
@@ -132,9 +132,9 @@ public class JMIntegration implements IClientPlugin
 			return;
 		}
 
-		if (JMIntegration.lastPosition == null || MathUtils.dist(event.getNewChunkX(), event.getNewChunkZ(), JMIntegration.lastPosition.x, JMIntegration.lastPosition.z) >= 3D)
+		if (JourneyMapIntegration.lastPosition == null || MathUtils.dist(event.getNewChunkX(), event.getNewChunkZ(), JourneyMapIntegration.lastPosition.x, JourneyMapIntegration.lastPosition.z) >= 3D)
 		{
-			JMIntegration.lastPosition = new ChunkPos(event.getNewChunkX(), event.getNewChunkZ());
+			JourneyMapIntegration.lastPosition = new ChunkPos(event.getNewChunkX(), event.getNewChunkZ());
 			new MessageClaimedChunksRequest(ClientUtils.MC.player).sendToServer();
 		}
 	}

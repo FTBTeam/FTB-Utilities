@@ -31,8 +31,8 @@ public class CmdGet extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		checkArgs(sender, args, 1);
-		ForgePlayer p = getForgePlayer(args[0]);
-		Rank rank = Ranks.getRank(p.getProfile());
+		ForgePlayer p = getForgePlayer(sender, args[0]);
+		Rank rank = Ranks.getRank(server, p.getProfile());
 		ITextComponent name = new TextComponentString(rank.getName() + " - " + rank.getFormattedName(p.getName()));
 		name.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + p.getName() + " "));
 		name.getStyle().setInsertion(p.getName());

@@ -5,7 +5,7 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftbutilities.FTBULang;
 import com.feed_the_beast.ftbutilities.FTBUPermissions;
-import com.feed_the_beast.ftbutilities.util.FTBUPlayerData;
+import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;

@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbutilities.util;
+package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
@@ -9,11 +9,7 @@ import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbutilities.FTBUFinals;
 import com.feed_the_beast.ftbutilities.FTBUPermissions;
-import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
-import com.feed_the_beast.ftbutilities.data.ChunkUpgrade;
-import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
-import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
-import com.feed_the_beast.ftbutilities.handlers.FTBLibIntegration;
+import com.feed_the_beast.ftbutilities.integration.FTBLibIntegration;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.nbt.NBTTagCompound;
@@ -58,7 +54,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 
 		Int2ObjectOpenHashMap<NBTTagList> claimedChunks = new Int2ObjectOpenHashMap<>();
 
-		for (ClaimedChunk chunk : ClaimedChunks.get().getTeamChunks(team))
+		for (ClaimedChunk chunk : ClaimedChunks.instance.getTeamChunks(team))
 		{
 			ChunkDimPos pos = chunk.getPos();
 
@@ -74,12 +70,9 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 			chunkNBT.setInteger("x", pos.posX);
 			chunkNBT.setInteger("z", pos.posZ);
 
-			for (ChunkUpgrade upgrade : FTBUUniverseData.CHUNK_UPGRADES.values())
+			if (chunk.isLoaded())
 			{
-				if (!upgrade.isInternal() && chunk.hasUpgrade(upgrade))
-				{
-					chunkNBT.setBoolean(upgrade.getName(), true);
-				}
+				chunkNBT.setBoolean("loaded", true);
 			}
 
 			list.appendTag(chunkNBT);
@@ -119,16 +112,8 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 			{
 				NBTTagCompound chunkNBT = list.getCompoundTagAt(i);
 				ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(new ChunkPos(chunkNBT.getInteger("x"), chunkNBT.getInteger("z")), dimInt), this);
-
-				for (ChunkUpgrade upgrade : FTBUUniverseData.CHUNK_UPGRADES.values())
-				{
-					if (!upgrade.isInternal() && chunkNBT.getBoolean(upgrade.getName()))
-					{
-						chunk.setHasUpgrade(upgrade, true);
-					}
-				}
-
-				ClaimedChunks.get().addChunk(chunk);
+				chunk.setLoaded(chunkNBT.getBoolean("loaded"));
+				ClaimedChunks.instance.addChunk(chunk);
 			}
 		}
 	}
@@ -164,7 +149,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 
 		for (ForgePlayer player : team.getMembers())
 		{
-			p += Ranks.getRank(player.getProfile()).getConfig(FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
+			p += Ranks.getRank(team.universe.server, player.getProfile()).getConfig(FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
 		}
 
 		return p;
@@ -176,7 +161,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 
 		for (ForgePlayer player : team.getMembers())
 		{
-			p += Ranks.getRank(player.getProfile()).getConfig(FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+			p += Ranks.getRank(team.universe.server, player.getProfile()).getConfig(FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
 		}
 
 		return p;

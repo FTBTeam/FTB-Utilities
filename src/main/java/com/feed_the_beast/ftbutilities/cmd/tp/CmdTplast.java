@@ -46,12 +46,12 @@ public class CmdTplast extends CmdBase
 		if (args.length == 1)
 		{
 			who = getCommandSenderAsPlayer(sender);
-			to = getForgePlayer(args[0]);
+			to = getForgePlayer(sender, args[0]);
 		}
 		else
 		{
 			who = getPlayer(server, sender, args[0]);
-			to = getForgePlayer(args[1]);
+			to = getForgePlayer(sender, args[1]);
 		}
 
 		BlockDimPos p;

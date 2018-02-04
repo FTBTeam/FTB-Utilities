@@ -1,10 +1,11 @@
-package com.feed_the_beast.ftbutilities.util.backups;
+package com.feed_the_beast.ftbutilities.data.backups;
 
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUConfig;
 import com.feed_the_beast.ftbutilities.FTBUFinals;
 import com.feed_the_beast.ftbutilities.FTBULang;
+import net.minecraft.server.MinecraftServer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,17 +18,19 @@ import java.util.zip.ZipOutputStream;
 public class ThreadBackup extends Thread
 {
 	public boolean isDone = false;
+	private final MinecraftServer server;
 	private final File src0;
 	private final String customName;
 
-	public ThreadBackup(File w, String s)
+	public ThreadBackup(MinecraftServer ms, File w, String s)
 	{
+		server = ms;
 		src0 = w;
 		customName = s;
 		setPriority(7);
 	}
 
-	public static void doBackup(File src, String customName)
+	public static void doBackup(MinecraftServer server, File src, String customName)
 	{
 		Calendar time = Calendar.getInstance();
 		File dstFile = null;
@@ -154,11 +157,11 @@ public class ThreadBackup extends Thread
 				{
 					String sizeB = FileUtils.getSizeS(dstFile);
 					String sizeT = FileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
-					Backups.notifyAll(player -> FTBULang.BACKUP_END_2.textComponent(player, getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT))), false);
+					Backups.notifyAll(server, player -> FTBULang.BACKUP_END_2.textComponent(player, getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT))), false);
 				}
 				else
 				{
-					Backups.notifyAll(player -> FTBULang.BACKUP_END_1.textComponent(player, getDoneTime(time.getTimeInMillis())), false);
+					Backups.notifyAll(server, player -> FTBULang.BACKUP_END_1.textComponent(player, getDoneTime(time.getTimeInMillis())), false);
 				}
 			}
 		}
@@ -166,7 +169,7 @@ public class ThreadBackup extends Thread
 		{
 			if (!FTBUConfig.backups.silent)
 			{
-				Backups.notifyAll(player -> FTBULang.BACKUP_FAIL.textComponent(player, ex.getClass().getName()), true);
+				Backups.notifyAll(server, player -> FTBULang.BACKUP_FAIL.textComponent(player, ex.getClass().getName()), true);
 			}
 
 			ex.printStackTrace();
@@ -209,7 +212,7 @@ public class ThreadBackup extends Thread
 	public void run()
 	{
 		isDone = false;
-		doBackup(src0, customName);
+		doBackup(server, src0, customName);
 		isDone = true;
 	}
 }

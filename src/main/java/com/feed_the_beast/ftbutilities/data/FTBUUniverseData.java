@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbutilities.util;
+package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.events.universe.UniverseClosedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseLoadedEvent;
@@ -7,15 +7,12 @@ import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUConfig;
 import com.feed_the_beast.ftbutilities.FTBUFinals;
 import com.feed_the_beast.ftbutilities.FTBULang;
-import com.feed_the_beast.ftbutilities.data.ChunkUpgrade;
-import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
-import com.feed_the_beast.ftbutilities.handlers.FTBLibIntegration;
-import com.feed_the_beast.ftbutilities.util.backups.Backups;
+import com.feed_the_beast.ftbutilities.data.backups.Backups;
+import com.feed_the_beast.ftbutilities.integration.FTBLibIntegration;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -23,8 +20,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author LatvianModder
@@ -35,12 +30,9 @@ public class FTBUUniverseData
 	public static long shutdownTime;
 	public static final BlockDimPosStorage WARPS = new BlockDimPosStorage();
 	//public static final ChatHistory GENERAL_CHAT = new ChatHistory(() -> FTBUConfig.chat.general_history_limit);
-	public static final Map<String, ChunkUpgrade> CHUNK_UPGRADES = new HashMap<>();
 
-	public static boolean isInSpawn(ChunkDimPos pos)
+	public static boolean isInSpawn(MinecraftServer server, ChunkDimPos pos)
 	{
-		MinecraftServer server = ServerUtils.getServer();
-
 		if (pos.dim != 0 || (!server.isDedicatedServer() && !FTBUConfig.world.spawn_area_in_sp))
 		{
 			return false;
@@ -63,8 +55,10 @@ public class FTBUUniverseData
 	@SubscribeEvent
 	public static void onUniversePreLoaded(UniverseLoadedEvent.Pre event)
 	{
-		ClaimedChunks.close();
-		ClaimedChunks.instance = new ClaimedChunks();
+		if (FTBUConfig.world.chunk_claiming)
+		{
+			ClaimedChunks.instance = new ClaimedChunks(event.getUniverse());
+		}
 	}
 
 	@SubscribeEvent
@@ -80,7 +74,7 @@ public class FTBUUniverseData
 		long start = event.getWorld().getTotalWorldTime();
 		Backups.INSTANCE.nextBackup = start + FTBUConfig.backups.ticks();
 
-		if (FTBUConfig.auto_shutdown.enabled && FTBUConfig.auto_shutdown.times.length > 0 && ServerUtils.getServer().isDedicatedServer())
+		if (FTBUConfig.auto_shutdown.enabled && FTBUConfig.auto_shutdown.times.length > 0 && event.getWorld().getMinecraftServer().isDedicatedServer())
 		{
 			Calendar calendar = Calendar.getInstance();
 			int currentTime = calendar.get(Calendar.HOUR_OF_DAY) * 3600 + calendar.get(Calendar.MINUTE) * 60 + calendar.get(Calendar.SECOND);
@@ -111,7 +105,11 @@ public class FTBUUniverseData
 			}
 		}
 
-		ClaimedChunks.get().nextChunkloaderUpdate = start + 20L;
+		if (ClaimedChunks.instance != null)
+		{
+			ClaimedChunks.instance.nextChunkloaderUpdate = start + 20L;
+		}
+
 		Badges.LOCAL_BADGES.clear();
 	}
 
@@ -120,7 +118,7 @@ public class FTBUUniverseData
 	{
 		if (ClaimedChunks.instance != null)
 		{
-			ClaimedChunks.get().processQueue();
+			ClaimedChunks.instance.processQueue();
 		}
 
 		NBTTagCompound nbt = new NBTTagCompound();
@@ -134,8 +132,14 @@ public class FTBUUniverseData
 	@SubscribeEvent
 	public static void onUniverseClosed(UniverseClosedEvent event)
 	{
-		CHUNK_UPGRADES.clear();
-		ClaimedChunks.close();
+		if (ClaimedChunks.instance != null)
+		{
+			ClaimedChunks.instance.clear();
+			ClaimedChunks.instance = null;
+		}
+
+		FTBULoadedChunkManager.INSTANCE.clear();
+
 		Badges.BADGE_CACHE.clear();
 		Badges.LOCAL_BADGES.clear();
 	}

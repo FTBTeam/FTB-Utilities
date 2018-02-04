@@ -1,14 +1,11 @@
 package com.feed_the_beast.ftbutilities.gui;
 
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
+import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.feed_the_beast.ftbutilities.data.ChunkUpgrade;
-import com.feed_the_beast.ftbutilities.util.FTBUUniverseData;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -26,7 +23,7 @@ public class ClientClaimedChunks
 		{
 			data.writeUUID(team.ownerId);
 			data.writeString(team.formattedName);
-			data.write(EnumTeamColor.NAME_MAP, team.color);
+			data.write(team.color, EnumTeamColor.NAME_MAP);
 			data.writeBoolean(team.isAlly);
 			data.writeMap(team.chunks, DataOut.INT, ChunkData.SERIALIZER);
 		};
@@ -57,45 +54,23 @@ public class ClientClaimedChunks
 
 	public static class ChunkData
 	{
-		public static final DataOut.Serializer<ChunkUpgrade> UPGRADE_SERIALIZER = (data, upgrade) -> data.writeString(upgrade.getName());
-		public static final DataIn.Deserializer<ChunkUpgrade> UPGRADE_DESERIALIZER = data -> FTBUUniverseData.CHUNK_UPGRADES.get(data.readString());
+		public static final DataOut.Serializer<ChunkData> SERIALIZER = (data, d) -> data.writeInt(d.flags);
+		public static final DataIn.Deserializer<ChunkData> DESERIALIZER = data -> new ChunkData(Team.currentTeam, data.readInt());
 
-		public static final DataOut.Serializer<ChunkData> SERIALIZER = (data, d) -> data.writeCollection(d.upgrades, UPGRADE_SERIALIZER);
-		public static final DataIn.Deserializer<ChunkData> DESERIALIZER = data ->
-		{
-			ChunkData d = new ChunkData(Team.currentTeam);
-			data.readCollection(d.upgrades, UPGRADE_DESERIALIZER);
-			return d;
-		};
+		public static final int LOADED = 1;
 
 		public final Team team;
-		public final Collection<ChunkUpgrade> upgrades = new HashSet<>();
+		public final int flags;
 
-		public ChunkData(Team t)
+		public ChunkData(Team t, int f)
 		{
 			team = t;
-		}
-
-		public boolean hasUpgrade(ChunkUpgrade upgrade)
-		{
-			return upgrades.contains(upgrade);
-		}
-
-		public void setHasUpgrade(ChunkUpgrade upgrade, boolean val)
-		{
-			if (val)
-			{
-				upgrades.add(upgrade);
-			}
-			else
-			{
-				upgrades.remove(upgrade);
-			}
+			flags = f;
 		}
 
 		public int hashCode()
 		{
-			return Objects.hash(team, upgrades);
+			return Objects.hash(team, flags);
 		}
 
 		public boolean equals(Object o)
@@ -107,9 +82,14 @@ public class ClientClaimedChunks
 			else if (o != null && o.getClass() == ChunkData.class)
 			{
 				ChunkData d = (ChunkData) o;
-				return team.equals(d.team) && upgrades.equals(d.upgrades);
+				return team.equals(d.team) && flags == d.flags;
 			}
 			return false;
+		}
+
+		public boolean isLoaded()
+		{
+			return Bits.getFlag(flags, LOADED);
 		}
 	}
 }

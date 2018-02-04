@@ -1,35 +1,22 @@
 package com.feed_the_beast.ftbutilities.data;
 
-import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
-import com.feed_the_beast.ftbutilities.FTBU;
 import com.feed_the_beast.ftbutilities.FTBUConfig;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
-import com.feed_the_beast.ftbutilities.FTBULang;
 import com.feed_the_beast.ftbutilities.FTBUPermissions;
 import com.feed_the_beast.ftbutilities.events.chunks.ChunkModifiedEvent;
 import com.feed_the_beast.ftbutilities.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;
-import com.feed_the_beast.ftbutilities.util.FTBUPlayerData;
-import com.feed_the_beast.ftbutilities.util.FTBUTeamData;
-import com.feed_the_beast.ftbutilities.util.FTBUUniverseData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -38,7 +25,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -48,67 +34,16 @@ public class ClaimedChunks
 {
 	public static ClaimedChunks instance;
 
-	public static ClaimedChunks get()
-	{
-		Objects.requireNonNull(instance);
-		return instance;
-	}
-
-	public static void close()
-	{
-		if (instance != null)
-		{
-			instance.clear();
-			instance = null;
-		}
-	}
-
-	public enum ClaimResult
-	{
-		SUCCESS,
-		NO_TEAM,
-		DIMENSION_BLOCKED,
-		NO_POWER,
-		ALREADY_CLAIMED
-	}
-
-	public static final class TicketKey
-	{
-		public final int dimension;
-		public final String teamId;
-
-		public TicketKey(int dim, String team)
-		{
-			dimension = dim;
-			teamId = team;
-		}
-
-		public int hashCode()
-		{
-			return Objects.hash(dimension, teamId);
-		}
-
-		public boolean equals(Object o)
-		{
-			if (o == this)
-			{
-				return true;
-			}
-			else if (o != null && o.getClass() == TicketKey.class)
-			{
-				TicketKey key = (TicketKey) o;
-				return dimension == key.dimension && teamId.equals(key.teamId);
-			}
-			return false;
-		}
-	}
-
+	public final Universe universe;
 	private final Collection<ClaimedChunk> pendingChunks = new HashSet<>();
 	private final Map<ChunkDimPos, ClaimedChunk> map = new HashMap<>();
-	public final Map<TicketKey, ForgeChunkManager.Ticket> ticketMap = new HashMap<>();
-	private final Map<ChunkDimPos, ForgeChunkManager.Ticket> chunkTickets = new HashMap<>();
 	public long nextChunkloaderUpdate;
 	private boolean isDirty = true;
+
+	public ClaimedChunks(Universe u)
+	{
+		universe = u;
+	}
 
 	@Nullable
 	public ForgeTeam getChunkTeam(ChunkDimPos pos)
@@ -126,8 +61,6 @@ public class ClaimedChunks
 	{
 		pendingChunks.clear();
 		map.clear();
-		ticketMap.clear();
-		chunkTickets.clear();
 		nextChunkloaderUpdate = 0;
 		isDirty = true;
 	}
@@ -159,112 +92,12 @@ public class ClaimedChunks
 
 			if (chunk.isInvalid())
 			{
-				unforceChunk(chunk);
+				FTBULoadedChunkManager.INSTANCE.unforceChunk(chunk);
 				iterator.remove();
 			}
 		}
 	}
 
-	@Nullable
-	private ForgeChunkManager.Ticket requestTicket(TicketKey key)
-	{
-		ForgeChunkManager.Ticket ticket = ticketMap.get(key);
-
-		if (ticket == null && DimensionManager.isDimensionRegistered(key.dimension))
-		{
-			WorldServer worldServer = ServerUtils.getServer().getWorld(key.dimension);
-			ticket = ForgeChunkManager.requestTicket(FTBU.INST, worldServer, ForgeChunkManager.Type.NORMAL);
-
-			if (ticket != null)
-			{
-				ticketMap.put(key, ticket);
-				ticket.getModData().setString("Team", key.teamId);
-			}
-		}
-
-		return ticket;
-	}
-
-	private void forceChunk(ClaimedChunk chunk)
-	{
-		if (chunk.forced != null && chunk.forced)
-		{
-			return;
-		}
-
-		ChunkDimPos pos = chunk.getPos();
-		ForgeChunkManager.Ticket ticket = requestTicket(new TicketKey(pos.dim, chunk.getTeam().getName()));
-
-		if (ticket == null)
-		{
-			return;
-		}
-
-		ChunkPos chunkPos = pos.getChunkPos();
-		ForgeChunkManager.unforceChunk(ticket, chunkPos);
-		ForgeChunkManager.forceChunk(ticket, chunkPos);
-		chunk.forced = true;
-		chunkTickets.put(pos, ticket);
-
-		if (FTBUConfig.world.log_chunkloading)
-		{
-			FTBUFinals.LOGGER.info(FTBULang.CHUNKS_CHUNKLOADER_FORCED.translate(chunk.getTeam().getTitle(), pos.posX, pos.posZ, ServerUtils.getDimensionName(null, pos.dim)));
-		}
-	}
-
-	private void unforceChunk(ClaimedChunk chunk)
-	{
-		if (chunk.forced != null && !chunk.forced)
-		{
-			return;
-		}
-
-		ChunkDimPos pos = chunk.getPos();
-		ForgeChunkManager.Ticket ticket = chunkTickets.get(pos);
-
-		if (ticket == null)
-		{
-			return;
-		}
-
-		ForgeChunkManager.unforceChunk(ticket, pos.getChunkPos());
-		chunkTickets.remove(pos);
-		chunk.forced = false;
-
-		if (ticket.getChunkList().isEmpty())
-		{
-			ticketMap.remove(new TicketKey(pos.dim, chunk.getTeam().getName()));
-			ForgeChunkManager.releaseTicket(ticket);
-		}
-
-		if (FTBUConfig.world.log_chunkloading)
-		{
-			FTBUFinals.LOGGER.info(FTBULang.CHUNKS_CHUNKLOADER_UNFORCED.translate(chunk.getTeam().getTitle(), pos.posX, pos.posZ, ServerUtils.getDimensionName(null, pos.dim)));
-		}
-	}
-
-	private boolean canForceChunks(ForgeTeam team)
-	{
-		Collection<ForgePlayer> members = team.getMembers();
-
-		for (ForgePlayer player : members)
-		{
-			if (player.isOnline())
-			{
-				return true;
-			}
-		}
-
-		for (ForgePlayer player : members)
-		{
-			if (PermissionAPI.hasPermission(player.getProfile(), FTBUPermissions.CHUNKLOADER_LOAD_OFFLINE, null))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
 
 	public void update(MinecraftServer server, long now)
 	{
@@ -278,32 +111,32 @@ public class ClaimedChunks
 		{
 			processQueue();
 
-			if (FTBUConfig.world.chunk_claiming && FTBUConfig.world.chunk_loading)
+			if (FTBUConfig.world.chunk_loading)
 			{
-				for (ForgeTeam team : Universe.get().getTeams())
+				for (ForgeTeam team : universe.getTeams())
 				{
-					FTBUTeamData.get(team).canForceChunks = canForceChunks(team);
+					FTBUTeamData.get(team).canForceChunks = FTBULoadedChunkManager.INSTANCE.canForceChunks(team);
 				}
 
 				for (ClaimedChunk chunk : getAllChunks())
 				{
-					boolean force = chunk.getData().canForceChunks && chunk.hasUpgrade(ChunkUpgrades.LOADED);
+					boolean force = chunk.getData().canForceChunks && chunk.isLoaded();
 
 					if (chunk.forced == null || chunk.forced != force)
 					{
 						if (force)
 						{
-							forceChunk(chunk);
+							FTBULoadedChunkManager.INSTANCE.forceChunk(server, chunk);
 						}
 						else
 						{
-							unforceChunk(chunk);
+							FTBULoadedChunkManager.INSTANCE.unforceChunk(chunk);
 						}
 					}
 				}
 			}
 
-			for (EntityPlayerMP player : ServerUtils.getPlayers())
+			for (EntityPlayerMP player : server.getPlayerList().getPlayers())
 			{
 				ChunkDimPos playerPos = new ChunkDimPos(player);
 				int startX = playerPos.posX - ChunkSelectorMap.TILES_GUI2;
@@ -319,11 +152,6 @@ public class ClaimedChunks
 	@Nullable
 	public ClaimedChunk getChunk(ChunkDimPos pos)
 	{
-		if (!FTBUConfig.world.chunk_claiming)
-		{
-			return null;
-		}
-
 		ClaimedChunk chunk = map.get(pos);
 		return chunk == null || chunk.isInvalid() ? null : chunk;
 	}
@@ -346,11 +174,6 @@ public class ClaimedChunks
 	}
 
 	public Collection<ClaimedChunk> getAllChunks()
-	{
-		return !FTBUConfig.world.chunk_claiming ? Collections.emptyList() : getAllChunksIgnoreConfig();
-	}
-
-	public Collection<ClaimedChunk> getAllChunksIgnoreConfig()
 	{
 		return map.isEmpty() ? Collections.emptyList() : map.values();
 	}
@@ -393,7 +216,7 @@ public class ClaimedChunks
 
 	public boolean canPlayerInteract(EntityPlayerMP player, EnumHand hand, BlockPosContainer block, BlockInteractionType type)
 	{
-		if (!FTBUConfig.world.chunk_claiming)
+		if (ClaimedChunks.instance == null)
 		{
 			return true;
 		}
@@ -404,22 +227,22 @@ public class ClaimedChunks
 		}
 
 		ClaimedChunk chunk = getChunk(new ChunkDimPos(block.getPos(), player.dimension));
-		return chunk == null || chunk.getTeam().hasStatus(Universe.get().getPlayer(player), chunk.getData().getStatusFromType(type));
+		return chunk == null || chunk.getTeam().hasStatus(universe.getPlayer(player), chunk.getData().getStatusFromType(type));
 	}
 
 	public boolean canPlayerAttackEntity(EntityPlayerMP player, Entity entity)
 	{
 		if (entity instanceof EntityPlayer)
 		{
-			if (FTBUConfig.world.safe_spawn && player.dimension == 0 && FTBUUniverseData.isInSpawn(new ChunkDimPos(entity)))
+			if (FTBUConfig.world.safe_spawn && player.dimension == 0 && FTBUUniverseData.isInSpawn(player.mcServer, new ChunkDimPos(entity)))
 			{
 				return false;
 			}
 
 			if (FTBUConfig.world.enable_pvp.isDefault())
 			{
-				boolean pvp1 = FTBUPlayerData.get(Universe.get().getPlayer(player)).enablePVP.getBoolean();
-				boolean pvp2 = FTBUPlayerData.get(Universe.get().getPlayer(entity)).enablePVP.getBoolean();
+				boolean pvp1 = FTBUPlayerData.get(universe.getPlayer(player)).enablePVP.getBoolean();
+				boolean pvp2 = FTBUPlayerData.get(universe.getPlayer(entity)).enablePVP.getBoolean();
 				return pvp1 && pvp2;
 			}
 
@@ -429,7 +252,7 @@ public class ClaimedChunks
 		if (!(entity instanceof IMob))
 		{
 			ClaimedChunk chunk = getChunk(new ChunkDimPos(entity));
-			return chunk == null || chunk.getTeam().hasStatus(Universe.get().getPlayer(player), chunk.getData().getAttackEntitiesStatus());
+			return chunk == null || chunk.getTeam().hasStatus(universe.getPlayer(player), chunk.getData().getAttackEntitiesStatus());
 		}
 
 		return true;
@@ -499,7 +322,7 @@ public class ClaimedChunks
 	{
 		ClaimedChunk chunk = getChunk(pos);
 
-		if (chunk == null || loaded == chunk.hasUpgrade(ChunkUpgrades.LOADED) || !chunk.getTeam().equalsTeam(team))
+		if (chunk == null || loaded == chunk.isLoaded() || !chunk.getTeam().equalsTeam(team))
 		{
 			return false;
 		}
@@ -522,7 +345,7 @@ public class ClaimedChunks
 
 			for (ClaimedChunk c : getTeamChunks(team))
 			{
-				if (c.hasUpgrade(ChunkUpgrades.LOADED))
+				if (c.isLoaded())
 				{
 					loadedChunks++;
 
@@ -538,14 +361,11 @@ public class ClaimedChunks
 			new ChunkModifiedEvent.Unloaded(chunk).post();
 		}
 
-		chunk.setHasUpgrade(ChunkUpgrades.LOADED, loaded);
-
-		if (loaded)
+		if (chunk.setLoaded(loaded) && loaded)
 		{
 			new ChunkModifiedEvent.Loaded(chunk).post();
 		}
 
-		markDirty();
 		return true;
 	}
 }

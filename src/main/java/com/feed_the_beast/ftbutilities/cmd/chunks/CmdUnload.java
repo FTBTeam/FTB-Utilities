@@ -27,17 +27,24 @@ public class CmdUnload extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+
+		if (ClaimedChunks.instance == null)
+		{
+			FTBUNotifications.sendCantModifyChunk(server, player);
+			return;
+		}
+
 		ForgePlayer p = getForgePlayer(player);
 		ChunkDimPos pos = new ChunkDimPos(player);
 
-		if (p.getTeam() != null && ClaimedChunks.get().setLoaded(p.getTeam(), pos, false))
+		if (p.getTeam() != null && ClaimedChunks.instance.setLoaded(p.getTeam(), pos, false))
 		{
-			Notification.of(FTBUFinals.get("chunk_modified"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.chunk_unloaded")).send(player);
+			Notification.of(FTBUFinals.get("chunk_modified"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.chunk_unloaded")).send(server, player);
 			CmdChunks.updateChunk(player, pos);
 		}
 		else
 		{
-			FTBUNotifications.sendCantModifyChunk(player);
+			FTBUNotifications.sendCantModifyChunk(server, player);
 		}
 	}
 }

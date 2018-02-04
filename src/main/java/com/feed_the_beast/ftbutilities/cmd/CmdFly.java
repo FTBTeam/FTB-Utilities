@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbutilities.cmd;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbutilities.util.FTBUPlayerData;
+import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;

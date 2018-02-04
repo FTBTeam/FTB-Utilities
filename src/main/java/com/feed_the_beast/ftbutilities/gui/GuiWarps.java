@@ -70,7 +70,7 @@ public class GuiWarps extends GuiBase
 
 		public ArcButton(GuiBase gui, MessageSendWarpList.WarpItem w, int i)
 		{
-			super(gui, 0, 0, 0, 0);
+			super(gui);
 			setTitle(w.cmd);
 			warpItem = w;
 			index = i;
@@ -123,7 +123,7 @@ public class GuiWarps extends GuiBase
 
 	public GuiWarps()
 	{
-		super(SIZE, SIZE);
+		setSize(SIZE, SIZE);
 		buttonCancel = new ArcButton(this, MessageSendWarpList.WarpItem.CANCEL, -1);
 	}
 

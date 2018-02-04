@@ -23,7 +23,7 @@ public class GuiViewCrashList extends GuiButtonListBase
 	{
 		public ButtonFile(GuiBase gui, String title)
 		{
-			super(gui, 0, 0, title, Icon.EMPTY);
+			super(gui, title, Icon.EMPTY);
 		}
 
 		@Override

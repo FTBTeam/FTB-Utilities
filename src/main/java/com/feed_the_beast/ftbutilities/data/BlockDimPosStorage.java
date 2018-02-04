@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbutilities.util;
+package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;

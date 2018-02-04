@@ -19,13 +19,13 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.IconWithOutline;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
+import com.feed_the_beast.ftblib.lib.item.ItemEntryWithCount;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbutilities.FTBUFinals;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBTResponse;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagByte;
@@ -354,11 +354,15 @@ public class GuiEditNBT extends GuiBase
 		private void updateHoverIcon()
 		{
 			hoverIcon = Icon.EMPTY;
-			ItemStack stack = (map.hasKey("id", Constants.NBT.TAG_STRING) && map.hasKey("Count") && map.hasKey("Damage")) ? new ItemStack(map) : ItemStack.EMPTY;
 
-			if (!stack.isEmpty())
+			if (map.hasKey("id", Constants.NBT.TAG_STRING) && map.hasKey("Count") && map.hasKey("Damage"))
 			{
-				hoverIcon = ItemIcon.getItemIcon(stack);
+				ItemEntryWithCount entry = new ItemEntryWithCount(map);
+
+				if (!entry.isEmpty())
+				{
+					hoverIcon = ItemIcon.getItemIcon(entry.getStack(false));
+				}
 			}
 
 			setWidth(12 + getStringWidth(getTitle()) + (hoverIcon.isEmpty() ? 0 : 10));

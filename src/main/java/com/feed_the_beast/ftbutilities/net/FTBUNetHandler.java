@@ -9,8 +9,8 @@ public class FTBUNetHandler
 	static final NetworkWrapper BADGES = NetworkWrapper.newWrapper(FTBUFinals.MOD_ID + "_badges");
 	static final NetworkWrapper CLAIMS = NetworkWrapper.newWrapper(FTBUFinals.MOD_ID + "_claims");
 	static final NetworkWrapper NBTEDIT = NetworkWrapper.newWrapper(FTBUFinals.MOD_ID + "_nbtedit");
-	static final NetworkWrapper VIEW_CRASH = NetworkWrapper.newWrapper(FTBUFinals.MOD_ID + "_view_crash");
-	static final NetworkWrapper LEADERBOARDS = NetworkWrapper.newWrapper(FTBUFinals.MOD_ID + "_leaderboards");
+	static final NetworkWrapper VIEW_CRASH = NetworkWrapper.newWrapper(FTBUFinals.MOD_ID + "_crash");
+	static final NetworkWrapper STATS = NetworkWrapper.newWrapper(FTBUFinals.MOD_ID + "_stats");
 
 	public static void init()
 	{
@@ -31,7 +31,7 @@ public class FTBUNetHandler
 		VIEW_CRASH.register(1, new MessageViewCrash());
 		VIEW_CRASH.register(2, new MessageViewCrashList());
 
-		LEADERBOARDS.register(1, new MessageSendLeaderboardList());
-		LEADERBOARDS.register(2, new MessageSendLeaderboard());
+		STATS.register(1, new MessageSendLeaderboardList());
+		STATS.register(2, new MessageSendLeaderboard());
 	}
 }

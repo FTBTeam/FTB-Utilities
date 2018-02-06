@@ -2,9 +2,8 @@ package com.feed_the_beast.ftbutilities.gui;
 
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
-import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
-import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
+import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBULang;
@@ -17,11 +16,8 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class GuiLeaderboard extends GuiBase
+public class GuiLeaderboard extends GuiButtonListBase
 {
-	private final Panel panelButtons;
-	private final PanelScrollBar scrollBar;
-	private final String title;
 	private final List<LeaderboardValue> leaderboard;
 	private int rankSize, usernameSize, valueSize;
 
@@ -33,7 +29,6 @@ public class GuiLeaderboard extends GuiBase
 		public LeaderboardEntry(GuiBase g, LeaderboardValue v)
 		{
 			super(g);
-			setHeight(14);
 			value = v;
 			rank = value.color + "#" + StringUtils.add0s(v.rank, leaderboard.size());
 
@@ -41,7 +36,7 @@ public class GuiLeaderboard extends GuiBase
 			usernameSize = Math.max(usernameSize, gui.getStringWidth(v.username) + 8);
 			valueSize = Math.max(valueSize, gui.getStringWidth(value.value.getFormattedText()) + 8);
 
-			setWidth(rankSize + usernameSize + valueSize);
+			setSize(rankSize + usernameSize + valueSize, 14);
 		}
 
 		@Override
@@ -71,98 +66,22 @@ public class GuiLeaderboard extends GuiBase
 
 	public GuiLeaderboard(ITextComponent c, List<LeaderboardValue> l)
 	{
+		setTitle(FTBULang.LEADERBOARDS.translate() + " > " + c.getFormattedText());
 		leaderboard = l;
-		title = FTBULang.LEADERBOARDS.translate() + " > " + c.getFormattedText();
-
-		panelButtons = new Panel(gui)
-		{
-			@Override
-			public void addWidgets()
-			{
-				int i = 0;
-				rankSize = 0;
-				usernameSize = 0;
-				valueSize = 0;
-
-				for (LeaderboardValue value : leaderboard)
-				{
-					value.rank = ++i;
-					add(new LeaderboardEntry(gui, value));
-				}
-			}
-
-			@Override
-			public void alignWidgets()
-			{
-				width = 0;
-
-				for (Widget w : widgets)
-				{
-					setWidth(Math.max(width, w.width));
-				}
-
-				for (Widget w : widgets)
-				{
-					w.setWidth(width);
-				}
-
-				int size = align(WidgetLayout.VERTICAL);
-				scrollBar.setElementSize(size);
-				scrollBar.setSrollStepFromOneElementSize(14);
-				setHeight(widgets.size() > 10 ? 144 : size);
-				gui.setHeight(height + 18);
-			}
-
-			@Override
-			public Icon getIcon()
-			{
-				return gui.getTheme().getPanelBackground();
-			}
-		};
-
-		panelButtons.setPosAndSize(9, 9, 0, 146);
-		panelButtons.addFlags(Panel.DEFAULTS);
-
-		scrollBar = new PanelScrollBar(this, panelButtons)
-		{
-			@Override
-			public boolean shouldDraw()
-			{
-				return true;
-			}
-
-			@Override
-			public boolean canMouseScroll()
-			{
-				return true;
-			}
-		};
-
-		scrollBar.setPosAndSize(0, 8, 16, 146);
 	}
 
 	@Override
-	public void addWidgets()
+	public void addButtons(Panel panel)
 	{
-		add(panelButtons);
+		int i = 0;
+		rankSize = 0;
+		usernameSize = 0;
+		valueSize = 0;
 
-		if (panelButtons.widgets.size() > 10)
+		for (LeaderboardValue value : leaderboard)
 		{
-			add(scrollBar);
+			value.rank = ++i;
+			panel.add(new LeaderboardEntry(this, value));
 		}
-	}
-
-	@Override
-	public void alignWidgets()
-	{
-		scrollBar.setX(panelButtons.posX + panelButtons.width + 6);
-		setWidth(scrollBar.posX + (panelButtons.widgets.size() > 10 ? scrollBar.width + 8 : 4));
-		posX = (getScreen().getScaledWidth() - width) / 2;
-	}
-
-	@Override
-	public void drawBackground()
-	{
-		drawString(title, getAX() + (width - gui.getStringWidth(title)) / 2, getAY() - getFontHeight() - 2, SHADOW);
 	}
 }

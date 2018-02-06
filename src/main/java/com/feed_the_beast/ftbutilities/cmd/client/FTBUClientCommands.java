@@ -16,5 +16,6 @@ public class FTBUClientCommands
 	{
 		event.add(new CmdShrug());
 		event.add(new CmdToggleGamemode());
+		event.add(new CmdScanItems());
 	}
 }

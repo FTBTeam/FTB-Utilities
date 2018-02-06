@@ -81,7 +81,7 @@ public class MessageSendLeaderboard extends MessageToClient<MessageSendLeaderboa
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.LEADERBOARDS;
+		return FTBUNetHandler.STATS;
 	}
 
 	@Override

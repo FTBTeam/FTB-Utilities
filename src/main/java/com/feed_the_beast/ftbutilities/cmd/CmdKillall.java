@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
@@ -109,7 +110,7 @@ public class CmdKillall extends CmdBase
 
 		for (World world : server.worlds)
 		{
-			for (Entity entity : world.loadedEntityList)
+			for (Entity entity : new ArrayList<>(world.loadedEntityList))
 			{
 				if (predicate.test(entity))
 				{

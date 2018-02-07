@@ -5,13 +5,11 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.item.ItemEntry;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
+import com.feed_the_beast.ftbutilities.client.FTBUClientConfig;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArrow;
-import net.minecraft.item.ItemEnchantedBook;
-import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -35,195 +33,192 @@ public class CmdScanItems extends CmdBase
 		super("scan_items", Level.OP);
 	}
 
-	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	public static boolean filter(ItemEntry entry)
 	{
-		boolean md = args.length > 0 && args[0].equals("md");
+		String s = entry.item.getRegistryName().toString();
 
-		List<String> list = new ArrayList<>();
-
-		if (md)
+		for (String s1 : FTBUClientConfig.general.scan_items_whitelist)
 		{
-			list.add("# Item format: mod:item metadata {nbt}");
-		}
-		else
-		{
-			list.add("Item format: mod:item metadata {nbt}");
-		}
-
-		list.add("");
-
-		if (md)
-		{
-			list.add("## Items with duplicate display names:");
-		}
-		else
-		{
-			list.add("Items with duplicate display names:");
-		}
-
-		list.add("");
-
-		StringBuilder builder = new StringBuilder();
-
-		LinkedHashMap<String, LinkedHashSet<ItemEntry>> itemToDisplayNameMap = new LinkedHashMap<>();
-		LinkedHashMap<ItemEntry, Boolean> hasRecipe = new LinkedHashMap<>();
-
-		for (Item item : Item.REGISTRY)
-		{
-			if (item instanceof ItemEnchantedBook || item instanceof ItemArrow || item instanceof ItemPotion)
+			if (s.startsWith(s1))
 			{
-				continue;
+				return true;
 			}
+		}
 
-			NonNullList<ItemStack> stacks = NonNullList.create();
-			item.getSubItems(CreativeTabs.SEARCH, stacks);
-
-			for (ItemStack stack : stacks)
+		for (String s1 : FTBUClientConfig.general.scan_items_blacklist)
+		{
+			if (s.startsWith(s1))
 			{
-				if (!stack.isEmpty())
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, final String[] args) throws CommandException
+	{
+		new Thread("Scanning Items")
+		{
+			@Override
+			public void run()
+			{
+				boolean md = args.length > 0 && args[0].equals("md");
+
+				List<String> list = new ArrayList<>();
+				list.add("# Item format: mod:item metadata {nbt}");
+				list.add("");
+				list.add("## Items with duplicate display names:");
+
+				list.add("");
+
+				StringBuilder builder = new StringBuilder();
+				NonNullList<ItemStack> stacks = NonNullList.create();
+
+				LinkedHashMap<String, LinkedHashSet<ItemEntry>> itemToDisplayNameMap = new LinkedHashMap<>();
+				LinkedHashMap<ItemEntry, Boolean> hasRecipe = new LinkedHashMap<>();
+
+				for (Item item : Item.REGISTRY)
 				{
-					String displayName = stack.getDisplayName();
-					LinkedHashSet<ItemEntry> set = itemToDisplayNameMap.get(displayName);
+					stacks.clear();
+					item.getSubItems(CreativeTabs.SEARCH, stacks);
 
-					if (set == null)
+					for (ItemStack stack : stacks)
 					{
-						set = new LinkedHashSet<>();
-						itemToDisplayNameMap.put(displayName, set);
-					}
+						ItemEntry itemEntry = ItemEntry.get(stack);
 
-					ItemEntry itemEntry = ItemEntry.get(stack);
-					set.add(itemEntry);
-
-					hasRecipe.put(itemEntry, false);
-
-					ItemEntry itemEntry1 = ItemEntry.get(FurnaceRecipes.instance().getSmeltingResult(stack));
-
-					if (itemEntry.equalsEntry(itemEntry1))
-					{
-						hasRecipe.put(itemEntry, true);
-					}
-					else
-					{
-						for (IRecipe recipe : CraftingManager.REGISTRY)
+						if (!stack.isEmpty() && filter(itemEntry))
 						{
-							itemEntry1 = ItemEntry.get(recipe.getRecipeOutput());
+							String displayName = stack.getDisplayName();
+							LinkedHashSet<ItemEntry> set = itemToDisplayNameMap.get(displayName);
+
+							if (set == null)
+							{
+								set = new LinkedHashSet<>();
+								itemToDisplayNameMap.put(displayName, set);
+							}
+
+							set.add(itemEntry);
+							hasRecipe.put(itemEntry, false);
+
+							ItemEntry itemEntry1 = ItemEntry.get(FurnaceRecipes.instance().getSmeltingResult(stack));
 
 							if (itemEntry.equalsEntry(itemEntry1))
 							{
 								hasRecipe.put(itemEntry, true);
-								break;
+							}
+							else
+							{
+								for (IRecipe recipe : CraftingManager.REGISTRY)
+								{
+									itemEntry1 = ItemEntry.get(recipe.getRecipeOutput());
+
+									if (itemEntry.equalsEntry(itemEntry1))
+									{
+										hasRecipe.put(itemEntry, true);
+										break;
+									}
+								}
 							}
 						}
 					}
 				}
-			}
-		}
 
-		for (Map.Entry<String, LinkedHashSet<ItemEntry>> entry : itemToDisplayNameMap.entrySet())
-		{
-			if (entry.getValue().size() > 1)
-			{
-				list.add(entry.getKey());
-
-				if (md)
+				for (Map.Entry<String, LinkedHashSet<ItemEntry>> entry : itemToDisplayNameMap.entrySet())
 				{
-					list.add("");
-				}
+					if (entry.getValue().size() > 1)
+					{
+						list.add(entry.getKey());
 
-				for (ItemEntry itemEntry : entry.getValue())
-				{
-					builder.append('-');
-					builder.append(' ');
-					itemEntry.toString(builder);
-					list.add(builder.toString());
-					builder.setLength(0);
+						if (md)
+						{
+							list.add("");
+						}
+
+						for (ItemEntry itemEntry : entry.getValue())
+						{
+							builder.append('-');
+							builder.append(' ');
+							itemEntry.toString(builder);
+							list.add(builder.toString());
+							builder.setLength(0);
+						}
+
+						list.add("");
+					}
 				}
 
 				list.add("");
-			}
-		}
+				list.add("");
+				list.add("## Ore Dictionary names with more than one item:");
+				list.add("");
 
-		list.add("");
-		list.add("");
-
-		if (md)
-		{
-			list.add("## Items with duplicate Ore Dictionary names:");
-		}
-		else
-		{
-			list.add("Items with duplicate Ore Dictionary names:");
-		}
-
-		list.add("");
-
-		for (String ore : OreDictionary.getOreNames())
-		{
-			NonNullList<ItemStack> oreItems = OreDictionary.getOres(ore);
-
-			if (oreItems.size() > 1)
-			{
-				list.add(ore);
-
-				if (md)
+				for (String ore : OreDictionary.getOreNames())
 				{
-					list.add("");
+					NonNullList<ItemStack> oreItems = OreDictionary.getOres(ore);
+
+					if (oreItems.size() > 1)
+					{
+						boolean added = false;
+
+						for (ItemStack stack : oreItems)
+						{
+							ItemEntry itemEntry = ItemEntry.get(stack);
+
+							if (!itemEntry.isEmpty() && filter(itemEntry))
+							{
+								if (!added)
+								{
+									added = true;
+									list.add(ore);
+
+									if (md)
+									{
+										list.add("");
+									}
+								}
+
+								builder.append('-');
+								builder.append(' ');
+								itemEntry.toString(builder);
+								list.add(builder.toString());
+								builder.setLength(0);
+							}
+						}
+
+						list.add("");
+					}
 				}
 
-				for (ItemStack stack : oreItems)
-				{
-					ItemEntry itemEntry = ItemEntry.get(stack);
+				list.add("");
+				list.add("");
+				list.add("## Items without crafting table or furnace recipe (can be inaccurate):");
+				list.add("");
 
-					if (!itemEntry.isEmpty())
+				for (Map.Entry<ItemEntry, Boolean> entry : hasRecipe.entrySet())
+				{
+					if (!entry.getValue())
 					{
 						builder.append('-');
 						builder.append(' ');
-						itemEntry.toString(builder);
+						entry.getKey().toString(builder);
 						list.add(builder.toString());
 						builder.setLength(0);
 					}
 				}
 
-				list.add("");
+				try
+				{
+					FileUtils.save(new File(CommonUtils.folderLocal, "client/scanneditems." + (md ? "md" : "txt")), list);
+				}
+				catch (Exception ex)
+				{
+					ex.printStackTrace();
+				}
+
+				ClientUtils.MC.player.sendStatusMessage(new TextComponentString("Duplicate items have been exported in ./local/client/scanneditems." + (md ? "md" : "txt") + "!"), false);
 			}
-		}
-
-		list.add("");
-		list.add("");
-
-		if (md)
-		{
-			list.add("## Items without recipe:");
-		}
-		else
-		{
-			list.add("Items without crafting table or furnace recipe:");
-		}
-
-		list.add("");
-
-		for (Map.Entry<ItemEntry, Boolean> entry : hasRecipe.entrySet())
-		{
-			if (!entry.getValue())
-			{
-				builder.append('-');
-				builder.append(' ');
-				entry.getKey().toString(builder);
-				list.add(builder.toString());
-				builder.setLength(0);
-			}
-		}
-
-		try
-		{
-			FileUtils.save(new File(CommonUtils.folderLocal, "client/scanneditems." + (md ? "md" : "txt")), list);
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-
-		ClientUtils.MC.player.sendStatusMessage(new TextComponentString("Duplicate items have been exported in ./local/client/scanneditems." + (md ? "md" : "txt") + "!"), true);
+		}.start();
 	}
 }

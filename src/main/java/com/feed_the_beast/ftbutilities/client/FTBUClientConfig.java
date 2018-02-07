@@ -23,6 +23,45 @@ public class FTBUClientConfig
 	{
 		public boolean render_badges = true;
 		public boolean journeymap_overlay = true;
+
+		@Config.Comment("Will be called first. If item ID starts with any of these strings, it won't skip this item")
+		public String[] scan_items_whitelist = {
+		};
+
+		@Config.Comment("Will be called after scan_items_whitelist. If item ID starts with any of these strings, it will skip this item")
+		public String[] scan_items_blacklist = {
+				"minecraft:arrow",
+				"minecraft:tipped_arrow",
+				"minecraft:potion",
+				"minecraft:splash_potion",
+				"minecraft:lingering_potion",
+				"minecraft:enchanted_book",
+				"minecraft:spawn_egg",
+				"chisel:",
+				"chiselsandbits:",
+				"tconstruct:",
+				"silentgems:",
+				"tcomplement:",
+				"storagedrawers:",
+				"storagedrawersextra:",
+				"bibliocraft:",
+				"forestry:sapling",
+				"forestry:leaves",
+				"forestry:greenhouse",
+				"forestry:can",
+				"forestry:ffarm",
+				"forestry:fence",
+				"forestry:bee",
+				"forestry:door",
+				"thermalfoundation:armor",
+				"ic2:fluid_cell",
+				"appliedenergistics2:facade",
+				"forge:bucketfilled",
+				"actuallyadditions:item_potion_ring",
+				"actuallyadditions:potion_ring_advanced_bauble",
+				"actuallyadditions:item_potion_ring_advanced",
+				"thermaldynamics:cover"
+		};
 	}
 
 	public static void sync()

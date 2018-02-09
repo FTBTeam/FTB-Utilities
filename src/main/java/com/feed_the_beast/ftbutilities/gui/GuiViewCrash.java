@@ -13,7 +13,7 @@ import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -118,7 +118,7 @@ public class GuiViewCrash extends GuiBase
 			}
 		};
 
-		upload = new SimpleButton(this, FTBULang.UPLOAD_CRASH, GuiIcons.UP, (gui1, button) ->
+		upload = new SimpleButton(this, FTBUtilitiesLang.UPLOAD_CRASH, GuiIcons.UP, (gui1, button) ->
 		{
 			ClientUtils.execClientCommand("/ftb view_crash " + name.text.get(0) + " upload");
 			gui1.closeGui(false);

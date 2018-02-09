@@ -8,11 +8,10 @@ import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftbutilities.FTBUConfig;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
-import com.feed_the_beast.ftbutilities.integration.FTBLibIntegration;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -29,11 +28,11 @@ public class FTBUUniverseData
 {
 	public static long shutdownTime;
 	public static final BlockDimPosStorage WARPS = new BlockDimPosStorage();
-	//public static final ChatHistory GENERAL_CHAT = new ChatHistory(() -> FTBUConfig.chat.general_history_limit);
+	//public static final ChatHistory GENERAL_CHAT = new ChatHistory(() -> FTBUtilitiesConfig.chat.general_history_limit);
 
 	public static boolean isInSpawn(MinecraftServer server, ChunkDimPos pos)
 	{
-		if (pos.dim != 0 || (!server.isDedicatedServer() && !FTBUConfig.world.spawn_area_in_sp))
+		if (pos.dim != 0 || (!server.isDedicatedServer() && !FTBUtilitiesConfig.world.spawn_area_in_sp))
 		{
 			return false;
 		}
@@ -55,7 +54,7 @@ public class FTBUUniverseData
 	@SubscribeEvent
 	public static void onUniversePreLoaded(UniverseLoadedEvent.Pre event)
 	{
-		if (FTBUConfig.world.chunk_claiming)
+		if (FTBUtilitiesConfig.world.chunk_claiming)
 		{
 			ClaimedChunks.instance = new ClaimedChunks(event.getUniverse());
 		}
@@ -64,7 +63,7 @@ public class FTBUUniverseData
 	@SubscribeEvent
 	public static void onUniversePostLoaded(UniverseLoadedEvent.Post event)
 	{
-		NBTTagCompound nbt = event.getData(FTBLibIntegration.FTBU_DATA);
+		NBTTagCompound nbt = event.getData(FTBUtilities.MOD_ID);
 		FTBUUniverseData.WARPS.deserializeNBT(nbt.getCompoundTag("Warps"));
 	}
 
@@ -72,17 +71,17 @@ public class FTBUUniverseData
 	public static void onUniverseLoaded(UniverseLoadedEvent.Finished event)
 	{
 		long start = event.getWorld().getTotalWorldTime();
-		Backups.INSTANCE.nextBackup = start + FTBUConfig.backups.ticks();
+		Backups.INSTANCE.nextBackup = start + FTBUtilitiesConfig.backups.ticks();
 
-		if (FTBUConfig.auto_shutdown.enabled && FTBUConfig.auto_shutdown.times.length > 0 && event.getWorld().getMinecraftServer().isDedicatedServer())
+		if (FTBUtilitiesConfig.auto_shutdown.enabled && FTBUtilitiesConfig.auto_shutdown.times.length > 0 && event.getWorld().getMinecraftServer().isDedicatedServer())
 		{
 			Calendar calendar = Calendar.getInstance();
 			int currentTime = calendar.get(Calendar.HOUR_OF_DAY) * 3600 + calendar.get(Calendar.MINUTE) * 60 + calendar.get(Calendar.SECOND);
-			int[] times = new int[FTBUConfig.auto_shutdown.times.length];
+			int[] times = new int[FTBUtilitiesConfig.auto_shutdown.times.length];
 
 			for (int i = 0; i < times.length; i++)
 			{
-				String[] s = FTBUConfig.auto_shutdown.times[i].split(":", 2);
+				String[] s = FTBUtilitiesConfig.auto_shutdown.times[i].split(":", 2);
 
 				times[i] = Integer.parseInt(s[0]) * 3600 + Integer.parseInt(s[1]) * 60;
 
@@ -99,7 +98,7 @@ public class FTBUUniverseData
 				if (time > currentTime)
 				{
 					FTBUUniverseData.shutdownTime = start + (time - currentTime) * CommonUtils.TICKS_SECOND;
-					FTBUFinals.LOGGER.info(FTBULang.TIMER_SHUTDOWN.translate(StringUtils.getTimeStringTicks(FTBUUniverseData.shutdownTime)));
+					FTBUtilities.LOGGER.info(FTBUtilitiesLang.TIMER_SHUTDOWN.translate(StringUtils.getTimeStringTicks(FTBUUniverseData.shutdownTime)));
 					break;
 				}
 			}
@@ -126,7 +125,7 @@ public class FTBUUniverseData
 
 		//TODO: Save chat as json
 
-		event.setData(FTBLibIntegration.FTBU_DATA, nbt);
+		event.setData(FTBUtilities.MOD_ID, nbt);
 	}
 
 	@SubscribeEvent

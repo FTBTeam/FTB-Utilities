@@ -31,32 +31,32 @@ import javax.annotation.Nullable;
  * @author LatvianModder
  */
 @EventHandler
-public class FTBUPermissions
+public class FTBUtilitiesPermissions
 {
 	// Display //
-	public static final String DISPLAY_ADMIN_INFO = FTBUFinals.MOD_ID + ".display.admin_info";
-	public static final String BADGE = FTBUFinals.MOD_ID + ".badge";
+	public static final String DISPLAY_ADMIN_INFO = FTBUtilities.MOD_ID + ".display.admin_info";
+	public static final String BADGE = FTBUtilities.MOD_ID + ".badge";
 
 	// Homes //
-	public static final String HOMES_CROSS_DIM = FTBUFinals.MOD_ID + ".homes.cross_dim";
-	public static final String HOMES_MAX = FTBUFinals.MOD_ID + ".homes.max";
-	public static final String HOMES_LIST_OTHER = FTBUFinals.MOD_ID + ".homes.list_other";
-	public static final String HOMES_TELEPORT_OTHER = FTBUFinals.MOD_ID + ".homes.teleport_other";
+	public static final String HOMES_CROSS_DIM = FTBUtilities.MOD_ID + ".homes.cross_dim";
+	public static final String HOMES_MAX = FTBUtilities.MOD_ID + ".homes.max";
+	public static final String HOMES_LIST_OTHER = FTBUtilities.MOD_ID + ".homes.list_other";
+	public static final String HOMES_TELEPORT_OTHER = FTBUtilities.MOD_ID + ".homes.teleport_other";
 
 	// Claims //
-	public static final String CLAIMS_CHUNKS_MODIFY_OTHERS = FTBUFinals.MOD_ID + ".claims.modify.others";
-	public static final String CLAIMS_MAX_CHUNKS = FTBUFinals.MOD_ID + ".claims.max_chunks";
-	public static final String CLAIMS_BLOCK_CNB = FTBUFinals.MOD_ID + ".claims.block.cnb";
-	private static final String CLAIMS_BLOCK_EDIT_PREFIX = FTBUFinals.MOD_ID + ".claims.block.edit.";
-	private static final String CLAIMS_BLOCK_INTERACT_PREFIX = FTBUFinals.MOD_ID + ".claims.block.interact.";
-	private static final String CLAIMS_ITEM_PREFIX = FTBUFinals.MOD_ID + ".claims.item.";
+	public static final String CLAIMS_CHUNKS_MODIFY_OTHERS = FTBUtilities.MOD_ID + ".claims.modify.others";
+	public static final String CLAIMS_MAX_CHUNKS = FTBUtilities.MOD_ID + ".claims.max_chunks";
+	public static final String CLAIMS_BLOCK_CNB = FTBUtilities.MOD_ID + ".claims.block.cnb";
+	private static final String CLAIMS_BLOCK_EDIT_PREFIX = FTBUtilities.MOD_ID + ".claims.block.edit.";
+	private static final String CLAIMS_BLOCK_INTERACT_PREFIX = FTBUtilities.MOD_ID + ".claims.block.interact.";
+	private static final String CLAIMS_ITEM_PREFIX = FTBUtilities.MOD_ID + ".claims.item.";
 
-	public static final String INFINITE_BACK_USAGE = FTBUFinals.MOD_ID + ".back.infinite";
+	public static final String INFINITE_BACK_USAGE = FTBUtilities.MOD_ID + ".back.infinite";
 
 	// Chunkloader //
-	public static final String CHUNKLOADER_MAX_CHUNKS = FTBUFinals.MOD_ID + ".chunkloader.max_chunks";
-	//public static final String CHUNKLOADER_OFFLINE_TIMER = FTBUFinals.MOD_ID + ".chunkloader.offline_timer";
-	public static final String CHUNKLOADER_LOAD_OFFLINE = FTBUFinals.MOD_ID + ".chunkloader.load_offline";
+	public static final String CHUNKLOADER_MAX_CHUNKS = FTBUtilities.MOD_ID + ".chunkloader.max_chunks";
+	//public static final String CHUNKLOADER_OFFLINE_TIMER = FTBUtilities.MOD_ID + ".chunkloader.offline_timer";
+	public static final String CHUNKLOADER_LOAD_OFFLINE = FTBUtilities.MOD_ID + ".chunkloader.load_offline";
 
 	@SubscribeEvent
 	public static void registerPermissions(PermissionRegistryEvent event)
@@ -101,7 +101,7 @@ public class FTBUPermissions
 	@SubscribeEvent
 	public static void addCustomPerms(CustomPermissionPrefixesRegistryEvent event)
 	{
-		event.register(new NodeEntry("command.", DefaultPermissionLevel.OP, "Permission for commands, if FTBU command overriding is enabled. If not, this node will be inactive"));
+		event.register(new NodeEntry("command.", DefaultPermissionLevel.OP, "Permission for commands, if FTBUtilities command overriding is enabled. If not, this node will be inactive"));
 		event.register(new NodeEntry(CLAIMS_BLOCK_EDIT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can break and place within claimed chunks"));
 		event.register(new NodeEntry(CLAIMS_BLOCK_INTERACT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can right-click within claimed chunks"));
 		event.register(new NodeEntry(CLAIMS_ITEM_PREFIX, DefaultPermissionLevel.ALL, "Permission for items that players can right-click in air within claimed chunks"));
@@ -124,7 +124,7 @@ public class FTBUPermissions
 				return PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_INTERACT_PREFIX + formatId(block.getState().getBlock()), context);
 			case CNB_BREAK:
 			case CNB_PLACE:
-				return PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_CNB, context);
+				return PermissionAPI.hasPermission(player.getGameProfile(), FTBUtilitiesPermissions.CLAIMS_BLOCK_CNB, context);
 			case ITEM:
 				return !player.getHeldItem(hand).isEmpty() || PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_ITEM_PREFIX + formatId(player.getHeldItem(hand).getItem()), context);
 			default:

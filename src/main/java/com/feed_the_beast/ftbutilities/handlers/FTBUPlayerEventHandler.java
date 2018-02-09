@@ -8,8 +8,9 @@ import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
@@ -31,7 +32,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 /**
  * @author LatvianModder
  */
-@Mod.EventBusSubscriber(modid = FTBUFinals.MOD_ID)
+@Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
 public class FTBUPlayerEventHandler
 {
 	@SubscribeEvent
@@ -81,7 +82,7 @@ public class FTBUPlayerEventHandler
 
 			if (team != null)
 			{
-				Notification notification = Notification.of(FTBUFinals.get("chunk_changed"), StringUtils.color(new TextComponentString(team.getTitle()), team.getColor().getTextFormatting()));
+				Notification notification = Notification.of(FTBUtilitiesNotifications.CHUNK_CHANGED, StringUtils.color(new TextComponentString(team.getTitle()), team.getColor().getTextFormatting()));
 
 				if (!team.getDesc().isEmpty())
 				{
@@ -92,7 +93,7 @@ public class FTBUPlayerEventHandler
 			}
 			else
 			{
-				Notification.of(FTBUFinals.get("chunk_changed"), StringUtils.color(FTBULang.CHUNKS_WILDERNESS.textComponent(player), TextFormatting.DARK_GREEN)).send(player.mcServer, player);
+				Notification.of(FTBUtilitiesNotifications.CHUNK_CHANGED, StringUtils.color(FTBUtilitiesLang.CHUNKS_WILDERNESS.textComponent(player), TextFormatting.DARK_GREEN)).send(player.mcServer, player);
 			}
 		}
 	}

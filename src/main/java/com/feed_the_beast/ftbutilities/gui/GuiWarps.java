@@ -144,7 +144,7 @@ public class GuiWarps extends GuiBase
 		int ax = getAX() + SIZE_2;
 		int ay = getAY() + SIZE_2;
 
-        /*if(FTBUClient.KEY_WARP.isKeyDown())
+        /*if(FTBUtilitiesClient.KEY_WARP.isKeyDown())
 		{
             return;
         }*/

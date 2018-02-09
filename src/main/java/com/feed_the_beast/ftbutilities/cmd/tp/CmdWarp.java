@@ -4,7 +4,7 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.data.FTBUUniverseData;
 import com.feed_the_beast.ftbutilities.net.MessageSendWarpList;
 import net.minecraft.command.CommandException;
@@ -61,10 +61,10 @@ public class CmdWarp extends CmdBase
 		BlockDimPos p = FTBUUniverseData.WARPS.get(args[0]);
 		if (p == null)
 		{
-			throw FTBULang.WARP_NOT_SET.commandError(args[0]);
+			throw FTBUtilitiesLang.WARP_NOT_SET.commandError(args[0]);
 		}
 
 		ServerUtils.teleportEntity(player, p);
-		FTBULang.WARP_TP.sendMessage(sender, args[0]);
+		FTBUtilitiesLang.WARP_TP.sendMessage(sender, args[0]);
 	}
 }

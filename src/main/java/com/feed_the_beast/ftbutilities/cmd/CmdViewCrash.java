@@ -6,7 +6,7 @@ import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.net.MessageViewCrash;
 import com.feed_the_beast.ftbutilities.net.MessageViewCrashList;
 import com.google.gson.JsonElement;
@@ -168,7 +168,7 @@ public class CmdViewCrash extends CmdBase
 					ITextComponent link = FTBLibLang.CLICK_HERE.textComponent(sender);
 					link.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(url)));
 					link.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
-					FTBULang.UPLOADED_CRASH.sendMessage(sender, link);
+					FTBUtilitiesLang.UPLOADED_CRASH.sendMessage(sender, link);
 				}
 			}
 			catch (Exception ex)

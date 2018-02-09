@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
-import com.feed_the_beast.ftblib.FTBLibModCommon;
+import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.lib.config.ConfigNull;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
@@ -26,7 +26,7 @@ public class DefaultPlayerRank extends DefaultRank
 	@Override
 	public ConfigValue getConfig(String id)
 	{
-		RankConfigValueInfo config = FTBLibModCommon.RANK_CONFIGS_MIRROR.get(id);
+		RankConfigValueInfo config = FTBLibCommon.RANK_CONFIGS_MIRROR.get(id);
 		return config == null ? ConfigNull.INSTANCE : config.defaultValue;
 	}
 }

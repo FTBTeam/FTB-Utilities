@@ -2,9 +2,9 @@ package com.feed_the_beast.ftbutilities.data.backups;
 
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftbutilities.FTBUConfig;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import net.minecraft.server.MinecraftServer;
 
 import java.io.File;
@@ -56,9 +56,9 @@ public class ThreadBackup extends Thread
 			List<File> files = FileUtils.listAll(src);
 			int allFiles = files.size();
 
-			FTBUFinals.LOGGER.info(FTBULang.BACKUP_BACKING_UP_FILES.translate(files.size()));
+			FTBUtilities.LOGGER.info(FTBUtilitiesLang.BACKUP_BACKING_UP_FILES.translate(files.size()));
 
-			if (FTBUConfig.backups.compression_level > 0)
+			if (FTBUtilitiesConfig.backups.compression_level > 0)
 			{
 				out.append(".zip");
 				dstFile = FileUtils.newFile(new File(Backups.INSTANCE.backupsFolder, out.toString()));
@@ -67,13 +67,13 @@ public class ThreadBackup extends Thread
 
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(dstFile));
 				//zos.setLevel(9);
-				zos.setLevel(FTBUConfig.backups.compression_level);
+				zos.setLevel(FTBUtilitiesConfig.backups.compression_level);
 
 				long logMillis = System.currentTimeMillis() + 5000L;
 
 				byte[] buffer = new byte[4096];
 
-				FTBUFinals.LOGGER.info(FTBULang.BACKUP_COMPRESSING_FILES.translate(allFiles));
+				FTBUtilities.LOGGER.info(FTBUtilitiesLang.BACKUP_COMPRESSING_FILES.translate(allFiles));
 
 				for (int i = 0; i < allFiles; i++)
 				{
@@ -88,7 +88,7 @@ public class ThreadBackup extends Thread
 						if (i == 0 || millis > logMillis || i == allFiles - 1)
 						{
 							logMillis = millis + 5000L;
-							FTBUFinals.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) allFiles) * 100D) + "%]: " + ze.getName());
+							FTBUtilities.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) allFiles) * 100D) + "%]: " + ze.getName());
 						}
 
 						zos.putNextEntry(ze);
@@ -110,7 +110,7 @@ public class ThreadBackup extends Thread
 
 				zos.close();
 
-				FTBUFinals.LOGGER.info(FTBULang.BACKUP_COMPRESSING_DONE.translate(getDoneTime(start), FileUtils.getSizeS(dstFile)));
+				FTBUtilities.LOGGER.info(FTBUtilitiesLang.BACKUP_COMPRESSING_DONE.translate(getDoneTime(start), FileUtils.getSizeS(dstFile)));
 			}
 			else
 			{
@@ -135,7 +135,7 @@ public class ThreadBackup extends Thread
 						if (i == 0 || millis > logMillis || i == allFiles - 1)
 						{
 							logMillis = millis + 2000L;
-							FTBUFinals.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) allFiles) * 100D) + "%]: " + file.getName());
+							FTBUtilities.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) allFiles) * 100D) + "%]: " + file.getName());
 						}
 
 						File dst1 = new File(dstPath + (file.getAbsolutePath().replace(srcPath, "")));
@@ -148,28 +148,28 @@ public class ThreadBackup extends Thread
 				}
 			}
 
-			FTBUFinals.LOGGER.info(FTBULang.BACKUP_CREATED_FROM.translate(dstFile.getAbsolutePath(), src.getAbsolutePath()));
+			FTBUtilities.LOGGER.info(FTBUtilitiesLang.BACKUP_CREATED_FROM.translate(dstFile.getAbsolutePath(), src.getAbsolutePath()));
 			success = true;
 
-			if (!FTBUConfig.backups.silent)
+			if (!FTBUtilitiesConfig.backups.silent)
 			{
-				if (FTBUConfig.backups.display_file_size)
+				if (FTBUtilitiesConfig.backups.display_file_size)
 				{
 					String sizeB = FileUtils.getSizeS(dstFile);
 					String sizeT = FileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
-					Backups.notifyAll(server, player -> FTBULang.BACKUP_END_2.textComponent(player, getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT))), false);
+					Backups.notifyAll(server, player -> FTBUtilitiesLang.BACKUP_END_2.textComponent(player, getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT))), false);
 				}
 				else
 				{
-					Backups.notifyAll(server, player -> FTBULang.BACKUP_END_1.textComponent(player, getDoneTime(time.getTimeInMillis())), false);
+					Backups.notifyAll(server, player -> FTBUtilitiesLang.BACKUP_END_1.textComponent(player, getDoneTime(time.getTimeInMillis())), false);
 				}
 			}
 		}
 		catch (Exception ex)
 		{
-			if (!FTBUConfig.backups.silent)
+			if (!FTBUtilitiesConfig.backups.silent)
 			{
-				Backups.notifyAll(server, player -> FTBULang.BACKUP_FAIL.textComponent(player, ex.getClass().getName()), true);
+				Backups.notifyAll(server, player -> FTBUtilitiesLang.BACKUP_FAIL.textComponent(player, ex.getClass().getName()), true);
 			}
 
 			ex.printStackTrace();

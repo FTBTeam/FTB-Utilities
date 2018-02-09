@@ -19,29 +19,29 @@ import java.util.Comparator;
 /**
  * @author LatvianModder
  */
-@Mod.EventBusSubscriber(modid = FTBUFinals.MOD_ID)
-public class FTBULeaderboards
+@Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
+public class FTBUtilitiesLeaderboards
 {
 	@SubscribeEvent
 	public static void registerLeaderboards(LeaderboardRegistryEvent event)
 	{
-		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUFinals.MOD_ID + ":deaths"), StatList.DEATHS, false, Leaderboard.FromStat.DEFAULT));
-		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUFinals.MOD_ID + ":mob_kills"), StatList.MOB_KILLS, false, Leaderboard.FromStat.DEFAULT));
-		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUFinals.MOD_ID + ":time_played"), StatList.PLAY_ONE_MINUTE, false, Leaderboard.FromStat.TIME));
+		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUtilities.MOD_ID + ":deaths"), StatList.DEATHS, false, Leaderboard.FromStat.DEFAULT));
+		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUtilities.MOD_ID + ":mob_kills"), StatList.MOB_KILLS, false, Leaderboard.FromStat.DEFAULT));
+		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUtilities.MOD_ID + ":time_played"), StatList.PLAY_ONE_MINUTE, false, Leaderboard.FromStat.TIME));
 
 		event.register(new Leaderboard(
-				new ResourceLocation(FTBUFinals.MOD_ID + ":deaths_per_hour"),
+				new ResourceLocation(FTBUtilities.MOD_ID + ":deaths_per_hour"),
 				new TextComponentTranslation("ftbutilities.stat.dph"),
 				player ->
 				{
 					double d = getDPH(player);
 					return new TextComponentString(d < 0D ? "-" : String.format("%.2f", d));
 				},
-				Comparator.comparingDouble(FTBULeaderboards::getDPH).reversed(),
+				Comparator.comparingDouble(FTBUtilitiesLeaderboards::getDPH).reversed(),
 				player -> getDPH(player) >= 0D));
 
 		event.register(new Leaderboard(
-				new ResourceLocation(FTBUFinals.MOD_ID + ":last_seen"),
+				new ResourceLocation(FTBUtilities.MOD_ID + ":last_seen"),
 				new TextComponentTranslation("ftbutilities.stat.last_seen"),
 				player ->
 				{
@@ -58,7 +58,7 @@ public class FTBULeaderboards
 						return Leaderboard.FromStat.TIME.apply(time);
 					}
 				},
-				Comparator.comparingLong(FTBULeaderboards::getRelativeLastSeen),
+				Comparator.comparingLong(FTBUtilitiesLeaderboards::getRelativeLastSeen),
 				player -> player.getLastTimeSeen() != 0L));
 	}
 

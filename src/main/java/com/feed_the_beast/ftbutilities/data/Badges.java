@@ -5,9 +5,9 @@ import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftbutilities.FTBUConfig;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
-import com.feed_the_beast.ftbutilities.FTBUPermissions;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -69,7 +69,7 @@ public class Badges
 		{
 			return "";
 		}
-		else if (FTBUConfig.login.enable_global_badges && !data.disableGlobalBadge.getBoolean())
+		else if (FTBUtilitiesConfig.login.enable_global_badges && !data.disableGlobalBadge.getBoolean())
 		{
 			Socket socket = null;
 			DataOutputStream output = null;
@@ -86,7 +86,7 @@ public class Badges
 				String badge = input.readUTF();
 				boolean event = input.readBoolean();
 
-				if (!badge.isEmpty() && (FTBUConfig.login.enable_event_badges || !event))
+				if (!badge.isEmpty() && (FTBUtilitiesConfig.login.enable_event_badges || !event))
 				{
 					return badge;
 				}
@@ -101,7 +101,7 @@ public class Badges
 				IOUtils.closeQuietly(output);
 				IOUtils.closeQuietly(socket);
 
-				FTBUFinals.LOGGER.warn("Main Badge API errored, using fallback: " + ex);
+				FTBUtilities.LOGGER.warn("Main Badge API errored, using fallback: " + ex);
 
 				try
 				{
@@ -115,13 +115,13 @@ public class Badges
 				}
 				catch (Exception ex2)
 				{
-					FTBUFinals.LOGGER.warn("Fallback Badge API errored: " + ex2);
+					FTBUtilities.LOGGER.warn("Fallback Badge API errored: " + ex2);
 				}
 			}
 		}
 
 		String badge = LOCAL_BADGES.get(playerId);
-		return (badge == null || badge.isEmpty()) ? Ranks.getRank(universe.server, player.getProfile()).getConfig(FTBUPermissions.BADGE).getString() : badge;
+		return (badge == null || badge.isEmpty()) ? Ranks.getRank(universe.server, player.getProfile()).getConfig(FTBUtilitiesPermissions.BADGE).getString() : badge;
 	}
 
 	public static boolean reloadServerBadges(Universe universe)

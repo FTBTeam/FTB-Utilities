@@ -4,11 +4,10 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
-import com.feed_the_beast.ftbutilities.FTBU;
-import com.feed_the_beast.ftbutilities.FTBUConfig;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
-import com.feed_the_beast.ftbutilities.FTBULang;
-import com.feed_the_beast.ftbutilities.FTBUPermissions;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -91,7 +90,7 @@ public class FTBULoadedChunkManager implements ForgeChunkManager.LoadingCallback
 		if (ticket == null && DimensionManager.isDimensionRegistered(key.dimension))
 		{
 			WorldServer worldServer = server.getWorld(key.dimension);
-			ticket = ForgeChunkManager.requestTicket(FTBU.INST, worldServer, ForgeChunkManager.Type.NORMAL);
+			ticket = ForgeChunkManager.requestTicket(FTBUtilities.INST, worldServer, ForgeChunkManager.Type.NORMAL);
 
 			if (ticket != null)
 			{
@@ -124,9 +123,9 @@ public class FTBULoadedChunkManager implements ForgeChunkManager.LoadingCallback
 		chunk.forced = true;
 		chunkTickets.put(pos, ticket);
 
-		if (FTBUConfig.world.log_chunkloading)
+		if (FTBUtilitiesConfig.world.log_chunkloading)
 		{
-			FTBUFinals.LOGGER.info(FTBULang.CHUNKS_CHUNKLOADER_FORCED.translate(chunk.getTeam().getTitle(), pos.posX, pos.posZ, ServerUtils.getDimensionName(null, pos.dim)));
+			FTBUtilities.LOGGER.info(FTBUtilitiesLang.CHUNKS_CHUNKLOADER_FORCED.translate(chunk.getTeam().getTitle(), pos.posX, pos.posZ, ServerUtils.getDimensionName(null, pos.dim)));
 		}
 	}
 
@@ -155,9 +154,9 @@ public class FTBULoadedChunkManager implements ForgeChunkManager.LoadingCallback
 			ForgeChunkManager.releaseTicket(ticket);
 		}
 
-		if (FTBUConfig.world.log_chunkloading)
+		if (FTBUtilitiesConfig.world.log_chunkloading)
 		{
-			FTBUFinals.LOGGER.info(FTBULang.CHUNKS_CHUNKLOADER_UNFORCED.translate(chunk.getTeam().getTitle(), pos.posX, pos.posZ, ServerUtils.getDimensionName(null, pos.dim)));
+			FTBUtilities.LOGGER.info(FTBUtilitiesLang.CHUNKS_CHUNKLOADER_UNFORCED.translate(chunk.getTeam().getTitle(), pos.posX, pos.posZ, ServerUtils.getDimensionName(null, pos.dim)));
 		}
 	}
 
@@ -177,7 +176,7 @@ public class FTBULoadedChunkManager implements ForgeChunkManager.LoadingCallback
 
 		for (ForgePlayer player : members)
 		{
-			if (PermissionAPI.hasPermission(player.getProfile(), FTBUPermissions.CHUNKLOADER_LOAD_OFFLINE, context))
+			if (PermissionAPI.hasPermission(player.getProfile(), FTBUtilitiesPermissions.CHUNKLOADER_LOAD_OFFLINE, context))
 			{
 				return true;
 			}

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbutilities;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
@@ -14,18 +14,32 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod(modid = FTBUFinals.MOD_ID, name = FTBUFinals.MOD_NAME, version = FTBUFinals.VERSION, acceptableRemoteVersions = "*", acceptedMinecraftVersions = "[1.10,)", dependencies = "required-after:" + FTBLibFinals.MOD_ID)
-public class FTBU
+@Mod(
+		modid = FTBUtilities.MOD_ID,
+		name = FTBUtilities.MOD_NAME,
+		version = FTBUtilities.VERSION,
+		acceptableRemoteVersions = "*",
+		acceptedMinecraftVersions = "[1.10,)",
+		dependencies = "required-after:" + FTBLib.MOD_ID
+)
+public class FTBUtilities
 {
-	@Mod.Instance(FTBUFinals.MOD_ID)
-	public static FTBU INST;
+	public static final String MOD_ID = "ftbutilities";
+	public static final String MOD_NAME = "FTBUtilities";
+	public static final String VERSION = "@VERSION@";
+	public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
-	@SidedProxy(serverSide = "com.feed_the_beast.ftbutilities.FTBUCommon", clientSide = "com.feed_the_beast.ftbutilities.client.FTBUClient")
-	public static FTBUCommon PROXY;
+	@Mod.Instance(MOD_ID)
+	public static FTBUtilities INST;
+
+	@SidedProxy(serverSide = "com.feed_the_beast.ftbutilities.FTBUtilitiesCommon", clientSide = "com.feed_the_beast.ftbutilities.client.FTBUtilitiesClient")
+	public static FTBUtilitiesCommon PROXY;
 
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event)
@@ -51,7 +65,7 @@ public class FTBU
 		Backups.INSTANCE.init();
 		Ranks.CMD_PERMISSION_NODES.clear();
 
-		if (FTBUConfig.ranks.override_commands)
+		if (FTBUtilitiesConfig.ranks.override_commands)
 		{
 			ServerCommandManager manager = (ServerCommandManager) Universe.get().server.getCommandManager();
 			List<ICommand> commands = new ArrayList<>(manager.getCommands().values());
@@ -68,7 +82,7 @@ public class FTBU
 				manager.registerCommand(new CommandOverride(command));
 			}
 
-			FTBUFinals.LOGGER.info("Overridden " + manager.getCommands().size() + " commands");
+			LOGGER.info("Overridden " + manager.getCommands().size() + " commands");
 		}
 
 		Ranks.generateExampleFiles();

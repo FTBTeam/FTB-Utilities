@@ -1,15 +1,15 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
-import com.feed_the_beast.ftblib.FTBLibModCommon;
+import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftbutilities.FTBUCommon;
-import com.feed_the_beast.ftbutilities.FTBUConfig;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -86,7 +86,7 @@ public class Ranks
 
 	public static Rank getRank(@Nullable MinecraftServer server, GameProfile profile)
 	{
-		Rank r = FTBUConfig.ranks.enabled ? PLAYER_MAP.get(profile.getId()) : null;
+		Rank r = FTBUtilitiesConfig.ranks.enabled ? PLAYER_MAP.get(profile.getId()) : null;
 		return (r == null) ? (ServerUtils.isOP(server, profile) ? getDefaultOPRank() : getDefaultPlayerRank()) : r;
 	}
 
@@ -127,7 +127,7 @@ public class Ranks
 
 	public static boolean reload()
 	{
-		FTBUFinals.LOGGER.info("Loading ranks..");
+		FTBUtilities.LOGGER.info("Loading ranks..");
 
 		RANKS.clear();
 		RANKS.put(DefaultPlayerRank.INSTANCE.getName(), DefaultPlayerRank.INSTANCE);
@@ -137,7 +137,7 @@ public class Ranks
 		defaultOPRank = null;
 		boolean result = true;
 
-		if (FTBUConfig.ranks.enabled)
+		if (FTBUtilitiesConfig.ranks.enabled)
 		{
 			JsonElement e = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbutilities/ranks.json"));
 
@@ -228,7 +228,7 @@ public class Ranks
 	{
 		List<NodeEntry> allNodes = new ArrayList<>();
 
-		for (NodeEntry node : FTBUCommon.CUSTOM_PERM_PREFIX_REGISTRY)
+		for (NodeEntry node : FTBUtilitiesCommon.CUSTOM_PERM_PREFIX_REGISTRY)
 		{
 			allNodes.add(new NodeEntry(node.getName() + "*", node.getLevel(), node.getDescription()));
 		}
@@ -240,7 +240,7 @@ public class Ranks
 
 			boolean printNode = true;
 
-			for (NodeEntry cprefix : FTBUCommon.CUSTOM_PERM_PREFIX_REGISTRY)
+			for (NodeEntry cprefix : FTBUtilitiesCommon.CUSTOM_PERM_PREFIX_REGISTRY)
 			{
 				if (s.startsWith(cprefix.getName()))
 				{
@@ -296,7 +296,7 @@ public class Ranks
 			ex.printStackTrace();
 		}
 
-		List<RankConfigValueInfo> sortedRankConfigKeys = new ArrayList<>(FTBLibModCommon.RANK_CONFIGS_MIRROR.values());
+		List<RankConfigValueInfo> sortedRankConfigKeys = new ArrayList<>(FTBLibCommon.RANK_CONFIGS_MIRROR.values());
 		sortedRankConfigKeys.sort(StringUtils.ID_COMPARATOR);
 
 		try

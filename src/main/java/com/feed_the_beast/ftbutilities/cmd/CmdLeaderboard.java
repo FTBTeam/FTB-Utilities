@@ -5,7 +5,7 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftbutilities.FTBUCommon;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.net.MessageSendLeaderboard;
 import com.feed_the_beast.ftbutilities.net.MessageSendLeaderboardList;
@@ -41,7 +41,7 @@ public class CmdLeaderboard extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, FTBUCommon.LEADERBOARDS.keySet());
+			return getListOfStringsMatchingLastWord(args, FTBUtilitiesCommon.LEADERBOARDS.keySet());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -56,7 +56,7 @@ public class CmdLeaderboard extends CmdBase
 			component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.CLICK_HERE.textComponent(sender)));
 			boolean first = true;
 
-			for (Leaderboard leaderboard : FTBUCommon.LEADERBOARDS.values())
+			for (Leaderboard leaderboard : FTBUtilitiesCommon.LEADERBOARDS.values())
 			{
 				if (first)
 				{
@@ -83,7 +83,7 @@ public class CmdLeaderboard extends CmdBase
 			{
 				Map<ResourceLocation, ITextComponent> map = new LinkedHashMap<>();
 
-				for (Leaderboard leaderboard : FTBUCommon.LEADERBOARDS.values())
+				for (Leaderboard leaderboard : FTBUtilitiesCommon.LEADERBOARDS.values())
 				{
 					map.put(leaderboard.id, leaderboard.getTitle());
 				}
@@ -92,16 +92,16 @@ public class CmdLeaderboard extends CmdBase
 				return;
 			}
 
-			Leaderboard leaderboard = FTBUCommon.LEADERBOARDS.get(new ResourceLocation(args[1]));
+			Leaderboard leaderboard = FTBUtilitiesCommon.LEADERBOARDS.get(new ResourceLocation(args[1]));
 
 			if (leaderboard != null)
 			{
 				new MessageSendLeaderboard(player, leaderboard).sendTo(player);
 			}
 		}
-		else if (FTBUCommon.LEADERBOARDS.get(new ResourceLocation(args[0])) != null)
+		else if (FTBUtilitiesCommon.LEADERBOARDS.get(new ResourceLocation(args[0])) != null)
 		{
-			Leaderboard leaderboard = FTBUCommon.LEADERBOARDS.get(new ResourceLocation(args[0]));
+			Leaderboard leaderboard = FTBUtilitiesCommon.LEADERBOARDS.get(new ResourceLocation(args[0]));
 			sender.sendMessage(leaderboard.getTitle().createCopy().appendText(":"));
 
 			ForgePlayer p0 = Universe.get().getPlayer(sender);

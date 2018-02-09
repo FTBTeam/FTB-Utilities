@@ -3,9 +3,9 @@ package com.feed_the_beast.ftbutilities.integration;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
-import com.feed_the_beast.ftbutilities.FTBULang;
-import com.feed_the_beast.ftbutilities.client.FTBUClientConfig;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
+import com.feed_the_beast.ftbutilities.client.FTBUtilitiesClientConfig;
 import com.feed_the_beast.ftbutilities.gui.ClientClaimedChunks;
 import com.feed_the_beast.ftbutilities.gui.UpdateClientDataEvent;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksRequest;
@@ -52,7 +52,7 @@ public class JourneyMapIntegration implements IClientPlugin
 	@Override
 	public String getModId()
 	{
-		return FTBUFinals.MOD_ID;
+		return FTBUtilities.MOD_ID;
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class JourneyMapIntegration implements IClientPlugin
 		if (!POLYGONS.isEmpty())
 		{
 			POLYGONS.clear();
-			clientAPI.removeAll(FTBUFinals.MOD_ID);
+			clientAPI.removeAll(FTBUtilities.MOD_ID);
 		}
 	}
 
@@ -100,9 +100,9 @@ public class JourneyMapIntegration implements IClientPlugin
 			if (chunk != null)
 			{
 				MapPolygon poly = PolygonHelper.createChunkPolygon(pos.x, 0, pos.z);
-				p = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + pos.x + '_' + pos.z, dim, (ShapeProperties) chunk.team.shapeProperties, poly);
+				p = new PolygonOverlay(FTBUtilities.MOD_ID, "claimed_" + pos.x + '_' + pos.z, dim, (ShapeProperties) chunk.team.shapeProperties, poly);
 				p.setOverlayGroupName("claimed_chunks");
-				p.setTitle(chunk.team.formattedName + '\n' + TextFormatting.GREEN + FTBULang.CHUNKS_CLAIMED_AREA.translate());
+				p.setTitle(chunk.team.formattedName + '\n' + TextFormatting.GREEN + FTBUtilitiesLang.CHUNKS_CLAIMED_AREA.translate());
 				/*
 				DEFAULT_SCALE = 1.0F;
    				DEFAULT_COLOR = 16777215;
@@ -127,7 +127,7 @@ public class JourneyMapIntegration implements IClientPlugin
 	@SubscribeEvent
 	public static void onEnteringChunk(EntityEvent.EnteringChunk event)
 	{
-		if (!FTBUClientConfig.general.journeymap_overlay || event.getEntity() != ClientUtils.MC.player)
+		if (!FTBUtilitiesClientConfig.general.journeymap_overlay || event.getEntity() != ClientUtils.MC.player)
 		{
 			return;
 		}
@@ -142,7 +142,7 @@ public class JourneyMapIntegration implements IClientPlugin
 	@SubscribeEvent
 	public static void onDataReceived(UpdateClientDataEvent event)
 	{
-		if (!POLYGONS.isEmpty() && (!FTBUClientConfig.general.journeymap_overlay || !clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon)))
+		if (!POLYGONS.isEmpty() && (!FTBUtilitiesClientConfig.general.journeymap_overlay || !clientAPI.playerAccepts(FTBUtilities.MOD_ID, DisplayType.Polygon)))
 		{
 			clearData();
 			return;

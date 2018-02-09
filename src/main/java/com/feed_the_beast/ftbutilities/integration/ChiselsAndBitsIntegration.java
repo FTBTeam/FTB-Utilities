@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbutilities.integration;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
 import com.feed_the_beast.ftblib.lib.EventHandler;
+import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 /**
  * @author LatvianModder
  */
-@EventHandler(requiredMods = FTBLibFinals.CHISELS_AND_BITS)
+@EventHandler(requiredMods = OtherMods.CHISELS_AND_BITS)
 public class ChiselsAndBitsIntegration
 {
 	@SubscribeEvent(priority = EventPriority.HIGH)

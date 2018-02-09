@@ -5,7 +5,7 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.item.ItemEntry;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
-import com.feed_the_beast.ftbutilities.client.FTBUClientConfig;
+import com.feed_the_beast.ftbutilities.client.FTBUtilitiesClientConfig;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.creativetab.CreativeTabs;
@@ -37,7 +37,7 @@ public class CmdScanItems extends CmdBase
 	{
 		String s = entry.item.getRegistryName().toString();
 
-		for (String s1 : FTBUClientConfig.general.scan_items_whitelist)
+		for (String s1 : FTBUtilitiesClientConfig.general.scan_items_whitelist)
 		{
 			if (s.startsWith(s1))
 			{
@@ -45,7 +45,7 @@ public class CmdScanItems extends CmdBase
 			}
 		}
 
-		for (String s1 : FTBUClientConfig.general.scan_items_blacklist)
+		for (String s1 : FTBUtilitiesClientConfig.general.scan_items_blacklist)
 		{
 			if (s.startsWith(s1))
 			{

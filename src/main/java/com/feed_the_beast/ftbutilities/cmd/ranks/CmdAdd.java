@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbutilities.cmd.ranks;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.ranks.DefaultPlayerRank;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
@@ -28,14 +28,14 @@ public class CmdAdd extends CmdBase
 
 		if (Ranks.getRankNames().contains(id))
 		{
-			throw FTBULang.RANK_ID_EXISTS.commandError(id);
+			throw FTBUtilitiesLang.RANK_ID_EXISTS.commandError(id);
 		}
 
 		Rank parent = args.length == 1 ? DefaultPlayerRank.INSTANCE : Ranks.getRank(args[1], null);
 
 		if (parent == null)
 		{
-			throw FTBULang.RANK_NOT_FOUND.commandError(id);
+			throw FTBUtilitiesLang.RANK_NOT_FOUND.commandError(id);
 		}
 
 		Ranks.addRank(new Rank(id, parent));

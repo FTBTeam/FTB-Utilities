@@ -5,8 +5,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
-import com.feed_the_beast.ftbutilities.integration.FTBLibIntegration;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -34,7 +33,7 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 
 	public static FTBUPlayerData get(ForgePlayer player)
 	{
-		return player.getData().get(FTBLibIntegration.FTBU_DATA);
+		return player.getData().get(FTBUtilities.MOD_ID);
 	}
 
 	@Override
@@ -89,10 +88,9 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 
 	public void addConfig(ForgePlayerConfigEvent event)
 	{
-		String group = FTBUFinals.MOD_ID;
-		event.getConfig().setGroupName(group, new TextComponentString(FTBUFinals.MOD_NAME));
-		event.getConfig().add(group, "render_badge", renderBadge);
-		event.getConfig().add(group, "disable_global_badge", disableGlobalBadge);
-		event.getConfig().add(group, "enable_pvp", enablePVP);
+		event.getConfig().setGroupName(FTBUtilities.MOD_ID, new TextComponentString(FTBUtilities.MOD_NAME));
+		event.getConfig().add(FTBUtilities.MOD_ID, "render_badge", renderBadge);
+		event.getConfig().add(FTBUtilities.MOD_ID, "disable_global_badge", disableGlobalBadge);
+		event.getConfig().add(FTBUtilities.MOD_ID, "enable_pvp", enablePVP);
 	}
 }

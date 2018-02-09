@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbutilities.cmd.ranks;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.ranks.DefaultOPRank;
 import com.feed_the_beast.ftbutilities.ranks.DefaultPlayerRank;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
@@ -51,17 +51,17 @@ public class CmdSet extends CmdBase
 
 		if (r == DefaultPlayerRank.INSTANCE)
 		{
-			FTBULang.RANK_USE_DEOP.sendMessage(sender, args[0]);
+			FTBUtilitiesLang.RANK_USE_DEOP.sendMessage(sender, args[0]);
 			return;
 		}
 		else if (r == DefaultOPRank.INSTANCE)
 		{
-			FTBULang.RANK_USE_OP.sendMessage(sender, args[0]);
+			FTBUtilitiesLang.RANK_USE_OP.sendMessage(sender, args[0]);
 			return;
 		}
 		else if (!Ranks.getRankNames().contains(args[1]))
 		{
-			throw FTBULang.RANK_NOT_FOUND.commandError(args[1]);
+			throw FTBUtilitiesLang.RANK_NOT_FOUND.commandError(args[1]);
 		}
 
 		ForgePlayer p = getForgePlayer(sender, args[0]);
@@ -69,11 +69,11 @@ public class CmdSet extends CmdBase
 
 		if (r == null)
 		{
-			FTBULang.RANK_UNSET.sendMessage(sender, p.getName());
+			FTBUtilitiesLang.RANK_UNSET.sendMessage(sender, p.getName());
 		}
 		else
 		{
-			FTBULang.RANK_SET.sendMessage(sender, p.getName(), r.getName());
+			FTBUtilitiesLang.RANK_SET.sendMessage(sender, p.getName(), r.getName());
 		}
 	}
 }

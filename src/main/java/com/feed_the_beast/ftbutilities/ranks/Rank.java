@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
-import com.feed_the_beast.ftblib.FTBLibModCommon;
+import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
@@ -171,7 +171,7 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 		{
 			for (Map.Entry<String, JsonElement> entry : o.get("config").getAsJsonObject().entrySet())
 			{
-				RankConfigValueInfo rconfig = FTBLibModCommon.RANK_CONFIGS_MIRROR.get(entry.getKey());
+				RankConfigValueInfo rconfig = FTBLibCommon.RANK_CONFIGS_MIRROR.get(entry.getKey());
 
 				if (rconfig != null)
 				{

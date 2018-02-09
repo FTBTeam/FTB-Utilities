@@ -16,7 +16,7 @@ import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksModify;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksRequest;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;
@@ -201,13 +201,13 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			}
 		};
 
-		buttonUnclaimDim = new ButtonSide(this, FTBULang.CHUNKS_UNCLAIM_ALL_DIM.translate(currentDimName), GuiIcons.REMOVE)
+		buttonUnclaimDim = new ButtonSide(this, FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL_DIM.translate(currentDimName), GuiIcons.REMOVE)
 		{
 			@Override
 			public void onClicked(MouseButton button)
 			{
 				GuiHelper.playClickSound();
-				String s = FTBULang.CHUNKS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
+				String s = FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
 				ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
 				{
 					if (set)
@@ -221,13 +221,13 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			}
 		};
 
-		buttonUnclaimAll = new ButtonSide(this, FTBULang.CHUNKS_UNCLAIM_ALL.translate(), GuiIcons.REMOVE)
+		buttonUnclaimAll = new ButtonSide(this, FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL.translate(), GuiIcons.REMOVE)
 		{
 			@Override
 			public void onClicked(MouseButton button)
 			{
 				GuiHelper.playClickSound();
-				String s = FTBULang.CHUNKS_UNCLAIM_ALL_Q.translate();
+				String s = FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL_Q.translate();
 				ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
 				{
 					if (set)
@@ -303,8 +303,8 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 		switch (corner)
 		{
 			case BOTTOM_RIGHT:
-				list.add(FTBULang.CHUNKS_CLAIMED_COUNT.translate(claimedChunks, maxClaimedChunks));
-				list.add(FTBULang.CHUNKS_LOADED_COUNT.translate(loadedChunks, maxLoadedChunks));
+				list.add(FTBUtilitiesLang.CHUNKS_CLAIMED_COUNT.translate(claimedChunks, maxClaimedChunks));
+				list.add(FTBUtilitiesLang.CHUNKS_LOADED_COUNT.translate(loadedChunks, maxLoadedChunks));
 				break;
 		}
 	}
@@ -317,7 +317,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 		if (data != null)
 		{
 			list.add(data.team.formattedName);
-			list.add(TextFormatting.GREEN + FTBULang.CHUNKS_CLAIMED_AREA.translate());
+			list.add(TextFormatting.GREEN + FTBUtilitiesLang.CHUNKS_CLAIMED_AREA.translate());
 
 			if (data.isLoaded())
 			{
@@ -326,7 +326,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 		}
 		else
 		{
-			list.add(TextFormatting.DARK_GREEN + FTBULang.CHUNKS_WILDERNESS.translate());
+			list.add(TextFormatting.DARK_GREEN + FTBUtilitiesLang.CHUNKS_WILDERNESS.translate());
 		}
 
 		if (GuiScreen.isCtrlKeyDown())

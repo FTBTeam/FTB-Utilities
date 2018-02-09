@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbutilities.net;
 
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbutilities.FTBU;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
@@ -29,6 +29,6 @@ public class MessageEditNBTRequest extends MessageToClient<MessageEditNBTRequest
 	@Override
 	public void onMessage(MessageEditNBTRequest m, EntityPlayer player)
 	{
-		FTBU.PROXY.editNBT();
+		FTBUtilities.PROXY.editNBT();
 	}
 }

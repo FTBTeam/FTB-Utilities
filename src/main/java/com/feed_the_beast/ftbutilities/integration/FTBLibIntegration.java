@@ -19,8 +19,8 @@ import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.TeamGuiAction;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
-import com.feed_the_beast.ftbutilities.FTBUConfig;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.data.Badges;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
@@ -41,10 +41,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @EventHandler
 public class FTBLibIntegration
 {
-	public static final ResourceLocation FTBU_DATA = FTBUFinals.get("data");
-	public static final ResourceLocation RELOAD_CONFIG = FTBUFinals.get("config");
-	public static final ResourceLocation RELOAD_RANKS = FTBUFinals.get("ranks");
-	public static final ResourceLocation RELOAD_BADGES = FTBUFinals.get("badges");
+	public static final ResourceLocation RELOAD_CONFIG = new ResourceLocation(FTBUtilities.MOD_ID, "config");
+	public static final ResourceLocation RELOAD_RANKS = new ResourceLocation(FTBUtilities.MOD_ID, "ranks");
+	public static final ResourceLocation RELOAD_BADGES = new ResourceLocation(FTBUtilities.MOD_ID, "badges");
 
 	@SubscribeEvent
 	public static void registerReloadIds(ServerReloadEvent.RegisterIds event)
@@ -59,7 +58,7 @@ public class FTBLibIntegration
 	{
 		if (event.reload(RELOAD_CONFIG))
 		{
-			FTBUConfig.sync();
+			FTBUtilitiesConfig.sync();
 		}
 
 		if (event.reload(RELOAD_RANKS) && !Ranks.reload())
@@ -76,25 +75,25 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void registerOptionalServerMod(RegisterOptionalServerModsEvent event)
 	{
-		event.register(FTBUFinals.MOD_ID);
+		event.register(FTBUtilities.MOD_ID);
 	}
 
 	@SubscribeEvent
 	public static void registerPlayerDataProvider(RegisterDataProvidersEvent.Player event)
 	{
-		event.register(FTBU_DATA, FTBUPlayerData::new);
+		event.register(FTBUtilities.MOD_ID, FTBUPlayerData::new);
 	}
 
 	@SubscribeEvent
 	public static void registerTeamDataProvider(RegisterDataProvidersEvent.Team event)
 	{
-		event.register(FTBU_DATA, FTBUTeamData::new);
+		event.register(FTBUtilities.MOD_ID, FTBUTeamData::new);
 	}
 
 	@SubscribeEvent
 	public static void registerSyncData(RegisterSyncDataEvent event)
 	{
-		event.register(FTBUFinals.MOD_ID, new FTBUSyncData());
+		event.register(FTBUtilities.MOD_ID, new FTBUSyncData());
 	}
 
 	@SubscribeEvent
@@ -109,18 +108,18 @@ public class FTBLibIntegration
 
 		if (event.isFirstLogin())
 		{
-			if (FTBUConfig.login.enable_starting_items)
+			if (FTBUtilitiesConfig.login.enable_starting_items)
 			{
-				for (ItemStack stack : FTBUConfig.login.getStartingItems())
+				for (ItemStack stack : FTBUtilitiesConfig.login.getStartingItems())
 				{
 					InvUtils.giveItem(player, stack.copy());
 				}
 			}
 		}
 
-		if (FTBUConfig.login.enable_motd)
+		if (FTBUtilitiesConfig.login.enable_motd)
 		{
-			for (ITextComponent t : FTBUConfig.login.getMOTD())
+			for (ITextComponent t : FTBUtilitiesConfig.login.getMOTD())
 			{
 				player.sendMessage(t);
 			}
@@ -197,7 +196,7 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void registerTeamGuiActions(RegisterTeamGuiActionsEvent event)
 	{
-		event.register(new TeamGuiAction(FTBUFinals.get("chat"), new TextComponentTranslation("sidebar_button.ftbutilities.chats.team"), GuiIcons.CHAT, -10)
+		event.register(new TeamGuiAction(new ResourceLocation(FTBUtilities.MOD_ID, "chat"), new TextComponentTranslation("sidebar_button." + FTBUtilities.MOD_ID + ".chats.team"), GuiIcons.CHAT, -10)
 		{
 			@Override
 			public boolean isAvailable(ForgeTeam team, ForgePlayer player, NBTTagCompound data)

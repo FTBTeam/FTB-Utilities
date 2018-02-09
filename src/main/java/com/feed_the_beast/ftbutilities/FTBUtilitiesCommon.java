@@ -19,14 +19,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class FTBUCommon
+public class FTBUtilitiesCommon
 {
 	public static final Collection<NodeEntry> CUSTOM_PERM_PREFIX_REGISTRY = new HashSet<>();
 	public static final Map<ResourceLocation, Leaderboard> LEADERBOARDS = new HashMap<>();
 
 	public void preInit()
 	{
-		FTBUConfig.sync();
+		FTBUtilitiesConfig.sync();
 
 		File oldConfig = new File(CommonUtils.folderLocal, "ftbu");
 
@@ -35,21 +35,21 @@ public class FTBUCommon
 			FileUtils.delete(oldConfig);
 		}
 
-		if (FTBUConfig.ranks.enabled)
+		if (FTBUtilitiesConfig.ranks.enabled)
 		{
 			PermissionAPI.setPermissionHandler(FTBUPermissionHandler.INSTANCE);
 		}
 
 		FTBUNetHandler.init();
 
-		if (!ForgeChunkManager.getConfig().hasCategory(FTBUFinals.MOD_ID))
+		if (!ForgeChunkManager.getConfig().hasCategory(FTBUtilities.MOD_ID))
 		{
-			ForgeChunkManager.getConfig().get(FTBUFinals.MOD_ID, "maximumChunksPerTicket", 1000000).setMinValue(0);
-			ForgeChunkManager.getConfig().get(FTBUFinals.MOD_ID, "maximumTicketCount", 1000000).setMinValue(0);
+			ForgeChunkManager.getConfig().get(FTBUtilities.MOD_ID, "maximumChunksPerTicket", 1000000).setMinValue(0);
+			ForgeChunkManager.getConfig().get(FTBUtilities.MOD_ID, "maximumTicketCount", 1000000).setMinValue(0);
 			ForgeChunkManager.getConfig().save();
 		}
 
-		ForgeChunkManager.setForcedChunkLoadingCallback(FTBU.INST, FTBULoadedChunkManager.INSTANCE);
+		ForgeChunkManager.setForcedChunkLoadingCallback(FTBUtilities.INST, FTBULoadedChunkManager.INSTANCE);
 		new CustomPermissionPrefixesRegistryEvent(CUSTOM_PERM_PREFIX_REGISTRY::add).post();
 	}
 

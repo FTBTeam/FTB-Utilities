@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbutilities.cmd.chunks;
 import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftbutilities.FTBULang;
-import com.feed_the_beast.ftbutilities.FTBUPermissions;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import net.minecraft.command.CommandException;
@@ -57,7 +57,7 @@ public class CmdUnloadAll extends CmdBase
 
 		if (args.length >= 2)
 		{
-			if (!PermissionAPI.hasPermission(player, FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS))
+			if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS))
 			{
 				throw FTBLibLang.COMMAND_PERMISSION.commandError();
 			}
@@ -80,6 +80,6 @@ public class CmdUnloadAll extends CmdBase
 			}
 		}
 
-		FTBULang.CHUNKS_UNLOADED_FOR.sendMessage(sender, p.getName());
+		FTBUtilitiesLang.CHUNKS_UNLOADED_FOR.sendMessage(sender, p.getName());
 	}
 }

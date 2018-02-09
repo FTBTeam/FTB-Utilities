@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbutilities.FTBULang;
-import com.feed_the_beast.ftbutilities.FTBUPermissions;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.CommandException;
@@ -47,17 +47,17 @@ public class CmdSetHome extends CmdBase
 
 		args[0] = args[0].toLowerCase();
 
-		int maxHomes = Ranks.getRank(server, player.getGameProfile()).getConfig(FTBUPermissions.HOMES_MAX).getInt();
+		int maxHomes = Ranks.getRank(server, player.getGameProfile()).getConfig(FTBUtilitiesPermissions.HOMES_MAX).getInt();
 
 		if (maxHomes <= 0 || data.homes.size() >= maxHomes)
 		{
 			if (maxHomes == 0 || data.homes.get(args[0]) == null)
 			{
-				throw FTBULang.HOME_LIMIT.commandError();
+				throw FTBUtilitiesLang.HOME_LIMIT.commandError();
 			}
 		}
 
 		data.homes.set(args[0], new BlockDimPos(player));
-		FTBULang.HOME_SET.sendMessage(sender, args[0]);
+		FTBUtilitiesLang.HOME_SET.sendMessage(sender, args[0]);
 	}
 }

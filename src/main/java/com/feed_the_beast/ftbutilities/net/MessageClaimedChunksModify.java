@@ -8,7 +8,7 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbutilities.FTBUPermissions;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUTeamData;
 import net.minecraft.entity.player.EntityPlayer;
@@ -82,7 +82,7 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 			return;
 		}
 
-		boolean canUnclaim = m.action == UNCLAIM && PermissionAPI.hasPermission(player, FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS);
+		boolean canUnclaim = m.action == UNCLAIM && PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS);
 
 		for (ChunkPos pos0 : m.chunks)
 		{

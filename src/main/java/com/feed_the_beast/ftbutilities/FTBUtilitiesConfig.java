@@ -20,9 +20,9 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-@Mod.EventBusSubscriber(modid = FTBUFinals.MOD_ID)
-@Config(modid = FTBUFinals.MOD_ID, category = "", name = "../local/ftbutilities/config")
-public class FTBUConfig
+@Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
+@Config(modid = FTBUtilities.MOD_ID, category = "", name = "../local/" + FTBUtilities.MOD_ID + "/config")
+public class FTBUtilitiesConfig
 {
 	@Config.RequiresWorldRestart
 	public static final AutoShutdown auto_shutdown = new AutoShutdown();
@@ -242,7 +242,7 @@ public class FTBUConfig
 
 	public static void sync()
 	{
-		ConfigManager.sync(FTBUFinals.MOD_ID, Config.Type.INSTANCE);
+		ConfigManager.sync(FTBUtilities.MOD_ID, Config.Type.INSTANCE);
 		login.motdComponents.clear();
 		login.startingItems.clear();
 
@@ -283,7 +283,7 @@ public class FTBUConfig
 	@SubscribeEvent
 	public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
 	{
-		if (event.getModID().equals(FTBUFinals.MOD_ID))
+		if (event.getModID().equals(FTBUtilities.MOD_ID))
 		{
 			sync();
 		}

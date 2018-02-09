@@ -7,7 +7,7 @@ import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -23,7 +23,7 @@ public class GuiLeaderboardList extends GuiButtonListBase
 	public GuiLeaderboardList(Map<ResourceLocation, ITextComponent> l)
 	{
 		leaderboards = l;
-		setTitle(FTBULang.LEADERBOARDS.translate());
+		setTitle(FTBUtilitiesLang.LEADERBOARDS.translate());
 	}
 
 	@Override

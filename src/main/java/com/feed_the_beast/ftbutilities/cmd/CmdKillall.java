@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbutilities.cmd;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -120,6 +120,6 @@ public class CmdKillall extends CmdBase
 			}
 		}
 
-		sender.sendMessage(FTBULang.KILLED_ENTITIES.textComponent(sender, killed, type));
+		sender.sendMessage(FTBUtilitiesLang.KILLED_ENTITIES.textComponent(sender, killed, type));
 	}
 }

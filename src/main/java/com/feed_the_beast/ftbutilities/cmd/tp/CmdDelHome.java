@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.Universe;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -44,11 +44,11 @@ public class CmdDelHome extends CmdBase
 
 		if (data.homes.set(args[0], null))
 		{
-			FTBULang.HOME_DEL.sendMessage(sender, args[0]);
+			FTBUtilitiesLang.HOME_DEL.sendMessage(sender, args[0]);
 		}
 		else
 		{
-			throw FTBULang.HOME_NOT_SET.commandError(args[0]);
+			throw FTBUtilitiesLang.HOME_NOT_SET.commandError(args[0]);
 		}
 	}
 }

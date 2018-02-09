@@ -6,8 +6,8 @@ import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.feed_the_beast.ftbutilities.FTBUConfig;
-import com.feed_the_beast.ftbutilities.FTBUPermissions;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.events.chunks.ChunkModifiedEvent;
 import com.feed_the_beast.ftbutilities.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;
@@ -111,7 +111,7 @@ public class ClaimedChunks
 		{
 			processQueue();
 
-			if (FTBUConfig.world.chunk_loading)
+			if (FTBUtilitiesConfig.world.chunk_loading)
 			{
 				for (ForgeTeam team : universe.getTeams())
 				{
@@ -221,7 +221,7 @@ public class ClaimedChunks
 			return true;
 		}
 
-		if (FTBUPermissions.canModifyBlock(player, hand, block, type))
+		if (FTBUtilitiesPermissions.canModifyBlock(player, hand, block, type))
 		{
 			return true;
 		}
@@ -234,19 +234,19 @@ public class ClaimedChunks
 	{
 		if (entity instanceof EntityPlayer)
 		{
-			if (FTBUConfig.world.safe_spawn && player.dimension == 0 && FTBUUniverseData.isInSpawn(player.mcServer, new ChunkDimPos(entity)))
+			if (FTBUtilitiesConfig.world.safe_spawn && player.dimension == 0 && FTBUUniverseData.isInSpawn(player.mcServer, new ChunkDimPos(entity)))
 			{
 				return false;
 			}
 
-			if (FTBUConfig.world.enable_pvp.isDefault())
+			if (FTBUtilitiesConfig.world.enable_pvp.isDefault())
 			{
 				boolean pvp1 = FTBUPlayerData.get(universe.getPlayer(player)).enablePVP.getBoolean();
 				boolean pvp2 = FTBUPlayerData.get(universe.getPlayer(entity)).enablePVP.getBoolean();
 				return pvp1 && pvp2;
 			}
 
-			return FTBUConfig.world.enable_pvp.isTrue();
+			return FTBUtilitiesConfig.world.enable_pvp.isTrue();
 		}
 
 		if (!(entity instanceof IMob))
@@ -260,7 +260,7 @@ public class ClaimedChunks
 
 	public ClaimResult claimChunk(@Nullable FTBUTeamData data, ChunkDimPos pos)
 	{
-		if (!FTBUConfig.world.allowDimension(pos.dim))
+		if (!FTBUtilitiesConfig.world.allowDimension(pos.dim))
 		{
 			return ClaimResult.DIMENSION_BLOCKED;
 		}
@@ -329,7 +329,7 @@ public class ClaimedChunks
 
 		if (loaded)
 		{
-			if (!FTBUConfig.world.allowDimension(pos.dim))
+			if (!FTBUtilitiesConfig.world.allowDimension(pos.dim))
 			{
 				return false;
 			}

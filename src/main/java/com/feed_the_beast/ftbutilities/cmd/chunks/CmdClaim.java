@@ -5,10 +5,10 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
-import com.feed_the_beast.ftbutilities.FTBUConfig;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
-import com.feed_the_beast.ftbutilities.FTBUNotifications;
-import com.feed_the_beast.ftbutilities.FTBUPermissions;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUTeamData;
 import net.minecraft.command.CommandException;
@@ -41,7 +41,7 @@ public class CmdClaim extends CmdBase
 
 		if (args.length >= 1)
 		{
-			if (!PermissionAPI.hasPermission(player, FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS))
+			if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS))
 			{
 				throw FTBLibLang.COMMAND_PERMISSION.commandError();
 			}
@@ -60,16 +60,16 @@ public class CmdClaim extends CmdBase
 
 		ChunkDimPos pos = new ChunkDimPos(player);
 
-		if (!FTBUConfig.world.allowDimension(pos.dim))
+		if (!FTBUtilitiesConfig.world.allowDimension(pos.dim))
 		{
-			Notification.of(FTBUFinals.get("cant_claim_chunk"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.claiming_not_enabled_dim")).setError().send(server, player);
+			Notification.of(FTBUtilitiesNotifications.CHUNK_CANT_CLAIM, TextComponentHelper.createComponentTranslation(player, FTBUtilities.MOD_ID + ".lang.chunks.claiming_not_enabled_dim")).setError().send(server, player);
 			return;
 		}
 
 		switch (ClaimedChunks.instance.claimChunk(FTBUTeamData.get(p.getTeam()), pos))
 		{
 			case SUCCESS:
-				Notification.of(FTBUFinals.get("chunk_modified"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.chunk_claimed")).send(server, player);
+				Notification.of(FTBUtilitiesNotifications.CHUNK_MODIFIED, TextComponentHelper.createComponentTranslation(player, FTBUtilities.MOD_ID + ".lang.chunks.chunk_claimed")).send(server, player);
 				CmdChunks.updateChunk(player, pos);
 				break;
 			case DIMENSION_BLOCKED:
@@ -77,7 +77,7 @@ public class CmdClaim extends CmdBase
 			case NO_POWER:
 				break;
 			case ALREADY_CLAIMED:
-				FTBUNotifications.sendCantModifyChunk(server, player);
+				FTBUtilitiesNotifications.sendCantModifyChunk(server, player);
 				break;
 		}
 	}

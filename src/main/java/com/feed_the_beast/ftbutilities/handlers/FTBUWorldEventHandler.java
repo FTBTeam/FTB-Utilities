@@ -5,9 +5,9 @@ import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
-import com.feed_the_beast.ftbutilities.FTBUConfig;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.cmd.CmdShutdown;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
@@ -41,10 +41,10 @@ import java.util.function.Function;
 /**
  * @author LatvianModder
  */
-@Mod.EventBusSubscriber(modid = FTBUFinals.MOD_ID)
+@Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
 public class FTBUWorldEventHandler
 {
-	private static final ResourceLocation RESTART_TIMER_ID = FTBUFinals.get("restart_timer");
+	private static final ResourceLocation RESTART_TIMER_ID = new ResourceLocation(FTBUtilities.MOD_ID, "restart_timer");
 
 	@SubscribeEvent
 	public static void onMobSpawned(EntityJoinWorldEvent event)
@@ -104,7 +104,7 @@ public class FTBUWorldEventHandler
 				{
 					for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
 					{
-						Notification.of(RESTART_TIMER_ID, StringUtils.color(FTBULang.TIMER_SHUTDOWN.textComponent(player, StringUtils.getTimeStringTicks(t / CommonUtils.TICKS_SECOND)), TextFormatting.LIGHT_PURPLE)).send(universe.server, player);
+						Notification.of(RESTART_TIMER_ID, StringUtils.color(FTBUtilitiesLang.TIMER_SHUTDOWN.textComponent(player, StringUtils.getTimeStringTicks(t / CommonUtils.TICKS_SECOND)), TextFormatting.LIGHT_PURPLE)).send(universe.server, player);
 					}
 				}
 			}
@@ -148,7 +148,7 @@ public class FTBUWorldEventHandler
 			return true;
 		}
 
-		if (FTBUConfig.world.safe_spawn && FTBUUniverseData.isInSpawn(entity.getServer(), new ChunkDimPos(entity)))
+		if (FTBUtilitiesConfig.world.safe_spawn && FTBUUniverseData.isInSpawn(entity.getServer(), new ChunkDimPos(entity)))
 		{
 			if (entity instanceof IMob)
 			{
@@ -181,19 +181,19 @@ public class FTBUWorldEventHandler
 
 		Function<ChunkDimPos, Boolean> func = pos ->
 		{
-			if (pos.dim == 0 && FTBUConfig.world.safe_spawn && FTBUUniverseData.isInSpawn(server, pos))
+			if (pos.dim == 0 && FTBUtilitiesConfig.world.safe_spawn && FTBUUniverseData.isInSpawn(server, pos))
 			{
 				return false;
 			}
 			else
 			{
-				if (FTBUConfig.world.enable_explosions.isDefault())
+				if (FTBUtilitiesConfig.world.enable_explosions.isDefault())
 				{
 					ClaimedChunk chunk = ClaimedChunks.instance == null ? null : ClaimedChunks.instance.getChunk(pos);
 					return chunk == null || chunk.hasExplosions();
 				}
 
-				return FTBUConfig.world.enable_explosions.isTrue();
+				return FTBUtilitiesConfig.world.enable_explosions.isTrue();
 			}
 		};
 

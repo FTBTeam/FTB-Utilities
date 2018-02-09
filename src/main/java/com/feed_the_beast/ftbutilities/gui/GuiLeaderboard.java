@@ -6,7 +6,7 @@ import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.data.LeaderboardValue;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -66,7 +66,7 @@ public class GuiLeaderboard extends GuiButtonListBase
 
 	public GuiLeaderboard(ITextComponent c, List<LeaderboardValue> l)
 	{
-		setTitle(FTBULang.LEADERBOARDS.translate() + " > " + c.getFormattedText());
+		setTitle(FTBUtilitiesLang.LEADERBOARDS.translate() + " > " + c.getFormattedText());
 		leaderboard = l;
 	}
 

@@ -4,8 +4,8 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.BroadcastSender;
-import com.feed_the_beast.ftbutilities.FTBUConfig;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -26,16 +26,16 @@ public class CmdBackup extends CmdTreeBase
 			boolean b = Backups.INSTANCE.run(server, sender, args.length == 0 ? "" : args[0]);
 			if (b)
 			{
-				FTBULang.BACKUP_MANUAL_LAUNCH.sendMessage(new BroadcastSender(server), sender.getName());
+				FTBUtilitiesLang.BACKUP_MANUAL_LAUNCH.sendMessage(new BroadcastSender(server), sender.getName());
 
-				if (!FTBUConfig.backups.use_separate_thread)
+				if (!FTBUtilitiesConfig.backups.use_separate_thread)
 				{
 					Backups.INSTANCE.postBackup(server);
 				}
 			}
 			else
 			{
-				FTBULang.BACKUP_ALREADY_RUNNING.sendMessage(sender);
+				FTBUtilitiesLang.BACKUP_ALREADY_RUNNING.sendMessage(sender);
 			}
 		}
 	}
@@ -54,11 +54,11 @@ public class CmdBackup extends CmdTreeBase
 			{
 				Backups.INSTANCE.thread.interrupt();
 				Backups.INSTANCE.thread = null;
-				FTBULang.BACKUP_STOP.sendMessage(sender);
+				FTBUtilitiesLang.BACKUP_STOP.sendMessage(sender);
 				return;
 			}
 
-			throw FTBULang.BACKUP_NOT_RUNNING.commandError();
+			throw FTBUtilitiesLang.BACKUP_NOT_RUNNING.commandError();
 		}
 	}
 
@@ -74,7 +74,7 @@ public class CmdBackup extends CmdTreeBase
 		{
 			String sizeW = FileUtils.getSizeS(sender.getEntityWorld().getSaveHandler().getWorldDirectory());
 			String sizeT = FileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
-			FTBULang.BACKUP_SIZE.sendMessage(sender, sizeW, sizeT);
+			FTBUtilitiesLang.BACKUP_SIZE.sendMessage(sender, sizeW, sizeT);
 		}
 	}
 

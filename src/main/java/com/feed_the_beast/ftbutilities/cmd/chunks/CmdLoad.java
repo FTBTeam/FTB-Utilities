@@ -5,8 +5,8 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
-import com.feed_the_beast.ftbutilities.FTBUNotifications;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -38,12 +38,12 @@ public class CmdLoad extends CmdBase
 
 		if (p.getTeam() != null && ClaimedChunks.instance.setLoaded(p.getTeam(), pos, true))
 		{
-			Notification.of(FTBUFinals.get("chunk_modified"), TextComponentHelper.createComponentTranslation(player, FTBUFinals.MOD_ID + ".lang.chunks.chunk_loaded")).send(server, player);
+			Notification.of(FTBUtilitiesNotifications.CHUNK_MODIFIED, TextComponentHelper.createComponentTranslation(player, FTBUtilities.MOD_ID + ".lang.chunks.chunk_loaded")).send(server, player);
 			CmdChunks.updateChunk(player, pos);
 		}
 		else
 		{
-			FTBUNotifications.sendCantModifyChunk(server, player);
+			FTBUtilitiesNotifications.sendCantModifyChunk(server, player);
 		}
 	}
 }

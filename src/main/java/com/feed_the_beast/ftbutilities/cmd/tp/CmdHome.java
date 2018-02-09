@@ -6,8 +6,8 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
-import com.feed_the_beast.ftbutilities.FTBULang;
-import com.feed_the_beast.ftbutilities.FTBUPermissions;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.CommandException;
@@ -72,7 +72,7 @@ public class CmdHome extends CmdBase
 				p = getForgePlayer(sender);
 			}
 
-			if (sender instanceof EntityPlayer && !p.equalsPlayer(getForgePlayer(sender)) && !PermissionAPI.hasPermission((EntityPlayer) sender, FTBUPermissions.HOMES_LIST_OTHER))
+			if (sender instanceof EntityPlayer && !p.equalsPlayer(getForgePlayer(sender)) && !PermissionAPI.hasPermission((EntityPlayer) sender, FTBUtilitiesPermissions.HOMES_LIST_OTHER))
 			{
 				throw FTBLibLang.COMMAND_PERMISSION.commandError();
 			}
@@ -80,7 +80,7 @@ public class CmdHome extends CmdBase
 			FTBUPlayerData data = FTBUPlayerData.get(p);
 
 			Collection<String> list = data.homes.list();
-			ITextComponent msg = new TextComponentString(p.getName() + ": " + list.size() + " / " + Ranks.getRank(server, p.getProfile()).getConfig(FTBUPermissions.HOMES_MAX).getInt() + ": ");
+			ITextComponent msg = new TextComponentString(p.getName() + ": " + list.size() + " / " + Ranks.getRank(server, p.getProfile()).getConfig(FTBUtilitiesPermissions.HOMES_MAX).getInt() + ": ");
 
 			if (!list.isEmpty())
 			{
@@ -131,7 +131,7 @@ public class CmdHome extends CmdBase
 			p = getForgePlayer(sender);
 		}
 
-		if (sender instanceof EntityPlayer && !p.equalsPlayer(getForgePlayer(sender)) && !PermissionAPI.hasPermission((EntityPlayer) sender, FTBUPermissions.HOMES_TELEPORT_OTHER))
+		if (sender instanceof EntityPlayer && !p.equalsPlayer(getForgePlayer(sender)) && !PermissionAPI.hasPermission((EntityPlayer) sender, FTBUtilitiesPermissions.HOMES_TELEPORT_OTHER))
 		{
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
@@ -142,14 +142,14 @@ public class CmdHome extends CmdBase
 
 		if (pos == null)
 		{
-			throw FTBULang.HOME_NOT_SET.commandError(args[0]);
+			throw FTBUtilitiesLang.HOME_NOT_SET.commandError(args[0]);
 		}
-		else if (player.dimension != pos.dim && !PermissionAPI.hasPermission(player, FTBUPermissions.HOMES_CROSS_DIM))
+		else if (player.dimension != pos.dim && !PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.HOMES_CROSS_DIM))
 		{
-			throw FTBULang.HOME_CROSS_DIM.commandError();
+			throw FTBUtilitiesLang.HOME_CROSS_DIM.commandError();
 		}
 
 		ServerUtils.teleportEntity(player, pos);
-		FTBULang.WARP_TP.sendMessage(sender, args[0]);
+		FTBUtilitiesLang.WARP_TP.sendMessage(sender, args[0]);
 	}
 }

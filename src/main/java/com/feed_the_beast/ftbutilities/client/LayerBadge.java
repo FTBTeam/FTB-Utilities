@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbutilities.client;
 
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
-import com.feed_the_beast.ftbutilities.FTBUItems;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesItems;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -21,7 +21,7 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 	@Override
 	public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
 	{
-		if (FTBUClientConfig.general.render_badges && !player.isInvisible())
+		if (FTBUtilitiesClientConfig.general.render_badges && !player.isInvisible())
 		{
 			UUID id = player.getGameProfile().getId();
 			Icon tex = CachedClientData.getBadge(id);
@@ -49,7 +49,7 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 			}
 
 			ItemStack armor = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-			if (FTBUItems.SILENTGEMS_CHESTPLATE != Items.AIR && armor.getItem() == FTBUItems.SILENTGEMS_CHESTPLATE)
+			if (FTBUtilitiesItems.SILENTGEMS_CHESTPLATE != Items.AIR && armor.getItem() == FTBUtilitiesItems.SILENTGEMS_CHESTPLATE)
 			{
 				GlStateManager.translate(0F, 0F, -0.1F);
 			}

@@ -10,7 +10,7 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbutilities.FTBUPermissions;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUTeamData;
@@ -62,7 +62,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 		maxLoadedChunks = teamData == null ? -1 : teamData.getMaxChunkloaderChunks();
 		teams = new HashMap<>();
 
-		boolean canSeeChunkInfo = PermissionAPI.hasPermission(player, FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS);
+		boolean canSeeChunkInfo = PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS);
 
 		for (int x1 = 0; x1 < ChunkSelectorMap.TILES_GUI; x1++)
 		{

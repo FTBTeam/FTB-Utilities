@@ -7,9 +7,8 @@ import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
-import com.feed_the_beast.ftbutilities.FTBUPermissions;
-import com.feed_the_beast.ftbutilities.integration.FTBLibIntegration;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,7 +27,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 {
 	public static FTBUTeamData get(ForgeTeam team)
 	{
-		return team.getData().get(FTBLibIntegration.FTBU_DATA);
+		return team.getData().get(FTBUtilities.MOD_ID);
 	}
 
 	public final ForgeTeam team;
@@ -135,12 +134,11 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 
 	public void addConfig(ForgeTeamConfigEvent event)
 	{
-		String group = FTBUFinals.MOD_ID;
-		event.getConfig().setGroupName(group, new TextComponentString(FTBUFinals.MOD_NAME));
-		event.getConfig().add(group, "explosions", explosions);
-		event.getConfig().add(group, "blocks_edit", editBlocks);
-		event.getConfig().add(group, "blocks_interact", interactWithBlocks);
-		event.getConfig().add(group, "attack_entities", attackEntities);
+		event.getConfig().setGroupName(FTBUtilities.MOD_ID, new TextComponentString(FTBUtilities.MOD_NAME));
+		event.getConfig().add(FTBUtilities.MOD_ID, "explosions", explosions);
+		event.getConfig().add(FTBUtilities.MOD_ID, "blocks_edit", editBlocks);
+		event.getConfig().add(FTBUtilities.MOD_ID, "blocks_interact", interactWithBlocks);
+		event.getConfig().add(FTBUtilities.MOD_ID, "attack_entities", attackEntities);
 	}
 
 	public int getMaxClaimChunks()
@@ -149,7 +147,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 
 		for (ForgePlayer player : team.getMembers())
 		{
-			p += Ranks.getRank(team.universe.server, player.getProfile()).getConfig(FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
+			p += Ranks.getRank(team.universe.server, player.getProfile()).getConfig(FTBUtilitiesPermissions.CLAIMS_MAX_CHUNKS).getInt();
 		}
 
 		return p;
@@ -161,7 +159,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 
 		for (ForgePlayer player : team.getMembers())
 		{
-			p += Ranks.getRank(team.universe.server, player.getProfile()).getConfig(FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+			p += Ranks.getRank(team.universe.server, player.getProfile()).getConfig(FTBUtilitiesPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
 		}
 
 		return p;

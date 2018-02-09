@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbutilities.cmd.tp;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.data.FTBUUniverseData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -38,11 +38,11 @@ public class CmdDelWarp extends CmdBase
 
 		if (FTBUUniverseData.WARPS.set(args[0], null))
 		{
-			FTBULang.WARP_DEL.sendMessage(sender, args[0]);
+			FTBUtilitiesLang.WARP_DEL.sendMessage(sender, args[0]);
 		}
 		else
 		{
-			throw FTBULang.WARP_NOT_SET.commandError(args[0]);
+			throw FTBUtilitiesLang.WARP_NOT_SET.commandError(args[0]);
 		}
 	}
 }

@@ -4,9 +4,9 @@ import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
-import com.feed_the_beast.ftbutilities.FTBUConfig;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
-import com.feed_the_beast.ftbutilities.FTBULang;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import net.minecraft.command.ICommandSender;
@@ -27,7 +27,7 @@ public enum Backups
 {
 	INSTANCE;
 
-	public static final ResourceLocation NOTIFICATION_ID = FTBUFinals.get("backup");
+	public static final ResourceLocation NOTIFICATION_ID = new ResourceLocation(FTBUtilities.MOD_ID, "backup");
 
 	public final List<Backup> backups = new ArrayList<>();
 	public File backupsFolder;
@@ -36,7 +36,7 @@ public enum Backups
 
 	public void init()
 	{
-		backupsFolder = FTBUConfig.backups.folder.isEmpty() ? new File(CommonUtils.folderMinecraft, "/backups/") : new File(FTBUConfig.backups.folder);
+		backupsFolder = FTBUtilitiesConfig.backups.folder.isEmpty() ? new File(CommonUtils.folderMinecraft, "/backups/") : new File(FTBUtilitiesConfig.backups.folder);
 		thread = null;
 
 		backups.clear();
@@ -80,7 +80,7 @@ public enum Backups
 						Calendar c = Calendar.getInstance();
 						c.set(year, month, day, hours, minutes, seconds);
 
-						if (FTBUConfig.backups.compression_level > 0)
+						if (FTBUtilitiesConfig.backups.compression_level > 0)
 						{
 							s += ".zip";
 						}
@@ -92,7 +92,7 @@ public enum Backups
 		}
 
 		cleanupAndSave();
-		FTBUFinals.LOGGER.info("Backups folder - " + backupsFolder.getAbsolutePath());
+		FTBUtilities.LOGGER.info("Backups folder - " + backupsFolder.getAbsolutePath());
 	}
 
 	public static void notifyAll(MinecraftServer server, Function<ICommandSender, ITextComponent> function, boolean error)
@@ -104,7 +104,7 @@ public enum Backups
 			Notification.of(NOTIFICATION_ID, component).setImportant(true).send(server, null);
 		}
 
-		FTBUFinals.LOGGER.info(function.apply(null).getUnformattedText());
+		FTBUtilities.LOGGER.info(function.apply(null).getUnformattedText());
 	}
 
 	public boolean run(MinecraftServer server, ICommandSender sender, String customName)
@@ -116,13 +116,13 @@ public enum Backups
 
 		boolean auto = !(sender instanceof EntityPlayerMP);
 
-		if (auto && !FTBUConfig.backups.enabled)
+		if (auto && !FTBUtilitiesConfig.backups.enabled)
 		{
 			return false;
 		}
 
-		notifyAll(server, player -> FTBULang.BACKUP_START.textComponent(player, sender.getName()), false);
-		nextBackup = CommonUtils.getWorldTime() + FTBUConfig.backups.ticks();
+		notifyAll(server, player -> FTBUtilitiesLang.BACKUP_START.textComponent(player, sender.getName()), false);
+		nextBackup = CommonUtils.getWorldTime() + FTBUtilitiesConfig.backups.ticks();
 
 		try
 		{
@@ -145,7 +145,7 @@ public enum Backups
 			}
 			catch (Exception ex1)
 			{
-				notifyAll(server, FTBULang.BACKUP_SAVING_FAILED::textComponent, true);
+				notifyAll(server, FTBUtilitiesLang.BACKUP_SAVING_FAILED::textComponent, true);
 			}
 		}
 		catch (Exception ex)
@@ -155,7 +155,7 @@ public enum Backups
 
 		File wd = server.getEntityWorld().getSaveHandler().getWorldDirectory();
 
-		if (FTBUConfig.backups.use_separate_thread)
+		if (FTBUtilitiesConfig.backups.use_separate_thread)
 		{
 			thread = new ThreadBackup(server, wd, customName);
 			thread.start();
@@ -176,7 +176,7 @@ public enum Backups
 		{
 			backups.sort(Backup.COMPARATOR);
 
-			int backupsToKeep = FTBUConfig.backups.backups_to_keep;
+			int backupsToKeep = FTBUtilitiesConfig.backups.backups_to_keep;
 
 			if (backupsToKeep > 0)
 			{
@@ -189,7 +189,7 @@ public enum Backups
 						for (int i = toDelete - 1; i >= 0; i--)
 						{
 							Backup b = backups.get(i);
-							FTBUFinals.LOGGER.info(FTBULang.BACKUP_DELETING_OLD.translate(b.fileId));
+							FTBUtilities.LOGGER.info(FTBUtilitiesLang.BACKUP_DELETING_OLD.translate(b.fileId));
 							FileUtils.delete(b.getFile());
 							backups.remove(i);
 						}

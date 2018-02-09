@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbutilities.cmd;
 
 import com.feed_the_beast.ftblib.events.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
-import com.feed_the_beast.ftbutilities.FTBUConfig;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.cmd.chunks.CmdChunks;
 import com.feed_the_beast.ftbutilities.cmd.ranks.CmdRanks;
 import com.feed_the_beast.ftbutilities.cmd.tp.CmdBack;
@@ -30,96 +30,96 @@ public class FTBUCommands
 			event.add(new CmdShutdown());
 		}
 
-		if (FTBUConfig.commands.inv)
+		if (FTBUtilitiesConfig.commands.inv)
 		{
 			event.add(new CmdInv());
 		}
 
-		if (FTBUConfig.commands.warp)
+		if (FTBUtilitiesConfig.commands.warp)
 		{
 			event.add(new CmdWarp());
 			event.add(new CmdSetWarp());
 			event.add(new CmdDelWarp());
 		}
 
-		if (FTBUConfig.backups.enabled)
+		if (FTBUtilitiesConfig.backups.enabled)
 		{
 			event.add(new CmdBackup());
 		}
 
-		if (FTBUConfig.commands.home)
+		if (FTBUtilitiesConfig.commands.home)
 		{
 			event.add(new CmdHome());
 			event.add(new CmdSetHome());
 			event.add(new CmdDelHome());
 		}
 
-		if (FTBUConfig.commands.tpl)
+		if (FTBUtilitiesConfig.commands.tpl)
 		{
 			event.add(new CmdTplast());
 		}
 
-		if (FTBUConfig.commands.trash_can)
+		if (FTBUtilitiesConfig.commands.trash_can)
 		{
 			event.add(new CmdTrashCan());
 		}
 
-		if (FTBUConfig.commands.back)
+		if (FTBUtilitiesConfig.commands.back)
 		{
 			event.add(new CmdBack());
 		}
 
-		if (FTBUConfig.commands.spawn)
+		if (FTBUtilitiesConfig.commands.spawn)
 		{
 			event.add(new CmdSpawn());
 		}
 
-		if (FTBUConfig.commands.chunks)
+		if (FTBUtilitiesConfig.commands.chunks)
 		{
 			event.add(new CmdChunks());
 		}
 
-		if (FTBUConfig.commands.kickme)
+		if (FTBUtilitiesConfig.commands.kickme)
 		{
 			event.add(new CmdKickme());
 		}
 
-		if (FTBUConfig.commands.ranks)
+		if (FTBUtilitiesConfig.commands.ranks)
 		{
 			event.add(new CmdRanks());
 		}
 
-		if (FTBUConfig.commands.heal)
+		if (FTBUtilitiesConfig.commands.heal)
 		{
 			event.add(new CmdHeal());
 		}
 
-		if (FTBUConfig.commands.set_hour)
+		if (FTBUtilitiesConfig.commands.set_hour)
 		{
 			event.add(new CmdSetHour());
 		}
 
-		if (FTBUConfig.commands.killall)
+		if (FTBUtilitiesConfig.commands.killall)
 		{
 			event.add(new CmdKillall());
 		}
 
-		if (FTBUConfig.commands.nbtedit)
+		if (FTBUtilitiesConfig.commands.nbtedit)
 		{
 			event.add(new CmdEditNBT());
 		}
 
-		if (FTBUConfig.commands.view_crash)
+		if (FTBUtilitiesConfig.commands.view_crash)
 		{
 			event.add(new CmdViewCrash());
 		}
 
-		if (FTBUConfig.commands.fly)
+		if (FTBUtilitiesConfig.commands.fly)
 		{
 			event.add(new CmdFly());
 		}
 
-		if (FTBUConfig.commands.leaderboard)
+		if (FTBUtilitiesConfig.commands.leaderboard)
 		{
 			event.add(new CmdLeaderboard());
 		}

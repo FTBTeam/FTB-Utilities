@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbutilities.handlers;
 
-import com.feed_the_beast.ftbutilities.FTBUConfig;
-import com.feed_the_beast.ftbutilities.FTBUFinals;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.entity.EntityList;
@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 /**
  * @author LatvianModder
  */
-@Mod.EventBusSubscriber(modid = FTBUFinals.MOD_ID)
+@Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
 public class FTBUServerEventHandler
 {
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -27,7 +27,7 @@ public class FTBUServerEventHandler
 	{
 		String msg = event.getMessage().trim();
 
-		if (FTBUConfig.ranks.override_chat)
+		if (FTBUtilitiesConfig.ranks.override_chat)
 		{
 			Rank rank = Ranks.getRank(event.getPlayer().mcServer, event.getPlayer().getGameProfile());
 

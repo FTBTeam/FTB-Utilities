@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftbutilities.FTBUFinals;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -188,8 +189,13 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 		return syntax == null ? getParent().getSyntax() : syntax;
 	}
 
-	public String getFormattedName(String name)
+	public String getFormattedName(String name, String tag)
 	{
-		return getSyntax().replace("$name", name);
+		String s = getSyntax();
+		s = s.replace("$name", name);
+		s = s.replace("$rank", getName());
+		s = s.replace("$tag", tag);
+		s = s.replaceAll("\\[]", "");
+		return s;
 	}
 }

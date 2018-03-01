@@ -77,6 +77,7 @@ team_config.ftbutilities.blocks_edit=Required Level for Block Editing
 team_config.ftbutilities.blocks_interact=Required Level for Block Interactions
 team_config.ftbutilities.attack_entities=Required Level for Attacking Entities
 team_config.ftbutilities.explosions=Enable Explosions in Claimed Chunks
+team_config.ftbutilities.tag=Team Tag for displaying in chat
 team_config.ftbutilities.fake_players=Allow Fake Players to Interact With Blocks
 
 # Action Buttons

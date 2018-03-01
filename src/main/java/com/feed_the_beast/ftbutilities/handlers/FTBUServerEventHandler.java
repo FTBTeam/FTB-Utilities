@@ -1,7 +1,12 @@
 package com.feed_the_beast.ftbutilities.handlers;
 
+import com.feed_the_beast.ftblib.FTBLibConfig;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftbutilities.FTBUConfig;
 import com.feed_the_beast.ftbutilities.FTBUFinals;
+import com.feed_the_beast.ftbutilities.data.FTBUTeamData;
+import com.feed_the_beast.ftbutilities.gui.ClientClaimedChunks;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.entity.EntityList;
@@ -32,7 +37,13 @@ public class FTBUServerEventHandler
 			Rank rank = Ranks.getRank(event.getPlayer().mcServer, event.getPlayer().getGameProfile());
 
 			ITextComponent main = new TextComponentString("");
-			ITextComponent name = new TextComponentString(rank.getFormattedName(event.getPlayer().getDisplayNameString()));
+
+			// FIXME: Find a better way getting tag
+			ForgePlayer player = Universe.get().getPlayer(event.getPlayer());
+			FTBUTeamData teamData = FTBUTeamData.get(player.team);
+			String tag = teamData.tag.getString();
+
+			ITextComponent name = new TextComponentString(rank.getFormattedName(event.getPlayer().getDisplayNameString(), tag));
 
 			name.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + event.getPlayer().getName() + " "));
 

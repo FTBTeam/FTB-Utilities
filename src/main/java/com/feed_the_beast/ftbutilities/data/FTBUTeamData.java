@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
+import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
@@ -36,6 +37,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 	private final ConfigEnum<EnumTeamStatus> interactWithBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	private final ConfigEnum<EnumTeamStatus> attackEntities = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	public final ConfigBoolean explosions = new ConfigBoolean(false);
+	public final ConfigString tag = new ConfigString("", 3);
 	public boolean canForceChunks = false;
 
 	public FTBUTeamData(ForgeTeam t)
@@ -51,6 +53,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 		nbt.setString("EditBlocks", editBlocks.getString());
 		nbt.setString("InteractWithBlocks", interactWithBlocks.getString());
 		nbt.setString("AttackEntities", attackEntities.getString());
+		nbt.setString("Tag", tag.getString());
 
 		Int2ObjectOpenHashMap<NBTTagList> claimedChunks = new Int2ObjectOpenHashMap<>();
 
@@ -100,6 +103,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 		editBlocks.setValueFromString(nbt.getString("EditBlocks"), false);
 		interactWithBlocks.setValueFromString(nbt.getString("InteractWithBlocks"), false);
 		attackEntities.setValueFromString(nbt.getString("AttackEntities"), false);
+		tag.setValueFromString(nbt.getString("Tag"), false);
 
 		NBTTagCompound claimedChunksTag = nbt.getCompoundTag("ClaimedChunks");
 
@@ -141,6 +145,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 		event.getConfig().add(group, "blocks_edit", editBlocks);
 		event.getConfig().add(group, "blocks_interact", interactWithBlocks);
 		event.getConfig().add(group, "attack_entities", attackEntities);
+		event.getConfig().add(group, "tag", tag);
 	}
 
 	public int getMaxClaimChunks()

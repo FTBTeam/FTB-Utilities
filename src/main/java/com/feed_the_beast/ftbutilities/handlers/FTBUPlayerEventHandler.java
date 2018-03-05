@@ -40,7 +40,9 @@ public class FTBUPlayerEventHandler
 	{
 		if (event.getEntity() instanceof EntityPlayerMP)
 		{
-			FTBUPlayerData.get(Universe.get().getPlayer(event.getEntity())).lastDeath = new BlockDimPos(event.getEntity());
+			FTBUPlayerData data = FTBUPlayerData.get(Universe.get().getPlayer(event.getEntity()));
+			data.lastDeath = new BlockDimPos(event.getEntity());
+			data.player.markDirty();
 		}
 	}
 
@@ -61,6 +63,7 @@ public class FTBUPlayerEventHandler
 		}
 
 		FTBUPlayerData.get(p).lastSafePos = new BlockDimPos(player);
+		p.markDirty();
 		updateChunkMessage(player, new ChunkDimPos(event.getNewChunkX(), event.getNewChunkZ(), player.dimension));
 	}
 
@@ -82,7 +85,7 @@ public class FTBUPlayerEventHandler
 
 			if (team != null)
 			{
-				Notification notification = Notification.of(FTBUtilitiesNotifications.CHUNK_CHANGED, StringUtils.color(new TextComponentString(team.getTitle()), team.getColor().getTextFormatting()));
+				Notification notification = Notification.of(FTBUtilitiesNotifications.CHUNK_CHANGED, team.getTitle());
 
 				if (!team.getDesc().isEmpty())
 				{

@@ -45,6 +45,7 @@ public class CmdDelHome extends CmdBase
 		if (data.homes.set(args[0], null))
 		{
 			FTBUtilitiesLang.HOME_DEL.sendMessage(sender, args[0]);
+			data.player.markDirty();
 		}
 		else
 		{

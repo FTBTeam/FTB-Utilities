@@ -9,7 +9,7 @@ public interface FTBUtilitiesLang
 {
 	LangKey TIMER_SHUTDOWN = get("lang.timer.shutdown", String.class);
 	LangKey TIMER_BACKUP = get("lang.timer.backup", String.class);
-	LangKey LEADERBOARDS = get("sidebar_button.ftbutilities.leaderboards");
+	LangKey LEADERBOARDS = LangKey.of("sidebar_button.ftbutilities.leaderboards");
 	LangKey KILLED_ENTITIES = get("lang.killed_entities", Integer.class, String.class);
 	LangKey GUIDE_UNSUPPORTED_FORMAT = get("lang.guide.unsupported_format");
 	LangKey GUIDE_COMMANDS_FAILED = get("lang.guide.commands_failed");

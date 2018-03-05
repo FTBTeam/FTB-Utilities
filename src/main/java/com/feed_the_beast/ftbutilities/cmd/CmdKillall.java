@@ -27,6 +27,7 @@ import java.util.function.Predicate;
  */
 public class CmdKillall extends CmdBase
 {
+	private static final Predicate<Entity> ALL = CommonUtils.alwaysTruePredicate();
 	private static final Predicate<Entity> ITEM = entity -> entity instanceof EntityItem;
 	private static final Predicate<Entity> XP = entity -> entity instanceof EntityXPOrb;
 	private static final Predicate<Entity> MOB = entity -> entity instanceof IMob;
@@ -35,7 +36,7 @@ public class CmdKillall extends CmdBase
 	private static final Predicate<Entity> PLAYER = entity -> entity instanceof EntityPlayer;
 	private static final Predicate<Entity> NON_LIVING = entity -> !(entity instanceof EntityLivingBase);
 	private static final Predicate<Entity> NON_PLAYER = entity -> !(entity instanceof EntityPlayer);
-	private static final List<String> TAB = Arrays.asList("items", "xp", "monsters", "animals", "living", "players", "non_living", "non_players", "all");
+	private static final List<String> TAB = Arrays.asList("all", "items", "xp", "monsters", "animals", "living", "players", "non_living", "non_players");
 
 	public CmdKillall()
 	{
@@ -56,7 +57,7 @@ public class CmdKillall extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		Predicate<Entity> predicate = CommonUtils.alwaysTruePredicate();
+		Predicate<Entity> predicate = ALL;
 		String type = "all";
 
 		if (args.length >= 1)
@@ -114,7 +115,7 @@ public class CmdKillall extends CmdBase
 			{
 				if (predicate.test(entity))
 				{
-					entity.setDead();
+					entity.onKillCommand();
 					killed++;
 				}
 			}

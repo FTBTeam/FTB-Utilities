@@ -5,19 +5,15 @@ import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.apache.commons.io.IOUtils;
+import net.minecraft.world.storage.ThreadedFileIOBase;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.net.HttpURLConnection;
-import java.net.Socket;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +24,7 @@ import java.util.UUID;
  */
 public class Badges
 {
-	public static final String MAIN_ADDRESS = "badges.latmod.com";
-	public static final int MAIN_PORT = 25566;
-	private static final String FALLBACK_URL = "http://badges.latmod.com/get?id=";
+	private static final String URL = "http://badges.latmod.com/get?id=";
 
 	public static final Map<UUID, String> BADGE_CACHE = new HashMap<>();
 	public static final Map<UUID, String> LOCAL_BADGES = new HashMap<>();
@@ -65,58 +59,25 @@ public class Badges
 
 		FTBUPlayerData data = FTBUPlayerData.get(player);
 
-		if (!data.renderBadge.getBoolean())
+		if (!data.renderBadge())
 		{
 			return "";
 		}
-		else if (FTBUtilitiesConfig.login.enable_global_badges && !data.disableGlobalBadge.getBoolean())
+		else if (FTBUtilitiesConfig.login.enable_global_badges && !data.disableGlobalBadge())
 		{
-			Socket socket = null;
-			DataOutputStream output = null;
-			DataInputStream input = null;
-
 			try
 			{
-				socket = new Socket(MAIN_ADDRESS, MAIN_PORT);
-				output = new DataOutputStream(socket.getOutputStream());
-				output.writeLong(playerId.getMostSignificantBits());
-				output.writeLong(playerId.getLeastSignificantBits());
-				output.flush();
-				input = new DataInputStream(socket.getInputStream());
-				String badge = input.readUTF();
-				boolean event = input.readBoolean();
+				HttpURLConnection connection = (HttpURLConnection) new URL(URL + StringUtils.fromUUID(playerId)).openConnection();
+				String badge = StringUtils.readString(connection.getInputStream(), 32);
 
-				if (!badge.isEmpty() && (FTBUtilitiesConfig.login.enable_event_badges || !event))
+				if (!badge.isEmpty() && (FTBUtilitiesConfig.login.enable_event_badges || !"true".equals(connection.getHeaderField("Event-Badge"))))
 				{
 					return badge;
 				}
-
-				IOUtils.closeQuietly(input);
-				IOUtils.closeQuietly(output);
-				IOUtils.closeQuietly(socket);
 			}
 			catch (Exception ex)
 			{
-				IOUtils.closeQuietly(input);
-				IOUtils.closeQuietly(output);
-				IOUtils.closeQuietly(socket);
-
-				FTBUtilities.LOGGER.warn("Main Badge API errored, using fallback: " + ex);
-
-				try
-				{
-					HttpURLConnection connection = (HttpURLConnection) new URL(FALLBACK_URL + StringUtils.fromUUID(playerId)).openConnection();
-					String badge = StringUtils.readString(connection.getInputStream());
-
-					if (!badge.isEmpty())
-					{
-						return badge;
-					}
-				}
-				catch (Exception ex2)
-				{
-					FTBUtilities.LOGGER.warn("Fallback Badge API errored: " + ex2);
-				}
+				//FTBUtilities.LOGGER.warn("Badge API errored: " + ex);
 			}
 		}
 
@@ -134,10 +95,14 @@ public class Badges
 
 			if (!file.exists())
 			{
-				JsonObject o = new JsonObject();
-				o.addProperty("uuid", "url_to.png");
-				o.addProperty("username", "url2_to.png");
-				JsonUtils.toJson(o, file);
+				ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
+				{
+					JsonObject o = new JsonObject();
+					o.addProperty("uuid", "url_to.png");
+					o.addProperty("username", "url2_to.png");
+					JsonUtils.toJson(o, file);
+					return false;
+				});
 			}
 			else
 			{

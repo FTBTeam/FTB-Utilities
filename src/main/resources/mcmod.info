@@ -1,7 +1,7 @@
 [
 	{
 		"modid": "ftbutilities",
-		"name": "FTBUtilities",
+		"name": "FTB Utilities",
 		"description": "FTBUtilities",
 		"version": "${version}",
 		"mcversion": "${mcversion}",
@@ -9,7 +9,7 @@
 		"updateUrl": "",
 		"authorList": ["LatvianModder"],
 		"credits": "",
-		"logoFile": "assets/ftbu/textures/logo.png",
+		"logoFile": "assets/ftbutilities/textures/logo.png",
 		"screenshots": [],
 		"parent": "",
 		"dependencies": []

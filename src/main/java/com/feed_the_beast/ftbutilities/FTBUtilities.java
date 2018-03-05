@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbutilities.ranks.CommandOverride;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.world.storage.ThreadedFileIOBase;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -25,13 +26,13 @@ import java.util.List;
 		name = FTBUtilities.MOD_NAME,
 		version = FTBUtilities.VERSION,
 		acceptableRemoteVersions = "*",
-		acceptedMinecraftVersions = "[1.10,)",
+		acceptedMinecraftVersions = "[1.12,)",
 		dependencies = "required-after:" + FTBLib.MOD_ID
 )
 public class FTBUtilities
 {
 	public static final String MOD_ID = "ftbutilities";
-	public static final String MOD_NAME = "FTBUtilities";
+	public static final String MOD_NAME = "FTB Utilities";
 	public static final String VERSION = "@VERSION@";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
@@ -85,6 +86,10 @@ public class FTBUtilities
 			LOGGER.info("Overridden " + manager.getCommands().size() + " commands");
 		}
 
-		Ranks.generateExampleFiles();
+		ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
+		{
+			Ranks.generateExampleFiles();
+			return false;
+		});
 	}
 }

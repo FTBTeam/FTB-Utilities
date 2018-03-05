@@ -66,7 +66,7 @@ public class FTBUWorldEventHandler
 
 		Universe universe = Universe.get();
 
-		long now = universe.server.getEntityWorld().getTotalWorldTime();
+		long now = universe.server.getWorld(0).getTotalWorldTime();
 
 		if (event.phase == TickEvent.Phase.START)
 		{

@@ -38,19 +38,19 @@ public class CmdUnclaim extends CmdBase
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 		ForgePlayer p = getForgePlayer(player);
 
-		if (p.getTeam() == null)
+		if (!p.hasTeam())
 		{
 			throw FTBLibLang.TEAM_NO_TEAM.commandError();
 		}
 
 		ChunkDimPos pos = new ChunkDimPos(player);
 
-		if (!p.getTeam().equalsTeam(ClaimedChunks.instance.getChunkTeam(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS, new BlockPosContext(player, pos.getChunkPos())))
+		if (!p.team.equalsTeam(ClaimedChunks.instance.getChunkTeam(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS, new BlockPosContext(player, pos.getChunkPos())))
 		{
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
 
-		if (ClaimedChunks.instance.unclaimChunk(p.getTeam(), pos))
+		if (ClaimedChunks.instance.unclaimChunk(p.team, pos))
 		{
 			Notification.of(FTBUtilitiesNotifications.CHUNK_MODIFIED, TextComponentHelper.createComponentTranslation(player, FTBUtilities.MOD_ID + ".lang.chunks.chunk_unclaimed")).send(server, player);
 			CmdChunks.updateChunk(player, pos);

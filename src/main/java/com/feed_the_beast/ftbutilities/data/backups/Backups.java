@@ -122,7 +122,7 @@ public enum Backups
 		}
 
 		notifyAll(server, player -> FTBUtilitiesLang.BACKUP_START.textComponent(player, sender.getName()), false);
-		nextBackup = CommonUtils.getWorldTime() + FTBUtilitiesConfig.backups.ticks();
+		nextBackup = server.getWorld(0).getTotalWorldTime() + FTBUtilitiesConfig.backups.ticks();
 
 		try
 		{
@@ -153,7 +153,7 @@ public enum Backups
 			ex.printStackTrace();
 		}
 
-		File wd = server.getEntityWorld().getSaveHandler().getWorldDirectory();
+		File wd = server.getWorld(0).getSaveHandler().getWorldDirectory();
 
 		if (FTBUtilitiesConfig.backups.use_separate_thread)
 		{

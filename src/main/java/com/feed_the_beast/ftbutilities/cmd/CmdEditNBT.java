@@ -76,7 +76,7 @@ public class CmdEditNBT extends CmdTreeBase
 			int y = parseInt(args[1]);
 			int z = parseInt(args[2]);
 
-			TileEntity tile = player.getEntityWorld().getTileEntity(new BlockPos(x, y, z));
+			TileEntity tile = player.world.getTileEntity(new BlockPos(x, y, z));
 
 			if (tile != null)
 			{
@@ -106,7 +106,7 @@ public class CmdEditNBT extends CmdTreeBase
 		{
 			checkArgs(player, args, 1);
 			int id = parseInt(args[0]);
-			Entity entity = player.getEntityWorld().getEntityByID(id);
+			Entity entity = player.world.getEntityByID(id);
 
 			if (entity != null)
 			{

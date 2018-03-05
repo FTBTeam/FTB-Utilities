@@ -170,6 +170,7 @@ public class ClaimedChunks
 	public void addChunk(ClaimedChunk chunk)
 	{
 		pendingChunks.add(chunk);
+		chunk.getTeam().markDirty();
 		markDirty();
 	}
 
@@ -238,12 +239,9 @@ public class ClaimedChunks
 			{
 				return false;
 			}
-
-			if (FTBUtilitiesConfig.world.enable_pvp.isDefault())
+			else if (FTBUtilitiesConfig.world.enable_pvp.isDefault())
 			{
-				boolean pvp1 = FTBUPlayerData.get(universe.getPlayer(player)).enablePVP.getBoolean();
-				boolean pvp2 = FTBUPlayerData.get(universe.getPlayer(entity)).enablePVP.getBoolean();
-				return pvp1 && pvp2;
+				return FTBUPlayerData.get(universe.getPlayer(player)).enablePVP() && FTBUPlayerData.get(universe.getPlayer(entity)).enablePVP();
 			}
 
 			return FTBUtilitiesConfig.world.enable_pvp.isTrue();
@@ -260,14 +258,13 @@ public class ClaimedChunks
 
 	public ClaimResult claimChunk(@Nullable FTBUTeamData data, ChunkDimPos pos)
 	{
-		if (!FTBUtilitiesConfig.world.allowDimension(pos.dim))
-		{
-			return ClaimResult.DIMENSION_BLOCKED;
-		}
-
 		if (data == null)
 		{
 			return ClaimResult.NO_TEAM;
+		}
+		else if (!FTBUtilitiesConfig.world.allowDimension(pos.dim))
+		{
+			return ClaimResult.DIMENSION_BLOCKED;
 		}
 
 		int max = data.getMaxClaimChunks();

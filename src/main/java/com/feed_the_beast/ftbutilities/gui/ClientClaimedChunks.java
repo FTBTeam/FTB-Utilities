@@ -8,7 +8,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * @author LatvianModder
@@ -21,7 +20,7 @@ public class ClientClaimedChunks
 
 		public static final DataOut.Serializer<Team> SERIALIZER = (data, team) ->
 		{
-			data.writeUUID(team.ownerId);
+			data.writeString(team.name);
 			data.writeString(team.formattedName);
 			data.write(team.color, EnumTeamColor.NAME_MAP);
 			data.writeBoolean(team.isAlly);
@@ -30,7 +29,7 @@ public class ClientClaimedChunks
 
 		public static final DataIn.Deserializer<Team> DESERIALIZER = data ->
 		{
-			Team team = new Team(data.readUUID());
+			Team team = new Team(data.readString());
 			team.formattedName = data.readString();
 			team.color = data.read(EnumTeamColor.NAME_MAP);
 			team.isAlly = data.readBoolean();
@@ -39,16 +38,16 @@ public class ClientClaimedChunks
 			return team;
 		};
 
-		public final UUID ownerId;
+		public final String name;
 		public EnumTeamColor color;
 		public String formattedName;
 		public boolean isAlly;
 		public final Map<Integer, ChunkData> chunks = new Int2ObjectOpenHashMap<>();
 		public Object shapeProperties;
 
-		public Team(UUID id)
+		public Team(String n)
 		{
-			ownerId = id;
+			name = n;
 		}
 	}
 

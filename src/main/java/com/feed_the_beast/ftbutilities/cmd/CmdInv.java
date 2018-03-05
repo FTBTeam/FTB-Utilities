@@ -1,10 +1,11 @@
 package com.feed_the_beast.ftbutilities.cmd;
 
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.feed_the_beast.ftblib.lib.util.NBTUtils;
+import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -74,11 +75,11 @@ public class CmdInv extends CmdTreeBase
 					writeItemsToNBT(baubles, tag, "Baubles");
 				}*/
 
-				NBTUtils.writeTag(file, tag);
+				FileUtils.writeNBT(file, tag);
 			}
 			catch (Exception ex)
 			{
-				if (CommonUtils.DEV_ENV)
+				if (FTBLibConfig.debugging.print_more_errors)
 				{
 					ex.printStackTrace();
 				}
@@ -129,7 +130,7 @@ public class CmdInv extends CmdTreeBase
 
 			try
 			{
-				NBTTagCompound tag = NBTUtils.readTag(file);
+				NBTTagCompound tag = FileUtils.readNBT(file);
 				readItemsFromNBT(ep.inventory, tag, "Inventory");
 				/*IInventory baubles = InvUtils.getBaubles(ep);
 
@@ -140,7 +141,7 @@ public class CmdInv extends CmdTreeBase
 			}
 			catch (Exception ex)
 			{
-				if (CommonUtils.DEV_ENV)
+				if (FTBLibConfig.debugging.print_more_errors)
 				{
 					ex.printStackTrace();
 				}

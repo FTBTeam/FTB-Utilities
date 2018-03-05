@@ -1,13 +1,14 @@
 package com.feed_the_beast.ftbutilities.integration;
 
-import com.feed_the_beast.ftblib.events.RegisterDataProvidersEvent;
 import com.feed_the_beast.ftblib.events.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftblib.events.RegisterSyncDataEvent;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamDataEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamOwnerChangedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
@@ -15,7 +16,6 @@ import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerLeftEvent;
 import com.feed_the_beast.ftblib.events.team.RegisterTeamGuiActionsEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.TeamGuiAction;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
@@ -44,6 +44,7 @@ public class FTBLibIntegration
 	public static final ResourceLocation RELOAD_CONFIG = new ResourceLocation(FTBUtilities.MOD_ID, "config");
 	public static final ResourceLocation RELOAD_RANKS = new ResourceLocation(FTBUtilities.MOD_ID, "ranks");
 	public static final ResourceLocation RELOAD_BADGES = new ResourceLocation(FTBUtilities.MOD_ID, "badges");
+	public static final ResourceLocation LOGIN_STARTING_ITEMS = new ResourceLocation(FTBUtilities.MOD_ID, "starting_items");
 
 	@SubscribeEvent
 	public static void registerReloadIds(ServerReloadEvent.RegisterIds event)
@@ -79,15 +80,15 @@ public class FTBLibIntegration
 	}
 
 	@SubscribeEvent
-	public static void registerPlayerDataProvider(RegisterDataProvidersEvent.Player event)
+	public static void registerPlayerData(ForgePlayerDataEvent event)
 	{
-		event.register(FTBUtilities.MOD_ID, FTBUPlayerData::new);
+		event.register(FTBUtilities.MOD_ID, new FTBUPlayerData(event.getPlayer()));
 	}
 
 	@SubscribeEvent
-	public static void registerTeamDataProvider(RegisterDataProvidersEvent.Team event)
+	public static void registerTeamData(ForgeTeamDataEvent event)
 	{
-		event.register(FTBUtilities.MOD_ID, FTBUTeamData::new);
+		event.register(FTBUtilities.MOD_ID, new FTBUTeamData(event.getTeam()));
 	}
 
 	@SubscribeEvent
@@ -106,7 +107,7 @@ public class FTBLibIntegration
 
 		EntityPlayerMP player = event.getPlayer().getPlayer();
 
-		if (event.isFirstLogin())
+		if (event.isFirstLogin(LOGIN_STARTING_ITEMS))
 		{
 			if (FTBUtilitiesConfig.login.enable_starting_items)
 			{
@@ -199,13 +200,13 @@ public class FTBLibIntegration
 		event.register(new TeamGuiAction(new ResourceLocation(FTBUtilities.MOD_ID, "chat"), new TextComponentTranslation("sidebar_button." + FTBUtilities.MOD_ID + ".chats.team"), GuiIcons.CHAT, -10)
 		{
 			@Override
-			public boolean isAvailable(ForgeTeam team, ForgePlayer player, NBTTagCompound data)
+			public Type getType(ForgePlayer player, NBTTagCompound data)
 			{
-				return false;
+				return Type.INVISIBLE;
 			}
 
 			@Override
-			public void onAction(ForgeTeam team, ForgePlayer player, NBTTagCompound data)
+			public void onAction(ForgePlayer player, NBTTagCompound data)
 			{
 			}
 		});

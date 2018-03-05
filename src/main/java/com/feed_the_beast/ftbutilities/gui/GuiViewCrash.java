@@ -41,14 +41,21 @@ public class GuiViewCrash extends GuiBase
 			@Override
 			public void addWidgets()
 			{
-				int wi = 0;
-
 				for (String s : text)
 				{
-					TextField f = new TextField(gui, StringUtils.fixTabs(s, 2), Widget.UNICODE);
-					f.setX(2);
-					wi = Math.max(wi, f.width);
-					add(f);
+					add(new TextField(this, StringUtils.fixTabs(s, 2), Widget.UNICODE));
+				}
+			}
+
+			@Override
+			public void alignWidgets()
+			{
+				int wi = 0;
+
+				for (Widget w : widgets)
+				{
+					w.setX(2);
+					wi = Math.max(w.width, wi);
 				}
 
 				scrollH.setElementSize(wi + 4);
@@ -58,15 +65,9 @@ public class GuiViewCrash extends GuiBase
 			}
 
 			@Override
-			public void alignWidgets()
-			{
-
-			}
-
-			@Override
 			public Icon getIcon()
 			{
-				return gui.getTheme().getContainerSlot();
+				return getTheme().getContainerSlot();
 			}
 		};
 
@@ -109,7 +110,7 @@ public class GuiViewCrash extends GuiBase
 			}
 		};
 
-		close = new SimpleButton(this, GuiLang.CLOSE, GuiIcons.CLOSE, (gui1, button) -> gui1.closeGui())
+		close = new SimpleButton(this, GuiLang.CLOSE, GuiIcons.CLOSE, (widget, button) -> widget.getGui().closeGui())
 		{
 			@Override
 			public Icon getIcon()
@@ -118,10 +119,10 @@ public class GuiViewCrash extends GuiBase
 			}
 		};
 
-		upload = new SimpleButton(this, FTBUtilitiesLang.UPLOAD_CRASH, GuiIcons.UP, (gui1, button) ->
+		upload = new SimpleButton(this, FTBUtilitiesLang.UPLOAD_CRASH, GuiIcons.UP, (widget, button) ->
 		{
 			ClientUtils.execClientCommand("/ftb view_crash " + name.text.get(0) + " upload");
-			gui1.closeGui(false);
+			widget.getGui().closeGui(false);
 		})
 		{
 			@Override
@@ -131,7 +132,7 @@ public class GuiViewCrash extends GuiBase
 			}
 		};
 
-		reset = new SimpleButton(this, "", Icon.EMPTY, (gui1, button) ->
+		reset = new SimpleButton(this, "", Icon.EMPTY, (widget, button) ->
 		{
 			scrollH.setValue(0D);
 			scrollV.setValue(0D);
@@ -145,19 +146,26 @@ public class GuiViewCrash extends GuiBase
 	}
 
 	@Override
-	public void onPostInit()
+	public void addWidgets()
 	{
-		close.setPos(width - 24, 8);
-		upload.setPos(width - 48, 8);
-		scrollH.setPosAndSize(8, height - 24, width - 32, 16);
-		scrollV.setPosAndSize(width - 24, 32, 16, height - 56);
-		textPanel.setSize(scrollH.width - 2, scrollV.height - 2);
-		reset.setPos(width - 24, height - 24);
+		add(textPanel);
+		add(scrollH);
+		add(scrollV);
+		add(close);
+		add(upload);
+		add(reset);
+		add(name);
 	}
 
 	@Override
-	public void addWidgets()
+	public void alignWidgets()
 	{
-		addAll(textPanel, scrollH, scrollV, close, upload, reset, name);
+		close.setPos(width - 24, 8);
+		upload.setPos(width - 48, 8);
+		reset.setPos(width - 24, height - 24);
+		scrollH.setPosAndSize(8, height - 24, width - 32, 16);
+		scrollV.setPosAndSize(width - 24, 32, 16, height - 56);
+		textPanel.setSize(scrollH.width - 2, scrollV.height - 2);
+		textPanel.alignWidgets();
 	}
 }

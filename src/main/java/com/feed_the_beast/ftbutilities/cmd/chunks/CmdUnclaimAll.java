@@ -74,10 +74,10 @@ public class CmdUnclaimAll extends CmdBase
 			p = getForgePlayer(player);
 		}
 
-		if (p.getTeam() != null)
+		if (p.hasTeam())
 		{
 			boolean allDimensions = args.length == 0 || parseBoolean(args[0]);
-			ClaimedChunks.instance.unclaimAllChunks(p.getTeam(), allDimensions ? null : player.dimension);
+			ClaimedChunks.instance.unclaimAllChunks(p.team, allDimensions ? null : player.dimension);
 			Notification.of(FTBUtilitiesNotifications.UNCLAIMED_ALL, TextComponentHelper.createComponentTranslation(player, FTBUtilities.MOD_ID + ".lang.chunks.unclaimed_all")).send(server, player);
 		}
 	}

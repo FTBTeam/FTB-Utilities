@@ -1,10 +1,11 @@
 package com.feed_the_beast.ftbutilities.net;
 
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.gui.GuiEditNBT;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,9 +26,9 @@ public class MessageEditNBT extends MessageToClient<MessageEditNBT>
 		info = i;
 		mainNbt = nbt;
 
-		if (CommonUtils.DEV_ENV)
+		if (FTBLibConfig.debugging.log_config_editing)
 		{
-			CommonUtils.DEV_LOGGER.info("Editing NBT: " + mainNbt);
+			FTBUtilities.LOGGER.info("Editing NBT: " + mainNbt);
 		}
 	}
 

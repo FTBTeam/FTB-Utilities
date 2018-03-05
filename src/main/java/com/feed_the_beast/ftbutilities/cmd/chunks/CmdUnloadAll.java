@@ -72,7 +72,7 @@ public class CmdUnloadAll extends CmdBase
 		boolean allDimensions = args.length == 0 || parseBoolean(args[0]);
 		int currentDim = sender.getEntityWorld().provider.getDimension();
 
-		for (ClaimedChunk chunk : ClaimedChunks.instance.getTeamChunks(p.getTeam()))
+		for (ClaimedChunk chunk : ClaimedChunks.instance.getTeamChunks(p.team))
 		{
 			if (!allDimensions || currentDim == chunk.getPos().dim)
 			{

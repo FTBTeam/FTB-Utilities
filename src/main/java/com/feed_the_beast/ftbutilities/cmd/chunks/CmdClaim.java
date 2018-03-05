@@ -53,7 +53,7 @@ public class CmdClaim extends CmdBase
 			p = getForgePlayer(player);
 		}
 
-		if (p.getTeam() == null)
+		if (!p.hasTeam())
 		{
 			throw FTBLibLang.TEAM_NO_TEAM.commandError();
 		}
@@ -66,7 +66,7 @@ public class CmdClaim extends CmdBase
 			return;
 		}
 
-		switch (ClaimedChunks.instance.claimChunk(FTBUTeamData.get(p.getTeam()), pos))
+		switch (ClaimedChunks.instance.claimChunk(FTBUTeamData.get(p.team), pos))
 		{
 			case SUCCESS:
 				Notification.of(FTBUtilitiesNotifications.CHUNK_MODIFIED, TextComponentHelper.createComponentTranslation(player, FTBUtilities.MOD_ID + ".lang.chunks.chunk_claimed")).send(server, player);

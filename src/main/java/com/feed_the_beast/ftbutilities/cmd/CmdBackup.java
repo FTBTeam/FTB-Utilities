@@ -72,7 +72,7 @@ public class CmdBackup extends CmdTreeBase
 		@Override
 		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 		{
-			String sizeW = FileUtils.getSizeS(sender.getEntityWorld().getSaveHandler().getWorldDirectory());
+			String sizeW = FileUtils.getSizeS(server.getWorld(0).getSaveHandler().getWorldDirectory());
 			String sizeT = FileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
 			FTBUtilitiesLang.BACKUP_SIZE.sendMessage(sender, sizeW, sizeT);
 		}

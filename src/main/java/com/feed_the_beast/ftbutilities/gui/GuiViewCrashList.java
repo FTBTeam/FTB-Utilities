@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbutilities.gui;
 
 
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
-import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
@@ -21,9 +20,9 @@ public class GuiViewCrashList extends GuiButtonListBase
 {
 	private static class ButtonFile extends SimpleTextButton
 	{
-		public ButtonFile(GuiBase gui, String title)
+		public ButtonFile(Panel panel, String title)
 		{
-			super(gui, title, Icon.EMPTY);
+			super(panel, title, Icon.EMPTY);
 		}
 
 		@Override
@@ -52,7 +51,7 @@ public class GuiViewCrashList extends GuiButtonListBase
 	{
 		for (String s : files)
 		{
-			panel.add(new ButtonFile(this, s));
+			panel.add(new ButtonFile(panel, s));
 		}
 	}
 }

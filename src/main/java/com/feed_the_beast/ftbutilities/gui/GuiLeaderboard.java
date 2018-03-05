@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbutilities.gui;
 
-import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
+import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -26,15 +26,15 @@ public class GuiLeaderboard extends GuiButtonListBase
 		private final LeaderboardValue value;
 		private final String rank;
 
-		public LeaderboardEntry(GuiBase g, LeaderboardValue v)
+		public LeaderboardEntry(Panel panel, LeaderboardValue v)
 		{
-			super(g);
+			super(panel);
 			value = v;
 			rank = value.color + "#" + StringUtils.add0s(v.rank, leaderboard.size());
 
-			rankSize = Math.max(rankSize, gui.getStringWidth(rank) + 4);
-			usernameSize = Math.max(usernameSize, gui.getStringWidth(v.username) + 8);
-			valueSize = Math.max(valueSize, gui.getStringWidth(value.value.getFormattedText()) + 8);
+			rankSize = Math.max(rankSize, getStringWidth(rank) + 4);
+			usernameSize = Math.max(usernameSize, getStringWidth(v.username) + 8);
+			valueSize = Math.max(valueSize, getStringWidth(value.value.getFormattedText()) + 8);
 
 			setSize(rankSize + usernameSize + valueSize, 14);
 		}
@@ -50,17 +50,17 @@ public class GuiLeaderboard extends GuiButtonListBase
 			int ax = getAX();
 			int ay = getAY();
 
-			Icon widget = value.color == TextFormatting.DARK_GRAY ? gui.getTheme().getDisabledButton() : gui.getTheme().getButton(gui.isMouseOver(this));
-			int textY = ay + (height - gui.getFontHeight() + 1) / 2;
+			Icon widget = value.color == TextFormatting.DARK_GRAY ? getTheme().getButton(WidgetType.DISABLED) : getTheme().getButton(WidgetType.mouseOver(isMouseOver()));
+			int textY = ay + (height - getFontHeight() + 1) / 2;
 			widget.draw(ax, ay, rankSize, height);
-			gui.drawString(rank, ax + 2, textY, SHADOW);
+			drawString(rank, ax + 2, textY, SHADOW);
 
 			widget.draw(ax + rankSize, ay, usernameSize, height);
-			gui.drawString(value.color + value.username, ax + 4 + rankSize, textY, SHADOW);
+			drawString(value.color + value.username, ax + 4 + rankSize, textY, SHADOW);
 
 			widget.draw(ax + rankSize + usernameSize, ay, valueSize, height);
 			String formattedText = value.value.getFormattedText();
-			gui.drawString(value.color + formattedText, ax + rankSize + usernameSize + valueSize - gui.getStringWidth(formattedText) - 4, textY, SHADOW);
+			drawString(value.color + formattedText, ax + rankSize + usernameSize + valueSize - getStringWidth(formattedText) - 4, textY, SHADOW);
 		}
 	}
 
@@ -81,7 +81,7 @@ public class GuiLeaderboard extends GuiButtonListBase
 		for (LeaderboardValue value : leaderboard)
 		{
 			value.rank = ++i;
-			panel.add(new LeaderboardEntry(this, value));
+			panel.add(new LeaderboardEntry(panel, value));
 		}
 	}
 }

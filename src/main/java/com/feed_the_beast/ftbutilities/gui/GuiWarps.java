@@ -47,8 +47,8 @@ public class GuiWarps extends GuiBase
 
 		for (int i = 0; i <= 360; i += 6)
 		{
-			double cos = Math.cos(i * MathUtils.RAD);
-			double sin = Math.sin(i * MathUtils.RAD);
+			double cos = Math.cos(Math.toRadians(i));
+			double sin = Math.sin(Math.toRadians(i));
 
 			BACKGROUND.pos(cos * SIZE_2, sin * SIZE_2).color(200, 200, 200, 153);
 			CIRCLE_OUT.pos(cos * SIZE_2, sin * SIZE_2).color(102, 102, 102, 255);
@@ -96,11 +96,11 @@ public class GuiWarps extends GuiBase
 				double s = (in ? buttonsIn : buttonsOut).size();
 				double i = (s > 1D) ? (index * (360D / s) + (180D / s)) : 270D;
 				double d = ((in) ? (SIZE_I + SIZE_C) : (SIZE_C + SIZE_2)) / 2D;
-				textX = (int) (Math.cos(i * MathUtils.RAD) * d);
-				textY = (int) (Math.sin(i * MathUtils.RAD) * d) - 2;
+				textX = (int) (Math.cos(Math.toRadians(i)) * d);
+				textY = (int) (Math.sin(Math.toRadians(i)) * d) - 2;
 			}
 
-			gui.drawString(warpItem.name, gui.posX + gui.width / 2 + textX, gui.posY + gui.height / 2 + textY, DARK | CENTERED);
+			drawString(warpItem.name, getGui().posX + getGui().width / 2 + textX, getGui().posY + getGui().height / 2 + textY, DARK | CENTERED);
 		}
 
 		@Override
@@ -111,7 +111,7 @@ public class GuiWarps extends GuiBase
 				ClientUtils.execClientCommand(warpItem.cmd, true);
 			}
 
-			gui.closeGui();
+			getGui().closeGui();
 		}
 	}
 
@@ -178,7 +178,7 @@ public class GuiWarps extends GuiBase
 
 		buttonOver = buttonCancel;
 		double dist = MathUtils.dist(ax, ay, getMouseX(), getMouseY());
-		double rotation = Math.atan2(getMouseY() - ay, getMouseX() - ax) * MathUtils.DEG;
+		double rotation = Math.toDegrees(Math.atan2(getMouseY() - ay, getMouseX() - ax));
 
 		if (rotation < 0D)
 		{
@@ -238,8 +238,8 @@ public class GuiWarps extends GuiBase
 			int add = 360 / buttonsOut.size();
 			for (int i = 0; i < 360; i += add)
 			{
-				double cos = Math.cos(i * MathUtils.RAD);
-				double sin = Math.sin(i * MathUtils.RAD);
+				double cos = Math.cos(Math.toRadians(i));
+				double sin = Math.sin(Math.toRadians(i));
 
 				lines.pos(cos * SIZE_C, sin * SIZE_C, 0D).color(102, 102, 102, 255);
 				lines.pos(cos * SIZE_2, sin * SIZE_2, 0D).color(102, 102, 102, 255);
@@ -251,8 +251,8 @@ public class GuiWarps extends GuiBase
 			int add = 360 / buttonsIn.size();
 			for (int i = 0; i < 360; i += add)
 			{
-				double cos = Math.cos(i * MathUtils.RAD);
-				double sin = Math.sin(i * MathUtils.RAD);
+				double cos = Math.cos(Math.toRadians(i));
+				double sin = Math.sin(Math.toRadians(i));
 
 				lines.pos(cos * SIZE_I, sin * SIZE_I, 0D).color(102, 102, 102, 255);
 				lines.pos(cos * SIZE_C, sin * SIZE_C, 0D).color(102, 102, 102, 255);

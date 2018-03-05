@@ -36,6 +36,7 @@ public class CmdFly extends CmdBase
 			player.capabilities.isFlying = false;
 		}
 
+		data.player.markDirty();
 		player.sendPlayerAbilities();
 	}
 }

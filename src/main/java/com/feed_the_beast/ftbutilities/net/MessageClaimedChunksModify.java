@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbutilities.net;
 
 import com.feed_the_beast.ftblib.FTBLibNotifications;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
@@ -74,9 +73,8 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 		}
 
 		ForgePlayer p = ClaimedChunks.instance.universe.getPlayer(player);
-		ForgeTeam team = p.getTeam();
 
-		if (team == null)
+		if (!p.hasTeam())
 		{
 			FTBLibNotifications.NO_TEAM.send(((EntityPlayerMP) player).mcServer, player);
 			return;
@@ -91,19 +89,19 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 			switch (m.action)
 			{
 				case CLAIM:
-					ClaimedChunks.instance.claimChunk(FTBUTeamData.get(team), pos);
+					ClaimedChunks.instance.claimChunk(FTBUTeamData.get(p.team), pos);
 					break;
 				case UNCLAIM:
-					if (canUnclaim || team.equalsTeam(ClaimedChunks.instance.getChunkTeam(pos)))
+					if (canUnclaim || p.team.equalsTeam(ClaimedChunks.instance.getChunkTeam(pos)))
 					{
-						ClaimedChunks.instance.unclaimChunk(team, pos);
+						ClaimedChunks.instance.unclaimChunk(p.team, pos);
 					}
 					break;
 				case LOAD:
-					ClaimedChunks.instance.setLoaded(team, pos, true);
+					ClaimedChunks.instance.setLoaded(p.team, pos, true);
 					break;
 				case UNLOAD:
-					ClaimedChunks.instance.setLoaded(team, pos, false);
+					ClaimedChunks.instance.setLoaded(p.team, pos, false);
 					break;
 			}
 		}

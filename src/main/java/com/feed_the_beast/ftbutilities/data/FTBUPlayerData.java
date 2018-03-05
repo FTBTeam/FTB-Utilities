@@ -15,9 +15,9 @@ import net.minecraftforge.common.util.INBTSerializable;
  */
 public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 {
-	public final ConfigBoolean renderBadge = new ConfigBoolean(true);
-	public final ConfigBoolean disableGlobalBadge = new ConfigBoolean(false);
-	public final ConfigBoolean enablePVP = new ConfigBoolean(true);
+	private final ConfigBoolean renderBadge = new ConfigBoolean(true);
+	private final ConfigBoolean disableGlobalBadge = new ConfigBoolean(false);
+	private final ConfigBoolean enablePVP = new ConfigBoolean(true);
 
 	public final ForgePlayer player;
 	public BlockDimPos lastDeath, lastSafePos;
@@ -92,5 +92,20 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 		event.getConfig().add(FTBUtilities.MOD_ID, "render_badge", renderBadge);
 		event.getConfig().add(FTBUtilities.MOD_ID, "disable_global_badge", disableGlobalBadge);
 		event.getConfig().add(FTBUtilities.MOD_ID, "enable_pvp", enablePVP);
+	}
+
+	public boolean renderBadge()
+	{
+		return renderBadge.getBoolean();
+	}
+
+	public boolean disableGlobalBadge()
+	{
+		return disableGlobalBadge.getBoolean();
+	}
+
+	public boolean enablePVP()
+	{
+		return enablePVP.getBoolean();
 	}
 }

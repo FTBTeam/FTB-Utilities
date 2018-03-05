@@ -59,5 +59,6 @@ public class CmdSetHome extends CmdBase
 
 		data.homes.set(args[0], new BlockDimPos(player));
 		FTBUtilitiesLang.HOME_SET.sendMessage(sender, args[0]);
+		data.player.markDirty();
 	}
 }

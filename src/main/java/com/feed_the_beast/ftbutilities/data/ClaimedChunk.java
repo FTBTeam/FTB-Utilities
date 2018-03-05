@@ -25,12 +25,16 @@ public final class ClaimedChunk
 
 	public boolean isInvalid()
 	{
-		return invalid || teamData.team.getOwner() == null;
+		return invalid || !getTeam().isValid();
 	}
 
 	public void setInvalid()
 	{
-		invalid = true;
+		if (!invalid)
+		{
+			invalid = true;
+			getTeam().markDirty();
+		}
 	}
 
 	public ChunkDimPos getPos()
@@ -58,6 +62,9 @@ public final class ClaimedChunk
 			{
 				ClaimedChunks.instance.markDirty();
 			}
+
+			getTeam().markDirty();
+			return true;
 		}
 
 		return false;
@@ -70,7 +77,7 @@ public final class ClaimedChunk
 
 	public boolean hasExplosions()
 	{
-		return teamData.explosions.getBoolean();
+		return teamData.hasExplosions();
 	}
 
 	public String toString()

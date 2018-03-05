@@ -43,7 +43,7 @@ public class FTBUUniverseData
 			return false;
 		}
 
-		BlockPos c = server.getEntityWorld().getSpawnPoint();
+		BlockPos c = server.getWorld(0).getSpawnPoint();
 		int minX = MathUtils.chunk(c.getX() - radius);
 		int minZ = MathUtils.chunk(c.getZ() - radius);
 		int maxX = MathUtils.chunk(c.getX() + radius);

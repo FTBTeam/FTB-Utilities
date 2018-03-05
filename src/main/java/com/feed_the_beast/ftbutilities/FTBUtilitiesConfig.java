@@ -21,13 +21,14 @@ import java.util.List;
  * @author LatvianModder
  */
 @Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
-@Config(modid = FTBUtilities.MOD_ID, category = "", name = "../local/" + FTBUtilities.MOD_ID + "/config")
+@Config(modid = FTBUtilities.MOD_ID, category = "")
 public class FTBUtilitiesConfig
 {
 	@Config.RequiresWorldRestart
 	public static final AutoShutdown auto_shutdown = new AutoShutdown();
 
 	public static final Chat chat = new Chat();
+
 	public static final BackupsConfig backups = new BackupsConfig();
 
 	@Config.RequiresWorldRestart
@@ -48,9 +49,9 @@ public class FTBUtilitiesConfig
 		public boolean enabled = false;
 
 		@Config.Comment({
-				"Server will automatically shut down after X hours",
-				"Time Format: HH:MM. If the system time matches a value, server will shut down",
-				"It will look for closest value available that is not equal to current time"
+				"Server will automatically shut down after X hours.",
+				"Time Format: HH:MM. If the system time matches a value, server will shut down.",
+				"It will look for closest value available that is not equal to current time."
 		})
 		public String[] times = {"04:00", "16:00"};
 	}
@@ -73,12 +74,12 @@ public class FTBUtilitiesConfig
 		@Config.Comment("Enables backups")
 		public boolean enabled = true;
 
-		@Config.Comment("If set to true, no messages will be displayed in chat/status bar")
+		@Config.Comment("If set to true, no messages will be displayed in chat/status bar.")
 		public boolean silent = false;
 
 		@Config.RangeInt(min = 0, max = 32000)
 		@Config.Comment({
-				"The number of backup files to keep",
+				"The number of backup files to keep.",
 				"More backups = more space used",
 				"0 - Infinite"
 		})
@@ -86,7 +87,7 @@ public class FTBUtilitiesConfig
 
 		@Config.RangeDouble(min = 0.05D, max = 600D)
 		@Config.Comment({
-				"Timer in hours",
+				"Timer in hours.",
 				"1.0 - backups every hour",
 				"6.0 - backups every 6 hours",
 				"0.5 - backups every 30 minutes"
@@ -101,13 +102,13 @@ public class FTBUtilitiesConfig
 		})
 		public int compression_level = 1;
 
-		@Config.Comment("Absolute path to backups folder")
+		@Config.Comment("Absolute path to backups folder.")
 		public String folder = "";
 
-		@Config.Comment("Prints (current size | total size) when backup is done")
+		@Config.Comment("Prints (current size | total size) when backup is done.")
 		public boolean display_file_size = true;
 
-		@Config.Comment("Run backup in a separated Thread (recommended)")
+		@Config.Comment("Run backup in a separated Thread. (recommended)")
 		public boolean use_separate_thread = true;
 
 		public long ticks()
@@ -139,37 +140,80 @@ public class FTBUtilitiesConfig
 
 	public static class Login
 	{
-		@Config.Comment("Enables message of the day")
+		@Config.Comment("Enables message of the day.")
 		public boolean enable_motd = false;
 
-		@Config.Comment("Enables starting items")
+		@Config.Comment("Enables starting items.")
 		public boolean enable_starting_items = false;
 
-		@Config.Comment("Set to false to disable global badges completely, only server-wide badges will be available")
+		@Config.Comment("Set to false to disable global badges completely, only server-wide badges will be available.")
 		public boolean enable_global_badges = true;
 
-		@Config.Comment("Set to false to disable event badges, e.g. Halloween")
+		@Config.Comment("Set to false to disable event badges, e.g. Halloween.")
 		public boolean enable_event_badges = true;
 
-		@Config.Comment("Message of the day. This will be displayed when player joins the server")
+		@Config.Comment("Message of the day. This will be displayed when player joins the server.")
 		public String[] motd = {"\"Hello player!\""};
 
-		private List<ITextComponent> motdComponents = new ArrayList<>();
-		private List<ItemStack> startingItems = new ArrayList<>();
+		private List<ITextComponent> motdComponents = null;
+		private List<ItemStack> startingItems = null;
 
 		@Config.Comment({
-				"Items to give player when he first joins the server",
+				"Items to give player when he first joins the server.",
 				"Format: '{id:\"ID\",Count:X,Damage:X,tag:{}}'"
 		})
 		public String[] starting_items = {"{id:\"minecraft:stone_sword\",Count:1,Damage:1,tag:{display:{Name:\"Epic Stone Sword\"}}}"};
 
 		public List<ITextComponent> getMOTD()
 		{
+			if (motdComponents == null)
+			{
+				motdComponents = new ArrayList<>();
+
+				if (enable_motd)
+				{
+					for (String s : motd)
+					{
+						ITextComponent t = JsonUtils.deserializeTextComponent(JsonUtils.fromJson(s));
+
+						if (t != null)
+						{
+							motdComponents.add(t);
+						}
+					}
+				}
+			}
+
 			return motdComponents;
 		}
 
 		public List<ItemStack> getStartingItems()
 		{
+			if (startingItems == null)
+			{
+				startingItems = new ArrayList<>();
+
+				if (enable_starting_items)
+				{
+					for (String s : starting_items)
+					{
+						try
+						{
+							ItemStack stack = ItemStackSerializer.parseItem(s);
+
+							if (!stack.isEmpty())
+							{
+								startingItems.add(stack);
+							}
+						}
+						catch (Exception ex)
+						{
+							ex.printStackTrace();
+						}
+					}
+				}
+			}
+
 			return startingItems;
 		}
 	}
@@ -178,43 +222,43 @@ public class FTBUtilitiesConfig
 	{
 		@Config.LangKey(GuiLang.LANG_ENABLED)
 		@Config.RequiresMcRestart
-		@Config.Comment("Enables ranks")
+		@Config.Comment("Enables ranks.")
 		public boolean enabled = true;
 
-		@Config.Comment("Adds chat colors/rank-specific syntax")
+		@Config.Comment("Adds chat colors/rank-specific syntax.")
 		public boolean override_chat = true;
 
-		@Config.Comment("Adds command.x permissions and allows ranks to control them")
+		@Config.Comment("Adds command.x permissions and allows ranks to control them.")
 		public boolean override_commands = true;
 	}
 
 	public static class WorldConfig
 	{
-		@Config.Comment("Enables chunk claiming")
+		@Config.Comment("Enables chunk claiming.")
 		@Config.RequiresWorldRestart
 		public boolean chunk_claiming = true;
 
-		@Config.Comment("Enables chunk loading. If chunk_claiming is set to false, changing this won't do anything")
+		@Config.Comment("Enables chunk loading. If chunk_claiming is set to false, changing this won't do anything.")
 		@Config.RequiresWorldRestart
 		public boolean chunk_loading = true;
 
-		@Config.Comment("If set to true, explosions and hostile mobs in spawn area will be disabled, players won't be able to attack each other in spawn area")
+		@Config.Comment("If set to true, explosions and hostile mobs in spawn area will be disabled, players won't be able to attack each other in spawn area.")
 		public boolean safe_spawn = false;
 
-		@Config.Comment("Enable spawn area in singleplayer")
+		@Config.Comment("Enable spawn area in singleplayer.")
 		public boolean spawn_area_in_sp = false;
 
-		@Config.Comment("Print a message in console every time a chunk is forced or unforced. Recommended to be off, because spam")
+		@Config.Comment("Print a message in console every time a chunk is forced or unforced. Recommended to be off, because spam.")
 		public boolean log_chunkloading = false;
 
-		@Config.Comment("Dimensions where chunk claiming isn't allowed")
+		@Config.Comment("Dimensions where chunk claiming isn't allowed.")
 		public int[] blocked_claiming_dimensions = { };
 
-		@Config.Comment("If set to DEFAULT, then players can decide their PVP status")
+		@Config.Comment("If set to DEFAULT, then players can decide their PVP status.")
 		@Config.LangKey("player_config.ftbutilities.enable_pvp")
 		public EnumTristate enable_pvp = EnumTristate.TRUE;
 
-		@Config.Comment("If set to DEFAULT, then teams can decide their Explosion setting")
+		@Config.Comment("If set to DEFAULT, then teams can decide their Explosion setting.")
 		@Config.LangKey("team_config.ftbutilities.explosions")
 		public EnumTristate enable_explosions = EnumTristate.DEFAULT;
 
@@ -243,41 +287,8 @@ public class FTBUtilitiesConfig
 	public static void sync()
 	{
 		ConfigManager.sync(FTBUtilities.MOD_ID, Config.Type.INSTANCE);
-		login.motdComponents.clear();
-		login.startingItems.clear();
-
-		if (login.enable_motd)
-		{
-			for (String s : login.motd)
-			{
-				ITextComponent t = JsonUtils.deserializeTextComponent(JsonUtils.fromJson(s));
-
-				if (t != null)
-				{
-					login.motdComponents.add(t);
-				}
-			}
-		}
-
-		if (login.enable_starting_items)
-		{
-			for (String s : login.starting_items)
-			{
-				try
-				{
-					ItemStack stack = ItemStackSerializer.parseItem(s);
-
-					if (!stack.isEmpty())
-					{
-						login.startingItems.add(stack);
-					}
-				}
-				catch (Exception ex)
-				{
-					ex.printStackTrace();
-				}
-			}
-		}
+		login.motdComponents = null;
+		login.startingItems = null;
 	}
 
 	@SubscribeEvent

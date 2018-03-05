@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.cmd.tp;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.data.FTBUUniverseData;
@@ -40,5 +41,6 @@ public class CmdSetWarp extends CmdBase
 
 		FTBUUniverseData.WARPS.set(args[0], new BlockDimPos(c, player.dimension));
 		FTBUtilitiesLang.WARP_SET.sendMessage(sender, args[0]);
+		Universe.get().markDirty();
 	}
 }

@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
+import com.feed_the_beast.ftblib.lib.data.IHasCache;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
@@ -23,19 +24,20 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
+public class FTBUTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
 {
 	public static FTBUTeamData get(ForgeTeam team)
 	{
-		return team.getData().get(FTBUtilities.MOD_ID);
+		return team.getData(FTBUtilities.MOD_ID);
 	}
 
 	public final ForgeTeam team;
 	private final ConfigEnum<EnumTeamStatus> editBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	private final ConfigEnum<EnumTeamStatus> interactWithBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	private final ConfigEnum<EnumTeamStatus> attackEntities = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
-	public final ConfigBoolean explosions = new ConfigBoolean(false);
+	private final ConfigBoolean explosions = new ConfigBoolean(false);
 	public boolean canForceChunks = false;
+	private int cachedMaxClaimChunks, cachedMaxChunkloaderChunks;
 
 	public FTBUTeamData(ForgeTeam t)
 	{
@@ -117,6 +119,15 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 		}
 	}
 
+	public void addConfig(ForgeTeamConfigEvent event)
+	{
+		event.getConfig().setGroupName(FTBUtilities.MOD_ID, new TextComponentString(FTBUtilities.MOD_NAME));
+		event.getConfig().add(FTBUtilities.MOD_ID, "explosions", explosions);
+		event.getConfig().add(FTBUtilities.MOD_ID, "blocks_edit", editBlocks);
+		event.getConfig().add(FTBUtilities.MOD_ID, "blocks_interact", interactWithBlocks);
+		event.getConfig().add(FTBUtilities.MOD_ID, "attack_entities", attackEntities);
+	}
+
 	public EnumTeamStatus getStatusFromType(BlockInteractionType type)
 	{
 		if (type == BlockInteractionType.INTERACT)
@@ -132,36 +143,57 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 		return attackEntities.getValue();
 	}
 
-	public void addConfig(ForgeTeamConfigEvent event)
+	public boolean hasExplosions()
 	{
-		event.getConfig().setGroupName(FTBUtilities.MOD_ID, new TextComponentString(FTBUtilities.MOD_NAME));
-		event.getConfig().add(FTBUtilities.MOD_ID, "explosions", explosions);
-		event.getConfig().add(FTBUtilities.MOD_ID, "blocks_edit", editBlocks);
-		event.getConfig().add(FTBUtilities.MOD_ID, "blocks_interact", interactWithBlocks);
-		event.getConfig().add(FTBUtilities.MOD_ID, "attack_entities", attackEntities);
+		return explosions.getBoolean();
 	}
 
 	public int getMaxClaimChunks()
 	{
-		int p = 0;
+		if (!team.isValid())
+		{
+			return -1;
+		}
+		else if (cachedMaxClaimChunks >= 0)
+		{
+			return cachedMaxClaimChunks;
+		}
+
+		cachedMaxClaimChunks = 0;
 
 		for (ForgePlayer player : team.getMembers())
 		{
-			p += Ranks.getRank(team.universe.server, player.getProfile()).getConfig(FTBUtilitiesPermissions.CLAIMS_MAX_CHUNKS).getInt();
+			cachedMaxClaimChunks += Ranks.getRank(team.universe.server, player.getProfile()).getConfig(FTBUtilitiesPermissions.CLAIMS_MAX_CHUNKS).getInt();
 		}
 
-		return p;
+		return cachedMaxClaimChunks;
 	}
 
 	public int getMaxChunkloaderChunks()
 	{
-		int p = 0;
+		if (!team.isValid())
+		{
+			return -1;
+		}
+		else if (cachedMaxChunkloaderChunks >= 0)
+		{
+			return cachedMaxChunkloaderChunks;
+		}
+
+		cachedMaxChunkloaderChunks = 0;
 
 		for (ForgePlayer player : team.getMembers())
 		{
-			p += Ranks.getRank(team.universe.server, player.getProfile()).getConfig(FTBUtilitiesPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+			cachedMaxChunkloaderChunks += Ranks.getRank(team.universe.server, player.getProfile()).getConfig(FTBUtilitiesPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
 		}
 
-		return p;
+		return cachedMaxChunkloaderChunks;
+	}
+
+	@Override
+	public void clearCache()
+	{
+		cachedMaxClaimChunks = -1;
+		cachedMaxChunkloaderChunks = -1;
 	}
 }

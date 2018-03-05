@@ -22,7 +22,7 @@ public class CmdSpawn extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-		World w = server.getEntityWorld();
+		World w = server.getWorld(0);
 		BlockPos spawnpoint = w.getSpawnPoint();
 
 		while (w.getBlockState(spawnpoint).isFullCube())

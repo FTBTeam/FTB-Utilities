@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author LatvianModder
@@ -31,7 +30,7 @@ import java.util.UUID;
 public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedChunksUpdate>
 {
 	public int startX, startZ, claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
-	public Map<UUID, ClientClaimedChunks.Team> teams;
+	public Map<String, ClientClaimedChunks.Team> teams;
 
 	public MessageClaimedChunksUpdate()
 	{
@@ -43,9 +42,9 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 		startZ = sz;
 
 		ForgePlayer p = Universe.get().getPlayer(player);
-		FTBUTeamData teamData = p.getTeam() == null ? null : FTBUTeamData.get(p.getTeam());
+		FTBUTeamData teamData = FTBUTeamData.get(p.team);
 
-		Collection<ClaimedChunk> chunks = teamData != null ? ClaimedChunks.instance.getTeamChunks(teamData.team) : Collections.emptyList();
+		Collection<ClaimedChunk> chunks = teamData.team.isValid() ? ClaimedChunks.instance.getTeamChunks(teamData.team) : Collections.emptyList();
 
 		claimedChunks = chunks.size();
 		loadedChunks = 0;
@@ -58,8 +57,8 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 			}
 		}
 
-		maxClaimedChunks = teamData == null ? -1 : teamData.getMaxClaimChunks();
-		maxLoadedChunks = teamData == null ? -1 : teamData.getMaxChunkloaderChunks();
+		maxClaimedChunks = teamData.getMaxClaimChunks();
+		maxLoadedChunks = teamData.getMaxChunkloaderChunks();
 		teams = new HashMap<>();
 
 		boolean canSeeChunkInfo = PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS);
@@ -74,15 +73,21 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 				if (chunk != null)
 				{
 					ForgeTeam chunkTeam = chunk.getTeam();
-					ClientClaimedChunks.Team team = teams.get(chunkTeam.getOwner().getId());
+
+					if (!chunkTeam.isValid())
+					{
+						continue;
+					}
+
+					ClientClaimedChunks.Team team = teams.get(chunkTeam.getName());
 
 					if (team == null)
 					{
-						team = new ClientClaimedChunks.Team(chunkTeam.getOwner().getId());
+						team = new ClientClaimedChunks.Team(chunkTeam.getName());
 						team.color = chunkTeam.getColor();
-						team.formattedName = chunkTeam.getColor().getTextFormatting() + chunkTeam.getTitle();
+						team.formattedName = chunkTeam.getTitle().getFormattedText();
 						team.isAlly = chunkTeam.isAlly(p);
-						teams.put(team.ownerId, team);
+						teams.put(chunkTeam.getName(), team);
 					}
 
 					boolean member = chunkTeam.isMember(p);
@@ -134,7 +139,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 
 		for (ClientClaimedChunks.Team team : data.readCollection(ClientClaimedChunks.Team.DESERIALIZER))
 		{
-			teams.put(team.ownerId, team);
+			teams.put(team.name, team);
 		}
 	}
 

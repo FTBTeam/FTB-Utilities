@@ -53,7 +53,7 @@ public class FTBUtilitiesLeaderboards
 					}
 					else
 					{
-						long worldTime = CommonUtils.getWorldTime();
+						long worldTime = player.team.universe.world.getTotalWorldTime();
 						int time = (int) (worldTime - player.getLastTimeSeen());
 						return Leaderboard.FromStat.TIME.apply(time);
 					}
@@ -64,13 +64,12 @@ public class FTBUtilitiesLeaderboards
 
 	private static long getRelativeLastSeen(ForgePlayer player)
 	{
-		long worldTime = CommonUtils.getWorldTime();
 		if (player.isOnline())
 		{
 			return 0;
 		}
 
-		return worldTime - player.getLastTimeSeen();
+		return player.team.universe.world.getTotalWorldTime() - player.getLastTimeSeen();
 	}
 
 	private static double getDPH(ForgePlayer player)

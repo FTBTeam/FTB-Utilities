@@ -37,6 +37,7 @@ public class CmdBack extends CmdBase
 		if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.INFINITE_BACK_USAGE))
 		{
 			data.lastDeath = null;
+			data.player.markDirty();
 		}
 	}
 }

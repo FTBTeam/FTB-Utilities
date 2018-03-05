@@ -30,7 +30,7 @@ public class CmdCheckPerm extends CmdBase
 	{
 		checkArgs(sender, args, 2);
 		ForgePlayer player = getForgePlayer(sender, args[0]);
-		boolean perm = player.isOnline() ? PermissionAPI.hasPermission(player.getPlayer(), args[1]) : PermissionAPI.hasPermission(player.getProfile(), args[1], new WorldContext(sender.getEntityWorld()));
+		boolean perm = player.isOnline() ? PermissionAPI.hasPermission(player.getPlayer(), args[1]) : PermissionAPI.hasPermission(player.getProfile(), args[1], new WorldContext(server.getWorld(0)));
 		FTBUtilitiesLang.PERM_FOR.sendMessage(sender, args[1], player.getName(), String.valueOf(perm));
 	}
 }

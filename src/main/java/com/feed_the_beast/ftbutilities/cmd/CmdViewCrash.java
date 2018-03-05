@@ -2,9 +2,11 @@ package com.feed_the_beast.ftbutilities.cmd;
 
 import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.io.HttpConnection;
+import com.feed_the_beast.ftblib.lib.io.RequestMethod;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
-import com.feed_the_beast.ftblib.lib.util.JsonUtils;
+import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.net.MessageViewCrash;
@@ -19,15 +21,12 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.world.storage.ThreadedFileIOBase;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
@@ -134,32 +133,27 @@ public class CmdViewCrash extends CmdBase
 				else
 				{
 					List<String> text = StringUtils.readStringList(new FileInputStream(file));
-					//{"url":"http://hastebin.com/documents","headers":{"User-Agent":"atom-rest-client","Content-Type":"text/plain; charset=utf-8"},"method":"POST","body":"some text"}
-
-					HttpURLConnection con = (HttpURLConnection) new URL("https://hastebin.com/documents").openConnection();
-					con.setRequestMethod("POST");
-					con.setRequestProperty("User-Agent", "HTTP/1.1");
-					con.setRequestProperty("Content-Type", "text/plain; charset=utf-8");
-					con.setDoOutput(true);
-					con.setDoInput(true);
-
-					OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream(), StandardCharsets.UTF_8);
-
-					for (String s : text)
-					{
-						writer.write(s);
-						writer.write('\n');
-					}
-
-					writer.close();
-
-					con.getResponseCode();
-					JsonElement response = JsonUtils.fromJson(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+					HttpConnection connection = HttpConnection.connection("https://hastebin.com/documents", RequestMethod.POST, "text/plain; charset=utf-8");
+					connection.data = StringJoiner.with('\n').join(text).getBytes(StandardCharsets.UTF_8);
+					JsonElement response = connection.connect().asJson();
 
 					if (response.isJsonObject() && response.getAsJsonObject().has("key"))
 					{
 						url = "https://hastebin.com/" + response.getAsJsonObject().get("key").getAsString() + ".md";
-						FileUtils.save(urlFile, url);
+						final String url1 = url;
+						ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
+						{
+							try
+							{
+								FileUtils.save(urlFile, url1);
+							}
+							catch (Exception ex)
+							{
+								ex.printStackTrace();
+							}
+
+							return false;
+						});
 					}
 				}
 

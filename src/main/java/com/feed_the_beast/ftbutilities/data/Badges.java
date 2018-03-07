@@ -2,6 +2,9 @@ package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.io.HttpConnection;
+import com.feed_the_beast.ftblib.lib.io.RequestMethod;
+import com.feed_the_beast.ftblib.lib.io.Response;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -10,11 +13,8 @@ import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.world.storage.ThreadedFileIOBase;
 
 import java.io.File;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -67,10 +67,10 @@ public class Badges
 		{
 			try
 			{
-				HttpURLConnection connection = (HttpURLConnection) new URL(URL + StringUtils.fromUUID(playerId)).openConnection();
-				String badge = StringUtils.readString(connection.getInputStream(), 32);
+				Response response = HttpConnection.connection(URL + StringUtils.fromUUID(playerId), RequestMethod.GET, HttpConnection.TEXT).connect(universe.server.getServerProxy());
+				String badge = response.asString(32);
 
-				if (!badge.isEmpty() && (FTBUtilitiesConfig.login.enable_event_badges || !"true".equals(connection.getHeaderField("Event-Badge"))))
+				if (!badge.isEmpty() && (FTBUtilitiesConfig.login.enable_event_badges || !response.getHeaderField("Event-Badge").equals("true")))
 				{
 					return badge;
 				}
@@ -95,14 +95,10 @@ public class Badges
 
 			if (!file.exists())
 			{
-				ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
-				{
-					JsonObject o = new JsonObject();
-					o.addProperty("uuid", "url_to.png");
-					o.addProperty("username", "url2_to.png");
-					JsonUtils.toJson(o, file);
-					return false;
-				});
+				JsonObject o = new JsonObject();
+				o.addProperty("uuid", "url_to.png");
+				o.addProperty("username", "url2_to.png");
+				JsonUtils.toJsonSafe(file, o);
 			}
 			else
 			{

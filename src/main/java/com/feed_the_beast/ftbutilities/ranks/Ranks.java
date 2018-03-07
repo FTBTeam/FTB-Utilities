@@ -217,11 +217,11 @@ public class Ranks
 
 		o.add("ranks", o1);
 
-		JsonUtils.toJson(o, new File(CommonUtils.folderLocal, "ftbutilities/ranks.json"));
+		JsonUtils.toJsonSafe(new File(CommonUtils.folderLocal, "ftbutilities/ranks.json"), o);
 
 		final JsonObject o2 = new JsonObject();
 		PLAYER_MAP.forEach((key, value) -> o2.add(StringUtils.fromUUID(key), new JsonPrimitive(value.getName())));
-		JsonUtils.toJson(o2, new File(CommonUtils.folderLocal, "ftbutilities/player_ranks.json"));
+		JsonUtils.toJsonSafe(new File(CommonUtils.folderLocal, "ftbutilities/player_ranks.json"), o2);
 	}
 
 	public static void generateExampleFiles()
@@ -262,131 +262,117 @@ public class Ranks
 		allNodes.sort(StringUtils.ID_COMPARATOR);
 		List<String> list = new ArrayList<>();
 
-		try
+		list.add("<html><head><title>Permissions</title><style>");
+		list.add("table{font-family:arial, sans-serif;border-collapse:collapse;}");
+		list.add("td,th{border:1px solid #666666;text-align:left;padding:8px;}");
+		list.add("td.all{background-color:#72FF85;}");
+		list.add("td.op{background-color:#42A3FF;}");
+		list.add("td.none{background-color:#FF4242;}");
+		list.add("</style></head><body><h1>Permissions</h1><h3>Modifying this file won't have any effect!</h3><table>");
+		list.add("<tr><th>Permission Node</th><th></th><th>Info</th></tr>");
+
+		for (NodeEntry entry : allNodes)
 		{
-			list.add("<html><head><title>Permissions</title><style>");
-			list.add("table{font-family:arial, sans-serif;border-collapse:collapse;}");
-			list.add("td,th{border:1px solid #666666;text-align:left;padding:8px;}");
-			list.add("td.all{background-color:#72FF85;}");
-			list.add("td.op{background-color:#42A3FF;}");
-			list.add("td.none{background-color:#FF4242;}");
-			list.add("</style></head><body><h1>Permissions</h1><h3>Modifying this file won't have any effect!</h3><table>");
-			list.add("<tr><th>Permission Node</th><th></th><th>Info</th></tr>");
+			list.add("<tr><td>" + entry.getName() + "</td><td class='" + entry.getLevel().name().toLowerCase() + "'>" + entry.getLevel() + "</td><td>");
 
-			for (NodeEntry entry : allNodes)
+			if (entry.getDescription() != null)
 			{
-				list.add("<tr><td>" + entry.getName() + "</td><td class='" + entry.getLevel().name().toLowerCase() + "'>" + entry.getLevel() + "</td><td>");
-
-				if (entry.getDescription() != null)
+				for (String s1 : entry.getDescription().split("\n"))
 				{
-					for (String s1 : entry.getDescription().split("\n"))
-					{
-						list.add("<p>" + s1 + "</p>");
-					}
+					list.add("<p>" + s1 + "</p>");
 				}
-
-				list.add("</td></tr>");
 			}
 
-			list.add("</table></body></html>");
-			FileUtils.save(new File(CommonUtils.folderLocal, "ftbutilities/all_permissions.html"), list);
+			list.add("</td></tr>");
 		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
+
+		list.add("</table></body></html>");
+		FileUtils.saveSafe(new File(CommonUtils.folderLocal, "ftbutilities/all_permissions.html"), list);
 
 		List<RankConfigValueInfo> sortedRankConfigKeys = new ArrayList<>(FTBLibCommon.RANK_CONFIGS_MIRROR.values());
 		sortedRankConfigKeys.sort(StringUtils.ID_COMPARATOR);
 
-		try
+		list.clear();
+		list.add("<html><head><title>Rank Configs</title>");
+		list.add("<style>table{font-family: arial, sans-serif;border-collapse: collapse;}td,th{border:1px solid #666666;text-align: left;padding:8px;}p,ul{margin:4px;}</style>");
+		list.add("</head><body><h1>Rank Configs</h1><h3>Modifying this file won't have any effect!</h3><table>");
+		list.add("<tr><th>Rank Config</th><th>Def Value</th><th>Info</th></tr>");
+
+		List<String> infoList = new ArrayList<>();
+
+		for (RankConfigValueInfo p : sortedRankConfigKeys)
 		{
-			list.clear();
-			list.add("<html><head><title>Rank Configs</title>");
-			list.add("<style>table{font-family: arial, sans-serif;border-collapse: collapse;}td,th{border:1px solid #666666;text-align: left;padding:8px;}p,ul{margin:4px;}</style>");
-			list.add("</head><body><h1>Rank Configs</h1><h3>Modifying this file won't have any effect!</h3><table>");
-			list.add("<tr><th>Rank Config</th><th>Def Value</th><th>Info</th></tr>");
+			list.add("<tr><td>" + p.id + "</td><td>");
 
-			List<String> infoList = new ArrayList<>();
+			p.defaultValue.addInfo(p, infoList);
+			List<String> variants = p.defaultValue.getVariants();
 
-			for (RankConfigValueInfo p : sortedRankConfigKeys)
+			if (!infoList.isEmpty() || !variants.isEmpty())
 			{
-				list.add("<tr><td>" + p.id + "</td><td>");
+				list.add("<ul><li>Default: " + p.defaultValue.getSerializableElement() + "</li>");
+				list.add("<li>OP Default: " + p.defaultOPValue.getSerializableElement() + "</li>");
 
-				p.defaultValue.addInfo(p, infoList);
-				List<String> variants = p.defaultValue.getVariants();
-
-				if (!infoList.isEmpty() || !variants.isEmpty())
+				for (String s : infoList)
 				{
-					list.add("<ul><li>Default: " + p.defaultValue.getSerializableElement() + "</li>");
-					list.add("<li>OP Default: " + p.defaultOPValue.getSerializableElement() + "</li>");
-
-					for (String s : infoList)
+					if (!s.contains("Def:"))
 					{
-						if (!s.contains("Def:"))
-						{
-							list.add("<li>" + TextFormatting.getTextWithoutFormattingCodes(s) + "</li>");
-						}
-					}
-
-					infoList.clear();
-
-					if (!variants.isEmpty())
-					{
-						list.add("<li>Variants:<ul>");
-						variants = new ArrayList<>(variants);
-						variants.sort(StringUtils.IGNORE_CASE_COMPARATOR);
-
-						for (String s : variants)
-						{
-							list.add("<li>" + s + "</li>");
-						}
-
-						list.add("</ul></li>");
-					}
-
-					list.add("</ul>");
-				}
-				else
-				{
-					list.add("Default: " + p.defaultValue.getSerializableElement());
-				}
-
-				list.add("</td><td>");
-
-				String info = StringUtils.translate(p.displayName.isEmpty() ? ("rank_config." + p.id) : p.displayName);
-
-				if (!info.isEmpty())
-				{
-					for (String s1 : info.split("\\\\n"))
-					{
-						list.add("<p>" + s1 + "</p>");
+						list.add("<li>" + TextFormatting.getTextWithoutFormattingCodes(s) + "</li>");
 					}
 				}
 
-				list.add("</td></tr>");
+				infoList.clear();
+
+				if (!variants.isEmpty())
+				{
+					list.add("<li>Variants:<ul>");
+					variants = new ArrayList<>(variants);
+					variants.sort(StringUtils.IGNORE_CASE_COMPARATOR);
+
+					for (String s : variants)
+					{
+						list.add("<li>" + s + "</li>");
+					}
+
+					list.add("</ul></li>");
+				}
+
+				list.add("</ul>");
+			}
+			else
+			{
+				list.add("Default: " + p.defaultValue.getSerializableElement());
 			}
 
-			list.add("</table></body></html>");
-			FileUtils.save(new File(CommonUtils.folderLocal, "ftbutilities/all_configs.html"), list);
+			list.add("</td><td>");
 
-			list.clear();
+			String info = StringUtils.translate(p.displayName.isEmpty() ? ("rank_config." + p.id) : p.displayName);
 
-			for (String node : PermissionAPI.getPermissionHandler().getRegisteredNodes())
+			if (!info.isEmpty())
 			{
-				list.add(node + ": " + DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(node));
+				for (String s1 : info.split("\\\\n"))
+				{
+					list.add("<p>" + s1 + "</p>");
+				}
 			}
 
-			list.addAll(CMD_PERMISSION_NODES);
-			Collections.sort(list);
-			list.add(0, "");
-			list.add(0, "Modifying this file won't have any effect!");
-			list.add(0, PermissionAPI.getPermissionHandler().getRegisteredNodes().size() + " nodes in total");
-			FileUtils.save(new File(CommonUtils.folderLocal, "ftbutilities/all_permissions_full_list.txt"), list);
+			list.add("</td></tr>");
 		}
-		catch (Exception ex)
+
+		list.add("</table></body></html>");
+		FileUtils.saveSafe(new File(CommonUtils.folderLocal, "ftbutilities/all_configs.html"), list);
+
+		list.clear();
+
+		for (String node : PermissionAPI.getPermissionHandler().getRegisteredNodes())
 		{
-			ex.printStackTrace();
+			list.add(node + ": " + DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(node));
 		}
+
+		list.addAll(CMD_PERMISSION_NODES);
+		Collections.sort(list);
+		list.add(0, "");
+		list.add(0, "Modifying this file won't have any effect!");
+		list.add(0, PermissionAPI.getPermissionHandler().getRegisteredNodes().size() + " nodes in total");
+		FileUtils.saveSafe(new File(CommonUtils.folderLocal, "ftbutilities/all_permissions_full_list.txt"), list);
 	}
 }

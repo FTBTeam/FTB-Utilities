@@ -208,15 +208,7 @@ public class CmdScanItems extends CmdBase
 					}
 				}
 
-				try
-				{
-					FileUtils.save(new File(CommonUtils.folderLocal, "client/scanneditems." + (md ? "md" : "txt")), list);
-				}
-				catch (Exception ex)
-				{
-					ex.printStackTrace();
-				}
-
+				FileUtils.saveSafe(new File(CommonUtils.folderLocal, "client/scanneditems." + (md ? "md" : "txt")), list);
 				ClientUtils.MC.player.sendStatusMessage(new TextComponentString("Duplicate items have been exported in ./local/client/scanneditems." + (md ? "md" : "txt") + "!"), false);
 			}
 		}.start();

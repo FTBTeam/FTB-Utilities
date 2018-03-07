@@ -8,7 +8,6 @@ import com.feed_the_beast.ftbutilities.ranks.CommandOverride;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ServerCommandManager;
-import net.minecraft.world.storage.ThreadedFileIOBase;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -86,10 +85,6 @@ public class FTBUtilities
 			LOGGER.info("Overridden " + manager.getCommands().size() + " commands");
 		}
 
-		ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
-		{
-			Ranks.generateExampleFiles();
-			return false;
-		});
+		Ranks.generateExampleFiles();
 	}
 }

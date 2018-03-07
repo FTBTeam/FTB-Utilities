@@ -211,7 +211,7 @@ public enum Backups
 			}
 		}
 
-		JsonUtils.toJson(a, new File(backupsFolder, "backups.json"));
+		JsonUtils.toJsonSafe(new File(backupsFolder, "backups.json"), a);
 	}
 
 	public void postBackup(MinecraftServer server)

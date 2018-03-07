@@ -21,7 +21,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraft.world.storage.ThreadedFileIOBase;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -135,25 +134,12 @@ public class CmdViewCrash extends CmdBase
 					List<String> text = StringUtils.readStringList(new FileInputStream(file));
 					HttpConnection connection = HttpConnection.connection("https://hastebin.com/documents", RequestMethod.POST, "text/plain; charset=utf-8");
 					connection.data = StringJoiner.with('\n').join(text).getBytes(StandardCharsets.UTF_8);
-					JsonElement response = connection.connect().asJson();
+					JsonElement response = connection.connect(sender.getServer().getServerProxy()).asJson();
 
 					if (response.isJsonObject() && response.getAsJsonObject().has("key"))
 					{
 						url = "https://hastebin.com/" + response.getAsJsonObject().get("key").getAsString() + ".md";
-						final String url1 = url;
-						ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
-						{
-							try
-							{
-								FileUtils.save(urlFile, url1);
-							}
-							catch (Exception ex)
-							{
-								ex.printStackTrace();
-							}
-
-							return false;
-						});
+						FileUtils.saveSafe(urlFile, url);
 					}
 				}
 

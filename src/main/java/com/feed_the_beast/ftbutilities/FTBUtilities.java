@@ -5,7 +5,6 @@ import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import com.feed_the_beast.ftbutilities.ranks.CommandOverride;
-import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraftforge.fml.common.Mod;
@@ -63,7 +62,6 @@ public class FTBUtilities
 	public void onServerStarted(FMLServerStartedEvent event)
 	{
 		Backups.INSTANCE.init();
-		Ranks.CMD_PERMISSION_NODES.clear();
 
 		if (FTBUtilitiesConfig.ranks.override_commands)
 		{
@@ -84,7 +82,5 @@ public class FTBUtilities
 
 			LOGGER.info("Overridden " + manager.getCommands().size() + " commands");
 		}
-
-		Ranks.generateExampleFiles();
 	}
 }

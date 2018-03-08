@@ -24,7 +24,7 @@ public class CommandOverride extends CommandMirror
 		if (sender instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP player = ((EntityPlayerMP) sender);
-			Event.Result result = Ranks.getRank(player.mcServer, player.getGameProfile()).hasPermission(ICommandWithCustomPermission.getPermissionNode(this));
+			Event.Result result = Ranks.INSTANCE.getRank(player.mcServer, player.getGameProfile()).hasPermission(ICommandWithCustomPermission.getPermissionNode(this));
 
 			if (result != Event.Result.DEFAULT)
 			{

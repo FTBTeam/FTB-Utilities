@@ -62,7 +62,7 @@ public class FTBLibIntegration
 			FTBUtilitiesConfig.sync();
 		}
 
-		if (event.reload(RELOAD_RANKS) && !Ranks.reload())
+		if (event.reload(RELOAD_RANKS) && !Ranks.INSTANCE.reload())
 		{
 			event.failedToReload(RELOAD_RANKS);
 		}

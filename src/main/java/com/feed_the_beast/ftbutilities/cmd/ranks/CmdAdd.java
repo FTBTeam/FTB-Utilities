@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbutilities.cmd.ranks;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
-import com.feed_the_beast.ftbutilities.ranks.DefaultPlayerRank;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.CommandException;
@@ -26,18 +25,18 @@ public class CmdAdd extends CmdBase
 
 		String id = args[0].toLowerCase();
 
-		if (Ranks.getRankNames().contains(id))
+		if (Ranks.INSTANCE.getRankNames().contains(id))
 		{
 			throw FTBUtilitiesLang.RANK_ID_EXISTS.commandError(id);
 		}
 
-		Rank parent = args.length == 1 ? DefaultPlayerRank.INSTANCE : Ranks.getRank(args[1], null);
+		Rank parent = args.length == 1 ? Ranks.INSTANCE.builtinPlayerRank : Ranks.INSTANCE.getRank(args[1], null);
 
 		if (parent == null)
 		{
 			throw FTBUtilitiesLang.RANK_NOT_FOUND.commandError(id);
 		}
 
-		Ranks.addRank(new Rank(id, parent));
+		Ranks.INSTANCE.addRank(new Rank(Ranks.INSTANCE, id, parent));
 	}
 }

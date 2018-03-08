@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.data;
 
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.HttpConnection;
@@ -8,6 +9,7 @@ import com.feed_the_beast.ftblib.lib.io.Response;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
@@ -77,12 +79,15 @@ public class Badges
 			}
 			catch (Exception ex)
 			{
-				//FTBUtilities.LOGGER.warn("Badge API errored: " + ex);
+				if (FTBLibConfig.debugging.print_more_errors)
+				{
+					FTBUtilities.LOGGER.warn("Badge API errored! " + ex);
+				}
 			}
 		}
 
 		String badge = LOCAL_BADGES.get(playerId);
-		return (badge == null || badge.isEmpty()) ? Ranks.getRank(universe.server, player.getProfile()).getConfig(FTBUtilitiesPermissions.BADGE).getString() : badge;
+		return (badge == null || badge.isEmpty()) ? Ranks.INSTANCE.getRank(universe.server, player.getProfile()).getConfig(FTBUtilitiesPermissions.BADGE).getString() : badge;
 	}
 
 	public static boolean reloadServerBadges(Universe universe)
@@ -91,7 +96,7 @@ public class Badges
 		{
 			BADGE_CACHE.clear();
 			LOCAL_BADGES.clear();
-			File file = new File(CommonUtils.folderLocal, "ftbutilities/server_badges.json");
+			File file = new File(CommonUtils.folderLocal, FTBUtilities.MOD_ID + "/server_badges.json");
 
 			if (!file.exists())
 			{

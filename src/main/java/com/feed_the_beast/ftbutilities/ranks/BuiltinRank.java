@@ -7,11 +7,11 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 /**
  * @author LatvianModder
  */
-class DefaultRank extends Rank
+class BuiltinRank extends Rank
 {
-	DefaultRank(String id)
+	BuiltinRank(Ranks r, String id)
 	{
-		super(id);
+		super(r, id, null);
 	}
 
 	@Override

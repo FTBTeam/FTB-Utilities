@@ -163,7 +163,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
 
 		for (ForgePlayer player : team.getMembers())
 		{
-			cachedMaxClaimChunks += Ranks.getRank(team.universe.server, player.getProfile()).getConfig(FTBUtilitiesPermissions.CLAIMS_MAX_CHUNKS).getInt();
+			cachedMaxClaimChunks += Ranks.INSTANCE.getRank(team.universe.server, player.getProfile()).getConfig(FTBUtilitiesPermissions.CLAIMS_MAX_CHUNKS).getInt();
 		}
 
 		return cachedMaxClaimChunks;
@@ -184,7 +184,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
 
 		for (ForgePlayer player : team.getMembers())
 		{
-			cachedMaxChunkloaderChunks += Ranks.getRank(team.universe.server, player.getProfile()).getConfig(FTBUtilitiesPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+			cachedMaxChunkloaderChunks += Ranks.INSTANCE.getRank(team.universe.server, player.getProfile()).getConfig(FTBUtilitiesPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
 		}
 
 		return cachedMaxChunkloaderChunks;

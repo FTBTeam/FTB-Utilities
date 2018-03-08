@@ -2,16 +2,18 @@ package com.feed_the_beast.ftbutilities.ranks;
 
 import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
@@ -35,153 +37,168 @@ import java.util.UUID;
 
 public class Ranks
 {
-	private static final Map<String, Rank> RANKS = new LinkedHashMap<>();
-	private static final Collection<String> RANK_NAMES = new ArrayList<>();
-	private static final Map<UUID, Rank> PLAYER_MAP = new HashMap<>();
-	private static Rank defaultPlayerRank, defaultOPRank;
-	public static final Collection<String> CMD_PERMISSION_NODES = new HashSet<>();
+	public static Ranks INSTANCE;
+
+	public final Universe universe;
+	private final Map<String, Rank> ranks = new LinkedHashMap<>();
+	private final Collection<String> rankNames = new ArrayList<>();
+	private final Map<UUID, Rank> playerMap = new HashMap<>();
+	public final BuiltinRank builtinPlayerRank, builtinOPRank;
+	private Rank defaultPlayerRank, defaultOPRank;
+	public final Collection<String> commandPermissionNodes = new HashSet<>();
+
+	public Ranks(Universe u)
+	{
+		universe = u;
+		builtinPlayerRank = new BuiltinPlayerRank(this);
+		builtinOPRank = new BuiltinOPRank(this);
+	}
 
 	@Nullable
-	public static Rank getRank(String id, @Nullable Rank nullrank)
+	public Rank getRank(String id, @Nullable Rank nullrank)
 	{
-		if (id.equals(DefaultPlayerRank.INSTANCE.getName()))
-		{
-			return DefaultPlayerRank.INSTANCE;
-		}
-		else if (id.equals(DefaultOPRank.INSTANCE.getName()))
-		{
-			return DefaultOPRank.INSTANCE;
-		}
-
-		Rank r = RANKS.get(id);
+		Rank r = ranks.get(id);
 		return r == null ? nullrank : r;
 	}
 
-	public static Rank getDefaultPlayerRank()
+	public Rank getDefaultPlayerRank()
 	{
 		if (defaultPlayerRank == null)
 		{
-			Rank r = new Rank("player");
-			r.parent = DefaultPlayerRank.INSTANCE;
-			RANKS.put(r.getName(), r);
+			Rank r = new Rank(this, "player", builtinPlayerRank);
+			ranks.put(r.getName(), r);
 			defaultPlayerRank = r;
 		}
 
 		return defaultPlayerRank;
 	}
 
-	public static Rank getDefaultOPRank()
+	public Rank getDefaultOPRank()
 	{
 		if (defaultOPRank == null)
 		{
-			Rank r = new Rank("op");
-			r.parent = DefaultOPRank.INSTANCE;
+			Rank r = new Rank(this, "op", builtinOPRank);
 			r.syntax = "<" + TextFormatting.DARK_GREEN + "$name" + TextFormatting.RESET + "> ";
-			RANKS.put(r.getName(), r);
+			ranks.put(r.getName(), r);
 			defaultOPRank = r;
 		}
 
 		return defaultOPRank;
 	}
 
-	public static Rank getRank(@Nullable MinecraftServer server, GameProfile profile)
+	public Rank getRank(@Nullable MinecraftServer server, GameProfile profile)
 	{
-		Rank r = FTBUtilitiesConfig.ranks.enabled ? PLAYER_MAP.get(profile.getId()) : null;
+		Rank r = FTBUtilitiesConfig.ranks.enabled ? playerMap.get(profile.getId()) : null;
 		return (r == null) ? (ServerUtils.isOP(server, profile) ? getDefaultOPRank() : getDefaultPlayerRank()) : r;
 	}
 
-	public static void addRank(Rank rank)
+	public void addRank(Rank rank)
 	{
-		RANKS.put(rank.getName(), rank);
+		ranks.put(rank.getName(), rank);
 		updateRankNames();
 		saveRanks();
 	}
 
-	public static void setRank(UUID id, @Nullable Rank r)
+	public void setRank(UUID id, @Nullable Rank r)
 	{
 		if (r == null)
 		{
-			PLAYER_MAP.remove(id);
+			playerMap.remove(id);
 		}
 		else
 		{
-			PLAYER_MAP.put(id, r);
+			playerMap.put(id, r);
 		}
 
-		saveRanks();
+		savePlayerRanks();
 	}
 
-	public static Collection<String> getRankNames()
+	public Collection<String> getRankNames()
 	{
-		return RANK_NAMES;
+		return rankNames;
 	}
 
-	public static void updateRankNames()
+	public void updateRankNames()
 	{
-		RANK_NAMES.clear();
-		RANK_NAMES.addAll(RANKS.keySet());
-		RANK_NAMES.add("none");
-		RANK_NAMES.remove(DefaultPlayerRank.INSTANCE.getName());
-		RANK_NAMES.remove(DefaultOPRank.INSTANCE.getName());
+		rankNames.clear();
+		rankNames.addAll(ranks.keySet());
+		rankNames.add("none");
+		rankNames.remove(builtinPlayerRank.getName());
+		rankNames.remove(builtinOPRank.getName());
 	}
 
-	public static boolean reload()
+	public boolean reload()
 	{
-		FTBUtilities.LOGGER.info("Loading ranks..");
+		File ranksFile;
+		JsonElement ranksJson = JsonNull.INSTANCE;
 
-		RANKS.clear();
-		RANKS.put(DefaultPlayerRank.INSTANCE.getName(), DefaultPlayerRank.INSTANCE);
-		RANKS.put(DefaultOPRank.INSTANCE.getName(), DefaultOPRank.INSTANCE);
-		PLAYER_MAP.clear();
+		if (FTBUtilitiesConfig.ranks.enabled)
+		{
+			ranksFile = new File(CommonUtils.folderLocal, "ftbutilities/ranks.json");
+			ranksJson = JsonUtils.fromJson(ranksFile);
+
+			if (ranksFile.exists() && !ranksJson.isJsonObject())
+			{
+				return false;
+			}
+		}
+
+		ranks.clear();
+		ranks.put(builtinPlayerRank.getName(), builtinPlayerRank);
+		ranks.put(builtinOPRank.getName(), builtinOPRank);
+		playerMap.clear();
 		defaultPlayerRank = null;
 		defaultOPRank = null;
 		boolean result = true;
 
 		if (FTBUtilitiesConfig.ranks.enabled)
 		{
-			JsonElement e = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbutilities/ranks.json"));
-
-			if (e.isJsonObject())
+			if (ranksJson.isJsonObject())
 			{
-				JsonObject o = e.getAsJsonObject();
+				JsonObject json = ranksJson.getAsJsonObject();
 
-				if (o.has("default_ranks") && o.has("ranks"))
+				if (json.has("default_ranks") && json.has("ranks"))
 				{
-					for (Map.Entry<String, JsonElement> entry : o.get("ranks").getAsJsonObject().entrySet())
+					for (Map.Entry<String, JsonElement> entry : json.get("ranks").getAsJsonObject().entrySet())
 					{
-						RANKS.put(entry.getKey(), new Rank(entry.getKey()));
+						ranks.put(entry.getKey(), new Rank(this, entry.getKey(), null));
 					}
 
-					for (Map.Entry<String, JsonElement> entry : o.get("ranks").getAsJsonObject().entrySet())
+					for (Map.Entry<String, JsonElement> entry : json.get("ranks").getAsJsonObject().entrySet())
 					{
-						RANKS.get(entry.getKey()).fromJson(entry.getValue());
+						ranks.get(entry.getKey()).fromJson(entry.getValue());
 					}
 
-					JsonObject dr = o.get("default_ranks").getAsJsonObject();
-					defaultPlayerRank = dr.has("player") ? RANKS.get(dr.get("player").getAsString()) : null;
-					defaultOPRank = dr.has("op") ? RANKS.get(dr.get("op").getAsString()) : null;
+					JsonObject dr = json.get("default_ranks").getAsJsonObject();
+					defaultPlayerRank = dr.has("player") ? ranks.get(dr.get("player").getAsString()) : null;
+					defaultOPRank = dr.has("op") ? ranks.get(dr.get("op").getAsString()) : null;
+
+					saveRanks();
 				}
 			}
 
 			try
 			{
-				e = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbutilities/player_ranks.json"));
+				ranksJson = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbutilities/player_ranks.json"));
 
-				if (e.isJsonObject())
+				if (ranksJson.isJsonObject())
 				{
-					for (Map.Entry<String, JsonElement> entry : e.getAsJsonObject().entrySet())
+					for (Map.Entry<String, JsonElement> entry : ranksJson.getAsJsonObject().entrySet())
 					{
-						UUID id = StringUtils.fromString(entry.getKey());
-						if (id != null)
+						ForgePlayer player = universe.getPlayer(entry.getKey());
+
+						if (player != null)
 						{
 							String s = entry.getValue().getAsString();
 
-							if (RANKS.containsKey(s))
+							if (ranks.containsKey(s))
 							{
-								PLAYER_MAP.put(id, RANKS.get(s));
+								playerMap.put(player.getId(), ranks.get(s));
 							}
 						}
 					}
+
+					savePlayerRanks();
 				}
 			}
 			catch (Exception ex)
@@ -193,19 +210,20 @@ public class Ranks
 
 		updateRankNames();
 		saveRanks();
+		savePlayerRanks();
 		return result;
 	}
 
-	private static void saveRanks()
+	private void saveRanks()
 	{
-		JsonObject o = new JsonObject();
+		JsonObject json = new JsonObject();
 		JsonObject o1 = new JsonObject();
 		o1.addProperty("player", getDefaultPlayerRank().getName());
 		o1.addProperty("op", getDefaultOPRank().getName());
-		o.add("default_ranks", o1);
+		json.add("default_ranks", o1);
 		o1 = new JsonObject();
 
-		for (Rank r : RANKS.values())
+		for (Rank r : ranks.values())
 		{
 			JsonElement e = r.getSerializableElement();
 
@@ -215,16 +233,28 @@ public class Ranks
 			}
 		}
 
-		o.add("ranks", o1);
-
-		JsonUtils.toJsonSafe(new File(CommonUtils.folderLocal, "ftbutilities/ranks.json"), o);
-
-		final JsonObject o2 = new JsonObject();
-		PLAYER_MAP.forEach((key, value) -> o2.add(StringUtils.fromUUID(key), new JsonPrimitive(value.getName())));
-		JsonUtils.toJsonSafe(new File(CommonUtils.folderLocal, "ftbutilities/player_ranks.json"), o2);
+		json.add("ranks", o1);
+		JsonUtils.toJsonSafe(new File(CommonUtils.folderLocal, "ftbutilities/ranks.json"), json);
 	}
 
-	public static void generateExampleFiles()
+	private void savePlayerRanks()
+	{
+		JsonObject json = new JsonObject();
+
+		for (Map.Entry<UUID, Rank> entry : playerMap.entrySet())
+		{
+			ForgePlayer player = universe.getPlayer(entry.getKey());
+
+			if (player != null)
+			{
+				json.add(player.getName(), new JsonPrimitive(entry.getValue().getName()));
+			}
+		}
+
+		JsonUtils.toJsonSafe(new File(CommonUtils.folderLocal, "ftbutilities/player_ranks.json"), json);
+	}
+
+	public void generateExampleFiles()
 	{
 		List<NodeEntry> allNodes = new ArrayList<>();
 
@@ -368,7 +398,7 @@ public class Ranks
 			list.add(node + ": " + DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(node));
 		}
 
-		list.addAll(CMD_PERMISSION_NODES);
+		list.addAll(commandPermissionNodes);
 		Collections.sort(list);
 		list.add(0, "");
 		list.add(0, "Modifying this file won't have any effect!");

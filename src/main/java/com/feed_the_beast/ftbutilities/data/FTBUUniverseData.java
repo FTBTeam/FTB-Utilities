@@ -12,6 +12,7 @@ import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
+import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -58,6 +59,8 @@ public class FTBUUniverseData
 		{
 			ClaimedChunks.instance = new ClaimedChunks(event.getUniverse());
 		}
+
+		Ranks.INSTANCE = new Ranks(event.getUniverse());
 	}
 
 	@SubscribeEvent
@@ -110,6 +113,7 @@ public class FTBUUniverseData
 		}
 
 		Badges.LOCAL_BADGES.clear();
+		Ranks.INSTANCE.generateExampleFiles();
 	}
 
 	@SubscribeEvent

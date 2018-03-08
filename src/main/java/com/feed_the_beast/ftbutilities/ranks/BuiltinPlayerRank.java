@@ -8,25 +8,23 @@ import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 /**
  * @author LatvianModder
  */
-public class DefaultOPRank extends DefaultRank
+public class BuiltinPlayerRank extends BuiltinRank
 {
-	public static final DefaultOPRank INSTANCE = new DefaultOPRank();
-
-	private DefaultOPRank()
+	BuiltinPlayerRank(Ranks r)
 	{
-		super("builtin_op");
+		super(r, "builtin_player");
 	}
 
 	@Override
 	public Rank getParent()
 	{
-		return DefaultPlayerRank.INSTANCE;
+		return this;
 	}
 
 	@Override
 	public ConfigValue getConfig(String id)
 	{
 		RankConfigValueInfo config = FTBLibCommon.RANK_CONFIGS_MIRROR.get(id);
-		return config == null ? ConfigNull.INSTANCE : config.defaultOPValue;
+		return config == null ? ConfigNull.INSTANCE : config.defaultValue;
 	}
 }

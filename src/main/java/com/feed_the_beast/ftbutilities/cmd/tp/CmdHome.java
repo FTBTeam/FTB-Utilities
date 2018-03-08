@@ -80,7 +80,7 @@ public class CmdHome extends CmdBase
 			FTBUPlayerData data = FTBUPlayerData.get(p);
 
 			Collection<String> list = data.homes.list();
-			ITextComponent msg = new TextComponentString(p.getName() + ": " + list.size() + " / " + Ranks.getRank(server, p.getProfile()).getConfig(FTBUtilitiesPermissions.HOMES_MAX).getInt() + ": ");
+			ITextComponent msg = new TextComponentString(p.getName() + ": " + list.size() + " / " + Ranks.INSTANCE.getRank(server, p.getProfile()).getConfig(FTBUtilitiesPermissions.HOMES_MAX).getInt() + ": ");
 
 			if (!list.isEmpty())
 			{

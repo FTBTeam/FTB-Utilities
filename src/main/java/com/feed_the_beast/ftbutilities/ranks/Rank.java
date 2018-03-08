@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,6 +20,7 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 {
 	private static final String[] EVENT_RESULT_PREFIX = {"-", "~", "+"};
 
+	public final Ranks ranks;
 	Rank parent;
 	private final Map<String, Event.Result> permissions;
 	private final Map<String, Event.Result> cachedPermissions;
@@ -26,25 +28,21 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 	private final Map<String, ConfigValue> cachedConfig;
 	String syntax;
 
-	public Rank(String id)
+	public Rank(Ranks r, String id, @Nullable Rank p)
 	{
 		super(id);
+		ranks = r;
 		permissions = new LinkedHashMap<>();
 		cachedPermissions = new HashMap<>();
 		config = new LinkedHashMap<>();
 		cachedConfig = new HashMap<>();
 		syntax = null;
-	}
-
-	public Rank(String id, Rank r)
-	{
-		this(id);
-		parent = r;
+		parent = p;
 	}
 
 	public Rank getParent()
 	{
-		return parent == null ? DefaultPlayerRank.INSTANCE : parent;
+		return parent == null ? ranks.builtinPlayerRank : parent;
 	}
 
 	private Event.Result hasPermissionRaw(String permission)
@@ -146,7 +144,7 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 
 		if (o.has("parent"))
 		{
-			parent = Ranks.getRank(o.get("parent").getAsString(), null);
+			parent = ranks.getRank(o.get("parent").getAsString(), null);
 		}
 
 		if (o.has("syntax"))

@@ -322,7 +322,7 @@ public class Ranks
 		List<RankConfigValueInfo> sortedRankConfigKeys = new ArrayList<>(FTBLibCommon.RANK_CONFIGS_MIRROR.values());
 		sortedRankConfigKeys.sort(StringUtils.ID_COMPARATOR);
 
-		list.clear();
+		list = new ArrayList<>();
 		list.add("<html><head><title>Rank Configs</title>");
 		list.add("<style>table{font-family: arial, sans-serif;border-collapse: collapse;}td,th{border:1px solid #666666;text-align: left;padding:8px;}p,ul{margin:4px;}</style>");
 		list.add("</head><body><h1>Rank Configs</h1><h3>Modifying this file won't have any effect!</h3><table>");
@@ -391,7 +391,7 @@ public class Ranks
 		list.add("</table></body></html>");
 		FileUtils.saveSafe(new File(CommonUtils.folderLocal, "ftbutilities/all_configs.html"), list);
 
-		list.clear();
+		list = new ArrayList<>();
 
 		for (String node : PermissionAPI.getPermissionHandler().getRegisteredNodes())
 		{

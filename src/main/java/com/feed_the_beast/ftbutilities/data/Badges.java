@@ -67,14 +67,16 @@ public class Badges
 		}
 		else if (FTBUtilitiesConfig.login.enable_global_badges && !data.disableGlobalBadge())
 		{
-			try
+			try (Response response = HttpConnection.connection(URL + StringUtils.fromUUID(playerId), RequestMethod.GET, HttpConnection.TEXT).connect(universe.server.getServerProxy()))
 			{
-				Response response = HttpConnection.connection(URL + StringUtils.fromUUID(playerId), RequestMethod.GET, HttpConnection.TEXT).connect(universe.server.getServerProxy());
-				String badge = response.asString(32);
-
-				if (!badge.isEmpty() && (FTBUtilitiesConfig.login.enable_event_badges || !response.getHeaderField("Event-Badge").equals("true")))
+				if (response.isOK())
 				{
-					return badge;
+					String badge = response.asString(32);
+
+					if (!badge.isEmpty() && (FTBUtilitiesConfig.login.enable_event_badges || !response.getHeaderField("Event-Badge").equals("true")))
+					{
+						return badge;
+					}
 				}
 			}
 			catch (Exception ex)

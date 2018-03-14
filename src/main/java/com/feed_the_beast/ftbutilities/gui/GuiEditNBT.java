@@ -120,7 +120,7 @@ public class GuiEditNBT extends GuiBase
 
 			if (selected == this)
 			{
-				Color4I.WHITE_A[33].draw(ax, ay, width, height);
+				Color4I.WHITE.withAlpha(33).draw(ax, ay, width, height);
 			}
 
 			getIcon().draw(ax + 1, ay + 1, 8, 8);

@@ -47,7 +47,7 @@ public class MessageSendLeaderboard extends MessageToClient<MessageSendLeaderboa
 		values = new ArrayList<>();
 
 		ForgePlayer p0 = Universe.get().getPlayer(player);
-		List<ForgePlayer> players = Universe.get().getRealPlayers();
+		List<ForgePlayer> players = new ArrayList<>(Universe.get().getPlayers());
 		players.sort(leaderboard.getComparator());
 
 		for (int i = 0; i < players.size(); i++)

@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.io.HttpConnection;
 import com.feed_the_beast.ftblib.lib.io.RequestMethod;
+import com.feed_the_beast.ftblib.lib.io.Response;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
@@ -134,13 +135,16 @@ public class CmdViewCrash extends CmdBase
 					List<String> text = StringUtils.readStringList(new FileInputStream(file));
 					HttpConnection connection = HttpConnection.connection("https://hastebin.com/documents", RequestMethod.POST, "text/plain; charset=utf-8");
 					connection.data = StringJoiner.with('\n').join(text).getBytes(StandardCharsets.UTF_8);
-					JsonElement response = connection.connect(sender.getServer().getServerProxy()).asJson();
+					Response response = connection.connect(sender.getServer().getServerProxy());
+					JsonElement json = response.asJson();
 
-					if (response.isJsonObject() && response.getAsJsonObject().has("key"))
+					if (json.isJsonObject() && json.getAsJsonObject().has("key"))
 					{
-						url = "https://hastebin.com/" + response.getAsJsonObject().get("key").getAsString() + ".md";
+						url = "https://hastebin.com/" + json.getAsJsonObject().get("key").getAsString() + ".md";
 						FileUtils.saveSafe(urlFile, url);
 					}
+
+					response.close();
 				}
 
 				if (!url.isEmpty())

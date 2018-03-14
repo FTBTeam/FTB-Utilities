@@ -22,6 +22,7 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,7 +106,7 @@ public class CmdLeaderboard extends CmdBase
 			sender.sendMessage(leaderboard.getTitle().createCopy().appendText(":"));
 
 			ForgePlayer p0 = Universe.get().getPlayer(sender);
-			List<ForgePlayer> players = Universe.get().getRealPlayers();
+			List<ForgePlayer> players = new ArrayList<>(Universe.get().getPlayers());
 			players.sort(leaderboard.getComparator());
 
 			for (int i = 0; i < players.size(); i++)

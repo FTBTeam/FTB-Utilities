@@ -111,7 +111,7 @@ public class CmdHome extends CmdBase
 		}
 		else if (args[0].equals("list_all"))
 		{
-			for (ForgePlayer p : Universe.get().getRealPlayers())
+			for (ForgePlayer p : Universe.get().getPlayers())
 			{
 				execute(server, sender, new String[] {"list", p.getName()});
 			}

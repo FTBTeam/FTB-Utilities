@@ -3,9 +3,7 @@ package com.feed_the_beast.ftbutilities.data;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
-import com.feed_the_beast.ftblib.lib.io.HttpConnection;
-import com.feed_the_beast.ftblib.lib.io.RequestMethod;
-import com.feed_the_beast.ftblib.lib.io.Response;
+import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -17,6 +15,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.File;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -26,7 +25,7 @@ import java.util.UUID;
  */
 public class Badges
 {
-	private static final String URL = "http://badges.latmod.com/get?id=";
+	private static final String BADGE_URL = "http://badges.latmod.com/get?id=";
 
 	public static final Map<UUID, String> BADGE_CACHE = new HashMap<>();
 	public static final Map<UUID, String> LOCAL_BADGES = new HashMap<>();
@@ -67,16 +66,13 @@ public class Badges
 		}
 		else if (FTBUtilitiesConfig.login.enable_global_badges && !data.disableGlobalBadge())
 		{
-			try (Response response = HttpConnection.connection(URL + StringUtils.fromUUID(playerId), RequestMethod.GET, HttpConnection.TEXT).connect(universe.server.getServerProxy()))
+			try
 			{
-				if (response.isOK())
-				{
-					String badge = response.asString(32);
+				String badge = DataReader.get(new URL(BADGE_URL + StringUtils.fromUUID(playerId)), DataReader.TEXT, universe.server.getServerProxy()).string(32);
 
-					if (!badge.isEmpty() && (FTBUtilitiesConfig.login.enable_event_badges || !response.getHeaderField("Event-Badge").equals("true")))
-					{
-						return badge;
-					}
+				if (!badge.isEmpty())// && (FTBUtilitiesConfig.login.enable_event_badges || !response.getHeaderField("Event-Badge").equals("true")))
+				{
+					return badge;
 				}
 			}
 			catch (Exception ex)
@@ -109,7 +105,7 @@ public class Badges
 			}
 			else
 			{
-				for (Map.Entry<String, JsonElement> entry : JsonUtils.fromJson(file).getAsJsonObject().entrySet())
+				for (Map.Entry<String, JsonElement> entry : DataReader.get(file).json().getAsJsonObject().entrySet())
 				{
 					ForgePlayer player = universe.getPlayer(entry.getKey());
 

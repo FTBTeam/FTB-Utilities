@@ -2,12 +2,11 @@ package com.feed_the_beast.ftbutilities.cmd;
 
 import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
-import com.feed_the_beast.ftblib.lib.io.HttpConnection;
+import com.feed_the_beast.ftblib.lib.io.DataReader;
+import com.feed_the_beast.ftblib.lib.io.HttpDataReader;
 import com.feed_the_beast.ftblib.lib.io.RequestMethod;
-import com.feed_the_beast.ftblib.lib.io.Response;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
-import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.net.MessageViewCrash;
@@ -25,9 +24,7 @@ import net.minecraft.util.text.event.HoverEvent;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.nio.charset.StandardCharsets;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -97,7 +94,7 @@ public class CmdViewCrash extends CmdBase
 
 				try
 				{
-					new MessageViewCrash(file.getName(), StringUtils.readStringList(new FileReader(file))).sendTo(player);
+					new MessageViewCrash(file.getName(), DataReader.get(file).stringList()).sendTo(player);
 				}
 				catch (Exception e)
 				{
@@ -124,27 +121,19 @@ public class CmdViewCrash extends CmdBase
 			try
 			{
 				File urlFile = new File(CommonUtils.folderLocal, "ftbutilities/uploaded_crash_reports/" + file.getName());
-				String url = "";
+				String url = DataReader.get(urlFile).safeString();
 
-				if (urlFile.exists())
+				if (url.isEmpty())
 				{
-					url = FileUtils.loadAsText(urlFile);
-				}
-				else
-				{
-					List<String> text = StringUtils.readStringList(new FileInputStream(file));
-					HttpConnection connection = HttpConnection.connection("https://hastebin.com/documents", RequestMethod.POST, "text/plain; charset=utf-8");
-					connection.data = StringJoiner.with('\n').join(text).getBytes(StandardCharsets.UTF_8);
-					Response response = connection.connect(sender.getServer().getServerProxy());
-					JsonElement json = response.asJson();
+					List<String> text = DataReader.get(file).safeStringList();
+					URL hastebinURL = new URL("https://hastebin.com/documents");
+					JsonElement json = DataReader.get(hastebinURL, RequestMethod.POST, DataReader.TEXT, new HttpDataReader.HttpDataOutput.StringOutput(text), sender.getServer().getServerProxy()).json();
 
 					if (json.isJsonObject() && json.getAsJsonObject().has("key"))
 					{
 						url = "https://hastebin.com/" + json.getAsJsonObject().get("key").getAsString() + ".md";
 						FileUtils.saveSafe(urlFile, url);
 					}
-
-					response.close();
 				}
 
 				if (!url.isEmpty())

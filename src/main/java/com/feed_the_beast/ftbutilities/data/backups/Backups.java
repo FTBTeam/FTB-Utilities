@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.data.backups;
 
+import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
@@ -41,7 +42,7 @@ public enum Backups
 
 		backups.clear();
 
-		JsonElement element = JsonUtils.fromJson(new File(backupsFolder, "backups.json"));
+		JsonElement element = DataReader.get(new File(backupsFolder, "backups.json")).safeJson();
 
 		if (element.isJsonArray())
 		{

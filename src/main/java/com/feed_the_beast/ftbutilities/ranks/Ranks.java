@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
@@ -135,7 +136,7 @@ public class Ranks
 		if (FTBUtilitiesConfig.ranks.enabled)
 		{
 			ranksFile = new File(CommonUtils.folderLocal, "ftbutilities/ranks.json");
-			ranksJson = JsonUtils.fromJson(ranksFile);
+			ranksJson = DataReader.get(ranksFile).safeJson();
 
 			if (ranksFile.exists() && !ranksJson.isJsonObject())
 			{
@@ -179,7 +180,7 @@ public class Ranks
 
 			try
 			{
-				ranksJson = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbutilities/player_ranks.json"));
+				ranksJson = DataReader.get(new File(CommonUtils.folderLocal, "ftbutilities/player_ranks.json")).safeJson();
 
 				if (ranksJson.isJsonObject())
 				{

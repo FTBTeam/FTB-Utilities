@@ -53,7 +53,7 @@ public class ThreadBackup extends Thread
 
 		try
 		{
-			List<File> files = FileUtils.listAll(src);
+			List<File> files = FileUtils.listTree(src);
 			int allFiles = files.size();
 
 			FTBUtilities.LOGGER.info(FTBUtilitiesLang.BACKUP_BACKING_UP_FILES.translate(files.size()));
@@ -110,7 +110,7 @@ public class ThreadBackup extends Thread
 
 				zos.close();
 
-				FTBUtilities.LOGGER.info(FTBUtilitiesLang.BACKUP_COMPRESSING_DONE.translate(getDoneTime(start), FileUtils.getSizeS(dstFile)));
+				FTBUtilities.LOGGER.info(FTBUtilitiesLang.BACKUP_COMPRESSING_DONE.translate(getDoneTime(start), FileUtils.getSizeString(dstFile)));
 			}
 			else
 			{
@@ -155,8 +155,8 @@ public class ThreadBackup extends Thread
 			{
 				if (FTBUtilitiesConfig.backups.display_file_size)
 				{
-					String sizeB = FileUtils.getSizeS(dstFile);
-					String sizeT = FileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
+					String sizeB = FileUtils.getSizeString(dstFile);
+					String sizeT = FileUtils.getSizeString(Backups.INSTANCE.backupsFolder);
 					Backups.notifyAll(server, player -> FTBUtilitiesLang.BACKUP_END_2.textComponent(player, getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT))), false);
 				}
 				else

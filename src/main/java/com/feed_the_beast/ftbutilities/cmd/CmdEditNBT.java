@@ -75,8 +75,14 @@ public class CmdEditNBT extends CmdTreeBase
 			int x = parseInt(args[0]);
 			int y = parseInt(args[1]);
 			int z = parseInt(args[2]);
+			BlockPos pos = new BlockPos(x, y, z);
 
-			TileEntity tile = player.world.getTileEntity(new BlockPos(x, y, z));
+			if (!player.world.isBlockLoaded(pos))
+			{
+				throw new CommandException("commands.setblock.outOfWorld");
+			}
+
+			TileEntity tile = player.world.getTileEntity(pos);
 
 			if (tile != null)
 			{

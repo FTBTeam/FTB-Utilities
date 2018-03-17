@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbutilities;
 
 import com.feed_the_beast.ftblib.lib.config.EnumTristate;
 import com.feed_the_beast.ftblib.lib.gui.GuiLang;
+import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
@@ -174,7 +175,7 @@ public class FTBUtilitiesConfig
 				{
 					for (String s : motd)
 					{
-						ITextComponent t = JsonUtils.deserializeTextComponent(JsonUtils.fromJson(s));
+						ITextComponent t = JsonUtils.deserializeTextComponent(DataReader.get(s).safeJson());
 
 						if (t != null)
 						{

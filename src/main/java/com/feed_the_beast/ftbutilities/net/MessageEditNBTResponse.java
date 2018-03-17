@@ -79,23 +79,26 @@ public class MessageEditNBTResponse extends MessageToServer<MessageEditNBTRespon
 				{
 					BlockPos pos = new BlockPos(m.info.getInteger("x"), m.info.getInteger("y"), m.info.getInteger("z"));
 
-					TileEntity tile = player.world.getTileEntity(pos);
-
-					if (tile != null)
+					if (player.world.isBlockLoaded(pos))
 					{
-						m.mainNbt.setInteger("x", pos.getX());
-						m.mainNbt.setInteger("y", pos.getY());
-						m.mainNbt.setInteger("z", pos.getZ());
-						m.mainNbt.setString("id", m.info.getString("id"));
-						tile.readFromNBT(m.mainNbt);
-						tile.markDirty();
-						tile.getWorld().markChunkDirty(pos, tile);
-						IBlockState state = tile.getWorld().getBlockState(pos);
-						tile.getWorld().notifyBlockUpdate(pos, state, state, 255);
+						TileEntity tile = player.world.getTileEntity(pos);
 
-						if (state != CommonUtils.AIR_STATE)
+						if (tile != null)
 						{
-							tile.getWorld().updateComparatorOutputLevel(pos, state.getBlock());
+							m.mainNbt.setInteger("x", pos.getX());
+							m.mainNbt.setInteger("y", pos.getY());
+							m.mainNbt.setInteger("z", pos.getZ());
+							m.mainNbt.setString("id", m.info.getString("id"));
+							tile.readFromNBT(m.mainNbt);
+							tile.markDirty();
+							tile.getWorld().markChunkDirty(pos, tile);
+							IBlockState state = tile.getWorld().getBlockState(pos);
+							tile.getWorld().notifyBlockUpdate(pos, state, state, 255);
+
+							if (state != CommonUtils.AIR_STATE)
+							{
+								tile.getWorld().updateComparatorOutputLevel(pos, state.getBlock());
+							}
 						}
 					}
 

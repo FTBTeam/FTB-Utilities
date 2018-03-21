@@ -72,7 +72,7 @@ public class CmdHome extends CmdBase
 				p = getForgePlayer(sender);
 			}
 
-			if (sender instanceof EntityPlayer && !p.equalsPlayer(getForgePlayer(sender)) && !PermissionAPI.hasPermission((EntityPlayer) sender, FTBUtilitiesPermissions.HOMES_LIST_OTHER))
+			if (sender instanceof EntityPlayer && !p.equalsPlayer(getForgePlayer(sender)) && !PermissionAPI.hasPermission((EntityPlayer) sender, FTBUtilitiesPermissions.HOMES_TELEPORT_OTHER))
 			{
 				throw FTBLibLang.COMMAND_PERMISSION.commandError();
 			}

@@ -100,11 +100,6 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void onPlayerLoggedIn(ForgePlayerLoggedInEvent event)
 	{
-		if (event.getPlayer().isFake())
-		{
-			return;
-		}
-
 		EntityPlayerMP player = event.getPlayer().getPlayer();
 
 		if (event.isFirstLogin(LOGIN_STARTING_ITEMS))

@@ -55,9 +55,9 @@ public class FTBUPlayerEventHandler
 		}
 
 		EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
-		ForgePlayer p = Universe.get().getPlayer(player.getGameProfile());
+		ForgePlayer p = Universe.get().getPlayer(player);
 
-		if (p == null || p.isFake())
+		if (p.isFake())
 		{
 			return;
 		}

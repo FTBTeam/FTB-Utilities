@@ -53,42 +53,45 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
 		nbt.setString("InteractWithBlocks", interactWithBlocks.getString());
 		nbt.setString("AttackEntities", attackEntities.getString());
 
-		Int2ObjectOpenHashMap<NBTTagList> claimedChunks = new Int2ObjectOpenHashMap<>();
-
-		for (ClaimedChunk chunk : ClaimedChunks.instance.getTeamChunks(team))
+		if (ClaimedChunks.instance != null)
 		{
-			ChunkDimPos pos = chunk.getPos();
+			Int2ObjectOpenHashMap<NBTTagList> claimedChunks = new Int2ObjectOpenHashMap<>();
 
-			NBTTagList list = claimedChunks.get(pos.dim);
-
-			if (list == null)
+			for (ClaimedChunk chunk : ClaimedChunks.instance.getTeamChunks(team))
 			{
-				list = new NBTTagList();
-				claimedChunks.put(pos.dim, list);
+				ChunkDimPos pos = chunk.getPos();
+
+				NBTTagList list = claimedChunks.get(pos.dim);
+
+				if (list == null)
+				{
+					list = new NBTTagList();
+					claimedChunks.put(pos.dim, list);
+				}
+
+				NBTTagCompound chunkNBT = new NBTTagCompound();
+				chunkNBT.setInteger("x", pos.posX);
+				chunkNBT.setInteger("z", pos.posZ);
+
+				if (chunk.isLoaded())
+				{
+					chunkNBT.setBoolean("loaded", true);
+				}
+
+				list.appendTag(chunkNBT);
 			}
 
-			NBTTagCompound chunkNBT = new NBTTagCompound();
-			chunkNBT.setInteger("x", pos.posX);
-			chunkNBT.setInteger("z", pos.posZ);
+			NBTTagCompound claimedChunksTag = new NBTTagCompound();
 
-			if (chunk.isLoaded())
+			for (Map.Entry<Integer, NBTTagList> entry : claimedChunks.entrySet())
 			{
-				chunkNBT.setBoolean("loaded", true);
+				claimedChunksTag.setTag(entry.getKey().toString(), entry.getValue());
 			}
 
-			list.appendTag(chunkNBT);
-		}
-
-		NBTTagCompound claimedChunksTag = new NBTTagCompound();
-
-		for (Map.Entry<Integer, NBTTagList> entry : claimedChunks.entrySet())
-		{
-			claimedChunksTag.setTag(entry.getKey().toString(), entry.getValue());
-		}
-
-		if (!claimedChunksTag.hasNoTags())
-		{
-			nbt.setTag("ClaimedChunks", claimedChunksTag);
+			if (!claimedChunksTag.hasNoTags())
+			{
+				nbt.setTag("ClaimedChunks", claimedChunksTag);
+			}
 		}
 
 		return nbt;
@@ -102,19 +105,21 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
 		interactWithBlocks.setValueFromString(nbt.getString("InteractWithBlocks"), false);
 		attackEntities.setValueFromString(nbt.getString("AttackEntities"), false);
 
-		NBTTagCompound claimedChunksTag = nbt.getCompoundTag("ClaimedChunks");
+		if (ClaimedChunks.instance != null) {
+			NBTTagCompound claimedChunksTag = nbt.getCompoundTag("ClaimedChunks");
 
-		for (String dim : claimedChunksTag.getKeySet())
-		{
-			NBTTagList list = claimedChunksTag.getTagList(dim, Constants.NBT.TAG_COMPOUND);
-			int dimInt = Integer.parseInt(dim);
-
-			for (int i = 0; i < list.tagCount(); i++)
+			for (String dim : claimedChunksTag.getKeySet())
 			{
-				NBTTagCompound chunkNBT = list.getCompoundTagAt(i);
-				ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(new ChunkPos(chunkNBT.getInteger("x"), chunkNBT.getInteger("z")), dimInt), this);
-				chunk.setLoaded(chunkNBT.getBoolean("loaded"));
-				ClaimedChunks.instance.addChunk(chunk);
+				NBTTagList list = claimedChunksTag.getTagList(dim, Constants.NBT.TAG_COMPOUND);
+				int dimInt = Integer.parseInt(dim);
+
+				for (int i = 0; i < list.tagCount(); i++)
+				{
+					NBTTagCompound chunkNBT = list.getCompoundTagAt(i);
+					ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(new ChunkPos(chunkNBT.getInteger("x"), chunkNBT.getInteger("z")), dimInt), this);
+					chunk.setLoaded(chunkNBT.getBoolean("loaded"));
+					ClaimedChunks.instance.addChunk(chunk);
+				}
 			}
 		}
 	}

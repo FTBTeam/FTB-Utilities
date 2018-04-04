@@ -105,7 +105,8 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
 		interactWithBlocks.setValueFromString(nbt.getString("InteractWithBlocks"), false);
 		attackEntities.setValueFromString(nbt.getString("AttackEntities"), false);
 
-		if (ClaimedChunks.instance != null) {
+		if (ClaimedChunks.instance != null)
+		{
 			NBTTagCompound claimedChunksTag = nbt.getCompoundTag("ClaimedChunks");
 
 			for (String dim : claimedChunksTag.getKeySet())
@@ -155,7 +156,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
 
 	public int getMaxClaimChunks()
 	{
-		if (!team.isValid())
+		if (ClaimedChunks.instance == null || !team.isValid())
 		{
 			return -1;
 		}
@@ -176,7 +177,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
 
 	public int getMaxChunkloaderChunks()
 	{
-		if (!team.isValid())
+		if (ClaimedChunks.instance == null || !team.isValid())
 		{
 			return -1;
 		}

@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +45,6 @@ public class Ranks
 	private final Map<UUID, Rank> playerMap = new HashMap<>();
 	public final BuiltinRank builtinPlayerRank, builtinOPRank;
 	private Rank defaultPlayerRank, defaultOPRank;
-	public final Collection<String> commandPermissionNodes = new HashSet<>();
 
 	public Ranks(Universe u)
 	{
@@ -399,7 +397,6 @@ public class Ranks
 			list.add(node + ": " + DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(node));
 		}
 
-		list.addAll(commandPermissionNodes);
 		Collections.sort(list);
 		list.add(0, "");
 		list.add(0, "Modifying this file won't have any effect!");

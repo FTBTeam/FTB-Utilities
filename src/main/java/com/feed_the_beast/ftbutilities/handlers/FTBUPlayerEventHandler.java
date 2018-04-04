@@ -49,15 +49,15 @@ public class FTBUPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onChunkChanged(EntityEvent.EnteringChunk event)
 	{
-		if (event.getEntity().world.isRemote || !(event.getEntity() instanceof EntityPlayerMP))
+		if (event.getEntity().world.isRemote || !(event.getEntity() instanceof EntityPlayerMP) || !Universe.loaded())
 		{
 			return;
 		}
 
 		EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
-		ForgePlayer p = Universe.get().getPlayer(player);
+		ForgePlayer p = Universe.get().getPlayer(player.getGameProfile());
 
-		if (p.isFake())
+		if (p == null || p.isFake())
 		{
 			return;
 		}

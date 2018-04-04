@@ -118,7 +118,6 @@ public class FTBULoadedChunkManager implements ForgeChunkManager.LoadingCallback
 		}
 
 		ChunkPos chunkPos = pos.getChunkPos();
-		ForgeChunkManager.unforceChunk(ticket, chunkPos);
 		ForgeChunkManager.forceChunk(ticket, chunkPos);
 		chunk.forced = true;
 		chunkTickets.put(pos, ticket);

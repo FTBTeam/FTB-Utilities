@@ -18,8 +18,6 @@ import java.util.Map;
 
 public class Rank extends FinalIDObject implements IJsonSerializable
 {
-	private static final String[] EVENT_RESULT_PREFIX = {"-", "~", "+"};
-
 	public final Ranks ranks;
 	Rank parent;
 	private final Map<String, Event.Result> permissions;
@@ -109,19 +107,15 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 			o.addProperty("syntax", syntax.replace(StringUtils.FORMATTING_CHAR, '&'));
 		}
 
-		JsonArray a1 = new JsonArray();
+		JsonObject o1 = new JsonObject();
 
 		for (Map.Entry<String, Event.Result> e : permissions.entrySet())
 		{
-			a1.add(EVENT_RESULT_PREFIX[e.getValue().ordinal()] + e.getKey());
+			o1.addProperty(e.getKey(), e.getValue() == Event.Result.ALLOW);
 		}
 
-		o.add("permissions", a1);
-
-		JsonObject o1 = new JsonObject();
 		config.forEach((key, value) -> o1.add(key, value.getSerializableElement()));
-		o.add("config", o1);
-
+		o.add("permissions", o1);
 		return o;
 	}
 
@@ -154,14 +148,42 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 
 		if (o.has("permissions"))
 		{
-			JsonArray a = o.get("permissions").getAsJsonArray();
+			JsonElement e1 = o.get("permissions");
 
-			for (int i = 0; i < a.size(); i++)
+			if (e1.isJsonArray())
 			{
-				String id = a.get(i).getAsString();
-				char firstChar = id.charAt(0);
-				String key = (firstChar == '-' || firstChar == '+' || firstChar == '~') ? id.substring(1) : id;
-				permissions.put(key, firstChar == '-' ? Event.Result.DENY : (firstChar == '~' ? Event.Result.DEFAULT : Event.Result.ALLOW));
+				JsonArray a = e1.getAsJsonArray();
+
+				for (int i = 0; i < a.size(); i++)
+				{
+					String id = a.get(i).getAsString();
+					char firstChar = id.charAt(0);
+					String key = (firstChar == '-' || firstChar == '+' || firstChar == '~') ? id.substring(1) : id;
+					permissions.put(key, firstChar == '-' ? Event.Result.DENY : (firstChar == '~' ? Event.Result.DEFAULT : Event.Result.ALLOW));
+				}
+			}
+			else
+			{
+				JsonObject o1 = e1.getAsJsonObject();
+
+				for (Map.Entry<String, JsonElement> entry : o1.entrySet())
+				{
+					if (entry.getValue().isJsonPrimitive() && entry.getValue().getAsJsonPrimitive().isBoolean())
+					{
+						permissions.put(entry.getKey(), entry.getValue().getAsBoolean() ? Event.Result.ALLOW : Event.Result.DENY);
+					}
+					else
+					{
+						RankConfigValueInfo rconfig = FTBLibCommon.RANK_CONFIGS_MIRROR.get(entry.getKey());
+
+						if (rconfig != null)
+						{
+							ConfigValue value = rconfig.defaultValue.copy();
+							value.fromJson(entry.getValue());
+							config.put(rconfig.id, value);
+						}
+					}
+				}
 			}
 		}
 

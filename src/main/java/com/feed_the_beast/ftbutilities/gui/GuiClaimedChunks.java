@@ -20,7 +20,6 @@ import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksModify;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksRequest;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -191,7 +190,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	@Override
 	public int getSelectionMode(MouseButton button)
 	{
-		boolean claim = !GuiScreen.isShiftKeyDown();
+		boolean claim = !isShiftKeyDown();
 		boolean flag = button.isLeft();
 
 		if (flag)
@@ -240,45 +239,48 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			}
 		});
 
-		panel.add(new ButtonSide(panel, FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL_DIM.translate(currentDimName), GuiIcons.REMOVE)
+		if (maxClaimedChunks != -1)
 		{
-			@Override
-			public void onClicked(MouseButton button)
+			panel.add(new ButtonSide(panel, FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL_DIM.translate(currentDimName), GuiIcons.REMOVE)
 			{
-				GuiHelper.playClickSound();
-				String s = FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
-				ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
+				@Override
+				public void onClicked(MouseButton button)
 				{
-					if (set)
+					GuiHelper.playClickSound();
+					String s = FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
+					ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
 					{
-						ClientUtils.execClientCommand("/ftb chunks unclaim_all false");
-					}
+						if (set)
+						{
+							ClientUtils.execClientCommand("/ftb chunks unclaim_all false");
+						}
 
-					getGui().openGui();
-					getGui().refreshWidgets();
-				}, s, "", 0));
-			}
-		});
+						getGui().openGui();
+						getGui().refreshWidgets();
+					}, s, "", 0));
+				}
+			});
 
-		panel.add(new ButtonSide(panel, FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL.translate(), GuiIcons.REMOVE)
-		{
-			@Override
-			public void onClicked(MouseButton button)
+			panel.add(new ButtonSide(panel, FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL.translate(), GuiIcons.REMOVE)
 			{
-				GuiHelper.playClickSound();
-				String s = FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL_Q.translate();
-				ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
+				@Override
+				public void onClicked(MouseButton button)
 				{
-					if (set)
+					GuiHelper.playClickSound();
+					String s = FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL_Q.translate();
+					ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
 					{
-						ClientUtils.execClientCommand("/ftb chunks unclaim_all true");
-					}
+						if (set)
+						{
+							ClientUtils.execClientCommand("/ftb chunks unclaim_all true");
+						}
 
-					getGui().openGui();
-					getGui().refreshWidgets();
-				}, s, "", 1));
-			}
-		});
+						getGui().openGui();
+						getGui().refreshWidgets();
+					}, s, "", 1));
+				}
+			});
+		}
 
 		if (Loader.isModLoaded(OtherMods.FTBGUIDES))
 		{
@@ -297,6 +299,11 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	@Override
 	public void addCornerText(List<String> list, Corner corner)
 	{
+		if (maxClaimedChunks == -1)
+		{
+			return;
+		}
+
 		switch (corner)
 		{
 			case BOTTOM_RIGHT:
@@ -326,7 +333,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			list.add(TextFormatting.DARK_GREEN + FTBUtilitiesLang.CHUNKS_WILDERNESS.translate());
 		}
 
-		if (GuiScreen.isCtrlKeyDown())
+		if (isCtrlKeyDown())
 		{
 			list.add(button.chunkPos.toString());
 		}

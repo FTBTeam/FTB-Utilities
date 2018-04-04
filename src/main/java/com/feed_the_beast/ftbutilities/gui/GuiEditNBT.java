@@ -805,7 +805,7 @@ public class GuiEditNBT extends GuiBase
 						}
 					}
 
-					scroll.setValue(0D);
+					scroll.setValue(0);
 					panelNbt.refreshWidgets();
 				}));
 
@@ -819,7 +819,7 @@ public class GuiEditNBT extends GuiBase
 						}
 					}
 
-					scroll.setValue(0D);
+					scroll.setValue(0);
 					panelNbt.refreshWidgets();
 				}));
 
@@ -857,7 +857,7 @@ public class GuiEditNBT extends GuiBase
 			@Override
 			public void alignWidgets()
 			{
-				scroll.setElementSize(align(WidgetLayout.VERTICAL) + 2);
+				scroll.setMaxValue(align(WidgetLayout.VERTICAL) + 2);
 			}
 		};
 
@@ -866,14 +866,7 @@ public class GuiEditNBT extends GuiBase
 		buttonNBTRoot.updateChildren(true);
 		selected = buttonNBTRoot;
 
-		scroll = new PanelScrollBar(this, panelNbt)
-		{
-			@Override
-			public boolean shouldDraw()
-			{
-				return true;
-			}
-		};
+		scroll = new PanelScrollBar(this, panelNbt);
 	}
 
 	@Override

@@ -67,6 +67,11 @@ public enum Backups
 			{
 				for (String s : files)
 				{
+					if (s.equals("backups.json"))
+					{
+						continue;
+					}
+
 					String[] s1 = s.split("-");
 
 					if (s1.length >= 6)

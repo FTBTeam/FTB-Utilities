@@ -58,10 +58,8 @@ public class GuiViewCrash extends GuiBase
 					wi = Math.max(w.width, wi);
 				}
 
-				scrollH.setElementSize(wi + 4);
-				scrollH.setScrollStep(scrollH.getScrollStep() * 5D);
-				scrollV.setElementSize(align(WidgetLayout.VERTICAL));
-				scrollV.setScrollStep(scrollV.getScrollStep() * 3D);
+				scrollH.setMaxValue(wi + 4);
+				scrollV.setMaxValue(align(WidgetLayout.VERTICAL));
 			}
 
 			@Override
@@ -74,41 +72,15 @@ public class GuiViewCrash extends GuiBase
 		textPanel.setPos(9, 33);
 		textPanel.addFlags(Panel.DEFAULTS | Widget.UNICODE);
 
-		scrollH = new PanelScrollBar(this, textPanel)
-		{
-			@Override
-			public Plane getPlane()
-			{
-				return Plane.HORIZONTAL;
-			}
+		scrollH = new PanelScrollBar(this, PanelScrollBar.Plane.HORIZONTAL, textPanel);
+		scrollH.setCanAlwaysScroll(true);
+		scrollH.setCanAlwaysScrollPlane(false);
+		scrollH.setScrollStep(30);
 
-			@Override
-			public boolean canMouseScroll()
-			{
-				return true;
-			}
-
-			@Override
-			public boolean shouldDraw()
-			{
-				return true;
-			}
-		};
-
-		scrollV = new PanelScrollBar(this, textPanel)
-		{
-			@Override
-			public boolean canMouseScroll()
-			{
-				return true;
-			}
-
-			@Override
-			public boolean shouldDraw()
-			{
-				return true;
-			}
-		};
+		scrollV = new PanelScrollBar(this, textPanel);
+		scrollV.setCanAlwaysScroll(true);
+		scrollV.setCanAlwaysScrollPlane(false);
+		scrollV.setScrollStep(10);
 
 		close = new SimpleButton(this, GuiLang.CLOSE, GuiIcons.CLOSE, (widget, button) -> widget.getGui().closeGui())
 		{
@@ -134,8 +106,8 @@ public class GuiViewCrash extends GuiBase
 
 		reset = new SimpleButton(this, "", Icon.EMPTY, (widget, button) ->
 		{
-			scrollH.setValue(0D);
-			scrollV.setValue(0D);
+			scrollH.setValue(0);
+			scrollV.setValue(0);
 		});
 	}
 

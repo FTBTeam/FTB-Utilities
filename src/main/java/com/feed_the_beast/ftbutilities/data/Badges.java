@@ -25,7 +25,7 @@ import java.util.UUID;
  */
 public class Badges
 {
-	private static final String BADGE_URL = "http://badges.latmod.com/get?id=";
+	private static final String BADGE_URL = "https://badges.latmod.com/get?id=";
 
 	public static final Map<UUID, String> BADGE_CACHE = new HashMap<>();
 	public static final Map<UUID, String> LOCAL_BADGES = new HashMap<>();

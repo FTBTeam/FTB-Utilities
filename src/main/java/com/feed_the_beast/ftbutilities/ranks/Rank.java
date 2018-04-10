@@ -20,10 +20,10 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 {
 	public final Ranks ranks;
 	Rank parent;
-	private final Map<String, Event.Result> permissions;
-	private final Map<String, Event.Result> cachedPermissions;
-	private final Map<String, ConfigValue> config;
-	private final Map<String, ConfigValue> cachedConfig;
+	public final Map<String, Event.Result> permissions;
+	public final Map<String, Event.Result> cachedPermissions;
+	public final Map<String, ConfigValue> config;
+	public final Map<String, ConfigValue> cachedConfig;
 	String syntax;
 
 	public Rank(Ranks r, String id, @Nullable Rank p)

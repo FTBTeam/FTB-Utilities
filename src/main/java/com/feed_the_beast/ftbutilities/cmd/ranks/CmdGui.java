@@ -9,11 +9,11 @@ import net.minecraft.server.MinecraftServer;
 /**
  * @author LatvianModder
  */
-public class CmdEdit extends CmdBase
+public class CmdGui extends CmdBase
 {
-	public CmdEdit()
+	public CmdGui()
 	{
-		super("edit", Level.OP);
+		super("gui", Level.OP);
 	}
 
 	@Override

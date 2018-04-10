@@ -47,7 +47,7 @@ public class CmdSetHome extends CmdBase
 
 		args[0] = args[0].toLowerCase();
 
-		int maxHomes = Ranks.INSTANCE.getRank(server, player.getGameProfile()).getConfig(FTBUtilitiesPermissions.HOMES_MAX).getInt();
+		int maxHomes = Ranks.INSTANCE.getRank(player).getConfig(FTBUtilitiesPermissions.HOMES_MAX).getInt();
 
 		if (maxHomes <= 0 || data.homes.size() >= maxHomes)
 		{

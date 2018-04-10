@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
 import com.feed_the_beast.ftblib.lib.cmd.CommandMirror;
-import com.feed_the_beast.ftblib.lib.cmd.ICommandWithCustomPermission;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,7 +23,7 @@ public class CommandOverride extends CommandMirror
 		if (sender instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP player = ((EntityPlayerMP) sender);
-			Event.Result result = Ranks.INSTANCE.getRank(player.mcServer, player.getGameProfile()).hasPermission(ICommandWithCustomPermission.getPermissionNode(this));
+			Event.Result result = Ranks.INSTANCE.getRank(player).hasPermission(getCustomPermissionNode());
 
 			if (result != Event.Result.DEFAULT)
 			{

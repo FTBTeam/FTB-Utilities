@@ -19,6 +19,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 
@@ -139,6 +140,7 @@ public class CmdViewCrash extends CmdBase
 				if (!url.isEmpty())
 				{
 					ITextComponent link = FTBLibLang.CLICK_HERE.textComponent(sender);
+					link.getStyle().setColor(TextFormatting.GOLD);
 					link.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(url)));
 					link.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
 					FTBUtilitiesLang.UPLOADED_CRASH.sendMessage(sender, link);

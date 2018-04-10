@@ -85,7 +85,7 @@ public class Badges
 		}
 
 		String badge = LOCAL_BADGES.get(playerId);
-		return (badge == null || badge.isEmpty()) ? Ranks.INSTANCE.getRank(universe.server, player.getProfile()).getConfig(FTBUtilitiesPermissions.BADGE).getString() : badge;
+		return (badge == null || badge.isEmpty()) ? Ranks.INSTANCE.getRank(player).getConfig(FTBUtilitiesPermissions.BADGE).getString() : badge;
 	}
 
 	public static boolean reloadServerBadges(Universe universe)

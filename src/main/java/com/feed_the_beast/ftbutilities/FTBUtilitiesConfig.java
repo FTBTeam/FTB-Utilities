@@ -112,6 +112,9 @@ public class FTBUtilitiesConfig
 		@Config.Comment("Run backup in a separated Thread. (recommended)")
 		public boolean use_separate_thread = true;
 
+		@Config.Comment("Add extra files that will be placed in backup _extra_/ folder")
+		public String[] extra_files = { };
+
 		public long ticks()
 		{
 			return (long) (backup_timer * CommonUtils.TICKS_HOUR);

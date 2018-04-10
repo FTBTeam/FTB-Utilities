@@ -18,11 +18,15 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
+import net.minecraftforge.server.permission.context.IContext;
+import net.minecraftforge.server.permission.context.PlayerContext;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -85,10 +89,20 @@ public class Ranks
 		return defaultOPRank;
 	}
 
-	public Rank getRank(@Nullable MinecraftServer server, GameProfile profile)
+	public Rank getRank(@Nullable MinecraftServer server, GameProfile profile, @Nullable IContext context)
 	{
 		Rank r = FTBUtilitiesConfig.ranks.enabled ? playerMap.get(profile.getId()) : null;
 		return (r == null) ? (ServerUtils.isOP(server, profile) ? getDefaultOPRank() : getDefaultPlayerRank()) : r;
+	}
+
+	public Rank getRank(EntityPlayerMP player)
+	{
+		return getRank(player.mcServer, player.getGameProfile(), new PlayerContext(player));
+	}
+
+	public Rank getRank(ForgePlayer player)
+	{
+		return player.isOnline() ? getRank(player.getPlayer()) : getRank(player.team.universe.server, player.getProfile(), null);
 	}
 
 	public void addRank(Rank rank)
@@ -374,7 +388,7 @@ public class Ranks
 
 			list.add("</td><td>");
 
-			String info = StringUtils.translate(p.displayName.isEmpty() ? ("rank_config." + p.id) : p.displayName);
+			String info = I18n.format(p.displayName.isEmpty() ? ("rank_config." + p.id) : p.displayName);
 
 			if (!info.isEmpty())
 			{

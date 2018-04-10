@@ -54,7 +54,7 @@ public class CmdLeaderboard extends CmdBase
 		if (args.length == 0)
 		{
 			ITextComponent component = new TextComponentString("");
-			component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.CLICK_HERE.textComponent(sender)));
+			component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, StringUtils.color(FTBLibLang.CLICK_HERE.textComponent(sender), TextFormatting.GOLD)));
 			boolean first = true;
 
 			for (Leaderboard leaderboard : FTBUtilitiesCommon.LEADERBOARDS.values())

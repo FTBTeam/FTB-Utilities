@@ -10,7 +10,6 @@ import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -101,7 +100,7 @@ public class FTBUUniverseData
 				if (time > currentTime)
 				{
 					FTBUUniverseData.shutdownTime = start + (time - currentTime) * CommonUtils.TICKS_SECOND;
-					FTBUtilities.LOGGER.info(FTBUtilitiesLang.TIMER_SHUTDOWN.translate(StringUtils.getTimeStringTicks(FTBUUniverseData.shutdownTime)));
+					FTBUtilities.LOGGER.info("Server shuts down in " + StringUtils.getTimeStringTicks(FTBUUniverseData.shutdownTime));
 					break;
 				}
 			}

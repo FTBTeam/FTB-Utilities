@@ -70,7 +70,7 @@ public class GuiViewCrash extends GuiBase
 		};
 
 		textPanel.setPos(9, 33);
-		textPanel.addFlags(Panel.DEFAULTS | Widget.UNICODE);
+		textPanel.setUnicode(true);
 
 		scrollH = new PanelScrollBar(this, PanelScrollBar.Plane.HORIZONTAL, textPanel);
 		scrollH.setCanAlwaysScroll(true);

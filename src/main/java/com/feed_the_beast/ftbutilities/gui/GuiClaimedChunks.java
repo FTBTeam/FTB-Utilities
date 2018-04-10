@@ -14,7 +14,6 @@ import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiChunkSelectorBase;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksModify;
@@ -24,6 +23,7 @@ import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.Loader;
@@ -325,7 +325,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 
 			if (data.isLoaded())
 			{
-				list.add(TextFormatting.RED + StringUtils.translate("ftbutilities.lang.chunks.upgrade.loaded"));
+				list.add(TextFormatting.RED + I18n.format("ftbutilities.lang.chunks.upgrade.loaded"));
 			}
 		}
 		else

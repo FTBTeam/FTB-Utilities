@@ -6,7 +6,6 @@ import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.ChunkPos;
@@ -124,7 +123,7 @@ public class FTBULoadedChunkManager implements ForgeChunkManager.LoadingCallback
 
 		if (FTBUtilitiesConfig.world.log_chunkloading)
 		{
-			FTBUtilities.LOGGER.info(FTBUtilitiesLang.CHUNKS_CHUNKLOADER_FORCED.translate(chunk.getTeam().getTitle(), pos.posX, pos.posZ, ServerUtils.getDimensionName(null, pos.dim)));
+			FTBUtilities.LOGGER.info(chunk.getTeam().getTitle().getUnformattedText() + " forced " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(null, pos.dim).getUnformattedText());
 		}
 	}
 
@@ -155,7 +154,7 @@ public class FTBULoadedChunkManager implements ForgeChunkManager.LoadingCallback
 
 		if (FTBUtilitiesConfig.world.log_chunkloading)
 		{
-			FTBUtilities.LOGGER.info(FTBUtilitiesLang.CHUNKS_CHUNKLOADER_UNFORCED.translate(chunk.getTeam().getTitle(), pos.posX, pos.posZ, ServerUtils.getDimensionName(null, pos.dim)));
+			FTBUtilities.LOGGER.info(chunk.getTeam().getTitle().getUnformattedText() + " unforced " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(null, pos.dim).getUnformattedText());
 		}
 	}
 

@@ -11,7 +11,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Calendar;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -53,10 +54,32 @@ public class ThreadBackup extends Thread
 
 		try
 		{
-			List<File> files = FileUtils.listTree(src);
-			int allFiles = files.size();
+			LinkedHashMap<File, String> fileMap = new LinkedHashMap<>();
 
-			FTBUtilities.LOGGER.info(FTBUtilitiesLang.BACKUP_BACKING_UP_FILES.translate(files.size()));
+			for (File file : FileUtils.listTree(src))
+			{
+				String filePath = file.getAbsolutePath();
+				fileMap.put(file, src.getName() + File.separator + filePath.substring(src.getAbsolutePath().length() + 1, filePath.length()));
+			}
+
+			String mcdir = server.getDataDirectory().getCanonicalFile().getAbsolutePath();
+
+			for (String s : FTBUtilitiesConfig.backups.extra_files)
+			{
+				for (File file : FileUtils.listTree(new File(s)))
+				{
+					String s1 = file.getAbsolutePath().replace(mcdir, "");
+
+					if (s1.startsWith(File.separator))
+					{
+						s1 = s1.substring(File.separator.length());
+					}
+
+					fileMap.put(file, "_extra_" + File.separator + s1);
+				}
+			}
+
+			FTBUtilities.LOGGER.info("Backing up " + fileMap.size() + " files...");
 
 			if (FTBUtilitiesConfig.backups.compression_level > 0)
 			{
@@ -66,33 +89,29 @@ public class ThreadBackup extends Thread
 				long start = System.currentTimeMillis();
 
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(dstFile));
-				//zos.setLevel(9);
 				zos.setLevel(FTBUtilitiesConfig.backups.compression_level);
 
 				long logMillis = System.currentTimeMillis() + 5000L;
-
 				byte[] buffer = new byte[4096];
 
-				FTBUtilities.LOGGER.info(FTBUtilitiesLang.BACKUP_COMPRESSING_FILES.translate(allFiles));
+				FTBUtilities.LOGGER.info("Compressing " + fileMap.size() + " files!");
 
-				for (int i = 0; i < allFiles; i++)
+				int i = 0;
+				for (Map.Entry<File, String> entry : fileMap.entrySet())
 				{
 					try
 					{
-						File file = files.get(i);
-						String filePath = file.getAbsolutePath();
-						ZipEntry ze = new ZipEntry(src.getName() + File.separator + filePath.substring(src.getAbsolutePath().length() + 1, filePath.length()));
-
+						ZipEntry ze = new ZipEntry(entry.getValue());
 						long millis = System.currentTimeMillis();
 
-						if (i == 0 || millis > logMillis || i == allFiles - 1)
+						if (i == 0 || millis > logMillis || i == fileMap.size() - 1)
 						{
 							logMillis = millis + 5000L;
-							FTBUtilities.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) allFiles) * 100D) + "%]: " + ze.getName());
+							FTBUtilities.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) fileMap.size()) * 100D) + "%]: " + entry.getValue());
 						}
 
 						zos.putNextEntry(ze);
-						FileInputStream fis = new FileInputStream(file);
+						FileInputStream fis = new FileInputStream(entry.getKey());
 
 						int len;
 						while ((len = fis.read(buffer)) > 0)
@@ -106,49 +125,49 @@ public class ThreadBackup extends Thread
 					{
 						ex.printStackTrace();
 					}
+
+					i++;
 				}
 
 				zos.close();
 
-				FTBUtilities.LOGGER.info(FTBUtilitiesLang.BACKUP_COMPRESSING_DONE.translate(getDoneTime(start), FileUtils.getSizeString(dstFile)));
+				FTBUtilities.LOGGER.info("Done compressing in " + getDoneTime(start) + " seconds (" + FileUtils.getSizeString(dstFile) + ")!");
 			}
 			else
 			{
-				out.append('/');
-				out.append(src.getName());
-				dstFile = new File(Backups.INSTANCE.backupsFolder, out.toString());
+				dstFile = new File(new File(Backups.INSTANCE.backupsFolder, out.toString()), src.getName());
 				dstFile.mkdirs();
-
-				String dstPath = dstFile.getAbsolutePath() + File.separator;
-				String srcPath = src.getAbsolutePath();
 
 				long logMillis = System.currentTimeMillis() + 2000L;
 
-				for (int i = 0; i < allFiles; i++)
+				int i = 0;
+				for (Map.Entry<File, String> entry : fileMap.entrySet())
 				{
 					try
 					{
-						File file = files.get(i);
+						File file = entry.getKey();
 
 						long millis = System.currentTimeMillis();
 
-						if (i == 0 || millis > logMillis || i == allFiles - 1)
+						if (i == 0 || millis > logMillis || i == fileMap.size() - 1)
 						{
 							logMillis = millis + 2000L;
-							FTBUtilities.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) allFiles) * 100D) + "%]: " + file.getName());
+							FTBUtilities.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) fileMap.size()) * 100D) + "%]: " + entry.getValue());
 						}
 
-						File dst1 = new File(dstPath + (file.getAbsolutePath().replace(srcPath, "")));
+						File dst1 = new File(dstFile, entry.getValue());
 						FileUtils.copyFile(file, dst1);
 					}
 					catch (Exception ex)
 					{
 						ex.printStackTrace();
 					}
+
+					i++;
 				}
 			}
 
-			FTBUtilities.LOGGER.info(FTBUtilitiesLang.BACKUP_CREATED_FROM.translate(dstFile.getAbsolutePath(), src.getAbsolutePath()));
+			FTBUtilities.LOGGER.info("Created " + dstFile.getAbsolutePath() + " from " + src.getAbsolutePath());
 			success = true;
 
 			if (!FTBUtilitiesConfig.backups.silent)

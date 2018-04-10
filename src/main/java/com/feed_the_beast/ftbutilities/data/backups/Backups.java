@@ -195,7 +195,7 @@ public enum Backups
 						for (int i = toDelete - 1; i >= 0; i--)
 						{
 							Backup b = backups.get(i);
-							FTBUtilities.LOGGER.info(FTBUtilitiesLang.BACKUP_DELETING_OLD.translate(b.fileId));
+							FTBUtilities.LOGGER.info("Deleting old backup: " + b.fileId);
 							FileUtils.delete(b.getFile());
 							backups.remove(i);
 						}

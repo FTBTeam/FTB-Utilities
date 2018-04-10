@@ -8,6 +8,7 @@ import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.resources.I18n;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,7 +44,7 @@ public class GuiViewCrashList extends GuiButtonListBase
 	@Override
 	public String getTitle()
 	{
-		return StringUtils.translate("sidebar_button.ftbutilities.view_crash");
+		return I18n.format("sidebar_button.ftbutilities.view_crash");
 	}
 
 	@Override

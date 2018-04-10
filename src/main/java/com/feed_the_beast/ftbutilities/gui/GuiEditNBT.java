@@ -788,7 +788,6 @@ public class GuiEditNBT extends GuiBase
 		};
 
 		panelTopLeft.setPosAndSize(0, 2, 0, 16);
-		panelTopLeft.addFlags(Panel.DEFAULTS);
 
 		panelTopRight = new Panel(this)
 		{
@@ -843,8 +842,6 @@ public class GuiEditNBT extends GuiBase
 			}
 		};
 
-		panelTopRight.addFlags(Panel.DEFAULTS);
-
 		panelNbt = new Panel(this)
 		{
 			@Override
@@ -861,7 +858,6 @@ public class GuiEditNBT extends GuiBase
 			}
 		};
 
-		panelNbt.addFlags(Panel.DEFAULTS);
 		buttonNBTRoot = new ButtonNBTMap(panelNbt, null, "ROOT", nbt);
 		buttonNBTRoot.updateChildren(true);
 		selected = buttonNBTRoot;

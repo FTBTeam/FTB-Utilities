@@ -123,5 +123,10 @@ public class FTBUCommands
 		{
 			event.add(new CmdLeaderboard());
 		}
+
+		if (FTBUtilitiesConfig.commands.cycle_block_state)
+		{
+			event.add(new CmdCycleBlockState());
+		}
 	}
 }

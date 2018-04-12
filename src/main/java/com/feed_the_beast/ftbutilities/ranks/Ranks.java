@@ -18,10 +18,10 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -388,7 +388,7 @@ public class Ranks
 
 			list.add("</td><td>");
 
-			String info = I18n.format(p.displayName.isEmpty() ? ("rank_config." + p.id) : p.displayName);
+			String info = I18n.translateToLocal(p.displayName.isEmpty() ? ("rank_config." + p.id) : p.displayName);
 
 			if (!info.isEmpty())
 			{

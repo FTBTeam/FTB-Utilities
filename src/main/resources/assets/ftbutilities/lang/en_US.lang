@@ -36,12 +36,13 @@ ftbutilities.world.chunk_claiming=Chunk Claiming
 ftbutilities.world.chunk_loading=Chunk Loading
 ftbutilities.world.safe_spawn=Safe Spawn
 ftbutilities.world.spawn_area_in_sp=Spawn Area In Singleplayer
-ftbutilities.world.log_chunkloading=Log Chunkloading
+ftbutilities.world.spawn_radius=Spawn Radius
 
 ftbutilities.ranks=Ranks
 ftbutilities.ranks.enabled=Enabled
 ftbutilities.ranks.override_chat=Override Chat
-ftbutilities.ranks.override_commands=Override Commands
+
+ftbutilities.debugging.log_chunkloading=Log Chunkloading
 
 ftbutilities_client.general.render_badges=Show Badges
 ftbutilities_client.general.journeymap_overlay=Enable Journeymap Integration

@@ -121,7 +121,7 @@ public class FTBULoadedChunkManager implements ForgeChunkManager.LoadingCallback
 		chunk.forced = true;
 		chunkTickets.put(pos, ticket);
 
-		if (FTBUtilitiesConfig.world.log_chunkloading)
+		if (FTBUtilitiesConfig.debugging.log_chunkloading)
 		{
 			FTBUtilities.LOGGER.info(chunk.getTeam().getTitle().getUnformattedText() + " forced " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(null, pos.dim).getUnformattedText());
 		}
@@ -152,7 +152,7 @@ public class FTBULoadedChunkManager implements ForgeChunkManager.LoadingCallback
 			ForgeChunkManager.releaseTicket(ticket);
 		}
 
-		if (FTBUtilitiesConfig.world.log_chunkloading)
+		if (FTBUtilitiesConfig.debugging.log_chunkloading)
 		{
 			FTBUtilities.LOGGER.info(chunk.getTeam().getTitle().getUnformattedText() + " unforced " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(null, pos.dim).getUnformattedText());
 		}

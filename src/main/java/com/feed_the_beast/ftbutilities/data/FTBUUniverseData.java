@@ -37,7 +37,7 @@ public class FTBUUniverseData
 			return false;
 		}
 
-		int radius = server.getSpawnProtectionSize();
+		int radius = FTBUtilitiesConfig.world.spawn_radius;
 		if (radius <= 0)
 		{
 			return false;

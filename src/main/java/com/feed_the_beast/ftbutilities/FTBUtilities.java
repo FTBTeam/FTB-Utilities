@@ -63,7 +63,7 @@ public class FTBUtilities
 	{
 		Backups.INSTANCE.init();
 
-		if (FTBUtilitiesConfig.ranks.override_commands)
+		if (FTBUtilitiesConfig.ranks.enabled)
 		{
 			ServerCommandManager manager = (ServerCommandManager) Universe.get().server.getCommandManager();
 			List<ICommand> commands = new ArrayList<>(manager.getCommands().values());
@@ -72,11 +72,6 @@ public class FTBUtilities
 
 			for (ICommand command : commands)
 			{
-				/*if (command instanceof ForgeCommand)
-				{
-					command = new CommandForgeOverride((ForgeCommand) c);
-				}*/
-
 				manager.registerCommand(new CommandOverride(command));
 			}
 

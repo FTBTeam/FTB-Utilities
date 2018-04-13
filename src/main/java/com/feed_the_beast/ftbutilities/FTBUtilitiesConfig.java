@@ -43,6 +43,9 @@ public class FTBUtilitiesConfig
 
 	public static final WorldConfig world = new WorldConfig();
 
+	@Config.LangKey("ftblib.debugging")
+	public static final Debugging debugging = new Debugging();
+
 	public static class AutoShutdown
 	{
 		@Config.LangKey(GuiLang.LANG_ENABLED)
@@ -227,14 +230,11 @@ public class FTBUtilitiesConfig
 	{
 		@Config.LangKey(GuiLang.LANG_ENABLED)
 		@Config.RequiresMcRestart
-		@Config.Comment("Enables ranks.")
+		@Config.Comment("Enables ranks and adds command.x permissions and allows ranks to control them.")
 		public boolean enabled = true;
 
 		@Config.Comment("Adds chat colors/rank-specific syntax.")
 		public boolean override_chat = true;
-
-		@Config.Comment("Adds command.x permissions and allows ranks to control them.")
-		public boolean override_commands = true;
 	}
 
 	public static class WorldConfig
@@ -253,9 +253,6 @@ public class FTBUtilitiesConfig
 		@Config.Comment("Enable spawn area in singleplayer.")
 		public boolean spawn_area_in_sp = false;
 
-		@Config.Comment("Print a message in console every time a chunk is forced or unforced. Recommended to be off, because spam.")
-		public boolean log_chunkloading = false;
-
 		@Config.Comment("Dimensions where chunk claiming isn't allowed.")
 		public int[] blocked_claiming_dimensions = { };
 
@@ -266,6 +263,9 @@ public class FTBUtilitiesConfig
 		@Config.Comment("If set to DEFAULT, then teams can decide their Explosion setting.")
 		@Config.LangKey("team_config.ftbutilities.explosions")
 		public EnumTristate enable_explosions = EnumTristate.DEFAULT;
+
+		@Config.Comment("Spawn radius. You must set spawn-protection in server.properties file to 0!")
+		public int spawn_radius = 0;
 
 		public boolean allowDimension(int dimension)
 		{
@@ -287,6 +287,12 @@ public class FTBUtilitiesConfig
 
 			return true;
 		}
+	}
+
+	public static class Debugging
+	{
+		@Config.Comment("Print a message in console every time a chunk is forced or unforced. Recommended to be off, because spam.")
+		public boolean log_chunkloading = false;
 	}
 
 	public static void sync()

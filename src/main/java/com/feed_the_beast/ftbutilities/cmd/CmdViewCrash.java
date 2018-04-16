@@ -36,13 +36,7 @@ public class CmdViewCrash extends CmdBase
 {
 	public CmdViewCrash()
 	{
-		super("view_crash", Level.OP);
-	}
-
-	@Override
-	public boolean checkPermission(MinecraftServer server, ICommandSender sender)
-	{
-		return !server.isDedicatedServer() || super.checkPermission(server, sender);
+		super("view_crash", Level.OP_OR_SP);
 	}
 
 	@Override

@@ -14,6 +14,7 @@ public class FTBUNetHandler
 
 	public static void init()
 	{
+		GENERAL.register(1, new MessageBackupProgress());
 		GENERAL.register(2, new MessageSendWarpList());
 
 		BADGES.register(1, new MessageRequestBadge());

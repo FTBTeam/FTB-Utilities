@@ -40,28 +40,6 @@ public class CmdBackup extends CmdTreeBase
 		}
 	}
 
-	public static class CmdStop extends CmdBase
-	{
-		public CmdStop()
-		{
-			super("stop", Level.OP);
-		}
-
-		@Override
-		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-		{
-			if (Backups.INSTANCE.thread != null)
-			{
-				Backups.INSTANCE.thread.interrupt();
-				Backups.INSTANCE.thread = null;
-				FTBUtilitiesLang.BACKUP_STOP.sendMessage(sender);
-				return;
-			}
-
-			throw FTBUtilitiesLang.BACKUP_NOT_RUNNING.commandError();
-		}
-	}
-
 	public static class CmdGetSize extends CmdBase
 	{
 		public CmdGetSize()
@@ -82,7 +60,6 @@ public class CmdBackup extends CmdTreeBase
 	{
 		super("backup");
 		addSubcommand(new CmdStart());
-		addSubcommand(new CmdStop());
 		addSubcommand(new CmdGetSize());
 	}
 }

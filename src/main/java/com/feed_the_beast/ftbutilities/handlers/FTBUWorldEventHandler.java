@@ -100,25 +100,16 @@ public class FTBUWorldEventHandler
 					CmdShutdown.shutdown(universe.server);
 					return;
 				}
-				else if ((t == CommonUtils.TICKS_SECOND * 10L && t % CommonUtils.TICKS_SECOND == 0L) || t == CommonUtils.TICKS_MINUTE || t == CommonUtils.TICKS_MINUTE * 5L || t == CommonUtils.TICKS_MINUTE * 10L || t == CommonUtils.TICKS_MINUTE * 30L)
+				else if ((t <= CommonUtils.TICKS_SECOND * 10L && t % CommonUtils.TICKS_SECOND == CommonUtils.TICKS_SECOND - 1L) || t == CommonUtils.TICKS_MINUTE || t == CommonUtils.TICKS_MINUTE * 5L || t == CommonUtils.TICKS_MINUTE * 10L || t == CommonUtils.TICKS_MINUTE * 30L)
 				{
 					for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
 					{
-						Notification.of(RESTART_TIMER_ID, StringUtils.color(FTBUtilitiesLang.TIMER_SHUTDOWN.textComponent(player, StringUtils.getTimeStringTicks(t / CommonUtils.TICKS_SECOND)), TextFormatting.LIGHT_PURPLE)).send(universe.server, player);
+						Notification.of(RESTART_TIMER_ID, StringUtils.color(FTBUtilitiesLang.TIMER_SHUTDOWN.textComponent(player, StringUtils.getTimeStringTicks(t)), TextFormatting.LIGHT_PURPLE)).send(universe.server, player);
 					}
 				}
 			}
 
-			if (Backups.INSTANCE.nextBackup > 0L && Backups.INSTANCE.nextBackup <= now)
-			{
-				Backups.INSTANCE.run(universe.server, universe.server, "");
-			}
-
-			if (Backups.INSTANCE.thread != null && Backups.INSTANCE.thread.isDone)
-			{
-				Backups.INSTANCE.thread = null;
-				Backups.INSTANCE.postBackup(universe.server);
-			}
+			Backups.INSTANCE.tick(universe, now);
 
         	/*
 			for(int i = teleportRequests.size() - 1; i >= 0; i--)

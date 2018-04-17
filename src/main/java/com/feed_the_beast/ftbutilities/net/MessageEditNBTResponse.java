@@ -8,7 +8,6 @@ import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftbutilities.cmd.CmdEditNBT;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -91,14 +90,7 @@ public class MessageEditNBTResponse extends MessageToServer<MessageEditNBTRespon
 							m.mainNbt.setString("id", m.info.getString("id"));
 							tile.readFromNBT(m.mainNbt);
 							tile.markDirty();
-							tile.getWorld().markChunkDirty(pos, tile);
-							IBlockState state = tile.getWorld().getBlockState(pos);
-							tile.getWorld().notifyBlockUpdate(pos, state, state, 255);
-
-							if (state != CommonUtils.AIR_STATE)
-							{
-								tile.getWorld().updateComparatorOutputLevel(pos, state.getBlock());
-							}
+							CommonUtils.notifyBlockUpdate(tile.getWorld(), pos, null);
 						}
 					}
 

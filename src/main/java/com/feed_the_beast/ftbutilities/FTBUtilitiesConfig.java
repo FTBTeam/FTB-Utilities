@@ -112,9 +112,6 @@ public class FTBUtilitiesConfig
 		@Config.Comment("Prints (current size | total size) when backup is done.")
 		public boolean display_file_size = true;
 
-		@Config.Comment("Run backup in a separated Thread. (recommended)")
-		public boolean use_separate_thread = true;
-
 		@Config.Comment("Add extra files that will be placed in backup _extra_/ folder")
 		public String[] extra_files = { };
 

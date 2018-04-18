@@ -124,7 +124,26 @@ public enum Backups
 		if (doingBackup > 1)
 		{
 			doingBackup = 0;
-			postBackup(universe.server);
+
+			try
+			{
+				for (WorldServer w : universe.server.worlds)
+				{
+					if (w != null && w.disableLevelSaving)
+					{
+						w.disableLevelSaving = false;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+
+			if (!FTBUtilitiesConfig.backups.silent)
+			{
+				new MessageBackupProgress(0, 0).sendToAll();
+			}
 
 		}
 		else if (doingBackup > 0)
@@ -202,18 +221,11 @@ public enum Backups
 		File wd = server.getWorld(0).getSaveHandler().getWorldDirectory();
 		doingBackup = 1;
 
-		if (FTBUtilitiesConfig.backups.use_separate_thread)
-		{
-			ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
-			{
-				doBackup(server, wd, customName);
-				return false;
-			});
-		}
-		else
+		ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
 		{
 			doBackup(server, wd, customName);
-		}
+			return false;
+		});
 
 		return true;
 	}
@@ -444,34 +456,6 @@ public enum Backups
 		}
 
 		JsonUtils.toJsonSafe(new File(backupsFolder, "backups.json"), a);
-	}
-
-	public void postBackup(MinecraftServer server)
-	{
-		try
-		{
-			for (int i = 0; i < server.worlds.length; ++i)
-			{
-				if (server.worlds[i] != null)
-				{
-					WorldServer worldserver = server.worlds[i];
-
-					if (worldserver.disableLevelSaving)
-					{
-						worldserver.disableLevelSaving = false;
-					}
-				}
-			}
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-
-		if (!FTBUtilitiesConfig.backups.silent)
-		{
-			new MessageBackupProgress(0, 0).sendToAll();
-		}
 	}
 
 	private int getLastIndex()

@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.BroadcastSender;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import net.minecraft.command.CommandException;
@@ -27,11 +26,6 @@ public class CmdBackup extends CmdTreeBase
 			if (b)
 			{
 				FTBUtilitiesLang.BACKUP_MANUAL_LAUNCH.sendMessage(new BroadcastSender(server), sender.getName());
-
-				if (!FTBUtilitiesConfig.backups.use_separate_thread)
-				{
-					Backups.INSTANCE.postBackup(server);
-				}
 			}
 			else
 			{

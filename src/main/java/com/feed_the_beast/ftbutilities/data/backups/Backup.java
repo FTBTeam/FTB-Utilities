@@ -3,15 +3,12 @@ package com.feed_the_beast.ftbutilities.data.backups;
 import com.google.gson.JsonObject;
 
 import java.io.File;
-import java.util.Comparator;
 
 /**
  * @author LatvianModder
  */
-public class Backup
+public class Backup implements Comparable<Backup>
 {
-	public static final Comparator<Backup> COMPARATOR = Comparator.comparingLong(o -> o.time);
-
 	public final long time;
 	public final String fileId;
 	public final int index;
@@ -58,5 +55,11 @@ public class Backup
 	public File getFile()
 	{
 		return new File(Backups.INSTANCE.backupsFolder, fileId);
+	}
+
+	@Override
+	public int compareTo(Backup o)
+	{
+		return Long.compare(time, o.time);
 	}
 }

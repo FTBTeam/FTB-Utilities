@@ -47,7 +47,7 @@ public class FTBUWorldEventHandler
 	private static final ResourceLocation RESTART_TIMER_ID = new ResourceLocation(FTBUtilities.MOD_ID, "restart_timer");
 
 	@SubscribeEvent
-	public static void onMobSpawned(EntityJoinWorldEvent event)
+	public static void onMobSpawned(EntityJoinWorldEvent event) //FIXME: LivingSpawnEvent.CheckSpawn
 	{
 		if (!event.getWorld().isRemote && !isEntityAllowed(event.getEntity()))
 		{

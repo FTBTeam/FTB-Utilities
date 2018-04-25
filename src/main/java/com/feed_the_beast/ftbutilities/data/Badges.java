@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.FTBLibConfig;
+import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
@@ -10,7 +11,6 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
-import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -85,7 +85,7 @@ public class Badges
 		}
 
 		String badge = LOCAL_BADGES.get(playerId);
-		return (badge == null || badge.isEmpty()) ? Ranks.INSTANCE.getRank(player).getConfig(FTBUtilitiesPermissions.BADGE).getString() : badge;
+		return (badge == null || badge.isEmpty()) ? RankConfigAPI.get(player, FTBUtilitiesPermissions.BADGE).getString() : badge;
 	}
 
 	public static boolean reloadServerBadges(Universe universe)

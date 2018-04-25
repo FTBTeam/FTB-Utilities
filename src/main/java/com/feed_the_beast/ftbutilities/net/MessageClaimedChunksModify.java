@@ -7,13 +7,9 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
-import com.feed_the_beast.ftbutilities.data.FTBUTeamData;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.Collection;
 
@@ -65,7 +61,7 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 	}
 
 	@Override
-	public void onMessage(MessageClaimedChunksModify m, EntityPlayer player)
+	public void onMessage(EntityPlayerMP player)
 	{
 		if (ClaimedChunks.instance == null)
 		{
@@ -76,32 +72,32 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 
 		if (!p.hasTeam())
 		{
-			FTBLibNotifications.NO_TEAM.send(((EntityPlayerMP) player).mcServer, player);
+			FTBLibNotifications.NO_TEAM.send(player.mcServer, player);
 			return;
 		}
 
-		boolean canUnclaim = m.action == UNCLAIM && PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS);
-
-		for (ChunkPos pos0 : m.chunks)
+		for (ChunkPos pos0 : chunks)
 		{
 			ChunkDimPos pos = new ChunkDimPos(pos0, player.dimension);
 
-			switch (m.action)
+			if (!ClaimedChunks.instance.canPlayerModify(p, pos))
+			{
+				continue;
+			}
+
+			switch (action)
 			{
 				case CLAIM:
-					ClaimedChunks.instance.claimChunk(FTBUTeamData.get(p.team), pos);
+					ClaimedChunks.instance.claimChunk(p, pos, true);
 					break;
 				case UNCLAIM:
-					if (canUnclaim || p.team.equalsTeam(ClaimedChunks.instance.getChunkTeam(pos)))
-					{
-						ClaimedChunks.instance.unclaimChunk(p.team, pos);
-					}
+					ClaimedChunks.instance.unclaimChunk(pos);
 					break;
 				case LOAD:
-					ClaimedChunks.instance.setLoaded(p.team, pos, true);
+					ClaimedChunks.instance.loadChunk(p.team, pos);
 					break;
 				case UNLOAD:
-					ClaimedChunks.instance.setLoaded(p.team, pos, false);
+					ClaimedChunks.instance.unloadChunk(pos);
 					break;
 			}
 		}

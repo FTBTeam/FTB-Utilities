@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities;
 
+import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftbutilities.data.FTBULoadedChunkManager;
@@ -38,6 +39,7 @@ public class FTBUtilitiesCommon
 		if (FTBUtilitiesConfig.ranks.enabled)
 		{
 			PermissionAPI.setPermissionHandler(FTBUPermissionHandler.INSTANCE);
+			RankConfigAPI.setHandler(FTBUPermissionHandler.INSTANCE);
 		}
 
 		FTBUNetHandler.init();
@@ -60,9 +62,5 @@ public class FTBUtilitiesCommon
 	public void postInit()
 	{
 		new LeaderboardRegistryEvent(leaderboard -> LEADERBOARDS.put(leaderboard.id, leaderboard)).post();
-	}
-
-	public void editNBT()
-	{
 	}
 }

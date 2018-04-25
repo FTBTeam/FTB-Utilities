@@ -17,6 +17,8 @@ import com.feed_the_beast.ftbutilities.data.FTBUTeamData;
 import com.feed_the_beast.ftbutilities.gui.ClientClaimedChunks;
 import com.feed_the_beast.ftbutilities.gui.UpdateClientDataEvent;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.Collection;
@@ -144,8 +146,9 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 	}
 
 	@Override
-	public void onMessage(MessageClaimedChunksUpdate m, EntityPlayer player)
+	@SideOnly(Side.CLIENT)
+	public void onMessage()
 	{
-		new UpdateClientDataEvent(m).post();
+		new UpdateClientDataEvent(this).post();
 	}
 }

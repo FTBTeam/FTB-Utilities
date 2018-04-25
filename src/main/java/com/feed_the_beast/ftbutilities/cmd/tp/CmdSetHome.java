@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbutilities.cmd.tp;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
-import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -47,7 +47,7 @@ public class CmdSetHome extends CmdBase
 
 		args[0] = args[0].toLowerCase();
 
-		int maxHomes = Ranks.INSTANCE.getRank(player).getConfig(FTBUtilitiesPermissions.HOMES_MAX).getInt();
+		int maxHomes = RankConfigAPI.get(player, FTBUtilitiesPermissions.HOMES_MAX).getInt();
 
 		if (maxHomes <= 0 || data.homes.size() >= maxHomes)
 		{

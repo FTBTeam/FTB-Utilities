@@ -8,6 +8,7 @@ import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.data.Badges;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.UUID;
 
@@ -63,8 +64,8 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
 	}
 
 	@Override
-	public void onMessage(MessageRequestBadge m, EntityPlayer player)
+	public void onMessage(EntityPlayerMP player)
 	{
-		new ThreadBadge(m.playerId, player).start();
+		new ThreadBadge(playerId, player).start();
 	}
 }

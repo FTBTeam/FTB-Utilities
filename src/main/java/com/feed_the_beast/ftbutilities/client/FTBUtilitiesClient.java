@@ -2,10 +2,8 @@ package com.feed_the_beast.ftbutilities.client;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
-import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -31,23 +29,5 @@ public class FTBUtilitiesClient extends FTBUtilitiesCommon // FTBLibClient
 
 		ClientUtils.MC.getRenderManager().getSkinMap().get("default").addLayer(LayerBadge.INSTANCE);
 		ClientUtils.MC.getRenderManager().getSkinMap().get("slim").addLayer(LayerBadge.INSTANCE);
-	}
-
-	@Override
-	public void editNBT()
-	{
-		RayTraceResult ray = ClientUtils.MC.objectMouseOver;
-
-		if (ray != null)
-		{
-			if (ray.typeOfHit == RayTraceResult.Type.BLOCK)
-			{
-				ClientUtils.execClientCommand(StringJoiner.with(' ').joinObjects("/ftb nbtedit tile", ray.getBlockPos().getX(), ray.getBlockPos().getY(), ray.getBlockPos().getZ()));
-			}
-			else if (ray.typeOfHit == RayTraceResult.Type.ENTITY && ray.entityHit != null)
-			{
-				ClientUtils.execClientCommand("/ftb nbtedit entity " + ray.entityHit.getEntityId());
-			}
-		}
 	}
 }

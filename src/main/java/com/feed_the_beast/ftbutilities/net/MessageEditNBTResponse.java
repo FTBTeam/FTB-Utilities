@@ -10,6 +10,7 @@ import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftbutilities.cmd.CmdEditNBT;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -49,22 +50,22 @@ public class MessageEditNBTResponse extends MessageToServer<MessageEditNBTRespon
 	}
 
 	@Override
-	public void onMessage(MessageEditNBTResponse m, EntityPlayer player)
+	public void onMessage(EntityPlayerMP player)
 	{
-		if (CmdEditNBT.EDITING.get(player.getGameProfile().getId()).equals(m.info))
+		if (CmdEditNBT.EDITING.get(player.getGameProfile().getId()).equals(info))
 		{
 			CmdEditNBT.EDITING.remove(player.getGameProfile().getId());
 
-			switch (m.info.getString("type"))
+			switch (info.getString("type"))
 			{
 				case "player":
 				{
-					ForgePlayer player1 = Universe.get().getPlayer(m.info.getUniqueId("id"));
+					ForgePlayer player1 = Universe.get().getPlayer(info.getUniqueId("id"));
 
 					if (player1 != null && player1.isOnline())
 					{
 						EntityPlayer entity = player1.getPlayer();
-						entity.deserializeNBT(m.mainNbt);
+						entity.deserializeNBT(mainNbt);
 
 						if (entity.isEntityAlive())
 						{
@@ -76,7 +77,7 @@ public class MessageEditNBTResponse extends MessageToServer<MessageEditNBTRespon
 				}
 				case "tile":
 				{
-					BlockPos pos = new BlockPos(m.info.getInteger("x"), m.info.getInteger("y"), m.info.getInteger("z"));
+					BlockPos pos = new BlockPos(info.getInteger("x"), info.getInteger("y"), info.getInteger("z"));
 
 					if (player.world.isBlockLoaded(pos))
 					{
@@ -84,11 +85,11 @@ public class MessageEditNBTResponse extends MessageToServer<MessageEditNBTRespon
 
 						if (tile != null)
 						{
-							m.mainNbt.setInteger("x", pos.getX());
-							m.mainNbt.setInteger("y", pos.getY());
-							m.mainNbt.setInteger("z", pos.getZ());
-							m.mainNbt.setString("id", m.info.getString("id"));
-							tile.readFromNBT(m.mainNbt);
+							mainNbt.setInteger("x", pos.getX());
+							mainNbt.setInteger("y", pos.getY());
+							mainNbt.setInteger("z", pos.getZ());
+							mainNbt.setString("id", info.getString("id"));
+							tile.readFromNBT(mainNbt);
 							tile.markDirty();
 							CommonUtils.notifyBlockUpdate(tile.getWorld(), pos, null);
 						}
@@ -98,11 +99,11 @@ public class MessageEditNBTResponse extends MessageToServer<MessageEditNBTRespon
 				}
 				case "entity":
 				{
-					Entity entity = player.world.getEntityByID(m.info.getInteger("id"));
+					Entity entity = player.world.getEntityByID(info.getInteger("id"));
 
 					if (entity != null)
 					{
-						entity.deserializeNBT(m.mainNbt);
+						entity.deserializeNBT(mainNbt);
 
 						if (entity.isEntityAlive())
 						{

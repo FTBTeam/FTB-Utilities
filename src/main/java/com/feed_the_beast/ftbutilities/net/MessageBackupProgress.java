@@ -5,7 +5,8 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbutilities.handlers.FTBUClientEventHandler;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author LatvianModder
@@ -45,9 +46,10 @@ public class MessageBackupProgress extends MessageToClient<MessageBackupProgress
 	}
 
 	@Override
-	public void onMessage(MessageBackupProgress m, EntityPlayer player)
+	@SideOnly(Side.CLIENT)
+	public void onMessage()
 	{
-		FTBUClientEventHandler.currentBackupFile = m.current;
-		FTBUClientEventHandler.totalBackupFiles = m.total;
+		FTBUClientEventHandler.currentBackupFile = current;
+		FTBUClientEventHandler.totalBackupFiles = total;
 	}
 }

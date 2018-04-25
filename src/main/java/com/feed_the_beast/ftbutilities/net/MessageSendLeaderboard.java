@@ -9,10 +9,11 @@ import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.data.LeaderboardValue;
 import com.feed_the_beast.ftbutilities.gui.GuiLeaderboard;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,8 +101,9 @@ public class MessageSendLeaderboard extends MessageToClient<MessageSendLeaderboa
 	}
 
 	@Override
-	public void onMessage(MessageSendLeaderboard m, EntityPlayer player)
+	@SideOnly(Side.CLIENT)
+	public void onMessage()
 	{
-		new GuiLeaderboard(m.title, m.values).openGui();
+		new GuiLeaderboard(title, values).openGui();
 	}
 }

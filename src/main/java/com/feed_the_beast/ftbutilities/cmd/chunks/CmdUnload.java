@@ -37,7 +37,7 @@ public class CmdUnload extends CmdBase
 		ForgePlayer p = getForgePlayer(player);
 		ChunkDimPos pos = new ChunkDimPos(player);
 
-		if (p.hasTeam() && ClaimedChunks.instance.setLoaded(p.team, pos, false))
+		if (ClaimedChunks.instance.canPlayerModify(p, pos) && ClaimedChunks.instance.unloadChunk(pos))
 		{
 			Notification.of(FTBUtilitiesNotifications.CHUNK_MODIFIED, TextComponentHelper.createComponentTranslation(player, FTBUtilities.MOD_ID + ".lang.chunks.chunk_unloaded")).send(server, player);
 			CmdChunks.updateChunk(player, pos);

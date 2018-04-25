@@ -47,7 +47,7 @@
 	"heal": {
 		"group": "ftblib:cheat",
 		"icon": "ftblib:icons/heart",
-		"x": 400,
+		"x": 140,
 		"click": "command:/heal",
 		"config": true,
 		"required_server_mods": ["ftbutilities"],
@@ -57,7 +57,7 @@
 	"toggle.gamemode": {
 		"group": "ftblib:cheat",
 		"icon": ["ftblib:icons/blue_button", "ftblib:textures/icons/toggle_gamemode.png"],
-		"x": 0,
+		"x": 100,
 		"click": "command:/ftbc toggle_gamemode",
 		"config": true,
 		"hide_with_nei": true,
@@ -66,7 +66,7 @@
 	"toggle.rain": {
 		"group": "ftblib:cheat",
 		"icon": ["ftblib:icons/blue_button", "ftblib:textures/icons/toggle_rain.png"],
-		"x": 100,
+		"x": 110,
 		"click": "command:/toggledownfall",
 		"config": true,
 		"hide_with_nei": true,
@@ -75,7 +75,7 @@
 	"toggle.day": {
 		"group": "ftblib:cheat",
 		"icon": ["ftblib:icons/blue_button", "ftblib:textures/icons/toggle_day.png"],
-		"x": 200,
+		"x": 120,
 		"click": "command:/ftb set_hour 6",
 		"config": true,
 		"required_server_mods": ["ftbutilities"],
@@ -85,20 +85,11 @@
 	"toggle.night": {
 		"group": "ftblib:cheat",
 		"icon": ["ftblib:icons/blue_button", "ftblib:textures/icons/toggle_night.png"],
-		"x": 300,
+		"x": 130,
 		"click": "command:/ftb set_hour 18",
 		"config": true,
 		"required_server_mods": ["ftbutilities"],
 		"hide_with_nei": true,
 		"requires_op": true
-	},
-	"view_crash": {
-		"group": "ftblib:util",
-		"icon": "item:minecraft:barrier",
-		"x": 600,
-		"click": "command:/ftb view_crash",
-		"config": false,
-		"required_mods": ["ftbutilities"],
-		"loading_screen": true
 	}
 }

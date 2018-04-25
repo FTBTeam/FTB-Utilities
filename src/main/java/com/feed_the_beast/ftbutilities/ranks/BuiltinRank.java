@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -15,7 +16,7 @@ class BuiltinRank extends Rank
 	}
 
 	@Override
-	public Event.Result hasPermission(String permission)
+	public Event.Result hasPermission(Node permission)
 	{
 		return Event.Result.DEFAULT;
 	}

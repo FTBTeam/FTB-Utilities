@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.gui;
 
+import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
 import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.OtherMods;
@@ -301,6 +302,11 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	{
 		if (maxClaimedChunks == -1)
 		{
+			if (corner == Corner.BOTTOM_RIGHT)
+			{
+				list.add(TextFormatting.RED + FTBLibLang.FEATURE_DISABLED_SERVER.translate());
+			}
+
 			return;
 		}
 

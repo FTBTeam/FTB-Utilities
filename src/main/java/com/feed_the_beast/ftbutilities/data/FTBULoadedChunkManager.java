@@ -13,9 +13,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.server.permission.PermissionAPI;
-import net.minecraftforge.server.permission.context.IContext;
-import net.minecraftforge.server.permission.context.WorldContext;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -170,11 +167,9 @@ public class FTBULoadedChunkManager implements ForgeChunkManager.LoadingCallback
 			}
 		}
 
-		IContext context = new WorldContext(team.universe.world);
-
 		for (ForgePlayer player : members)
 		{
-			if (PermissionAPI.hasPermission(player.getProfile(), FTBUtilitiesPermissions.CHUNKLOADER_LOAD_OFFLINE, context))
+			if (player.hasPermission(FTBUtilitiesPermissions.CHUNKLOADER_LOAD_OFFLINE))
 			{
 				return true;
 			}

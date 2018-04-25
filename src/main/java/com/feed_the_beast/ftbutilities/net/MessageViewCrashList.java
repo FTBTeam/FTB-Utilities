@@ -5,7 +5,8 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbutilities.gui.GuiViewCrashList;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,8 +60,9 @@ public class MessageViewCrashList extends MessageToClient<MessageViewCrashList>
 	}
 
 	@Override
-	public void onMessage(MessageViewCrashList m, EntityPlayer player)
+	@SideOnly(Side.CLIENT)
+	public void onMessage()
 	{
-		new GuiViewCrashList(m.list).openGui();
+		new GuiViewCrashList(list).openGui();
 	}
 }

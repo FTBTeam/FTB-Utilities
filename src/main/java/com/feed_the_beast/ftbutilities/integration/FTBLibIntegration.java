@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.integration;
 
+import com.feed_the_beast.ftblib.events.RegisterAdminPanelActionsEvent;
 import com.feed_the_beast.ftblib.events.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftblib.events.RegisterSyncDataEvent;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
@@ -15,8 +16,8 @@ import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerLeftEvent;
 import com.feed_the_beast.ftblib.events.team.RegisterTeamGuiActionsEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
+import com.feed_the_beast.ftblib.lib.data.Action;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.data.TeamGuiAction;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
@@ -34,6 +35,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.OptionalInt;
 
 /**
  * @author LatvianModder
@@ -168,7 +171,7 @@ public class FTBLibIntegration
 	public static void onTeamDeleted(ForgeTeamDeletedEvent event)
 	{
 		//printMessage(FTBLibLang.TEAM_DELETED.textComponent(getTitle()));
-		ClaimedChunks.instance.unclaimAllChunks(event.getTeam(), null);
+		ClaimedChunks.instance.unclaimAllChunks(event.getTeam(), OptionalInt.empty());
 	}
 
 	@SubscribeEvent
@@ -192,7 +195,7 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void registerTeamGuiActions(RegisterTeamGuiActionsEvent event)
 	{
-		event.register(new TeamGuiAction(new ResourceLocation(FTBUtilities.MOD_ID, "chat"), new TextComponentTranslation("sidebar_button." + FTBUtilities.MOD_ID + ".chats.team"), GuiIcons.CHAT, -10)
+		event.register(new Action(new ResourceLocation(FTBUtilities.MOD_ID, "chat"), new TextComponentTranslation("sidebar_button." + FTBUtilities.MOD_ID + ".chats.team"), GuiIcons.CHAT, -10)
 		{
 			@Override
 			public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -205,5 +208,23 @@ public class FTBLibIntegration
 			{
 			}
 		});
+	}
+
+	@SubscribeEvent
+	public static void registerAdminPanelActions(RegisterAdminPanelActionsEvent event)
+	{
+		/*event.register(new Action(new ResourceLocation(FTBUtilities.MOD_ID, "chat"), new TextComponentTranslation("sidebar_button." + FTBUtilities.MOD_ID + ".chats.team"), GuiIcons.CHAT, -10)
+		{
+			@Override
+			public Type getType(ForgePlayer player, NBTTagCompound data)
+			{
+				return Type.INVISIBLE;
+			}
+
+			@Override
+			public void onAction(ForgePlayer player, NBTTagCompound data)
+			{
+			}
+		});*/
 	}
 }

@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 
 import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
@@ -9,7 +10,6 @@ import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
-import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -80,7 +80,7 @@ public class CmdHome extends CmdBase
 			FTBUPlayerData data = FTBUPlayerData.get(p);
 
 			Collection<String> list = data.homes.list();
-			ITextComponent msg = new TextComponentString(p.getName() + ": " + list.size() + " / " + Ranks.INSTANCE.getRank(p).getConfig(FTBUtilitiesPermissions.HOMES_MAX).getInt() + ": ");
+			ITextComponent msg = new TextComponentString(p.getName() + ": " + list.size() + " / " + RankConfigAPI.get(p, FTBUtilitiesPermissions.HOMES_MAX).getInt() + ": ");
 
 			if (!list.isEmpty())
 			{

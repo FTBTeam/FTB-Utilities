@@ -4,14 +4,15 @@ import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * @author LatvianModder
@@ -34,17 +35,18 @@ public class CmdSetPermission extends CmdBase
 			throw FTBUtilitiesLang.RANK_NOT_FOUND.commandError(args[0]);
 		}
 
+		Node node = Node.get(args[1]);
+
 		if (args[2].equals("null"))
 		{
-			rank.permissions.remove(args[1]);
-			rank.cachedPermissions.remove(args[1]);
-			rank.config.remove(args[1]);
-			rank.cachedConfig.remove(args[1]);
+			rank.permissions.remove(node);
+			rank.cachedPermissions.remove(node);
+			rank.cachedConfig.remove(node);
 		}
 		else if (args[2].equals("true") || args[2].equals("false"))
 		{
-			rank.permissions.put(args[1], args[2].equals("true") ? Event.Result.ALLOW : Event.Result.DENY);
-			rank.cachedPermissions.remove(args[1]);
+			rank.permissions.put(node, new JsonPrimitive(args[2].equals("true")));
+			rank.cachedPermissions.remove(node);
 		}
 		else
 		{
@@ -56,8 +58,8 @@ public class CmdSetPermission extends CmdBase
 			}
 			else if (!element.isJsonNull())
 			{
-				//rank.config.put(args[1], );
-				rank.cachedConfig.remove(args[1]);
+				rank.permissions.put(node, element);
+				rank.cachedConfig.remove(node);
 			}
 		}
 	}

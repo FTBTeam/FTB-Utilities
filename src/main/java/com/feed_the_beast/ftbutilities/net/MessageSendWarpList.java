@@ -9,8 +9,9 @@ import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUUniverseData;
 import com.feed_the_beast.ftbutilities.gui.GuiWarps;
 import net.minecraft.command.ICommand;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,11 +123,12 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
 	}
 
 	@Override
-	public void onMessage(MessageSendWarpList m, EntityPlayer player)
+	@SideOnly(Side.CLIENT)
+	public void onMessage()
 	{
 		if (GuiWarps.INSTANCE != null)
 		{
-			GuiWarps.INSTANCE.setData(m.warps);
+			GuiWarps.INSTANCE.setData(warps);
 		}
 	}
 }

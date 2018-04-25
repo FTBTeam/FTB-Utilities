@@ -18,6 +18,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.OptionalInt;
 
 /**
  * @author LatvianModder
@@ -77,7 +78,7 @@ public class CmdUnclaimAll extends CmdBase
 		if (p.hasTeam())
 		{
 			boolean allDimensions = args.length == 0 || parseBoolean(args[0]);
-			ClaimedChunks.instance.unclaimAllChunks(p.team, allDimensions ? null : player.dimension);
+			ClaimedChunks.instance.unclaimAllChunks(p.team, allDimensions ? OptionalInt.empty() : OptionalInt.of(player.dimension));
 			Notification.of(FTBUtilitiesNotifications.UNCLAIMED_ALL, TextComponentHelper.createComponentTranslation(player, FTBUtilities.MOD_ID + ".lang.chunks.unclaimed_all")).send(server, player);
 		}
 	}

@@ -1,13 +1,17 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
 import com.feed_the_beast.ftblib.FTBLibCommon;
+import com.feed_the_beast.ftblib.lib.config.ConfigNull;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -20,10 +24,9 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 {
 	public final Ranks ranks;
 	Rank parent;
-	public final Map<String, Event.Result> permissions;
-	public final Map<String, Event.Result> cachedPermissions;
-	public final Map<String, ConfigValue> config;
-	public final Map<String, ConfigValue> cachedConfig;
+	public final Map<Node, JsonElement> permissions;
+	public final Map<Node, Event.Result> cachedPermissions;
+	public final Map<Node, ConfigValue> cachedConfig;
 	String syntax;
 
 	public Rank(Ranks r, String id, @Nullable Rank p)
@@ -32,7 +35,6 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 		ranks = r;
 		permissions = new LinkedHashMap<>();
 		cachedPermissions = new HashMap<>();
-		config = new LinkedHashMap<>();
 		cachedConfig = new HashMap<>();
 		syntax = null;
 		parent = p;
@@ -43,55 +45,71 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 		return parent == null ? ranks.builtinPlayerRank : parent;
 	}
 
-	private Event.Result hasPermissionRaw(String permission)
+	public JsonElement getMatchingJson(Node node)
 	{
-		Event.Result r = permissions.get(permission);
-		if (r != null)
+		JsonElement json = permissions.get(node);
+
+		if (json != null)
 		{
-			return r;
+			return json;
 		}
 
-		String[] splitPermission = permission.split("\\.");
+		int parts = 0;
 
-		for (Map.Entry<String, Event.Result> entry : permissions.entrySet())
+		for (Map.Entry<Node, JsonElement> entry : permissions.entrySet())
 		{
-			if (StringUtils.nodesMatch(splitPermission, entry.getKey().split("\\.")))
+			if (entry.getKey().getPartCount() > parts && entry.getKey().matches(node))
 			{
-				return entry.getValue();
+				parts = entry.getKey().getPartCount();
+				json = entry.getValue();
 			}
 		}
 
-		return getParent().hasPermission(permission);
+		return json != null ? json : parent == null ? JsonNull.INSTANCE : parent.getMatchingJson(node);
 	}
 
-	public Event.Result hasPermission(String permission)
+	public Event.Result hasPermission(Node node)
 	{
-		Event.Result r = cachedPermissions.get(permission);
+		Event.Result r = cachedPermissions.get(node);
 
 		if (r == null)
 		{
-			r = hasPermissionRaw(permission);
-			cachedPermissions.put(permission, r);
+			r = Event.Result.DEFAULT;
+			JsonElement json = getMatchingJson(node);
+
+			if (json.isJsonPrimitive() && json.getAsJsonPrimitive().isBoolean())
+			{
+				r = json.getAsBoolean() ? Event.Result.ALLOW : Event.Result.DENY;
+			}
+
+			cachedPermissions.put(node, r);
 		}
 
 		return r;
 	}
 
-	public ConfigValue getConfig(String id)
+	public ConfigValue getConfig(Node node)
 	{
-		ConfigValue e = cachedConfig.get(id);
+		ConfigValue e = cachedConfig.get(node);
 
 		if (e == null)
 		{
-			e = config.get(id);
+			e = ConfigNull.INSTANCE;
+			JsonElement json = getMatchingJson(node);
 
-			if (e == null || e.isNull())
+			if (!json.isJsonNull())
 			{
-				e = getParent().getConfig(id);
+				RankConfigValueInfo rconfig = FTBLibCommon.RANK_CONFIGS_MIRROR.get(node);
+
+				if (rconfig != null)
+				{
+					e = rconfig.defaultValue.copy();
+					e.fromJson(json);
+				}
 			}
 		}
 
-		cachedConfig.put(id, e);
+		cachedConfig.put(node, e);
 		return e;
 	}
 
@@ -109,12 +127,11 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 
 		JsonObject o1 = new JsonObject();
 
-		for (Map.Entry<String, Event.Result> e : permissions.entrySet())
+		for (Map.Entry<Node, JsonElement> e : permissions.entrySet())
 		{
-			o1.addProperty(e.getKey(), e.getValue() == Event.Result.ALLOW);
+			o1.add(e.getKey().toString(), e.getValue());
 		}
 
-		config.forEach((key, value) -> o1.add(key, value.getSerializableElement()));
 		o.add("permissions", o1);
 		return o;
 	}
@@ -124,7 +141,6 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 	{
 		parent = null;
 		permissions.clear();
-		config.clear();
 		cachedPermissions.clear();
 		cachedConfig.clear();
 		syntax = null;
@@ -159,7 +175,7 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 					String id = a.get(i).getAsString();
 					char firstChar = id.charAt(0);
 					String key = (firstChar == '-' || firstChar == '+' || firstChar == '~') ? id.substring(1) : id;
-					permissions.put(key, firstChar == '-' ? Event.Result.DENY : (firstChar == '~' ? Event.Result.DEFAULT : Event.Result.ALLOW));
+					permissions.put(Node.get(key), new JsonPrimitive(firstChar != '-'));
 				}
 			}
 			else
@@ -168,21 +184,7 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 
 				for (Map.Entry<String, JsonElement> entry : o1.entrySet())
 				{
-					if (entry.getValue().isJsonPrimitive() && entry.getValue().getAsJsonPrimitive().isBoolean())
-					{
-						permissions.put(entry.getKey(), entry.getValue().getAsBoolean() ? Event.Result.ALLOW : Event.Result.DENY);
-					}
-					else
-					{
-						RankConfigValueInfo rconfig = FTBLibCommon.RANK_CONFIGS_MIRROR.get(entry.getKey());
-
-						if (rconfig != null)
-						{
-							ConfigValue value = rconfig.defaultValue.copy();
-							value.fromJson(entry.getValue());
-							config.put(rconfig.id, value);
-						}
-					}
+					permissions.put(Node.get(entry.getKey()), entry.getValue());
 				}
 			}
 		}
@@ -191,14 +193,7 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 		{
 			for (Map.Entry<String, JsonElement> entry : o.get("config").getAsJsonObject().entrySet())
 			{
-				RankConfigValueInfo rconfig = FTBLibCommon.RANK_CONFIGS_MIRROR.get(entry.getKey());
-
-				if (rconfig != null)
-				{
-					ConfigValue value = rconfig.defaultValue.copy();
-					value.fromJson(entry.getValue());
-					config.put(rconfig.id, value);
-				}
+				permissions.put(Node.get(entry.getKey()), entry.getValue());
 			}
 		}
 	}

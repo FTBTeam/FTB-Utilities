@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbutilities.data;
 
-import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 
 import javax.annotation.Nullable;
@@ -9,16 +8,22 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-public class NodeEntry extends FinalIDObject
+public final class NodeEntry
 {
+	private Node node;
 	private DefaultPermissionLevel level;
 	private String desc;
 
-	public NodeEntry(String n, DefaultPermissionLevel l, @Nullable String d)
+	public NodeEntry(Node n, DefaultPermissionLevel l, @Nullable String d)
 	{
-		super(n, StringUtils.FLAG_ID_FIX | StringUtils.FLAG_ID_ONLY_LOWERCASE);
+		node = n;
 		level = l;
 		desc = d;
+	}
+
+	public Node getNode()
+	{
+		return node;
 	}
 
 	public DefaultPermissionLevel getLevel()
@@ -30,5 +35,15 @@ public class NodeEntry extends FinalIDObject
 	public String getDescription()
 	{
 		return desc;
+	}
+
+	public int hashCode()
+	{
+		return node.hashCode();
+	}
+
+	public boolean equals(Object o)
+	{
+		return o == this || o instanceof NodeEntry && node.equals(((NodeEntry) o).node);
 	}
 }

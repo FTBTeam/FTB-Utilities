@@ -8,7 +8,7 @@ import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 public class MessageClaimedChunksRequest extends MessageToServer<MessageClaimedChunksRequest>
 {
@@ -50,11 +50,11 @@ public class MessageClaimedChunksRequest extends MessageToServer<MessageClaimedC
 	}
 
 	@Override
-	public void onMessage(MessageClaimedChunksRequest m, EntityPlayer player)
+	public void onMessage(EntityPlayerMP player)
 	{
 		if (ClaimedChunks.instance != null)
 		{
-			new MessageClaimedChunksUpdate(m.startX, m.startZ, player).sendTo(player);
+			new MessageClaimedChunksUpdate(startX, startZ, player).sendTo(player);
 		}
 	}
 }

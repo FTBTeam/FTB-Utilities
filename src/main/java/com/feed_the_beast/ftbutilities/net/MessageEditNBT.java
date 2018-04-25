@@ -7,8 +7,9 @@ import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.gui.GuiEditNBT;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author LatvianModder
@@ -53,8 +54,9 @@ public class MessageEditNBT extends MessageToClient<MessageEditNBT>
 	}
 
 	@Override
-	public void onMessage(MessageEditNBT m, EntityPlayer player)
+	@SideOnly(Side.CLIENT)
+	public void onMessage()
 	{
-		new GuiEditNBT(m.info, m.mainNbt).openGuiLater();
+		new GuiEditNBT(info, mainNbt).openGui();
 	}
 }

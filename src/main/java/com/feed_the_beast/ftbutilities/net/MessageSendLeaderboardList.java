@@ -5,9 +5,10 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbutilities.gui.GuiLeaderboardList;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Map;
 
@@ -43,8 +44,9 @@ public class MessageSendLeaderboardList extends MessageToClient<MessageSendLeade
 	}
 
 	@Override
-	public void onMessage(MessageSendLeaderboardList m, EntityPlayer player)
+	@SideOnly(Side.CLIENT)
+	public void onMessage()
 	{
-		new GuiLeaderboardList(m.leaderboards).openGui();
+		new GuiLeaderboardList(leaderboards).openGui();
 	}
 }

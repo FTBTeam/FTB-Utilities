@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbutilities;
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import com.feed_the_beast.ftbutilities.ranks.CommandOverride;
 import net.minecraft.command.ICommand;
@@ -72,7 +73,7 @@ public class FTBUtilities
 
 			for (ICommand command : commands)
 			{
-				manager.registerCommand(new CommandOverride(command));
+				manager.registerCommand(CommandOverride.create(command, Node.COMMAND));
 			}
 
 			LOGGER.info("Overridden " + manager.getCommands().size() + " commands");

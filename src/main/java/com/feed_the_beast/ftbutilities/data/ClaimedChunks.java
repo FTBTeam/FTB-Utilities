@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.data;
 
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.OptionalInt;
 import java.util.Set;
 
 /**
@@ -256,9 +258,25 @@ public class ClaimedChunks
 		return true;
 	}
 
-	public ClaimResult claimChunk(@Nullable FTBUTeamData data, ChunkDimPos pos)
+	public boolean canPlayerModify(ForgePlayer player, ChunkDimPos pos)
 	{
-		if (data == null)
+		ClaimedChunk chunk = getChunk(pos);
+
+		if (chunk == null)
+		{
+			return true;
+		}
+		else if (!FTBUtilitiesConfig.world.allowDimension(pos.dim))
+		{
+			return false;
+		}
+
+		return player.hasTeam() && chunk.getTeam().equalsTeam(player.team) || player.hasPermission(FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS);
+	}
+
+	public ClaimResult claimChunk(ForgePlayer player, ChunkDimPos pos, boolean checkLimits)
+	{
+		if (!player.hasTeam())
 		{
 			return ClaimResult.NO_TEAM;
 		}
@@ -267,10 +285,15 @@ public class ClaimedChunks
 			return ClaimResult.DIMENSION_BLOCKED;
 		}
 
-		int max = data.getMaxClaimChunks();
-		if (max == 0 || getTeamChunks(data.team, true).size() >= max)
+		FTBUTeamData data = FTBUTeamData.get(player.team);
+
+		if (checkLimits)
 		{
-			return ClaimResult.NO_POWER;
+			int max = data.getMaxClaimChunks();
+			if (max == 0 || getTeamChunks(data.team, true).size() >= max)
+			{
+				return ClaimResult.NO_POWER;
+			}
 		}
 
 		ClaimedChunk chunk = getChunk(pos);
@@ -286,13 +309,18 @@ public class ClaimedChunks
 		return ClaimResult.SUCCESS;
 	}
 
-	public boolean unclaimChunk(ForgeTeam team, ChunkDimPos pos)
+	public boolean unclaimChunk(ChunkDimPos pos)
 	{
 		ClaimedChunk chunk = map.get(pos);
 
 		if (chunk != null && !chunk.isInvalid())
 		{
-			setLoaded(team, pos, false);
+			if (chunk.isLoaded())
+			{
+				new ChunkModifiedEvent.Unloaded(chunk).post();
+			}
+
+			chunk.setLoaded(false);
 			new ChunkModifiedEvent.Unclaimed(chunk).post();
 			removeChunk(pos);
 			return true;
@@ -301,68 +329,80 @@ public class ClaimedChunks
 		return false;
 	}
 
-	public void unclaimAllChunks(ForgeTeam team, @Nullable Integer dim)
+	public void unclaimAllChunks(ForgeTeam team, OptionalInt dim)
 	{
 		for (ClaimedChunk chunk : getTeamChunks(team))
 		{
 			ChunkDimPos pos = chunk.getPos();
-			if (dim == null || dim == pos.dim)
+			if (!dim.isPresent() || dim.getAsInt() == pos.dim)
 			{
-				setLoaded(team, pos, false);
+				if (chunk.isLoaded())
+				{
+					new ChunkModifiedEvent.Unloaded(chunk).post();
+				}
+
+				chunk.setLoaded(false);
 				new ChunkModifiedEvent.Unclaimed(chunk).post();
 				removeChunk(pos);
 			}
 		}
 	}
 
-	public boolean setLoaded(ForgeTeam team, ChunkDimPos pos, boolean loaded)
+	public boolean loadChunk(ForgeTeam team, ChunkDimPos pos)
 	{
 		ClaimedChunk chunk = getChunk(pos);
 
-		if (chunk == null || loaded == chunk.isLoaded() || !chunk.getTeam().equalsTeam(team))
+		if (chunk == null || chunk.isLoaded())
 		{
 			return false;
 		}
 
-		if (loaded)
+		if (!FTBUtilitiesConfig.world.allowDimension(pos.dim))
 		{
-			if (!FTBUtilitiesConfig.world.allowDimension(pos.dim))
+			return false;
+		}
+
+		int max = FTBUTeamData.get(team).getMaxChunkloaderChunks();
+
+		if (max == 0)
+		{
+			return false;
+		}
+
+		int loadedChunks = 0;
+
+		for (ClaimedChunk c : getTeamChunks(team))
+		{
+			if (c.isLoaded())
 			{
-				return false;
-			}
+				loadedChunks++;
 
-			int max = FTBUTeamData.get(team).getMaxChunkloaderChunks();
-
-			if (max == 0)
-			{
-				return false;
-			}
-
-			int loadedChunks = 0;
-
-			for (ClaimedChunk c : getTeamChunks(team))
-			{
-				if (c.isLoaded())
+				if (loadedChunks >= max)
 				{
-					loadedChunks++;
-
-					if (loadedChunks >= max)
-					{
-						return false;
-					}
+					return false;
 				}
 			}
 		}
-		else
-		{
-			new ChunkModifiedEvent.Unloaded(chunk).post();
-		}
 
-		if (chunk.setLoaded(loaded) && loaded)
+		if (chunk.setLoaded(true))
 		{
 			new ChunkModifiedEvent.Loaded(chunk).post();
 		}
 
+		return true;
+	}
+
+	public boolean unloadChunk(ChunkDimPos pos)
+	{
+		ClaimedChunk chunk = getChunk(pos);
+
+		if (chunk == null || !chunk.isLoaded())
+		{
+			return false;
+		}
+
+		new ChunkModifiedEvent.Unloaded(chunk).post();
+		chunk.setLoaded(false);
 		return true;
 	}
 }

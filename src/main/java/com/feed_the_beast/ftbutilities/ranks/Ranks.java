@@ -10,6 +10,7 @@ import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
@@ -22,6 +23,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -97,6 +99,11 @@ public class Ranks
 
 	public Rank getRank(EntityPlayerMP player)
 	{
+		if (player.connection == null || player instanceof FakePlayer)
+		{
+			return getDefaultPlayerRank();
+		}
+
 		return getRank(player.mcServer, player.getGameProfile(), new PlayerContext(player));
 	}
 
@@ -269,23 +276,19 @@ public class Ranks
 
 	public void generateExampleFiles()
 	{
-		List<NodeEntry> allNodes = new ArrayList<>();
-
-		for (NodeEntry node : FTBUtilitiesCommon.CUSTOM_PERM_PREFIX_REGISTRY)
-		{
-			allNodes.add(new NodeEntry(node.getName() + "*", node.getLevel(), node.getDescription()));
-		}
+		List<NodeEntry> allNodes = new ArrayList<>(FTBUtilitiesCommon.CUSTOM_PERM_PREFIX_REGISTRY);
 
 		for (String s : PermissionAPI.getPermissionHandler().getRegisteredNodes())
 		{
 			DefaultPermissionLevel level = DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(s);
 			String desc = PermissionAPI.getPermissionHandler().getNodeDescription(s);
+			Node node = Node.get(s);
 
 			boolean printNode = true;
 
 			for (NodeEntry cprefix : FTBUtilitiesCommon.CUSTOM_PERM_PREFIX_REGISTRY)
 			{
-				if (s.startsWith(cprefix.getName()))
+				if (cprefix.getNode().matches(node))
 				{
 					if (level == cprefix.getLevel() && desc.isEmpty())
 					{
@@ -298,7 +301,7 @@ public class Ranks
 
 			if (printNode)
 			{
-				allNodes.add(new NodeEntry(s, level, desc));
+				allNodes.add(new NodeEntry(node, level, desc));
 			}
 		}
 
@@ -316,7 +319,7 @@ public class Ranks
 
 		for (NodeEntry entry : allNodes)
 		{
-			list.add("<tr><td>" + entry.getName() + "</td><td class='" + entry.getLevel().name().toLowerCase() + "'>" + entry.getLevel() + "</td><td>");
+			list.add("<tr><td>" + entry.getNode() + "</td><td class='" + entry.getLevel().name().toLowerCase() + "'>" + entry.getLevel() + "</td><td>");
 
 			if (entry.getDescription() != null)
 			{

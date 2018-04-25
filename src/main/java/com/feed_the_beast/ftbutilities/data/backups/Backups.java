@@ -418,7 +418,7 @@ public enum Backups
 
 		if (!backups.isEmpty())
 		{
-			backups.sort(Backup.COMPARATOR);
+			backups.sort(null);
 
 			int backupsToKeep = FTBUtilitiesConfig.backups.backups_to_keep;
 

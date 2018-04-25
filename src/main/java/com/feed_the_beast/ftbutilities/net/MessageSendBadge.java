@@ -5,7 +5,8 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbutilities.client.CachedClientData;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
 
@@ -45,8 +46,9 @@ public class MessageSendBadge extends MessageToClient<MessageSendBadge>
 	}
 
 	@Override
-	public void onMessage(MessageSendBadge m, EntityPlayer player)
+	@SideOnly(Side.CLIENT)
+	public void onMessage()
 	{
-		CachedClientData.setBadge(m.playerId, m.badgeURL);
+		CachedClientData.setBadge(playerId, badgeURL);
 	}
 }

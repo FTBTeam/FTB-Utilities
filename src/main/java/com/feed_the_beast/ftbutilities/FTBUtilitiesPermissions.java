@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
@@ -35,17 +36,17 @@ public class FTBUtilitiesPermissions
 {
 	// Display //
 	public static final String DISPLAY_ADMIN_INFO = FTBUtilities.MOD_ID + ".display.admin_info";
-	public static final String BADGE = FTBUtilities.MOD_ID + ".badge";
+	public static final Node BADGE = Node.get(FTBUtilities.MOD_ID + ".badge");
 
 	// Homes //
 	public static final String HOMES_CROSS_DIM = FTBUtilities.MOD_ID + ".homes.cross_dim";
-	public static final String HOMES_MAX = FTBUtilities.MOD_ID + ".homes.max";
+	public static final Node HOMES_MAX = Node.get(FTBUtilities.MOD_ID + ".homes.max");
 	public static final String HOMES_LIST_OTHER = FTBUtilities.MOD_ID + ".homes.list_other";
 	public static final String HOMES_TELEPORT_OTHER = FTBUtilities.MOD_ID + ".homes.teleport_other";
 
 	// Claims //
 	public static final String CLAIMS_CHUNKS_MODIFY_OTHERS = FTBUtilities.MOD_ID + ".claims.modify.others";
-	public static final String CLAIMS_MAX_CHUNKS = FTBUtilities.MOD_ID + ".claims.max_chunks";
+	public static final Node CLAIMS_MAX_CHUNKS = Node.get(FTBUtilities.MOD_ID + ".claims.max_chunks");
 	public static final String CLAIMS_BLOCK_CNB = FTBUtilities.MOD_ID + ".claims.block.cnb";
 	private static final String CLAIMS_BLOCK_EDIT_PREFIX = FTBUtilities.MOD_ID + ".claims.block.edit.";
 	private static final String CLAIMS_BLOCK_INTERACT_PREFIX = FTBUtilities.MOD_ID + ".claims.block.interact.";
@@ -54,7 +55,7 @@ public class FTBUtilitiesPermissions
 	public static final String INFINITE_BACK_USAGE = FTBUtilities.MOD_ID + ".back.infinite";
 
 	// Chunkloader //
-	public static final String CHUNKLOADER_MAX_CHUNKS = FTBUtilities.MOD_ID + ".chunkloader.max_chunks";
+	public static final Node CHUNKLOADER_MAX_CHUNKS = Node.get(FTBUtilities.MOD_ID + ".chunkloader.max_chunks");
 	//public static final String CHUNKLOADER_OFFLINE_TIMER = FTBUtilities.MOD_ID + ".chunkloader.offline_timer";
 	public static final String CHUNKLOADER_LOAD_OFFLINE = FTBUtilities.MOD_ID + ".chunkloader.load_offline";
 
@@ -102,10 +103,10 @@ public class FTBUtilitiesPermissions
 	@SubscribeEvent
 	public static void addCustomPerms(CustomPermissionPrefixesRegistryEvent event)
 	{
-		event.register(new NodeEntry("command.", DefaultPermissionLevel.OP, "Permission for commands, if FTBUtilities command overriding is enabled. If not, this node will be inactive"));
-		event.register(new NodeEntry(CLAIMS_BLOCK_EDIT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can break and place within claimed chunks"));
-		event.register(new NodeEntry(CLAIMS_BLOCK_INTERACT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can right-click within claimed chunks"));
-		event.register(new NodeEntry(CLAIMS_ITEM_PREFIX, DefaultPermissionLevel.ALL, "Permission for items that players can right-click in air within claimed chunks"));
+		event.register(new NodeEntry(Node.COMMAND, DefaultPermissionLevel.OP, "Permission for commands, if FTBUtilities command overriding is enabled. If not, this node will be inactive"));
+		event.register(new NodeEntry(Node.get(CLAIMS_BLOCK_EDIT_PREFIX), DefaultPermissionLevel.OP, "Permission for blocks that players can break and place within claimed chunks"));
+		event.register(new NodeEntry(Node.get(CLAIMS_BLOCK_INTERACT_PREFIX), DefaultPermissionLevel.OP, "Permission for blocks that players can right-click within claimed chunks"));
+		event.register(new NodeEntry(Node.get(CLAIMS_ITEM_PREFIX), DefaultPermissionLevel.ALL, "Permission for items that players can right-click in air within claimed chunks"));
 	}
 
 	private static String formatId(@Nullable IForgeRegistryEntry item)

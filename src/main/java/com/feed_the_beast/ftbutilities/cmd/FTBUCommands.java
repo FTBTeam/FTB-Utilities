@@ -94,11 +94,6 @@ public class FTBUCommands
 			event.add(new CmdHeal());
 		}
 
-		if (FTBUtilitiesConfig.commands.set_hour)
-		{
-			event.add(new CmdSetHour());
-		}
-
 		if (FTBUtilitiesConfig.commands.killall)
 		{
 			event.add(new CmdKillall());

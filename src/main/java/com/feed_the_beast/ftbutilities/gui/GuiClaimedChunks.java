@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbutilities.gui;
 
 import com.feed_the_beast.ftblib.FTBLibLang;
+import com.feed_the_beast.ftblib.events.client.OpenGuideEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
 import com.feed_the_beast.ftblib.lib.EventHandler;
-import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.feed_the_beast.ftblib.lib.client.CachedVertexData;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.Button;
@@ -27,7 +27,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
@@ -283,7 +282,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			});
 		}
 
-		if (Loader.isModLoaded(OtherMods.FTBGUIDES))
+		if (new OpenGuideEvent().post())
 		{
 			panel.add(new ButtonSide(panel, GuiLang.INFO.translate(), GuiIcons.INFO)
 			{
@@ -291,7 +290,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 				public void onClicked(MouseButton button)
 				{
 					GuiHelper.playClickSound();
-					ClientUtils.execClientCommand("/ftbc open_guides /ftbutilities/chunk_claiming");
+					new OpenGuideEvent("/ftbutilities/chunk_claiming").post();
 				}
 			});
 		}

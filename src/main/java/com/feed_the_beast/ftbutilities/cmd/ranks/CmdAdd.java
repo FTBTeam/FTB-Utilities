@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.cmd.ranks;
 
+import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
@@ -21,6 +22,11 @@ public class CmdAdd extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
+		if (Ranks.INSTANCE == null)
+		{
+			throw FTBLibLang.FEATURE_DISABLED_SERVER.commandError();
+		}
+
 		checkArgs(sender, args, 2);
 
 		String id = args[0].toLowerCase();

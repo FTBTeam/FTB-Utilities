@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
-import com.feed_the_beast.ftblib.lib.config.ConfigNull;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
+import com.feed_the_beast.ftblib.lib.config.DefaultRankConfigHandler;
 import com.feed_the_beast.ftblib.lib.config.IRankConfigHandler;
+import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
@@ -22,9 +23,9 @@ public enum FTBUPermissionHandler implements IPermissionHandler, IRankConfigHand
 	INSTANCE;
 
 	@Override
-	public void registerNode(String s, DefaultPermissionLevel defaultPermissionLevel, String s1)
+	public void registerNode(String node, DefaultPermissionLevel level, String desc)
 	{
-		DefaultPermissionHandler.INSTANCE.registerNode(Node.get(s).toString(), defaultPermissionLevel, s1);
+		DefaultPermissionHandler.INSTANCE.registerNode(node, level, desc);
 	}
 
 	@Override
@@ -34,14 +35,19 @@ public enum FTBUPermissionHandler implements IPermissionHandler, IRankConfigHand
 	}
 
 	@Override
-	public boolean hasPermission(GameProfile profile, String permission, @Nullable IContext context)
+	public boolean hasPermission(GameProfile profile, String nodeS, @Nullable IContext context)
 	{
 		if (context != null && context.getWorld() != null && context.getWorld().isRemote)
 		{
 			return true;
 		}
 
-		Node node = Node.get(permission);
+		if (Ranks.INSTANCE == null)
+		{
+			return DefaultPermissionHandler.INSTANCE.hasPermission(profile, nodeS, context);
+		}
+
+		Node node = Node.get(nodeS);
 
 		switch (Ranks.INSTANCE.getRank(context != null && context.getWorld() != null ? context.getWorld().getMinecraftServer() : null, profile, context).hasPermission(node))
 		{
@@ -55,14 +61,40 @@ public enum FTBUPermissionHandler implements IPermissionHandler, IRankConfigHand
 	}
 
 	@Override
-	public String getNodeDescription(String s)
+	public String getNodeDescription(String node)
 	{
-		return DefaultPermissionHandler.INSTANCE.getNodeDescription(s);
+		return DefaultPermissionHandler.INSTANCE.getNodeDescription(node);
+	}
+
+	@Override
+	public void registerRankConfig(RankConfigValueInfo info)
+	{
+		DefaultRankConfigHandler.INSTANCE.registerRankConfig(info);
+	}
+
+	@Override
+	public Collection<RankConfigValueInfo> getRegisteredConfigs()
+	{
+		return DefaultRankConfigHandler.INSTANCE.getRegisteredConfigs();
 	}
 
 	@Override
 	public ConfigValue getConfigValue(MinecraftServer server, GameProfile profile, Node node, @Nullable IContext context)
 	{
-		return Ranks.INSTANCE == null ? ConfigNull.INSTANCE : Ranks.INSTANCE.getRank(server, profile, context).getConfig(node);
+		if (Ranks.INSTANCE == null)
+		{
+			return DefaultRankConfigHandler.INSTANCE.getConfigValue(server, profile, node, context);
+		}
+		else
+		{
+			return Ranks.INSTANCE.getRank(server, profile, context).getConfig(node);
+		}
+	}
+
+	@Nullable
+	@Override
+	public RankConfigValueInfo getInfo(Node node)
+	{
+		return DefaultRankConfigHandler.INSTANCE.getInfo(node);
 	}
 }

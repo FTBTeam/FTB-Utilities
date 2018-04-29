@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
-import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.IHasCache;
@@ -169,7 +168,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
 
 		for (ForgePlayer player : team.getMembers())
 		{
-			cachedMaxClaimChunks += RankConfigAPI.get(player, FTBUtilitiesPermissions.CLAIMS_MAX_CHUNKS).getInt();
+			cachedMaxClaimChunks += player.getRankConfig(FTBUtilitiesPermissions.CLAIMS_MAX_CHUNKS).getInt();
 		}
 
 		return cachedMaxClaimChunks;
@@ -190,7 +189,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
 
 		for (ForgePlayer player : team.getMembers())
 		{
-			cachedMaxChunkloaderChunks += RankConfigAPI.get(player, FTBUtilitiesPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+			cachedMaxChunkloaderChunks += player.getRankConfig(FTBUtilitiesPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
 		}
 
 		return cachedMaxChunkloaderChunks;

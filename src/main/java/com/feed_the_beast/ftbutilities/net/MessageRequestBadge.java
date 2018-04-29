@@ -5,9 +5,7 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.data.Badges;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.UUID;
@@ -19,11 +17,11 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
 	private static class ThreadBadge extends Thread
 	{
 		private final UUID playerId;
-		private final EntityPlayer player;
+		private final EntityPlayerMP player;
 
-		private ThreadBadge(UUID id, EntityPlayer p)
+		private ThreadBadge(UUID id, EntityPlayerMP p)
 		{
-			super("Badge_" + StringUtils.fromUUID(id));
+			super("Badge_" + p.getName());
 			playerId = id;
 			player = p;
 			setDaemon(true);

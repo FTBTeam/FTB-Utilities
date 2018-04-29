@@ -134,7 +134,6 @@ public class FTBUtilitiesConfig
 		public boolean kickme = true;
 		public boolean ranks = true;
 		public boolean heal = true;
-		public boolean set_hour = true;
 		public boolean killall = true;
 		public boolean nbtedit = true;
 		public boolean view_crash = true;

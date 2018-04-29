@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author LatvianModder
@@ -108,19 +109,21 @@ public class FTBULoadedChunkManager implements ForgeChunkManager.LoadingCallback
 		ChunkDimPos pos = chunk.getPos();
 		ForgeChunkManager.Ticket ticket = requestTicket(server, new TicketKey(pos.dim, chunk.getTeam().getName()));
 
-		if (ticket == null)
+		try
 		{
-			return;
+			Objects.requireNonNull(ticket);
+			ForgeChunkManager.forceChunk(ticket, pos.getChunkPos());
+			chunk.forced = true;
+			chunkTickets.put(pos, ticket);
+
+			if (FTBUtilitiesConfig.debugging.log_chunkloading)
+			{
+				FTBUtilities.LOGGER.info(chunk.getTeam().getTitle().getUnformattedText() + " forced " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(null, pos.dim).getUnformattedText());
+			}
 		}
-
-		ChunkPos chunkPos = pos.getChunkPos();
-		ForgeChunkManager.forceChunk(ticket, chunkPos);
-		chunk.forced = true;
-		chunkTickets.put(pos, ticket);
-
-		if (FTBUtilitiesConfig.debugging.log_chunkloading)
+		catch (Exception ex)
 		{
-			FTBUtilities.LOGGER.info(chunk.getTeam().getTitle().getUnformattedText() + " forced " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(null, pos.dim).getUnformattedText());
+			FTBUtilities.LOGGER.error("Failed to force chunk " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(null, pos.dim).getUnformattedText() + " from " + chunk.getTeam().getTitle().getUnformattedText() + ": " + ex);
 		}
 	}
 

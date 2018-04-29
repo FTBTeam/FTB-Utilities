@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 
 import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
-import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
@@ -61,6 +60,7 @@ public class CmdHome extends CmdBase
 
 		if (args[0].equals("list"))
 		{
+			ForgePlayer senderp = getForgePlayer(sender);
 			ForgePlayer p;
 
 			if (args.length >= 2)
@@ -69,10 +69,10 @@ public class CmdHome extends CmdBase
 			}
 			else
 			{
-				p = getForgePlayer(sender);
+				p = senderp;
 			}
 
-			if (sender instanceof EntityPlayer && !p.equalsPlayer(getForgePlayer(sender)) && !PermissionAPI.hasPermission((EntityPlayer) sender, FTBUtilitiesPermissions.HOMES_TELEPORT_OTHER))
+			if (sender instanceof EntityPlayer && !p.equalsPlayer(senderp) && senderp.hasPermission(FTBUtilitiesPermissions.HOMES_TELEPORT_OTHER))
 			{
 				throw FTBLibLang.COMMAND_PERMISSION.commandError();
 			}
@@ -80,7 +80,7 @@ public class CmdHome extends CmdBase
 			FTBUPlayerData data = FTBUPlayerData.get(p);
 
 			Collection<String> list = data.homes.list();
-			ITextComponent msg = new TextComponentString(p.getName() + ": " + list.size() + " / " + RankConfigAPI.get(p, FTBUtilitiesPermissions.HOMES_MAX).getInt() + ": ");
+			ITextComponent msg = new TextComponentString(p.getName() + ": " + list.size() + " / " + p.getRankConfig(FTBUtilitiesPermissions.HOMES_MAX).getInt() + ": ");
 
 			if (!list.isEmpty())
 			{
@@ -137,7 +137,6 @@ public class CmdHome extends CmdBase
 		}
 
 		FTBUPlayerData data = FTBUPlayerData.get(p);
-
 		BlockDimPos pos = data.homes.get(args[0]);
 
 		if (pos == null)

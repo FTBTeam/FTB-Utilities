@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
-import com.feed_the_beast.ftblib.FTBLibCommon;
+import com.feed_the_beast.ftblib.lib.config.ConfigValueInfo;
+import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
@@ -147,6 +148,15 @@ public class Ranks
 		rankNames.remove(builtinOPRank.getName());
 	}
 
+	public void removeNodeFromCaches(Node node)
+	{
+		for (Rank rank : ranks.values())
+		{
+			rank.cachedPermissions.remove(node);
+			rank.cachedConfig.remove(node);
+		}
+	}
+
 	public boolean reload()
 	{
 		File ranksFile;
@@ -234,7 +244,7 @@ public class Ranks
 		return result;
 	}
 
-	private void saveRanks()
+	public void saveRanks()
 	{
 		JsonObject json = new JsonObject();
 		JsonObject o1 = new JsonObject();
@@ -255,6 +265,17 @@ public class Ranks
 
 		json.add("ranks", o1);
 		JsonUtils.toJsonSafe(new File(CommonUtils.folderLocal, "ftbutilities/ranks.json"), json);
+	}
+
+	public void saveAndUpdate(MinecraftServer server, Node node)
+	{
+		removeNodeFromCaches(node);
+		saveRanks();
+
+		for (EntityPlayerMP playerMP : server.getPlayerList().getPlayers())
+		{
+			server.getPlayerList().updatePermissionLevel(playerMP);
+		}
 	}
 
 	private void savePlayerRanks()
@@ -335,9 +356,6 @@ public class Ranks
 		list.add("</table></body></html>");
 		FileUtils.saveSafe(new File(CommonUtils.folderLocal, "ftbutilities/all_permissions.html"), list);
 
-		List<RankConfigValueInfo> sortedRankConfigKeys = new ArrayList<>(FTBLibCommon.RANK_CONFIGS_MIRROR.values());
-		sortedRankConfigKeys.sort(StringUtils.ID_COMPARATOR);
-
 		list = new ArrayList<>();
 		list.add("<html><head><title>Rank Configs</title>");
 		list.add("<style>table{font-family: arial, sans-serif;border-collapse: collapse;}td,th{border:1px solid #666666;text-align: left;padding:8px;}p,ul{margin:4px;}</style>");
@@ -346,9 +364,10 @@ public class Ranks
 
 		List<String> infoList = new ArrayList<>();
 
-		for (RankConfigValueInfo p : sortedRankConfigKeys)
+		for (RankConfigValueInfo info : RankConfigAPI.getHandler().getRegisteredConfigs())
 		{
-			list.add("<tr><td>" + p.id + "</td><td>");
+			ConfigValueInfo p = new ConfigValueInfo(info.node, info.defaultValue);
+			list.add("<tr><td>" + info.node + "</td><td>");
 
 			p.defaultValue.addInfo(p, infoList);
 			List<String> variants = p.defaultValue.getVariants();
@@ -356,7 +375,7 @@ public class Ranks
 			if (!infoList.isEmpty() || !variants.isEmpty())
 			{
 				list.add("<ul><li>Default: " + p.defaultValue.getSerializableElement() + "</li>");
-				list.add("<li>OP Default: " + p.defaultOPValue.getSerializableElement() + "</li>");
+				list.add("<li>OP Default: " + info.defaultOPValue.getSerializableElement() + "</li>");
 
 				for (String s : infoList)
 				{
@@ -391,11 +410,11 @@ public class Ranks
 
 			list.add("</td><td>");
 
-			String info = I18n.translateToLocal(p.displayName.isEmpty() ? ("rank_config." + p.id) : p.displayName);
+			String infoS = I18n.translateToLocal(p.displayName.isEmpty() ? ("rank_config." + info.node) : p.displayName);
 
-			if (!info.isEmpty())
+			if (!infoS.isEmpty())
 			{
-				for (String s1 : info.split("\\\\n"))
+				for (String s1 : infoS.split("\\\\n"))
 				{
 					list.add("<p>" + s1 + "</p>");
 				}

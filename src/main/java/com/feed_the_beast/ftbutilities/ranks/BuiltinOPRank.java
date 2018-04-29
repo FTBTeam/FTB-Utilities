@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
-import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.lib.config.ConfigNull;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
+import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 
@@ -25,7 +25,7 @@ public class BuiltinOPRank extends BuiltinRank
 	@Override
 	public ConfigValue getConfig(Node node)
 	{
-		RankConfigValueInfo config = FTBLibCommon.RANK_CONFIGS_MIRROR.get(node);
+		RankConfigValueInfo config = RankConfigAPI.getHandler().getInfo(node);
 		return config == null ? ConfigNull.INSTANCE : config.defaultOPValue;
 	}
 }

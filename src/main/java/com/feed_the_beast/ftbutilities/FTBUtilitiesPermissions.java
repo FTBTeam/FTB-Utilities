@@ -1,7 +1,8 @@
 package com.feed_the_beast.ftbutilities;
 
-import com.feed_the_beast.ftblib.events.PermissionRegistryEvent;
+import com.feed_the_beast.ftblib.events.RegisterPermissionsEvent;
 import com.feed_the_beast.ftblib.events.RegisterRankConfigEvent;
+import com.feed_the_beast.ftblib.events.RegisterRankConfigHandlerEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
@@ -10,6 +11,7 @@ import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
+import com.feed_the_beast.ftbutilities.ranks.FTBUPermissionHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockDoor;
@@ -60,7 +62,16 @@ public class FTBUtilitiesPermissions
 	public static final String CHUNKLOADER_LOAD_OFFLINE = FTBUtilities.MOD_ID + ".chunkloader.load_offline";
 
 	@SubscribeEvent
-	public static void registerPermissions(PermissionRegistryEvent event)
+	public static void registerRankConfigHandler(RegisterRankConfigHandlerEvent event)
+	{
+		if (FTBUtilitiesConfig.ranks.enabled)
+		{
+			event.setHandler(FTBUPermissionHandler.INSTANCE);
+		}
+	}
+
+	@SubscribeEvent
+	public static void registerPermissions(RegisterPermissionsEvent event)
 	{
 		event.registerNode(DISPLAY_ADMIN_INFO, DefaultPermissionLevel.OP, "Display 'Admin' in Server Info");
 		event.registerNode(HOMES_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /home to teleport to/from another dimension");
@@ -91,7 +102,7 @@ public class FTBUtilitiesPermissions
 	}
 
 	@SubscribeEvent
-	public static void addConfigs(RegisterRankConfigEvent event)
+	public static void registerConfigs(RegisterRankConfigEvent event)
 	{
 		event.register(BADGE, new ConfigString(""), new ConfigString(""));
 		event.register(HOMES_MAX, new ConfigInt(1, 0, 30000), new ConfigInt(100));
@@ -101,7 +112,7 @@ public class FTBUtilitiesPermissions
 	}
 
 	@SubscribeEvent
-	public static void addCustomPerms(CustomPermissionPrefixesRegistryEvent event)
+	public static void registerCustomPermissionPrefixes(CustomPermissionPrefixesRegistryEvent event)
 	{
 		event.register(new NodeEntry(Node.COMMAND, DefaultPermissionLevel.OP, "Permission for commands, if FTBUtilities command overriding is enabled. If not, this node will be inactive"));
 		event.register(new NodeEntry(Node.get(CLAIMS_BLOCK_EDIT_PREFIX), DefaultPermissionLevel.OP, "Permission for blocks that players can break and place within claimed chunks"));

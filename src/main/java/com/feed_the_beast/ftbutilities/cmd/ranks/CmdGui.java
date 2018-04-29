@@ -19,6 +19,6 @@ public class CmdGui extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		throw FTBLibLang.FEATURE_DISABLED.commandError();
+		throw FTBLibLang.WIP.commandError();
 	}
 }

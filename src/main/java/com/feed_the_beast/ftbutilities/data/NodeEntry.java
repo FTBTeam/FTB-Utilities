@@ -37,6 +37,11 @@ public final class NodeEntry
 		return desc;
 	}
 
+	public String toString()
+	{
+		return node.toString();
+	}
+
 	public int hashCode()
 	{
 		return node.hashCode();

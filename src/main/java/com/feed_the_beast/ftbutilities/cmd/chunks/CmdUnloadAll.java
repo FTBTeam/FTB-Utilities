@@ -49,7 +49,7 @@ public class CmdUnloadAll extends CmdBase
 	{
 		if (ClaimedChunks.instance == null)
 		{
-			throw FTBLibLang.FEATURE_DISABLED.commandError();
+			throw FTBLibLang.FEATURE_DISABLED_SERVER.commandError();
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);

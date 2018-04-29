@@ -14,25 +14,25 @@ public class FTBUNetHandler
 
 	public static void init()
 	{
-		GENERAL.register(1, new MessageBackupProgress());
-		GENERAL.register(2, new MessageSendWarpList());
+		GENERAL.register(new MessageBackupProgress());
+		GENERAL.register(new MessageSendWarpList());
 
-		BADGES.register(1, new MessageRequestBadge());
-		BADGES.register(2, new MessageSendBadge());
+		BADGES.register(new MessageRequestBadge());
+		BADGES.register(new MessageSendBadge());
 
-		CLAIMS.register(1, new MessageOpenClaimedChunksGui());
-		CLAIMS.register(2, new MessageClaimedChunksRequest());
-		CLAIMS.register(3, new MessageClaimedChunksUpdate());
-		CLAIMS.register(4, new MessageClaimedChunksModify());
+		CLAIMS.register(new MessageOpenClaimedChunksGui());
+		CLAIMS.register(new MessageClaimedChunksRequest());
+		CLAIMS.register(new MessageClaimedChunksUpdate());
+		CLAIMS.register(new MessageClaimedChunksModify());
 
-		NBTEDIT.register(1, new MessageEditNBT());
-		NBTEDIT.register(2, new MessageEditNBTResponse());
-		NBTEDIT.register(3, new MessageEditNBTRequest());
+		NBTEDIT.register(new MessageEditNBT());
+		NBTEDIT.register(new MessageEditNBTResponse());
+		NBTEDIT.register(new MessageEditNBTRequest());
 
-		VIEW_CRASH.register(1, new MessageViewCrash());
-		VIEW_CRASH.register(2, new MessageViewCrashList());
+		VIEW_CRASH.register(new MessageViewCrash());
+		VIEW_CRASH.register(new MessageViewCrashList());
 
-		STATS.register(1, new MessageSendLeaderboardList());
-		STATS.register(2, new MessageSendLeaderboard());
+		STATS.register(new MessageSendLeaderboardList());
+		STATS.register(new MessageSendLeaderboard());
 	}
 }

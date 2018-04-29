@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbutilities.cmd.ranks;
 
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -26,11 +25,11 @@ public class CmdRanks extends CmdTreeBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		if (args.length == 0)
+		/*if (args.length == 0)
 		{
 			getCommandMap().get("gui").execute(server, sender, StringUtils.shiftArray(args));
 		}
-		else
+		else*/
 		{
 			super.execute(server, sender, args);
 		}

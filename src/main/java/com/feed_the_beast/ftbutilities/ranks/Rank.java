@@ -1,17 +1,17 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
-import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.lib.config.ConfigNull;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
+import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
+import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -45,27 +45,29 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 		return parent == null ? ranks.builtinPlayerRank : parent;
 	}
 
-	public JsonElement getMatchingJson(Node node)
+	private Event.Result getPermissionRaw(Node node)
 	{
 		JsonElement json = permissions.get(node);
 
-		if (json != null)
+		if (!JsonUtils.isNull(json) && json.isJsonPrimitive() && json.getAsJsonPrimitive().isBoolean())
 		{
-			return json;
+			return json.getAsBoolean() ? Event.Result.ALLOW : Event.Result.DENY;
 		}
+
+		Event.Result result = Event.Result.DEFAULT;
 
 		int parts = 0;
 
 		for (Map.Entry<Node, JsonElement> entry : permissions.entrySet())
 		{
-			if (entry.getKey().getPartCount() > parts && entry.getKey().matches(node))
+			if (entry.getKey().getPartCount() > parts && entry.getValue().isJsonPrimitive() && entry.getValue().getAsJsonPrimitive().isBoolean() && entry.getKey().matches(node))
 			{
 				parts = entry.getKey().getPartCount();
-				json = entry.getValue();
+				result = entry.getValue().getAsBoolean() ? Event.Result.ALLOW : Event.Result.DENY;
 			}
 		}
 
-		return json != null ? json : parent == null ? JsonNull.INSTANCE : parent.getMatchingJson(node);
+		return result != Event.Result.DEFAULT ? result : parent == null ? Event.Result.DEFAULT : parent.getPermissionRaw(node);
 	}
 
 	public Event.Result hasPermission(Node node)
@@ -74,18 +76,23 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 
 		if (r == null)
 		{
-			r = Event.Result.DEFAULT;
-			JsonElement json = getMatchingJson(node);
-
-			if (json.isJsonPrimitive() && json.getAsJsonPrimitive().isBoolean())
-			{
-				r = json.getAsBoolean() ? Event.Result.ALLOW : Event.Result.DENY;
-			}
-
+			r = getPermissionRaw(node);
 			cachedPermissions.put(node, r);
 		}
 
 		return r;
+	}
+
+	private JsonElement getConfigRaw(Node node)
+	{
+		JsonElement json = permissions.get(node);
+
+		if (!JsonUtils.isNull(json))
+		{
+			return json;
+		}
+
+		return parent == null ? JsonNull.INSTANCE : parent.getConfigRaw(node);
 	}
 
 	public ConfigValue getConfig(Node node)
@@ -95,21 +102,22 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 		if (e == null)
 		{
 			e = ConfigNull.INSTANCE;
-			JsonElement json = getMatchingJson(node);
+			JsonElement json = getConfigRaw(node);
 
 			if (!json.isJsonNull())
 			{
-				RankConfigValueInfo rconfig = FTBLibCommon.RANK_CONFIGS_MIRROR.get(node);
+				RankConfigValueInfo info = RankConfigAPI.getHandler().getInfo(node);
 
-				if (rconfig != null)
+				if (info != null)
 				{
-					e = rconfig.defaultValue.copy();
+					e = info.defaultValue.copy();
 					e.fromJson(json);
 				}
 			}
+
+			cachedConfig.put(node, e);
 		}
 
-		cachedConfig.put(node, e);
 		return e;
 	}
 
@@ -175,7 +183,7 @@ public class Rank extends FinalIDObject implements IJsonSerializable
 					String id = a.get(i).getAsString();
 					char firstChar = id.charAt(0);
 					String key = (firstChar == '-' || firstChar == '+' || firstChar == '~') ? id.substring(1) : id;
-					permissions.put(Node.get(key), new JsonPrimitive(firstChar != '-'));
+					permissions.put(Node.get(key), firstChar == '-' ? JsonUtils.JSON_FALSE : JsonUtils.JSON_TRUE);
 				}
 			}
 			else

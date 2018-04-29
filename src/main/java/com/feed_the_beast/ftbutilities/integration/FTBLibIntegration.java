@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.events.RegisterAdminPanelActionsEvent;
 import com.feed_the_beast.ftblib.events.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftblib.events.RegisterSyncDataEvent;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
+import com.feed_the_beast.ftblib.events.client.CustomClickEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
@@ -16,6 +17,7 @@ import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerLeftEvent;
 import com.feed_the_beast.ftblib.events.team.RegisterTeamGuiActionsEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
+import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.data.Action;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
@@ -35,6 +37,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.OptionalInt;
 
@@ -226,5 +230,28 @@ public class FTBLibIntegration
 			{
 			}
 		});*/
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public static void onCustomClick(CustomClickEvent event)
+	{
+		if (event.getID().getResourceDomain().equals(FTBUtilities.MOD_ID))
+		{
+			switch (event.getID().getResourcePath())
+			{
+				case "toggle_gamemode":
+					ClientUtils.execClientCommand("/gamemode " + (ClientUtils.MC.player.capabilities.isCreativeMode ? "survival" : "creative"));
+					break;
+				case "daytime":
+					ClientUtils.execClientCommand("/time add " + (24000L - (ClientUtils.MC.world.getWorldTime() % 24000L) + 6000));
+					break;
+				case "nighttime":
+					ClientUtils.execClientCommand("/time add " + (24000L - (ClientUtils.MC.world.getWorldTime() % 24000L) + 18000));
+					break;
+			}
+
+			event.setCanceled(true);
+		}
 	}
 }

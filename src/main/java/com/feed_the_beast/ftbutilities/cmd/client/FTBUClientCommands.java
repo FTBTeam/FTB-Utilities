@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.cmd.client;
 
-import com.feed_the_beast.ftblib.events.RegisterFTBClientCommandsEvent;
+import com.feed_the_beast.ftblib.FTBLibConfig;
+import com.feed_the_beast.ftblib.events.client.RegisterFTBClientCommandsEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -15,7 +16,10 @@ public class FTBUClientCommands
 	public static void registerCommands(RegisterFTBClientCommandsEvent event)
 	{
 		event.add(new CmdShrug());
-		event.add(new CmdToggleGamemode());
-		event.add(new CmdScanItems());
+
+		if (FTBLibConfig.debugging.special_commands)
+		{
+			event.add(new CmdScanItems());
+		}
 	}
 }

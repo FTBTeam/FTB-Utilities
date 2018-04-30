@@ -5,14 +5,13 @@
 		"x": 700,
 		"click": "custom:ftbutilities:leaderboards_gui",
 		"required_server_mods": ["ftbutilities"],
-		"config": true
+		"loading_screen": true
 	},
 	"claimed_chunks": {
 		"group": "ftblib:util",
 		"icon": "ftblib:icons/map",
 		"x": 0,
 		"click": "custom:ftbutilities:claims_gui",
-		"config": true,
 		"required_server_mods": ["ftbutilities"],
 		"loading_screen": true
 	},
@@ -21,7 +20,6 @@
 		"icon": "ftblib:icons/bin",
 		"x": 500,
 		"click": "command:/trash_can",
-		"config": true,
 		"required_mods": ["ftbutilities"],
 		"loading_screen": true
 	},
@@ -30,7 +28,6 @@
 		"icon": "ftblib:icons/money_bag",
 		"x": 100,
 		"click": "custom:ftbutilities:shop_gui",
-		"config": true,
 		"required_server_mods": ["ftbutilities"],
 		"dev_only": true,
 		"loading_screen": true
@@ -40,7 +37,6 @@
 		"icon": "ftblib:icons/heart",
 		"x": 140,
 		"click": "command:/heal",
-		"config": true,
 		"required_server_mods": ["ftbutilities"],
 		"hide_with_nei": true,
 		"requires_op": true
@@ -50,7 +46,6 @@
 		"icon": ["ftblib:icons/blue_button", "ftblib:textures/icons/toggle_gamemode.png"],
 		"x": 100,
 		"click": "custom:ftbutilities:toggle_gamemode",
-		"config": true,
 		"hide_with_nei": true,
 		"requires_op": true
 	},
@@ -68,7 +63,6 @@
 		"icon": ["ftblib:icons/blue_button", "ftblib:textures/icons/toggle_day.png"],
 		"x": 120,
 		"click": "custom:ftbutilities:daytime",
-		"config": true,
 		"required_server_mods": ["ftbutilities"],
 		"hide_with_nei": true,
 		"requires_op": true
@@ -78,7 +72,6 @@
 		"icon": ["ftblib:icons/blue_button", "ftblib:textures/icons/toggle_night.png"],
 		"x": 130,
 		"click": "custom:ftbutilities:nighttime",
-		"config": true,
 		"required_server_mods": ["ftbutilities"],
 		"hide_with_nei": true,
 		"requires_op": true

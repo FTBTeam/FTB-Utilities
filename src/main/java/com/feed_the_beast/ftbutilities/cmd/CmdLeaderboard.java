@@ -7,11 +7,8 @@ import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
-import com.feed_the_beast.ftbutilities.net.MessageSendLeaderboard;
-import com.feed_the_beast.ftbutilities.net.MessageSendLeaderboardList;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -23,9 +20,7 @@ import net.minecraft.util.text.event.HoverEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author LatvianModder
@@ -75,30 +70,6 @@ public class CmdLeaderboard extends CmdBase
 			}
 
 			sender.sendMessage(component);
-		}
-		else if (args[0].equals("gui"))
-		{
-			EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-
-			if (args.length == 1)
-			{
-				Map<ResourceLocation, ITextComponent> map = new LinkedHashMap<>();
-
-				for (Leaderboard leaderboard : FTBUtilitiesCommon.LEADERBOARDS.values())
-				{
-					map.put(leaderboard.id, leaderboard.getTitle());
-				}
-
-				new MessageSendLeaderboardList(map).sendTo(player);
-				return;
-			}
-
-			Leaderboard leaderboard = FTBUtilitiesCommon.LEADERBOARDS.get(new ResourceLocation(args[1]));
-
-			if (leaderboard != null)
-			{
-				new MessageSendLeaderboard(player, leaderboard).sendTo(player);
-			}
 		}
 		else if (FTBUtilitiesCommon.LEADERBOARDS.get(new ResourceLocation(args[0])) != null)
 		{

@@ -51,6 +51,7 @@ public class FTBUtilitiesCommon
 
 		ForgeChunkManager.setForcedChunkLoadingCallback(FTBUtilities.INST, FTBULoadedChunkManager.INSTANCE);
 		new CustomPermissionPrefixesRegistryEvent(CUSTOM_PERM_PREFIX_REGISTRY::add).post();
+		new LeaderboardRegistryEvent(leaderboard -> LEADERBOARDS.put(leaderboard.id, leaderboard)).post();
 	}
 
 	public void init()
@@ -59,6 +60,5 @@ public class FTBUtilitiesCommon
 
 	public void postInit()
 	{
-		new LeaderboardRegistryEvent(leaderboard -> LEADERBOARDS.put(leaderboard.id, leaderboard)).post();
 	}
 }

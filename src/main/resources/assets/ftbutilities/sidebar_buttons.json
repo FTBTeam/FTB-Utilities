@@ -1,18 +1,9 @@
 {
-	"chats": {
-		"group": "ftblib:info",
-		"icon": "ftblib:icons/chat",
-		"x": 500,
-		"click": "command:/ftbc open_chats",
-		"required_server_mods": ["ftbutilities"],
-		"config": true,
-		"dev_only": true
-	},
 	"leaderboards": {
 		"group": "ftblib:info",
 		"icon": "item:minecraft:sign",
 		"x": 700,
-		"click": "command:/ftb leaderboards gui",
+		"click": "custom:ftbutilities:leaderboards_gui",
 		"required_server_mods": ["ftbutilities"],
 		"config": true
 	},
@@ -20,7 +11,7 @@
 		"group": "ftblib:util",
 		"icon": "ftblib:icons/map",
 		"x": 0,
-		"click": "command:/ftb chunks gui",
+		"click": "custom:ftbutilities:claims_gui",
 		"config": true,
 		"required_server_mods": ["ftbutilities"],
 		"loading_screen": true
@@ -29,7 +20,7 @@
 		"group": "ftblib:util",
 		"icon": "ftblib:icons/bin",
 		"x": 500,
-		"click": "command:/ftb trash_can",
+		"click": "command:/trash_can",
 		"config": true,
 		"required_mods": ["ftbutilities"],
 		"loading_screen": true
@@ -38,7 +29,7 @@
 		"group": "ftblib:util",
 		"icon": "ftblib:icons/money_bag",
 		"x": 100,
-		"click": "command:/ftb shop gui",
+		"click": "custom:ftbutilities:shop_gui",
 		"config": true,
 		"required_server_mods": ["ftbutilities"],
 		"dev_only": true,

@@ -12,15 +12,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Map;
 
-public class MessageSendLeaderboardList extends MessageToClient
+public class MessageLeaderboardListResponse extends MessageToClient
 {
 	private Map<ResourceLocation, ITextComponent> leaderboards;
 
-	public MessageSendLeaderboardList()
+	public MessageLeaderboardListResponse()
 	{
 	}
 
-	public MessageSendLeaderboardList(Map<ResourceLocation, ITextComponent> l)
+	public MessageLeaderboardListResponse(Map<ResourceLocation, ITextComponent> l)
 	{
 		leaderboards = l;
 	}

@@ -30,7 +30,9 @@ import com.feed_the_beast.ftbutilities.data.Badges;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUTeamData;
+import com.feed_the_beast.ftbutilities.gui.GuiClaimedChunks;
 import com.feed_the_beast.ftbutilities.handlers.FTBUSyncData;
+import com.feed_the_beast.ftbutilities.net.MessageLeaderboardList;
 import com.feed_the_beast.ftbutilities.net.MessageViewCrashList;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -254,6 +256,13 @@ public class FTBLibIntegration
 					break;
 				case "nighttime":
 					ClientUtils.execClientCommand("/time add " + (24000L - (ClientUtils.MC.world.getWorldTime() % 24000L) + 18000));
+					break;
+				case "claims_gui":
+					GuiClaimedChunks.instance = new GuiClaimedChunks();
+					GuiClaimedChunks.instance.openGui();
+					break;
+				case "leaderboards_gui":
+					new MessageLeaderboardList().sendToServer();
 					break;
 			}
 

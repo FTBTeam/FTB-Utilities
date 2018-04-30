@@ -20,7 +20,7 @@ public class MessageEditNBTRequest extends MessageToClient
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.NBTEDIT;
+		return FTBUNetHandler.FILES;
 	}
 
 	@Override

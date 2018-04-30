@@ -9,6 +9,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
+import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
 import com.feed_the_beast.ftbutilities.ranks.FTBUPermissionHandler;
@@ -62,6 +63,7 @@ public class FTBUtilitiesPermissions
 	// Other //
 	public static final String INFINITE_BACK_USAGE = FTBUtilities.MOD_ID + ".back.infinite";
 	public static final String VIEW_CRASH_REPORTS = "admin_panel." + FTBUtilities.MOD_ID + ".view_crash_reports";
+	private static final String LEADERBOARD_PREFIX = "leaderboard.";
 
 	@SubscribeEvent
 	public static void registerRankConfigHandler(RegisterRankConfigHandlerEvent event)
@@ -102,6 +104,11 @@ public class FTBUtilitiesPermissions
 		event.registerNode(CLAIMS_BLOCK_EDIT_PREFIX + "openblocks.grave", DefaultPermissionLevel.ALL);
 		event.registerNode(CLAIMS_ITEM_PREFIX + formatId(Items.END_CRYSTAL), DefaultPermissionLevel.OP);
 		event.registerNode(CLAIMS_ITEM_PREFIX + "forge.bucketfilled", DefaultPermissionLevel.OP);
+
+		for (Leaderboard leaderboard : FTBUtilitiesCommon.LEADERBOARDS.values())
+		{
+			event.registerNode(getLeaderboardNode(leaderboard), DefaultPermissionLevel.ALL);
+		}
 	}
 
 	@SubscribeEvent
@@ -121,6 +128,7 @@ public class FTBUtilitiesPermissions
 		event.register(new NodeEntry(Node.get(CLAIMS_BLOCK_EDIT_PREFIX), DefaultPermissionLevel.OP, "Permission for blocks that players can break and place within claimed chunks"));
 		event.register(new NodeEntry(Node.get(CLAIMS_BLOCK_INTERACT_PREFIX), DefaultPermissionLevel.OP, "Permission for blocks that players can right-click within claimed chunks"));
 		event.register(new NodeEntry(Node.get(CLAIMS_ITEM_PREFIX), DefaultPermissionLevel.ALL, "Permission for items that players can right-click in air within claimed chunks"));
+		event.register(new NodeEntry(Node.get(LEADERBOARD_PREFIX), DefaultPermissionLevel.ALL, "Permission for leaderboards that players can view"));
 	}
 
 	private static String formatId(@Nullable IForgeRegistryEntry item)
@@ -146,5 +154,10 @@ public class FTBUtilitiesPermissions
 			default:
 				return false;
 		}
+	}
+
+	public static String getLeaderboardNode(Leaderboard leaderboard)
+	{
+		return LEADERBOARD_PREFIX + leaderboard.id.getResourceDomain() + "." + leaderboard.id.getResourcePath();
 	}
 }

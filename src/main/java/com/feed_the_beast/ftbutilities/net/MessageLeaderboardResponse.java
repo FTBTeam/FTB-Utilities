@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageSendLeaderboard extends MessageToClient
+public class MessageLeaderboardResponse extends MessageToClient
 {
 	private static final DataOut.Serializer<LeaderboardValue> VALUE_SERIALIZER = (data, object) -> {
 		data.writeString(object.username);
@@ -38,11 +38,11 @@ public class MessageSendLeaderboard extends MessageToClient
 	private ITextComponent title;
 	private List<LeaderboardValue> values;
 
-	public MessageSendLeaderboard()
+	public MessageLeaderboardResponse()
 	{
 	}
 
-	public MessageSendLeaderboard(EntityPlayerMP player, Leaderboard leaderboard)
+	public MessageLeaderboardResponse(EntityPlayerMP player, Leaderboard leaderboard)
 	{
 		title = leaderboard.getTitle();
 		values = new ArrayList<>();

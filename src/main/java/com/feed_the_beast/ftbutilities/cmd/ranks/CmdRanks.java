@@ -14,7 +14,6 @@ public class CmdRanks extends CmdTreeBase
 	public CmdRanks()
 	{
 		super("ranks");
-		addSubcommand(new CmdGui());
 		addSubcommand(new CmdAdd());
 		addSubcommand(new CmdGet());
 		addSubcommand(new CmdSet());

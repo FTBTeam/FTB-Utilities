@@ -46,7 +46,7 @@ public class GuiViewCrashList extends GuiButtonListBase
 	@Override
 	public String getTitle()
 	{
-		return I18n.format("admin_panel.ftbutilities.view_crash_reports");
+		return I18n.format("sidebar_button.ftblib.admin_panel") + " > " + I18n.format("admin_panel.ftbutilities.view_crash_reports");
 	}
 
 	@Override

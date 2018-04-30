@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbutilities.gui;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
@@ -8,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
+import com.feed_the_beast.ftbutilities.net.MessageLeaderboard;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -37,7 +37,7 @@ public class GuiLeaderboardList extends GuiButtonListBase
 				public void onClicked(MouseButton button)
 				{
 					GuiHelper.playClickSound();
-					ClientUtils.execClientCommand("/ftb leaderboards gui " + entry.getKey());
+					new MessageLeaderboard(entry.getKey()).sendToServer();
 				}
 			});
 		}

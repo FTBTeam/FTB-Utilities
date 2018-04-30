@@ -239,7 +239,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			}
 		});
 
-		if (maxClaimedChunks != -1)
+		if (maxClaimedChunks >= 0)
 		{
 			panel.add(new ButtonSide(panel, FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL_DIM.translate(currentDimName), GuiIcons.REMOVE)
 			{
@@ -299,11 +299,18 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	@Override
 	public void addCornerText(List<String> list, Corner corner)
 	{
-		if (maxClaimedChunks == -1)
+		if (maxClaimedChunks < 0)
 		{
 			if (corner == Corner.BOTTOM_RIGHT)
 			{
-				list.add(TextFormatting.RED + FTBLibLang.FEATURE_DISABLED_SERVER.translate());
+				if (maxClaimedChunks == -2)
+				{
+					list.add(TextFormatting.RED + FTBLibLang.TEAM_NO_TEAM.translate());
+				}
+				else
+				{
+					list.add(TextFormatting.RED + FTBLibLang.FEATURE_DISABLED_SERVER.translate());
+				}
 			}
 
 			return;

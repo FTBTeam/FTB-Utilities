@@ -155,9 +155,13 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
 
 	public int getMaxClaimChunks()
 	{
-		if (ClaimedChunks.instance == null || !team.isValid())
+		if (ClaimedChunks.instance == null)
 		{
 			return -1;
+		}
+		else if (!team.isValid())
+		{
+			return -2;
 		}
 		else if (cachedMaxClaimChunks >= 0)
 		{
@@ -176,9 +180,13 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
 
 	public int getMaxChunkloaderChunks()
 	{
-		if (ClaimedChunks.instance == null || !team.isValid())
+		if (ClaimedChunks.instance == null)
 		{
 			return -1;
+		}
+		else if (!team.isValid())
+		{
+			return -2;
 		}
 		else if (cachedMaxChunkloaderChunks >= 0)
 		{

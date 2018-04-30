@@ -32,7 +32,7 @@ public class MessageEditNBTResponse extends MessageToServer
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.NBTEDIT;
+		return FTBUNetHandler.FILES;
 	}
 
 	@Override

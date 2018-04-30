@@ -32,7 +32,7 @@ public class MessageViewCrashResponse extends MessageToClient
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.VIEW_CRASH;
+		return FTBUNetHandler.FILES;
 	}
 
 	@Override

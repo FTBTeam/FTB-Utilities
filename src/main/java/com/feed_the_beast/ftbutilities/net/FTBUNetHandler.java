@@ -9,7 +9,7 @@ public class FTBUNetHandler
 	static final NetworkWrapper BADGES = NetworkWrapper.newWrapper(FTBUtilities.MOD_ID + "_badges");
 	static final NetworkWrapper CLAIMS = NetworkWrapper.newWrapper(FTBUtilities.MOD_ID + "_claims");
 	static final NetworkWrapper NBTEDIT = NetworkWrapper.newWrapper(FTBUtilities.MOD_ID + "_nbtedit");
-	static final NetworkWrapper VIEW_CRASH = NetworkWrapper.newWrapper(FTBUtilities.MOD_ID + "_crash");
+	static final NetworkWrapper FILES = NetworkWrapper.newWrapper(FTBUtilities.MOD_ID + "_files");
 	static final NetworkWrapper STATS = NetworkWrapper.newWrapper(FTBUtilities.MOD_ID + "_stats");
 
 	public static void init()
@@ -29,9 +29,9 @@ public class FTBUNetHandler
 		NBTEDIT.register(new MessageEditNBTResponse());
 		NBTEDIT.register(new MessageEditNBTRequest());
 
-		VIEW_CRASH.register(new MessageViewCrashList());
-		VIEW_CRASH.register(new MessageViewCrash());
-		VIEW_CRASH.register(new MessageViewCrashResponse());
+		FILES.register(new MessageViewCrashList());
+		FILES.register(new MessageViewCrash());
+		FILES.register(new MessageViewCrashResponse());
 
 		STATS.register(new MessageSendLeaderboardList());
 		STATS.register(new MessageSendLeaderboard());

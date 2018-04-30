@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
+import com.feed_the_beast.ftblib.lib.config.ConfigNull;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.DefaultRankConfigHandler;
 import com.feed_the_beast.ftblib.lib.config.IRankConfigHandler;
@@ -81,14 +82,14 @@ public enum FTBUPermissionHandler implements IPermissionHandler, IRankConfigHand
 	@Override
 	public ConfigValue getConfigValue(MinecraftServer server, GameProfile profile, Node node, @Nullable IContext context)
 	{
-		if (Ranks.INSTANCE == null)
+		ConfigValue value = ConfigNull.INSTANCE;
+
+		if (Ranks.INSTANCE != null)
 		{
-			return DefaultRankConfigHandler.INSTANCE.getConfigValue(server, profile, node, context);
+			value = Ranks.INSTANCE.getRank(server, profile, context).getConfig(node);
 		}
-		else
-		{
-			return Ranks.INSTANCE.getRank(server, profile, context).getConfig(node);
-		}
+
+		return value.isNull() ? DefaultRankConfigHandler.INSTANCE.getConfigValue(server, profile, node, context) : value;
 	}
 
 	@Nullable

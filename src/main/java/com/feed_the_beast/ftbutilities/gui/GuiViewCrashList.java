@@ -1,13 +1,14 @@
 package com.feed_the_beast.ftbutilities.gui;
 
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
+import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import com.feed_the_beast.ftbutilities.net.MessageViewCrash;
 import net.minecraft.client.resources.I18n;
 
 import java.util.ArrayList;
@@ -29,7 +30,8 @@ public class GuiViewCrashList extends GuiButtonListBase
 		@Override
 		public void onClicked(MouseButton button)
 		{
-			ClientUtils.execClientCommand("/ftb view_crash " + getTitle());
+			GuiHelper.playClickSound();
+			new MessageViewCrash(getTitle()).sendToServer();
 		}
 	}
 
@@ -44,7 +46,7 @@ public class GuiViewCrashList extends GuiButtonListBase
 	@Override
 	public String getTitle()
 	{
-		return I18n.format("sidebar_button.ftbutilities.view_crash");
+		return I18n.format("admin_panel.ftbutilities.view_crash_reports");
 	}
 
 	@Override

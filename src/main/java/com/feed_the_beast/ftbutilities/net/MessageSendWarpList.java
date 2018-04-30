@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
+public class MessageSendWarpList extends MessageToClient
 {
 	public static class WarpItem implements Comparable<WarpItem>
 	{

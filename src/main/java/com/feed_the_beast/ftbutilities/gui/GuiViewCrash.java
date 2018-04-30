@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.gui;
 
+import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
@@ -12,9 +13,22 @@ import com.feed_the_beast.ftblib.lib.gui.TextField;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
+import com.feed_the_beast.ftblib.lib.io.DataReader;
+import com.feed_the_beast.ftblib.lib.io.HttpDataReader;
+import com.feed_the_beast.ftblib.lib.io.RequestMethod;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
+import com.google.gson.JsonElement;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,6 +38,44 @@ import java.util.List;
  */
 public class GuiViewCrash extends GuiBase
 {
+	public class ThreadUploadCrash extends Thread
+	{
+		@Override
+		public void run()
+		{
+			try
+			{
+				File urlFile = new File(CommonUtils.folderLocal, "ftbutilities/uploaded_crash_reports/crash-" + name.text.get(0) + ".txt");
+				String url = DataReader.get(urlFile).safeString();
+
+				if (url.isEmpty())
+				{
+					URL hastebinURL = new URL("https://hastebin.com/documents");
+					JsonElement json = DataReader.get(hastebinURL, RequestMethod.POST, DataReader.TEXT, new HttpDataReader.HttpDataOutput.StringOutput(text), ClientUtils.MC.getProxy()).json();
+
+					if (json.isJsonObject() && json.getAsJsonObject().has("key"))
+					{
+						url = "https://hastebin.com/" + json.getAsJsonObject().get("key").getAsString() + ".md";
+						FileUtils.saveSafe(urlFile, url);
+					}
+				}
+
+				if (!url.isEmpty())
+				{
+					ITextComponent link = FTBLibLang.CLICK_HERE.textComponent(null);
+					link.getStyle().setColor(TextFormatting.GOLD);
+					link.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(url)));
+					link.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
+					FTBUtilitiesLang.UPLOADED_CRASH.sendMessage(ClientUtils.MC.player, link);
+				}
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+		}
+	}
+
 	private final List<String> text;
 	private final TextField name;
 	private final Panel textPanel;
@@ -80,7 +132,7 @@ public class GuiViewCrash extends GuiBase
 		scrollV = new PanelScrollBar(this, textPanel);
 		scrollV.setCanAlwaysScroll(true);
 		scrollV.setCanAlwaysScrollPlane(false);
-		scrollV.setScrollStep(10);
+		scrollV.setScrollStep(30);
 
 		close = new SimpleButton(this, GuiLang.CLOSE, GuiIcons.CLOSE, (widget, button) -> widget.getGui().closeGui())
 		{
@@ -93,7 +145,7 @@ public class GuiViewCrash extends GuiBase
 
 		upload = new SimpleButton(this, FTBUtilitiesLang.UPLOAD_CRASH, GuiIcons.UP, (widget, button) ->
 		{
-			ClientUtils.execClientCommand("/ftb view_crash " + name.text.get(0) + " upload");
+			new ThreadUploadCrash().start();
 			widget.getGui().closeGui(false);
 		})
 		{

@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author LatvianModder
  */
-public class MessageBackupProgress extends MessageToClient<MessageBackupProgress>
+public class MessageBackupProgress extends MessageToClient
 {
 	public int current, total;
 

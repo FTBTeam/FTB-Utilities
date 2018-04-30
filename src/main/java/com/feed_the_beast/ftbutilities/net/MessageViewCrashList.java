@@ -15,7 +15,7 @@ import java.util.Collection;
 /**
  * @author LatvianModder
  */
-public class MessageViewCrashList extends MessageToClient<MessageViewCrashList>
+public class MessageViewCrashList extends MessageToClient
 {
 	private Collection<String> list;
 

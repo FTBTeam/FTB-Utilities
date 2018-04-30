@@ -13,7 +13,7 @@ import net.minecraft.util.math.ChunkPos;
 
 import java.util.Collection;
 
-public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedChunksModify>
+public class MessageClaimedChunksModify extends MessageToServer
 {
 	public static final int CLAIM = 0;
 	public static final int UNCLAIM = 1;

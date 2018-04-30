@@ -10,7 +10,7 @@ import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-public class MessageClaimedChunksRequest extends MessageToServer<MessageClaimedChunksRequest>
+public class MessageClaimedChunksRequest extends MessageToServer
 {
 	private int startX, startZ;
 

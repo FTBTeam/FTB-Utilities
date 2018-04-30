@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author LatvianModder
  */
-public class MessageEditNBTRequest extends MessageToClient<MessageEditNBTRequest>
+public class MessageEditNBTRequest extends MessageToClient
 {
 	public MessageEditNBTRequest()
 	{

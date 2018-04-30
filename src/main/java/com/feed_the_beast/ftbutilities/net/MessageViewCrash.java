@@ -1,32 +1,32 @@
 package com.feed_the_beast.ftbutilities.net;
 
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.feed_the_beast.ftblib.lib.net.MessageToClient;
+import com.feed_the_beast.ftblib.lib.io.DataReader;
+import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbutilities.gui.GuiViewCrash;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.server.permission.PermissionAPI;
 
-import java.util.Collection;
-import java.util.List;
+import java.io.File;
 
 /**
  * @author LatvianModder
  */
-public class MessageViewCrash extends MessageToClient<MessageViewCrash>
+public class MessageViewCrash extends MessageToServer
 {
-	private String name;
-	private Collection<String> text;
+	private String id;
 
 	public MessageViewCrash()
 	{
 	}
 
-	public MessageViewCrash(String n, List<String> l)
+	public MessageViewCrash(String s)
 	{
-		name = n;
-		text = l;
+		id = s;
 	}
 
 	@Override
@@ -38,21 +38,36 @@ public class MessageViewCrash extends MessageToClient<MessageViewCrash>
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeString(name);
-		data.writeCollection(text, DataOut.STRING);
+		data.writeString(id);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		name = data.readString();
-		text = data.readCollection(DataIn.STRING);
+		id = data.readString();
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void onMessage()
+	public void onMessage(EntityPlayerMP player)
 	{
-		new GuiViewCrash(name, text).openGui();
+		if (PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.VIEW_CRASH_REPORTS))
+		{
+			try
+			{
+				File file = new File(CommonUtils.folderMinecraft, "crash-reports/crash-" + id + ".txt");
+
+				if (file.exists())
+				{
+					new MessageViewCrashResponse(file.getName(), DataReader.get(file).stringList()).sendTo(player);
+				}
+			}
+			catch (Exception ex)
+			{
+				if (FTBLibConfig.debugging.print_more_errors)
+				{
+					ex.printStackTrace();
+				}
+			}
+		}
 	}
 }

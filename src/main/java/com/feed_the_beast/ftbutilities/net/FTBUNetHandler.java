@@ -29,8 +29,9 @@ public class FTBUNetHandler
 		NBTEDIT.register(new MessageEditNBTResponse());
 		NBTEDIT.register(new MessageEditNBTRequest());
 
-		VIEW_CRASH.register(new MessageViewCrash());
 		VIEW_CRASH.register(new MessageViewCrashList());
+		VIEW_CRASH.register(new MessageViewCrash());
+		VIEW_CRASH.register(new MessageViewCrashResponse());
 
 		STATS.register(new MessageSendLeaderboardList());
 		STATS.register(new MessageSendLeaderboard());

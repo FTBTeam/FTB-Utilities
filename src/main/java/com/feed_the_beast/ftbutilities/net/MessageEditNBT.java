@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author LatvianModder
  */
-public class MessageEditNBT extends MessageToClient<MessageEditNBT>
+public class MessageEditNBT extends MessageToClient
 {
 	private NBTTagCompound info, mainNbt;
 

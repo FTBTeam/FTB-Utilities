@@ -54,12 +54,14 @@ public class FTBUtilitiesPermissions
 	private static final String CLAIMS_BLOCK_INTERACT_PREFIX = FTBUtilities.MOD_ID + ".claims.block.interact.";
 	private static final String CLAIMS_ITEM_PREFIX = FTBUtilities.MOD_ID + ".claims.item.";
 
-	public static final String INFINITE_BACK_USAGE = FTBUtilities.MOD_ID + ".back.infinite";
-
 	// Chunkloader //
 	public static final Node CHUNKLOADER_MAX_CHUNKS = Node.get(FTBUtilities.MOD_ID + ".chunkloader.max_chunks");
 	//public static final String CHUNKLOADER_OFFLINE_TIMER = FTBUtilities.MOD_ID + ".chunkloader.offline_timer";
 	public static final String CHUNKLOADER_LOAD_OFFLINE = FTBUtilities.MOD_ID + ".chunkloader.load_offline";
+
+	// Other //
+	public static final String INFINITE_BACK_USAGE = FTBUtilities.MOD_ID + ".back.infinite";
+	public static final String VIEW_CRASH_REPORTS = "admin_panel." + FTBUtilities.MOD_ID + ".view_crash_reports";
 
 	@SubscribeEvent
 	public static void registerRankConfigHandler(RegisterRankConfigHandlerEvent event)
@@ -79,8 +81,9 @@ public class FTBUtilitiesPermissions
 		event.registerNode(HOMES_TELEPORT_OTHER, DefaultPermissionLevel.OP, "Allow to teleport to other people homes");
 		event.registerNode(CLAIMS_CHUNKS_MODIFY_OTHERS, DefaultPermissionLevel.OP, "Allow player to modify other team chunks");
 		event.registerNode(CLAIMS_BLOCK_CNB, DefaultPermissionLevel.OP, "Allow to edit C&B bits in claimed chunks");
-		event.registerNode(INFINITE_BACK_USAGE, DefaultPermissionLevel.NONE, "Allow to use 'back' command infinite times");
 		event.registerNode(CHUNKLOADER_LOAD_OFFLINE, DefaultPermissionLevel.ALL, "Keep loaded chunks working when player goes offline");
+		event.registerNode(INFINITE_BACK_USAGE, DefaultPermissionLevel.NONE, "Allow to use 'back' command infinite times");
+		event.registerNode(VIEW_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to view crash reports via Admin Panel");
 
 		for (Block block : Block.REGISTRY)
 		{

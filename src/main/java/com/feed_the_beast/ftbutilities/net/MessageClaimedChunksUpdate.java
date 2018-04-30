@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedChunksUpdate>
+public class MessageClaimedChunksUpdate extends MessageToClient
 {
 	public int startX, startZ, claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
 	public Map<String, ClientClaimedChunks.Team> teams;

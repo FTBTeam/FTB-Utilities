@@ -105,7 +105,8 @@ sidebar_button.ftbutilities.trash_can=Trash Can
 sidebar_button.ftbutilities.trash_can.tooltip=Opens a trash can. Items from it disappear after you close the GUI, but will remain there as long as it's open
 sidebar_button.ftbutilities.shop=Shop
 sidebar_button.ftbutilities.mail=Mail
-sidebar_button.ftbutilities.view_crash=View Crash Reports
+
+admin_panel.ftbutilities.view_crash_reports=View Crash Reports
 
 # Keys
 key.categories.ftbu=FTBMods
@@ -224,7 +225,7 @@ commands.ftb.ranks.get.usage=/ftb ranks get <player>
 commands.ftb.ranks.set.usage=/ftb ranks set <player> <rank|none>
 commands.ftb.ranks.get_permission.usage=/ftb ranks get_permission <player> <permission>
 commands.ftb.ranks.set_permission.usage=/ftb ranks set_permission <rank> <permission> <true|false|value|null>
-commands.ftb.view_crash.usage=/ftb view_crash
+commands.ftb.upload_crash_report.usage=/ftb upload_crash_report <file>
 commands.ftb.heal.usage=/ftb heal
 commands.ftb.set_hour.usage=/ftb set_hour <hour>
 commands.ftb.killall.usage=/ftb killall [type]

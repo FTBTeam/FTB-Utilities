@@ -104,11 +104,6 @@ public class FTBUCommands
 			event.add(new CmdEditNBT());
 		}
 
-		if (FTBUtilitiesConfig.commands.view_crash)
-		{
-			event.add(new CmdViewCrash());
-		}
-
 		if (FTBUtilitiesConfig.commands.fly)
 		{
 			event.add(new CmdFly());

@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.UUID;
 
-public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
+public class MessageRequestBadge extends MessageToServer
 {
 	private UUID playerId;
 

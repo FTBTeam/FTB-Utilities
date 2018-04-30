@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author LatvianModder
  */
-public class MessageOpenClaimedChunksGui extends MessageToClient<MessageOpenClaimedChunksGui>
+public class MessageOpenClaimedChunksGui extends MessageToClient
 {
 	@Override
 	public NetworkWrapper getWrapper()

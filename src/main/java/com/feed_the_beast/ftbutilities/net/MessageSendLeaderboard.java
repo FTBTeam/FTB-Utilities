@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageSendLeaderboard extends MessageToClient<MessageSendLeaderboard>
+public class MessageSendLeaderboard extends MessageToClient
 {
 	private static final DataOut.Serializer<LeaderboardValue> VALUE_SERIALIZER = (data, object) -> {
 		data.writeString(object.username);

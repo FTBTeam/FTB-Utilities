@@ -136,7 +136,6 @@ public class FTBUtilitiesConfig
 		public boolean heal = true;
 		public boolean killall = true;
 		public boolean nbtedit = true;
-		public boolean view_crash = true;
 		public boolean fly = true;
 		public boolean leaderboard = true;
 		public boolean cycle_block_state = true;

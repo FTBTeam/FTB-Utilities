@@ -15,7 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
-public class MessageEditNBTResponse extends MessageToServer<MessageEditNBTResponse>
+public class MessageEditNBTResponse extends MessageToServer
 {
 	private NBTTagCompound info, mainNbt;
 

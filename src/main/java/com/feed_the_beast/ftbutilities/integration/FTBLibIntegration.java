@@ -20,17 +20,21 @@ import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.data.Action;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
+import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.Badges;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUTeamData;
 import com.feed_the_beast.ftbutilities.handlers.FTBUSyncData;
+import com.feed_the_beast.ftbutilities.net.MessageViewCrashList;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -40,6 +44,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.File;
 import java.util.OptionalInt;
 
 /**
@@ -199,24 +204,6 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void registerTeamGuiActions(RegisterTeamGuiActionsEvent event)
 	{
-		event.register(new Action(new ResourceLocation(FTBUtilities.MOD_ID, "chat"), new TextComponentTranslation("sidebar_button." + FTBUtilities.MOD_ID + ".chats.team"), GuiIcons.CHAT, -10)
-		{
-			@Override
-			public Type getType(ForgePlayer player, NBTTagCompound data)
-			{
-				return Type.INVISIBLE;
-			}
-
-			@Override
-			public void onAction(ForgePlayer player, NBTTagCompound data)
-			{
-			}
-		});
-	}
-
-	@SubscribeEvent
-	public static void registerAdminPanelActions(RegisterAdminPanelActionsEvent event)
-	{
 		/*event.register(new Action(new ResourceLocation(FTBUtilities.MOD_ID, "chat"), new TextComponentTranslation("sidebar_button." + FTBUtilities.MOD_ID + ".chats.team"), GuiIcons.CHAT, -10)
 		{
 			@Override
@@ -230,6 +217,25 @@ public class FTBLibIntegration
 			{
 			}
 		});*/
+	}
+
+	@SubscribeEvent
+	public static void registerAdminPanelActions(RegisterAdminPanelActionsEvent event)
+	{
+		event.register(new Action(new ResourceLocation(FTBUtilities.MOD_ID, "view_crash_reports"), new TextComponentTranslation("admin_panel.ftbutilities.view_crash_reports"), ItemIcon.getItemIcon(new ItemStack(Blocks.BARRIER)), 0)
+		{
+			@Override
+			public Type getType(ForgePlayer player, NBTTagCompound data)
+			{
+				return Type.fromBoolean(player.hasPermission(FTBUtilitiesPermissions.VIEW_CRASH_REPORTS));
+			}
+
+			@Override
+			public void onAction(ForgePlayer player, NBTTagCompound data)
+			{
+				new MessageViewCrashList(new File(CommonUtils.folderMinecraft, "crash-reports")).sendTo(player.getPlayer());
+			}
+		});
 	}
 
 	@SubscribeEvent

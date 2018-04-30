@@ -271,6 +271,7 @@ public class Ranks
 	{
 		removeNodeFromCaches(node);
 		saveRanks();
+		Universe.get().clearCache();
 
 		for (EntityPlayerMP playerMP : server.getPlayerList().getPlayers())
 		{

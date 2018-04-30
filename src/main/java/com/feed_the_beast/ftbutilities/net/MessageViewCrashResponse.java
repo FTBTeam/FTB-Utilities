@@ -4,51 +4,55 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbutilities.client.CachedClientData;
+import com.feed_the_beast.ftbutilities.gui.GuiViewCrash;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.UUID;
+import java.util.Collection;
+import java.util.List;
 
-public class MessageSendBadge extends MessageToClient
+/**
+ * @author LatvianModder
+ */
+public class MessageViewCrashResponse extends MessageToClient
 {
-	private UUID playerId;
-	private String badgeURL;
+	private String name;
+	private Collection<String> text;
 
-	public MessageSendBadge()
+	public MessageViewCrashResponse()
 	{
 	}
 
-	public MessageSendBadge(UUID player, String url)
+	public MessageViewCrashResponse(String n, List<String> l)
 	{
-		playerId = player;
-		badgeURL = url;
+		name = n;
+		text = l;
 	}
 
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.BADGES;
+		return FTBUNetHandler.VIEW_CRASH;
 	}
 
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeUUID(playerId);
-		data.writeString(badgeURL);
+		data.writeString(name);
+		data.writeCollection(text, DataOut.STRING);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		playerId = data.readUUID();
-		badgeURL = data.readString();
+		name = data.readString();
+		text = data.readCollection(DataIn.STRING);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void onMessage()
 	{
-		CachedClientData.setBadge(playerId, badgeURL);
+		new GuiViewCrash(name, text).openGui();
 	}
 }

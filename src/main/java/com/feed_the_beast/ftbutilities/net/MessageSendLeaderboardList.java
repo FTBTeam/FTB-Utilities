@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Map;
 
-public class MessageSendLeaderboardList extends MessageToClient<MessageSendLeaderboardList>
+public class MessageSendLeaderboardList extends MessageToClient
 {
 	private Map<ResourceLocation, ITextComponent> leaderboards;
 

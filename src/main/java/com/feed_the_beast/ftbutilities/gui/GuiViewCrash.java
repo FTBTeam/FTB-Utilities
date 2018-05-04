@@ -45,7 +45,7 @@ public class GuiViewCrash extends GuiBase
 		{
 			try
 			{
-				File urlFile = new File(CommonUtils.folderLocal, "ftbutilities/uploaded_crash_reports/crash-" + name.text.get(0) + ".txt");
+				File urlFile = new File(CommonUtils.folderLocal, "ftbutilities/uploaded_crash_reports/crash-" + name.text[0] + ".txt");
 				String url = DataReader.get(urlFile).safeString();
 
 				if (url.isEmpty())

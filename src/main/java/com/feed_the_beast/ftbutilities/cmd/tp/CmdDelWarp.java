@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
-import com.feed_the_beast.ftbutilities.data.FTBUUniverseData;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -24,7 +24,7 @@ public class CmdDelWarp extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, FTBUUniverseData.WARPS.list());
+			return getListOfStringsMatchingLastWord(args, FTBUtilitiesUniverseData.WARPS.list());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -37,7 +37,7 @@ public class CmdDelWarp extends CmdBase
 
 		args[0] = args[0].toLowerCase();
 
-		if (FTBUUniverseData.WARPS.set(args[0], null))
+		if (FTBUtilitiesUniverseData.WARPS.set(args[0], null))
 		{
 			FTBUtilitiesLang.WARP_DEL.sendMessage(sender, args[0]);
 			Universe.get().markDirty();

@@ -44,7 +44,7 @@ public class MessageViewCrashList extends MessageToClient
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.FILES;
+		return FTBUtilitiesNetHandler.FILES;
 	}
 
 	@Override

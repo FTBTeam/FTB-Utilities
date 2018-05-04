@@ -14,7 +14,7 @@ import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
-import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.google.common.base.Objects;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumHand;
@@ -33,14 +33,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * @author LatvianModder
  */
 @Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
-public class FTBUPlayerEventHandler
+public class FTBUtilitiesPlayerEventHandler
 {
 	@SubscribeEvent
 	public static void onDeath(LivingDeathEvent event)
 	{
 		if (event.getEntity() instanceof EntityPlayerMP)
 		{
-			FTBUPlayerData data = FTBUPlayerData.get(Universe.get().getPlayer(event.getEntity()));
+			FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(Universe.get().getPlayer(event.getEntity()));
 			data.lastDeath = new BlockDimPos(event.getEntity());
 			data.player.markDirty();
 		}
@@ -62,7 +62,7 @@ public class FTBUPlayerEventHandler
 			return;
 		}
 
-		FTBUPlayerData.get(p).lastSafePos = new BlockDimPos(player);
+		FTBUtilitiesPlayerData.get(p).lastSafePos = new BlockDimPos(player);
 		p.markDirty();
 		updateChunkMessage(player, new ChunkDimPos(event.getNewChunkX(), event.getNewChunkZ(), player.dimension));
 	}
@@ -77,7 +77,7 @@ public class FTBUPlayerEventHandler
 		ClaimedChunk chunk = ClaimedChunks.instance.getChunk(pos);
 		ForgeTeam team = chunk == null ? null : chunk.getTeam();
 
-		FTBUPlayerData data = FTBUPlayerData.get(Universe.get().getPlayer(player));
+		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(Universe.get().getPlayer(player));
 
 		if (!Objects.equal(data.lastChunkTeam, team))
 		{

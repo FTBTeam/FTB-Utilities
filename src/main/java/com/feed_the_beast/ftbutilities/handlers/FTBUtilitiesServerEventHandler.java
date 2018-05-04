@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * @author LatvianModder
  */
 @Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
-public class FTBUServerEventHandler
+public class FTBUtilitiesServerEventHandler
 {
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onServerChatEvent(ServerChatEvent event)

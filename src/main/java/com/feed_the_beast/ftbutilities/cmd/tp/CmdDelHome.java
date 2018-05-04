@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
-import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -24,7 +24,7 @@ public class CmdDelHome extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(Universe.get().getPlayer(sender)).homes.list());
+			return getListOfStringsMatchingLastWord(args, FTBUtilitiesPlayerData.get(Universe.get().getPlayer(sender)).homes.list());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -33,7 +33,7 @@ public class CmdDelHome extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(sender));
+		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(getForgePlayer(sender));
 
 		if (args.length == 0)
 		{

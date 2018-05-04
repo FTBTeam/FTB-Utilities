@@ -46,7 +46,7 @@ public class MessageRequestBadge extends MessageToServer
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.GENERAL;
+		return FTBUtilitiesNetHandler.GENERAL;
 	}
 
 	@Override

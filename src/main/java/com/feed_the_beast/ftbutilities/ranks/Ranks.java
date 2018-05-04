@@ -22,8 +22,8 @@ import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
@@ -411,7 +411,7 @@ public class Ranks
 
 			list.add("</td><td>");
 
-			String infoS = I18n.translateToLocal(p.displayName.isEmpty() ? ("rank_config." + info.node) : p.displayName);
+			String infoS = (p.displayName == null ? new TextComponentTranslation("rank_config." + info.node) : p.displayName).getUnformattedText();
 
 			if (!infoS.isEmpty())
 			{

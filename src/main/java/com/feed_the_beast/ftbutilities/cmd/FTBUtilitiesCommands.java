@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * @author LatvianModder
  */
 @EventHandler
-public class FTBUCommands
+public class FTBUtilitiesCommands
 {
 	@SubscribeEvent
 	public static void registerCommands(RegisterFTBCommandsEvent event)

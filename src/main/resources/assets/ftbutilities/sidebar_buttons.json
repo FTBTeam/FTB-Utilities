@@ -1,8 +1,8 @@
 {
 	"leaderboards": {
-		"group": "ftblib:info",
+		"group": "ftblib:util",
 		"icon": "item:minecraft:sign",
-		"x": 700,
+		"x": 170,
 		"click": "custom:ftbutilities:leaderboards_gui",
 		"required_server_mods": ["ftbutilities"],
 		"loading_screen": true
@@ -18,7 +18,7 @@
 	"trash_can": {
 		"group": "ftblib:util",
 		"icon": "ftblib:icons/bin",
-		"x": 500,
+		"x": 150,
 		"click": "command:/trash_can",
 		"required_mods": ["ftbutilities"],
 		"loading_screen": true

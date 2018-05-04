@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbutilities.net;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 
-public class FTBUNetHandler
+public class FTBUtilitiesNetHandler
 {
 	static final NetworkWrapper GENERAL = NetworkWrapper.newWrapper(FTBUtilities.MOD_ID);
 	static final NetworkWrapper CLAIMS = NetworkWrapper.newWrapper(FTBUtilities.MOD_ID + "_claims");

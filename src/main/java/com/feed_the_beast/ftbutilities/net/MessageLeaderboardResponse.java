@@ -82,7 +82,7 @@ public class MessageLeaderboardResponse extends MessageToClient
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.STATS;
+		return FTBUtilitiesNetHandler.STATS;
 	}
 
 	@Override

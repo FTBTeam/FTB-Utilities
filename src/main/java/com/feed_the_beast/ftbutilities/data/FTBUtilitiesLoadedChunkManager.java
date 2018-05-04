@@ -24,9 +24,9 @@ import java.util.Objects;
 /**
  * @author LatvianModder
  */
-public class FTBULoadedChunkManager implements ForgeChunkManager.LoadingCallback
+public class FTBUtilitiesLoadedChunkManager implements ForgeChunkManager.LoadingCallback
 {
-	public static final FTBULoadedChunkManager INSTANCE = new FTBULoadedChunkManager();
+	public static final FTBUtilitiesLoadedChunkManager INSTANCE = new FTBUtilitiesLoadedChunkManager();
 
 	public final Map<TicketKey, ForgeChunkManager.Ticket> ticketMap = new HashMap<>();
 	private final Map<ChunkDimPos, ForgeChunkManager.Ticket> chunkTickets = new HashMap<>();

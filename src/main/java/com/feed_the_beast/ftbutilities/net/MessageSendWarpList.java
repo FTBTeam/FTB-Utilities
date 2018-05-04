@@ -5,8 +5,8 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
-import com.feed_the_beast.ftbutilities.data.FTBUUniverseData;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import com.feed_the_beast.ftbutilities.gui.GuiWarps;
 import net.minecraft.command.ICommand;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -90,14 +90,14 @@ public class MessageSendWarpList extends MessageToClient
 
 		String cmd = command(player, "warp", "ftb warp") + " ";
 
-		for (String s : FTBUUniverseData.WARPS.list())
+		for (String s : FTBUtilitiesUniverseData.WARPS.list())
 		{
 			warps.add(new WarpItem(s, cmd + s, WarpItem.TYPE_WARP));
 		}
 
 		cmd = command(player, "home", "ftb home") + " ";
 
-		for (String s : FTBUPlayerData.get(Universe.get().getPlayer(player)).homes.list())
+		for (String s : FTBUtilitiesPlayerData.get(Universe.get().getPlayer(player)).homes.list())
 		{
 			warps.add(new WarpItem(s, cmd + s, WarpItem.TYPE_HOME));
 		}
@@ -106,7 +106,7 @@ public class MessageSendWarpList extends MessageToClient
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.GENERAL;
+		return FTBUtilitiesNetHandler.GENERAL;
 	}
 
 	@Override

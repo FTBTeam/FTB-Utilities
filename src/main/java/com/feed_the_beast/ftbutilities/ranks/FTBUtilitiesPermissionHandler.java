@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.DefaultRankConfigHandler;
 import com.feed_the_beast.ftblib.lib.config.IRankConfigHandler;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
+import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
@@ -19,7 +20,7 @@ import java.util.Collection;
 /**
  * @author LatvianModder
  */
-public enum FTBUPermissionHandler implements IPermissionHandler, IRankConfigHandler
+public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankConfigHandler
 {
 	INSTANCE;
 
@@ -40,24 +41,24 @@ public enum FTBUPermissionHandler implements IPermissionHandler, IRankConfigHand
 	{
 		if (context != null && context.getWorld() != null && context.getWorld().isRemote)
 		{
-			return true;
+			throw new RuntimeException("Do not check permissions on client side! Node: " + nodeS);
 		}
-
-		if (Ranks.INSTANCE == null)
+		else if (Ranks.INSTANCE == null)
 		{
 			return DefaultPermissionHandler.INSTANCE.hasPermission(profile, nodeS, context);
 		}
 
 		Node node = Node.get(nodeS);
+		MinecraftServer server = context != null && context.getWorld() != null ? context.getWorld().getMinecraftServer() : null;
 
-		switch (Ranks.INSTANCE.getRank(context != null && context.getWorld() != null ? context.getWorld().getMinecraftServer() : null, profile, context).hasPermission(node))
+		switch (Ranks.INSTANCE.getRank(server, profile, context).hasPermission(node))
 		{
 			case ALLOW:
 				return true;
 			case DENY:
 				return false;
 			default:
-				return DefaultPermissionHandler.INSTANCE.hasPermission(profile, node.toString(), context);
+				return DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(node.toString()) == DefaultPermissionLevel.ALL || ServerUtils.isOP(server, profile);
 		}
 	}
 

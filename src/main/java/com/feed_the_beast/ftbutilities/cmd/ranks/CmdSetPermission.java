@@ -10,7 +10,7 @@ import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
-import com.feed_the_beast.ftbutilities.ranks.FTBUPermissionHandler;
+import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import com.google.gson.JsonElement;
@@ -42,7 +42,7 @@ public class CmdSetPermission extends CmdBase
 		}
 		else if (args.length == 2)
 		{
-			return getListOfStringsMatchingLastWord(args, FTBUPermissionHandler.INSTANCE.getRegisteredNodes());
+			return getListOfStringsMatchingLastWord(args, FTBUtilitiesPermissionHandler.INSTANCE.getRegisteredNodes());
 		}
 		else if (args.length == 3)
 		{

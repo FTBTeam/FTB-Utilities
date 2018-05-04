@@ -6,7 +6,7 @@ import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
-import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -28,7 +28,7 @@ public class CmdSetHome extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(Universe.get().getPlayer(sender)).homes.list());
+			return getListOfStringsMatchingLastWord(args, FTBUtilitiesPlayerData.get(Universe.get().getPlayer(sender)).homes.list());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -38,7 +38,7 @@ public class CmdSetHome extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-		FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(player));
+		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(getForgePlayer(player));
 
 		if (args.length == 0)
 		{

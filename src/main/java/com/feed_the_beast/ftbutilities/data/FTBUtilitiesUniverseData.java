@@ -24,7 +24,7 @@ import java.util.Calendar;
  * @author LatvianModder
  */
 @EventHandler
-public class FTBUUniverseData
+public class FTBUtilitiesUniverseData
 {
 	public static long shutdownTime;
 	public static final BlockDimPosStorage WARPS = new BlockDimPosStorage();
@@ -66,7 +66,7 @@ public class FTBUUniverseData
 	public static void onUniversePostLoaded(UniverseLoadedEvent.Post event)
 	{
 		NBTTagCompound nbt = event.getData(FTBUtilities.MOD_ID);
-		FTBUUniverseData.WARPS.deserializeNBT(nbt.getCompoundTag("Warps"));
+		FTBUtilitiesUniverseData.WARPS.deserializeNBT(nbt.getCompoundTag("Warps"));
 	}
 
 	@SubscribeEvent
@@ -99,8 +99,8 @@ public class FTBUUniverseData
 			{
 				if (time > currentTime)
 				{
-					FTBUUniverseData.shutdownTime = start + (time - currentTime) * CommonUtils.TICKS_SECOND;
-					FTBUtilities.LOGGER.info("Server shuts down in " + StringUtils.getTimeStringTicks(FTBUUniverseData.shutdownTime));
+					FTBUtilitiesUniverseData.shutdownTime = start + (time - currentTime) * CommonUtils.TICKS_SECOND;
+					FTBUtilities.LOGGER.info("Server shuts down in " + StringUtils.getTimeStringTicks(FTBUtilitiesUniverseData.shutdownTime));
 					break;
 				}
 			}
@@ -124,7 +124,7 @@ public class FTBUUniverseData
 		}
 
 		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setTag("Warps", FTBUUniverseData.WARPS.serializeNBT());
+		nbt.setTag("Warps", FTBUtilitiesUniverseData.WARPS.serializeNBT());
 
 		//TODO: Save chat as json
 
@@ -140,7 +140,7 @@ public class FTBUUniverseData
 			ClaimedChunks.instance = null;
 		}
 
-		FTBULoadedChunkManager.INSTANCE.clear();
+		FTBUtilitiesLoadedChunkManager.INSTANCE.clear();
 
 		Badges.BADGE_CACHE.clear();
 		Badges.LOCAL_BADGES.clear();

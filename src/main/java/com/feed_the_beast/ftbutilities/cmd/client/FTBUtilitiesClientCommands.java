@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
  * @author LatvianModder
  */
 @EventHandler(Side.CLIENT)
-public class FTBUClientCommands
+public class FTBUtilitiesClientCommands
 {
 	@SubscribeEvent
 	public static void registerCommands(RegisterFTBClientCommandsEvent event)

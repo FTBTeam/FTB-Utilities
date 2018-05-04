@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 /**
  * @author LatvianModder
  */
-public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
+public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 {
 	private final ConfigBoolean renderBadge = new ConfigBoolean(true);
 	private final ConfigBoolean disableGlobalBadge = new ConfigBoolean(false);
@@ -25,13 +25,13 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 	public final BlockDimPosStorage homes;
 	public boolean fly;
 
-	public FTBUPlayerData(ForgePlayer p)
+	public FTBUtilitiesPlayerData(ForgePlayer p)
 	{
 		player = p;
 		homes = new BlockDimPosStorage();
 	}
 
-	public static FTBUPlayerData get(ForgePlayer player)
+	public static FTBUtilitiesPlayerData get(ForgePlayer player)
 	{
 		return player.getData().get(FTBUtilities.MOD_ID);
 	}

@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
  * @author LatvianModder
  */
 @Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID, value = Side.CLIENT)
-public class FTBUClientEventHandler
+public class FTBUtilitiesClientEventHandler
 {
 	public static int currentBackupFile = 0;
 	public static int totalBackupFiles = 0;

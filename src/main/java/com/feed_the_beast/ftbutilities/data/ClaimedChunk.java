@@ -9,12 +9,12 @@ import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 public final class ClaimedChunk
 {
 	private final ChunkDimPos pos;
-	private final FTBUTeamData teamData;
+	private final FTBUtilitiesTeamData teamData;
 	private boolean loaded;
 	private boolean invalid;
 	public Boolean forced;
 
-	public ClaimedChunk(ChunkDimPos c, FTBUTeamData t)
+	public ClaimedChunk(ChunkDimPos c, FTBUtilitiesTeamData t)
 	{
 		pos = c;
 		teamData = t;
@@ -47,7 +47,7 @@ public final class ClaimedChunk
 		return teamData.team;
 	}
 
-	public FTBUTeamData getData()
+	public FTBUtilitiesTeamData getData()
 	{
 		return teamData;
 	}

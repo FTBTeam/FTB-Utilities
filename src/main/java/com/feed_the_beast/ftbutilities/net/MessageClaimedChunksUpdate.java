@@ -13,7 +13,7 @@ import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
-import com.feed_the_beast.ftbutilities.data.FTBUTeamData;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesTeamData;
 import com.feed_the_beast.ftbutilities.gui.ClientClaimedChunks;
 import com.feed_the_beast.ftbutilities.gui.UpdateClientDataEvent;
 import net.minecraft.entity.player.EntityPlayer;
@@ -44,7 +44,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient
 		startZ = sz;
 
 		ForgePlayer p = Universe.get().getPlayer(player);
-		FTBUTeamData teamData = FTBUTeamData.get(p.team);
+		FTBUtilitiesTeamData teamData = FTBUtilitiesTeamData.get(p.team);
 
 		Collection<ClaimedChunk> chunks = teamData.team.isValid() ? ClaimedChunks.instance.getTeamChunks(teamData.team) : Collections.emptyList();
 
@@ -112,7 +112,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.CLAIMS;
+		return FTBUtilitiesNetHandler.CLAIMS;
 	}
 
 	@Override

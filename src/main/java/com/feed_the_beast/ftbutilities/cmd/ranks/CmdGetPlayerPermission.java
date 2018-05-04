@@ -6,7 +6,7 @@ import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
-import com.feed_the_beast.ftbutilities.ranks.FTBUPermissionHandler;
+import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -30,7 +30,7 @@ public class CmdGetPlayerPermission extends CmdBase
 	{
 		if (args.length == 2)
 		{
-			return getListOfStringsMatchingLastWord(args, FTBUPermissionHandler.INSTANCE.getRegisteredNodes());
+			return getListOfStringsMatchingLastWord(args, FTBUtilitiesPermissionHandler.INSTANCE.getRegisteredNodes());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);

@@ -12,7 +12,7 @@ import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
-import com.feed_the_beast.ftbutilities.ranks.FTBUPermissionHandler;
+import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockDoor;
@@ -63,14 +63,15 @@ public class FTBUtilitiesPermissions
 	// Other //
 	public static final String INFINITE_BACK_USAGE = FTBUtilities.MOD_ID + ".back.infinite";
 	public static final String VIEW_CRASH_REPORTS = "admin_panel." + FTBUtilities.MOD_ID + ".view_crash_reports";
-	private static final String LEADERBOARD_PREFIX = "leaderboard.";
+	private static final String LEADERBOARD_PREFIX = FTBUtilities.MOD_ID + ".leaderboard.";
+	private static final String EDIT_GAMERULE = "admin_panel." + FTBUtilities.MOD_ID + ".edit_gamerule.";
 
 	@SubscribeEvent
 	public static void registerRankConfigHandler(RegisterRankConfigHandlerEvent event)
 	{
 		if (FTBUtilitiesConfig.ranks.enabled)
 		{
-			event.setHandler(FTBUPermissionHandler.INSTANCE);
+			event.setHandler(FTBUtilitiesPermissionHandler.INSTANCE);
 		}
 	}
 
@@ -129,6 +130,7 @@ public class FTBUtilitiesPermissions
 		event.register(new NodeEntry(Node.get(CLAIMS_BLOCK_INTERACT_PREFIX), DefaultPermissionLevel.OP, "Permission for blocks that players can right-click within claimed chunks"));
 		event.register(new NodeEntry(Node.get(CLAIMS_ITEM_PREFIX), DefaultPermissionLevel.ALL, "Permission for items that players can right-click in air within claimed chunks"));
 		event.register(new NodeEntry(Node.get(LEADERBOARD_PREFIX), DefaultPermissionLevel.ALL, "Permission for leaderboards that players can view"));
+		event.register(new NodeEntry(Node.get(EDIT_GAMERULE), DefaultPermissionLevel.OP, "Permission for editing specific gamerules in Admin Panel"));
 	}
 
 	private static String formatId(@Nullable IForgeRegistryEntry item)
@@ -159,5 +161,10 @@ public class FTBUtilitiesPermissions
 	public static String getLeaderboardNode(Leaderboard leaderboard)
 	{
 		return LEADERBOARD_PREFIX + leaderboard.id.getResourceDomain() + "." + leaderboard.id.getResourcePath();
+	}
+
+	public static String getGameruleNode(String gamerule)
+	{
+		return EDIT_GAMERULE + gamerule;
 	}
 }

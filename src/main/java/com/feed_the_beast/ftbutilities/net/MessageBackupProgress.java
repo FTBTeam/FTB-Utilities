@@ -4,7 +4,7 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbutilities.handlers.FTBUClientEventHandler;
+import com.feed_the_beast.ftbutilities.handlers.FTBUtilitiesClientEventHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -28,7 +28,7 @@ public class MessageBackupProgress extends MessageToClient
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.GENERAL;
+		return FTBUtilitiesNetHandler.GENERAL;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class MessageBackupProgress extends MessageToClient
 	@SideOnly(Side.CLIENT)
 	public void onMessage()
 	{
-		FTBUClientEventHandler.currentBackupFile = current;
-		FTBUClientEventHandler.totalBackupFiles = total;
+		FTBUtilitiesClientEventHandler.currentBackupFile = current;
+		FTBUtilitiesClientEventHandler.totalBackupFiles = total;
 	}
 }

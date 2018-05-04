@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbutilities.cmd.chunks;
 import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftbutilities.handlers.FTBUPlayerEventHandler;
+import com.feed_the_beast.ftbutilities.handlers.FTBUtilitiesPlayerEventHandler;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,7 +16,7 @@ public class CmdChunks extends CmdTreeBase
 {
 	static void updateChunk(EntityPlayerMP player, ChunkDimPos pos)
 	{
-		FTBUPlayerEventHandler.updateChunkMessage(player, pos);
+		FTBUtilitiesPlayerEventHandler.updateChunkMessage(player, pos);
 	}
 
 	public CmdChunks()

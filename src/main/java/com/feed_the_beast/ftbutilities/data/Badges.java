@@ -57,7 +57,7 @@ public class Badges
 			return "";
 		}
 
-		FTBUPlayerData data = FTBUPlayerData.get(player);
+		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(player);
 
 		if (!data.renderBadge())
 		{

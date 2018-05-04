@@ -39,7 +39,7 @@ public class MessageClaimedChunksModify extends MessageToServer
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBUNetHandler.CLAIMS;
+		return FTBUtilitiesNetHandler.CLAIMS;
 	}
 
 	@Override

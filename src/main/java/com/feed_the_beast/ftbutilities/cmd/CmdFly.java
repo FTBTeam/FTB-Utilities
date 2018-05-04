@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbutilities.cmd;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -27,7 +27,7 @@ public class CmdFly extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		EntityPlayerMP player = getSelfOrOther(sender, args, 0);
-		FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(player));
+		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(getForgePlayer(player));
 		data.fly = !data.fly;
 		player.capabilities.allowFlying = data.fly;
 

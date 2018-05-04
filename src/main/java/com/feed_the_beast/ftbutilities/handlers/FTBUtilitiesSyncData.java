@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * @author LatvianModder
  */
-public class FTBUSyncData implements ISyncData
+public class FTBUtilitiesSyncData implements ISyncData
 {
 	@Override
 	public NBTTagCompound writeSyncData(EntityPlayerMP player, ForgePlayer forgePlayer)

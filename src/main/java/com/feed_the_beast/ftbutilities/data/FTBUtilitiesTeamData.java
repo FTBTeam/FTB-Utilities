@@ -23,9 +23,9 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class FTBUTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
+public class FTBUtilitiesTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
 {
-	public static FTBUTeamData get(ForgeTeam team)
+	public static FTBUtilitiesTeamData get(ForgeTeam team)
 	{
 		return team.getData(FTBUtilities.MOD_ID);
 	}
@@ -38,7 +38,7 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
 	public boolean canForceChunks = false;
 	private int cachedMaxClaimChunks, cachedMaxChunkloaderChunks;
 
-	public FTBUTeamData(ForgeTeam t)
+	public FTBUtilitiesTeamData(ForgeTeam t)
 	{
 		team = t;
 	}

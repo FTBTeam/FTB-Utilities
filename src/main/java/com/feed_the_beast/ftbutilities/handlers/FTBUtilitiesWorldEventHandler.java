@@ -11,8 +11,8 @@ import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.cmd.CmdShutdown;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
-import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
-import com.feed_the_beast.ftbutilities.data.FTBUUniverseData;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
@@ -42,7 +42,7 @@ import java.util.function.Function;
  * @author LatvianModder
  */
 @Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
-public class FTBUWorldEventHandler
+public class FTBUtilitiesWorldEventHandler
 {
 	private static final ResourceLocation RESTART_TIMER_ID = new ResourceLocation(FTBUtilities.MOD_ID, "restart_timer");
 
@@ -79,7 +79,7 @@ public class FTBUWorldEventHandler
 		{
 			for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
 			{
-				if (!player.capabilities.isCreativeMode && FTBUPlayerData.get(universe.getPlayer(player)).fly)
+				if (!player.capabilities.isCreativeMode && FTBUtilitiesPlayerData.get(universe.getPlayer(player)).fly)
 				{
 					boolean fly = player.capabilities.allowFlying;
 					player.capabilities.allowFlying = true;
@@ -91,9 +91,9 @@ public class FTBUWorldEventHandler
 				}
 			}
 
-			if (FTBUUniverseData.shutdownTime > 0L)
+			if (FTBUtilitiesUniverseData.shutdownTime > 0L)
 			{
-				long t = FTBUUniverseData.shutdownTime - now;
+				long t = FTBUtilitiesUniverseData.shutdownTime - now;
 
 				if (t <= 0)
 				{
@@ -139,7 +139,7 @@ public class FTBUWorldEventHandler
 			return true;
 		}
 
-		if (FTBUtilitiesConfig.world.safe_spawn && FTBUUniverseData.isInSpawn(entity.getServer(), new ChunkDimPos(entity)))
+		if (FTBUtilitiesConfig.world.safe_spawn && FTBUtilitiesUniverseData.isInSpawn(entity.getServer(), new ChunkDimPos(entity)))
 		{
 			if (entity instanceof IMob)
 			{
@@ -172,7 +172,7 @@ public class FTBUWorldEventHandler
 
 		Function<ChunkDimPos, Boolean> func = pos ->
 		{
-			if (pos.dim == 0 && FTBUtilitiesConfig.world.safe_spawn && FTBUUniverseData.isInSpawn(server, pos))
+			if (pos.dim == 0 && FTBUtilitiesConfig.world.safe_spawn && FTBUtilitiesUniverseData.isInSpawn(server, pos))
 			{
 				return false;
 			}

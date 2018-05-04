@@ -5,7 +5,7 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
-import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -25,7 +25,7 @@ public class CmdBack extends CmdBase
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 		ForgePlayer p = getForgePlayer(player);
 
-		FTBUPlayerData data = FTBUPlayerData.get(p);
+		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
 
 		if (data.lastDeath == null)
 		{

@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.events.RegisterAdminPanelActionsEvent;
 import com.feed_the_beast.ftblib.events.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftblib.events.RegisterSyncDataEvent;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
-import com.feed_the_beast.ftblib.events.client.CustomClickEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
@@ -17,22 +16,27 @@ import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerLeftEvent;
 import com.feed_the_beast.ftblib.events.team.RegisterTeamGuiActionsEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
+import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
+import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
+import com.feed_the_beast.ftblib.lib.config.ConfigInt;
+import com.feed_the_beast.ftblib.lib.config.ConfigString;
+import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.data.Action;
+import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.Badges;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
-import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
-import com.feed_the_beast.ftbutilities.data.FTBUTeamData;
-import com.feed_the_beast.ftbutilities.gui.GuiClaimedChunks;
-import com.feed_the_beast.ftbutilities.handlers.FTBUSyncData;
-import com.feed_the_beast.ftbutilities.net.MessageLeaderboardList;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesTeamData;
+import com.feed_the_beast.ftbutilities.handlers.FTBUtilitiesSyncData;
 import com.feed_the_beast.ftbutilities.net.MessageViewCrashList;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -41,10 +45,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.GameRules;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
 import java.util.OptionalInt;
@@ -96,19 +100,19 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void registerPlayerData(ForgePlayerDataEvent event)
 	{
-		event.register(FTBUtilities.MOD_ID, new FTBUPlayerData(event.getPlayer()));
+		event.register(FTBUtilities.MOD_ID, new FTBUtilitiesPlayerData(event.getPlayer()));
 	}
 
 	@SubscribeEvent
 	public static void registerTeamData(ForgeTeamDataEvent event)
 	{
-		event.register(FTBUtilities.MOD_ID, new FTBUTeamData(event.getTeam()));
+		event.register(FTBUtilities.MOD_ID, new FTBUtilitiesTeamData(event.getTeam()));
 	}
 
 	@SubscribeEvent
 	public static void registerSyncData(RegisterSyncDataEvent event)
 	{
-		event.register(FTBUtilities.MOD_ID, new FTBUSyncData());
+		event.register(FTBUtilities.MOD_ID, new FTBUtilitiesSyncData());
 	}
 
 	@SubscribeEvent
@@ -155,7 +159,7 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void getPlayerSettings(ForgePlayerConfigEvent event)
 	{
-		FTBUPlayerData.get(event.getPlayer()).addConfig(event);
+		FTBUtilitiesPlayerData.get(event.getPlayer()).addConfig(event);
 	}
 	
 	/*
@@ -175,7 +179,7 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void getTeamSettings(ForgeTeamConfigEvent event)
 	{
-		FTBUTeamData.get(event.getTeam()).addConfig(event);
+		FTBUtilitiesTeamData.get(event.getTeam()).addConfig(event);
 	}
 
 	@SubscribeEvent
@@ -224,7 +228,7 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void registerAdminPanelActions(RegisterAdminPanelActionsEvent event)
 	{
-		event.register(new Action(new ResourceLocation(FTBUtilities.MOD_ID, "view_crash_reports"), new TextComponentTranslation("admin_panel.ftbutilities.view_crash_reports"), ItemIcon.getItemIcon(new ItemStack(Blocks.BARRIER)), 0)
+		event.register(new Action(new ResourceLocation(FTBUtilities.MOD_ID, "view_crash_reports"), new TextComponentTranslation("admin_panel.ftbutilities.crash_reports"), ItemIcon.getItemIcon(new ItemStack(Blocks.BARRIER)), 0)
 		{
 			@Override
 			public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -238,35 +242,109 @@ public class FTBLibIntegration
 				new MessageViewCrashList(new File(CommonUtils.folderMinecraft, "crash-reports")).sendTo(player.getPlayer());
 			}
 		});
-	}
 
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public static void onCustomClick(CustomClickEvent event)
-	{
-		if (event.getID().getResourceDomain().equals(FTBUtilities.MOD_ID))
+		event.register(new Action(new ResourceLocation(FTBUtilities.MOD_ID, "gamerules"), new TextComponentTranslation("admin_panel.ftbutilities.gamerules"), GuiIcons.NOTES, 0)
 		{
-			switch (event.getID().getResourcePath())
+			@Override
+			public Type getType(ForgePlayer player, NBTTagCompound data)
 			{
-				case "toggle_gamemode":
-					ClientUtils.execClientCommand("/gamemode " + (ClientUtils.MC.player.capabilities.isCreativeMode ? "survival" : "creative"));
-					break;
-				case "daytime":
-					ClientUtils.execClientCommand("/time add " + (24000L - (ClientUtils.MC.world.getWorldTime() % 24000L) + 6000));
-					break;
-				case "nighttime":
-					ClientUtils.execClientCommand("/time add " + (24000L - (ClientUtils.MC.world.getWorldTime() % 24000L) + 18000));
-					break;
-				case "claims_gui":
-					GuiClaimedChunks.instance = new GuiClaimedChunks();
-					GuiClaimedChunks.instance.openGui();
-					break;
-				case "leaderboards_gui":
-					new MessageLeaderboardList().sendToServer();
-					break;
+				GameRules gameRules = player.team.universe.world.getGameRules();
+
+				for (String s : gameRules.getRules())
+				{
+					if (player.hasPermission(FTBUtilitiesPermissions.getGameruleNode(s)))
+					{
+						return Type.ENABLED;
+					}
+				}
+
+				return Type.DISABLED;
 			}
 
-			event.setCanceled(true);
-		}
+			@Override
+			public void onAction(ForgePlayer player, NBTTagCompound data)
+			{
+				ConfigGroup group = new ConfigGroup(new TextComponentTranslation("admin_panel.ftbutilities.gamerules"));
+
+				GameRules gameRules = player.team.universe.world.getGameRules();
+
+				for (String key : gameRules.getRules())
+				{
+					if (player.hasPermission(FTBUtilitiesPermissions.getGameruleNode(key)))
+					{
+						switch (getType(gameRules, key))
+						{
+							case BOOLEAN_VALUE:
+								group.add("", key, new ConfigBoolean(gameRules.getBoolean(key))
+								{
+									@Override
+									public boolean getBoolean()
+									{
+										return gameRules.getBoolean(key);
+									}
+
+									@Override
+									public void setBoolean(boolean value)
+									{
+										gameRules.setOrCreateGameRule(key, Boolean.toString(value));
+									}
+								}).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
+								break;
+							case NUMERICAL_VALUE:
+								group.add("", key, new ConfigInt(gameRules.getInt(key))
+								{
+									@Override
+									public int getInt()
+									{
+										return gameRules.getInt(key);
+									}
+
+									@Override
+									public void setInt(int value)
+									{
+										gameRules.setOrCreateGameRule(key, Integer.toString(value));
+									}
+								}).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
+								break;
+							default:
+								group.add("", key, new ConfigString(gameRules.getString(key))
+								{
+									@Override
+									public String getString()
+									{
+										return gameRules.getString(key);
+									}
+
+									@Override
+									public void setString(String value)
+									{
+										gameRules.setOrCreateGameRule(key, value);
+									}
+								}).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
+						}
+					}
+				}
+
+				FTBLibAPI.editServerConfig(player.getPlayer(), group, IConfigCallback.DEFAULT);
+			}
+
+			private GameRules.ValueType getType(GameRules gameRules, String key)
+			{
+				if (gameRules.areSameType(key, GameRules.ValueType.BOOLEAN_VALUE))
+				{
+					return GameRules.ValueType.BOOLEAN_VALUE;
+				}
+				else if (gameRules.areSameType(key, GameRules.ValueType.NUMERICAL_VALUE))
+				{
+					return GameRules.ValueType.NUMERICAL_VALUE;
+				}
+				else if (gameRules.areSameType(key, GameRules.ValueType.FUNCTION))
+				{
+					return GameRules.ValueType.FUNCTION;
+				}
+
+				return GameRules.ValueType.ANY_VALUE;
+			}
+		});
 	}
 }

@@ -8,7 +8,7 @@ import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
-import com.feed_the_beast.ftbutilities.data.FTBUPlayerData;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,7 +38,7 @@ public class CmdHome extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(Universe.get().getPlayer(sender)).homes.list());
+			return getListOfStringsMatchingLastWord(args, FTBUtilitiesPlayerData.get(Universe.get().getPlayer(sender)).homes.list());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -77,7 +77,7 @@ public class CmdHome extends CmdBase
 				throw FTBLibLang.COMMAND_PERMISSION.commandError();
 			}
 
-			FTBUPlayerData data = FTBUPlayerData.get(p);
+			FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
 
 			Collection<String> list = data.homes.list();
 			ITextComponent msg = new TextComponentString(p.getName() + ": " + list.size() + " / " + p.getRankConfig(FTBUtilitiesPermissions.HOMES_MAX).getInt() + ": ");
@@ -136,7 +136,7 @@ public class CmdHome extends CmdBase
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
 
-		FTBUPlayerData data = FTBUPlayerData.get(p);
+		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
 		BlockDimPos pos = data.homes.get(args[0]);
 
 		if (pos == null)

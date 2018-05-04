@@ -2,13 +2,13 @@ package com.feed_the_beast.ftbutilities;
 
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
-import com.feed_the_beast.ftbutilities.data.FTBULoadedChunkManager;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesLoadedChunkManager;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
 import com.feed_the_beast.ftbutilities.events.LeaderboardRegistryEvent;
-import com.feed_the_beast.ftbutilities.net.FTBUNetHandler;
-import com.feed_the_beast.ftbutilities.ranks.FTBUPermissionHandler;
+import com.feed_the_beast.ftbutilities.net.FTBUtilitiesNetHandler;
+import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -37,10 +37,10 @@ public class FTBUtilitiesCommon
 
 		if (FTBUtilitiesConfig.ranks.enabled)
 		{
-			PermissionAPI.setPermissionHandler(FTBUPermissionHandler.INSTANCE);
+			PermissionAPI.setPermissionHandler(FTBUtilitiesPermissionHandler.INSTANCE);
 		}
 
-		FTBUNetHandler.init();
+		FTBUtilitiesNetHandler.init();
 
 		if (!ForgeChunkManager.getConfig().hasCategory(FTBUtilities.MOD_ID))
 		{
@@ -49,7 +49,7 @@ public class FTBUtilitiesCommon
 			ForgeChunkManager.getConfig().save();
 		}
 
-		ForgeChunkManager.setForcedChunkLoadingCallback(FTBUtilities.INST, FTBULoadedChunkManager.INSTANCE);
+		ForgeChunkManager.setForcedChunkLoadingCallback(FTBUtilities.INST, FTBUtilitiesLoadedChunkManager.INSTANCE);
 		new CustomPermissionPrefixesRegistryEvent(CUSTOM_PERM_PREFIX_REGISTRY::add).post();
 		new LeaderboardRegistryEvent(leaderboard -> LEADERBOARDS.put(leaderboard.id, leaderboard)).post();
 	}

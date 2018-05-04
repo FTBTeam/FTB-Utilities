@@ -10,7 +10,7 @@ import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.events.chunks.ChunkModifiedEvent;
-import com.feed_the_beast.ftbutilities.handlers.FTBUPlayerEventHandler;
+import com.feed_the_beast.ftbutilities.handlers.FTBUtilitiesPlayerEventHandler;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
@@ -94,7 +94,7 @@ public class ClaimedChunks
 
 			if (chunk.isInvalid())
 			{
-				FTBULoadedChunkManager.INSTANCE.unforceChunk(chunk);
+				FTBUtilitiesLoadedChunkManager.INSTANCE.unforceChunk(chunk);
 				iterator.remove();
 			}
 		}
@@ -117,7 +117,7 @@ public class ClaimedChunks
 			{
 				for (ForgeTeam team : universe.getTeams())
 				{
-					FTBUTeamData.get(team).canForceChunks = FTBULoadedChunkManager.INSTANCE.canForceChunks(team);
+					FTBUtilitiesTeamData.get(team).canForceChunks = FTBUtilitiesLoadedChunkManager.INSTANCE.canForceChunks(team);
 				}
 
 				for (ClaimedChunk chunk : getAllChunks())
@@ -128,11 +128,11 @@ public class ClaimedChunks
 					{
 						if (force)
 						{
-							FTBULoadedChunkManager.INSTANCE.forceChunk(server, chunk);
+							FTBUtilitiesLoadedChunkManager.INSTANCE.forceChunk(server, chunk);
 						}
 						else
 						{
-							FTBULoadedChunkManager.INSTANCE.unforceChunk(chunk);
+							FTBUtilitiesLoadedChunkManager.INSTANCE.unforceChunk(chunk);
 						}
 					}
 				}
@@ -144,7 +144,7 @@ public class ClaimedChunks
 				int startX = playerPos.posX - ChunkSelectorMap.TILES_GUI2;
 				int startZ = playerPos.posZ - ChunkSelectorMap.TILES_GUI2;
 				new MessageClaimedChunksUpdate(startX, startZ, player).sendTo(player);
-				FTBUPlayerEventHandler.updateChunkMessage(player, playerPos);
+				FTBUtilitiesPlayerEventHandler.updateChunkMessage(player, playerPos);
 			}
 
 			isDirty = false;
@@ -237,13 +237,13 @@ public class ClaimedChunks
 	{
 		if (entity instanceof EntityPlayer)
 		{
-			if (FTBUtilitiesConfig.world.safe_spawn && player.dimension == 0 && FTBUUniverseData.isInSpawn(player.mcServer, new ChunkDimPos(entity)))
+			if (FTBUtilitiesConfig.world.safe_spawn && player.dimension == 0 && FTBUtilitiesUniverseData.isInSpawn(player.mcServer, new ChunkDimPos(entity)))
 			{
 				return false;
 			}
 			else if (FTBUtilitiesConfig.world.enable_pvp.isDefault())
 			{
-				return FTBUPlayerData.get(universe.getPlayer(player)).enablePVP() && FTBUPlayerData.get(universe.getPlayer(entity)).enablePVP();
+				return FTBUtilitiesPlayerData.get(universe.getPlayer(player)).enablePVP() && FTBUtilitiesPlayerData.get(universe.getPlayer(entity)).enablePVP();
 			}
 
 			return FTBUtilitiesConfig.world.enable_pvp.isTrue();
@@ -285,7 +285,7 @@ public class ClaimedChunks
 			return ClaimResult.DIMENSION_BLOCKED;
 		}
 
-		FTBUTeamData data = FTBUTeamData.get(player.team);
+		FTBUtilitiesTeamData data = FTBUtilitiesTeamData.get(player.team);
 
 		if (checkLimits)
 		{
@@ -362,7 +362,7 @@ public class ClaimedChunks
 			return false;
 		}
 
-		int max = FTBUTeamData.get(team).getMaxChunkloaderChunks();
+		int max = FTBUtilitiesTeamData.get(team).getMaxChunkloaderChunks();
 
 		if (max == 0)
 		{

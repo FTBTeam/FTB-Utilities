@@ -1,12 +1,10 @@
 package com.feed_the_beast.ftbutilities.cmd.tp;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
@@ -20,6 +18,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.server.command.TextComponentHelper;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
@@ -74,7 +73,7 @@ public class CmdHome extends CmdBase
 
 			if (sender instanceof EntityPlayer && !p.equalsPlayer(senderp) && senderp.hasPermission(FTBUtilitiesPermissions.HOMES_TELEPORT_OTHER))
 			{
-				throw FTBLibLang.COMMAND_PERMISSION.commandError();
+				throw new CommandException("commands.generic.permission");
 			}
 
 			FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
@@ -133,7 +132,7 @@ public class CmdHome extends CmdBase
 
 		if (sender instanceof EntityPlayer && !p.equalsPlayer(getForgePlayer(sender)) && !PermissionAPI.hasPermission((EntityPlayer) sender, FTBUtilitiesPermissions.HOMES_TELEPORT_OTHER))
 		{
-			throw FTBLibLang.COMMAND_PERMISSION.commandError();
+			throw new CommandException("commands.generic.permission");
 		}
 
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
@@ -141,14 +140,14 @@ public class CmdHome extends CmdBase
 
 		if (pos == null)
 		{
-			throw FTBUtilitiesLang.HOME_NOT_SET.commandError(args[0]);
+			throw new CommandException("ftbutilities.lang.homes.not_set", args[0]);
 		}
 		else if (player.dimension != pos.dim && !PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.HOMES_CROSS_DIM))
 		{
-			throw FTBUtilitiesLang.HOME_CROSS_DIM.commandError();
+			throw new CommandException("ftbutilities.lang.homes.cross_dim");
 		}
 
 		ServerUtils.teleportEntity(player, pos);
-		FTBUtilitiesLang.WARP_TP.sendMessage(sender, args[0]);
+		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0]));
 	}
 }

@@ -1,11 +1,9 @@
 package com.feed_the_beast.ftbutilities.cmd.chunks;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
-import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import net.minecraft.command.CommandException;
@@ -29,7 +27,7 @@ public class CmdUnclaim extends CmdBase
 	{
 		if (ClaimedChunks.instance == null)
 		{
-			throw FTBLibLang.FEATURE_DISABLED_SERVER.commandError();
+			throw new CommandException("feature_disabled_server");
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
@@ -38,7 +36,7 @@ public class CmdUnclaim extends CmdBase
 
 		if (ClaimedChunks.instance.canPlayerModify(p, pos) && ClaimedChunks.instance.unclaimChunk(pos))
 		{
-			Notification.of(FTBUtilitiesNotifications.CHUNK_MODIFIED, TextComponentHelper.createComponentTranslation(player, FTBUtilities.MOD_ID + ".lang.chunks.chunk_unclaimed")).send(server, player);
+			Notification.of(FTBUtilitiesNotifications.CHUNK_MODIFIED, TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.chunks.chunk_unclaimed")).send(server, player);
 			CmdChunks.updateChunk(player, pos);
 		}
 		else

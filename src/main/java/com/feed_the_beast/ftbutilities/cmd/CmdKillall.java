@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbutilities.cmd;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -15,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -121,6 +121,6 @@ public class CmdKillall extends CmdBase
 			}
 		}
 
-		sender.sendMessage(FTBUtilitiesLang.KILLED_ENTITIES.textComponent(sender, killed, type));
+		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.killed_entities", killed, type));
 	}
 }

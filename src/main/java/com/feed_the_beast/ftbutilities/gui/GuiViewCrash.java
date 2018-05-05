@@ -1,11 +1,9 @@
 package com.feed_the_beast.ftbutilities.gui;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
-import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.SimpleButton;
@@ -19,10 +17,11 @@ import com.feed_the_beast.ftblib.lib.io.RequestMethod;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.google.gson.JsonElement;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
@@ -62,11 +61,11 @@ public class GuiViewCrash extends GuiBase
 
 				if (!url.isEmpty())
 				{
-					ITextComponent link = FTBLibLang.CLICK_HERE.textComponent(null);
+					ITextComponent link = new TextComponentTranslation("click_here");
 					link.getStyle().setColor(TextFormatting.GOLD);
 					link.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(url)));
 					link.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
-					FTBUtilitiesLang.UPLOADED_CRASH.sendMessage(ClientUtils.MC.player, link);
+					ClientUtils.MC.player.sendMessage(new TextComponentTranslation("ftbutilities.lang.uploaded_crash", link));
 				}
 			}
 			catch (Exception ex)
@@ -134,7 +133,7 @@ public class GuiViewCrash extends GuiBase
 		scrollV.setCanAlwaysScrollPlane(false);
 		scrollV.setScrollStep(30);
 
-		close = new SimpleButton(this, GuiLang.CLOSE, GuiIcons.CLOSE, (widget, button) -> widget.getGui().closeGui())
+		close = new SimpleButton(this, I18n.format("gui.close"), GuiIcons.CLOSE, (widget, button) -> widget.getGui().closeGui())
 		{
 			@Override
 			public Icon getIcon()
@@ -143,7 +142,7 @@ public class GuiViewCrash extends GuiBase
 			}
 		};
 
-		upload = new SimpleButton(this, FTBUtilitiesLang.UPLOAD_CRASH, GuiIcons.UP, (widget, button) ->
+		upload = new SimpleButton(this, I18n.format("ftbutilities.lang.upload_crash"), GuiIcons.UP, (widget, button) ->
 		{
 			new ThreadUploadCrash().start();
 			widget.getGui().closeGui(false);

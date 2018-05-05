@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbutilities;
 
 import com.feed_the_beast.ftblib.lib.config.EnumTristate;
-import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
@@ -48,7 +47,7 @@ public class FTBUtilitiesConfig
 
 	public static class AutoShutdown
 	{
-		@Config.LangKey(GuiLang.LANG_ENABLED)
+		@Config.LangKey("addServer.resourcePack.enabled")
 		@Config.Comment("Enables auto-shutdown")
 		public boolean enabled = false;
 
@@ -74,7 +73,7 @@ public class FTBUtilitiesConfig
 
 	public static class BackupsConfig
 	{
-		@Config.LangKey(GuiLang.LANG_ENABLED)
+		@Config.LangKey("addServer.resourcePack.enabled")
 		@Config.Comment("Enables backups")
 		public boolean enabled = true;
 
@@ -223,7 +222,7 @@ public class FTBUtilitiesConfig
 
 	public static class RanksConfig
 	{
-		@Config.LangKey(GuiLang.LANG_ENABLED)
+		@Config.LangKey("addServer.resourcePack.enabled")
 		@Config.RequiresMcRestart
 		@Config.Comment("Enables ranks and adds command.x permissions and allows ranks to control them.")
 		public boolean enabled = true;

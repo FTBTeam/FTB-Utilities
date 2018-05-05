@@ -9,7 +9,6 @@ import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
@@ -28,6 +27,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.server.command.TextComponentHelper;
 
 /**
  * @author LatvianModder
@@ -96,7 +96,7 @@ public class FTBUtilitiesPlayerEventHandler
 			}
 			else
 			{
-				Notification.of(FTBUtilitiesNotifications.CHUNK_CHANGED, StringUtils.color(FTBUtilitiesLang.CHUNKS_WILDERNESS.textComponent(player), TextFormatting.DARK_GREEN)).send(player.mcServer, player);
+				Notification.of(FTBUtilitiesNotifications.CHUNK_CHANGED, StringUtils.color(TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.chunks.wilderness"), TextFormatting.DARK_GREEN)).send(player.mcServer, player);
 			}
 		}
 	}

@@ -8,7 +8,6 @@ import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
-import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.SimpleButton;
@@ -28,6 +27,7 @@ import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBTResponse;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagByte;
@@ -677,7 +677,7 @@ public class GuiEditNBT extends GuiBase
 			@Override
 			public void addWidgets()
 			{
-				add(new SimpleButton(this, GuiLang.DELETE, selected == buttonNBTRoot ? GuiIcons.REMOVE_GRAY : GuiIcons.REMOVE, (widget, button) ->
+				add(new SimpleButton(this, I18n.format("selectServer.delete"), selected == buttonNBTRoot ? GuiIcons.REMOVE_GRAY : GuiIcons.REMOVE, (widget, button) ->
 				{
 					if (selected != buttonNBTRoot)
 					{
@@ -691,7 +691,7 @@ public class GuiEditNBT extends GuiBase
 
 				boolean canRename = selected.parent instanceof ButtonNBTMap;
 
-				add(new SimpleButton(this, "Rename", canRename ? GuiIcons.INFO : GuiIcons.INFO_GRAY, (gui, button) ->
+				add(new SimpleButton(this, "Rename", canRename ? GuiIcons.INFO : GuiIcons.INFO_GRAY, (gui, button) -> //LANG
 				{
 					if (canRename)
 					{
@@ -721,7 +721,7 @@ public class GuiEditNBT extends GuiBase
 
 				if (selected instanceof ButtonNBTPrimitive)
 				{
-					add(new SimpleButton(this, GuiLang.EDIT, GuiIcons.FEATHER, (widget, button) -> ((ButtonNBTPrimitive) selected).edit()));
+					add(new SimpleButton(this, I18n.format("selectServer.edit"), GuiIcons.FEATHER, (widget, button) -> ((ButtonNBTPrimitive) selected).edit()));
 				}
 
 				if (selected.canCreateNew(Constants.NBT.TAG_COMPOUND))
@@ -794,7 +794,7 @@ public class GuiEditNBT extends GuiBase
 			@Override
 			public void addWidgets()
 			{
-				add(new SimpleButton(this, GuiLang.COLLAPSE_ALL, GuiIcons.REMOVE, (widget, button) ->
+				add(new SimpleButton(this, I18n.format("gui.collapse_all"), GuiIcons.REMOVE, (widget, button) ->
 				{
 					for (Widget w : panelNbt.widgets)
 					{
@@ -808,7 +808,7 @@ public class GuiEditNBT extends GuiBase
 					panelNbt.refreshWidgets();
 				}));
 
-				add(new SimpleButton(this, GuiLang.EXPAND_ALL, GuiIcons.ADD, (widget, button) ->
+				add(new SimpleButton(this, I18n.format("gui.expand_all"), GuiIcons.ADD, (widget, button) ->
 				{
 					for (Widget w : panelNbt.widgets)
 					{
@@ -822,13 +822,13 @@ public class GuiEditNBT extends GuiBase
 					panelNbt.refreshWidgets();
 				}));
 
-				add(new SimpleButton(this, GuiLang.CANCEL, GuiIcons.CANCEL, (widget, button) ->
+				add(new SimpleButton(this, I18n.format("gui.cancel"), GuiIcons.CANCEL, (widget, button) ->
 				{
 					shouldClose = 2;
 					widget.getGui().closeGui();
 				}));
 
-				add(new SimpleButton(this, GuiLang.ACCEPT, GuiIcons.ACCEPT, (widget, button) ->
+				add(new SimpleButton(this, I18n.format("gui.accept"), GuiIcons.ACCEPT, (widget, button) ->
 				{
 					shouldClose = 1;
 					widget.getGui().closeGui();

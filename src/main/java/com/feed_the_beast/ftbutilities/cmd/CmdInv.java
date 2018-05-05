@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbutilities.cmd;
 
 import com.feed_the_beast.ftblib.FTBLibConfig;
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
@@ -84,7 +83,7 @@ public class CmdInv extends CmdTreeBase
 					ex.printStackTrace();
 				}
 
-				throw FTBLibLang.ERROR.commandError(ex.toString());
+				throw new CommandException("error", ex.toString());
 			}
 		}
 
@@ -146,7 +145,7 @@ public class CmdInv extends CmdTreeBase
 					ex.printStackTrace();
 				}
 
-				throw FTBLibLang.ERROR.commandError(ex.toString());
+				throw new CommandException("error", ex.toString());
 			}
 		}
 

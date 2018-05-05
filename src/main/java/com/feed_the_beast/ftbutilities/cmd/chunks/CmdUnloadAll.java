@@ -1,9 +1,7 @@
 package com.feed_the_beast.ftbutilities.cmd.chunks;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
@@ -12,6 +10,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.server.command.TextComponentHelper;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
@@ -49,7 +48,7 @@ public class CmdUnloadAll extends CmdBase
 	{
 		if (ClaimedChunks.instance == null)
 		{
-			throw FTBLibLang.FEATURE_DISABLED_SERVER.commandError();
+			throw new CommandException("feature_disabled_server");
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
@@ -59,7 +58,7 @@ public class CmdUnloadAll extends CmdBase
 		{
 			if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS))
 			{
-				throw FTBLibLang.COMMAND_PERMISSION.commandError();
+				throw new CommandException("commands.generic.permission");
 			}
 
 			p = getForgePlayer(sender, args[1]);
@@ -79,6 +78,6 @@ public class CmdUnloadAll extends CmdBase
 			}
 		}
 
-		FTBUtilitiesLang.CHUNKS_UNLOADED_FOR.sendMessage(sender, p.getName());
+		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.chunks.unloaded_for", p.getName()));
 	}
 }

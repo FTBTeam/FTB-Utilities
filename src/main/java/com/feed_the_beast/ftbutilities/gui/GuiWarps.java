@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.lib.client.CachedVertexData;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
-import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
@@ -16,6 +15,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 
@@ -194,7 +194,7 @@ public class GuiWarps extends GuiBase
 		{
 			if (dist < SIZE_I || dist > SIZE_2)
 			{
-				drawString(TextFormatting.BOLD + GuiLang.CANCEL.translate(), ax, ay, DARK | CENTERED);
+				drawString(TextFormatting.BOLD + I18n.format("gui.cancel"), ax, ay, DARK | CENTERED);
 			}
 			else
 			{

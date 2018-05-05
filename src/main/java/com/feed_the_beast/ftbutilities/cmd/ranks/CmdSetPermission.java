@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbutilities.cmd.ranks;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
@@ -9,7 +8,6 @@ import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
@@ -69,52 +67,52 @@ public class CmdSetPermission extends CmdBase
 
 		if (rank == null)
 		{
-			throw FTBUtilitiesLang.RANK_NOT_FOUND.commandError(args[0]);
+			throw new CommandException("ftbutilities.lang.rank.not_found", args[0]);
 		}
 
 		Node node = Node.get(args[1]);
 
-		if (args[2].equals("null"))
+		switch (args[2])
 		{
-			if (rank.permissions.remove(node) != null)
-			{
-				Ranks.INSTANCE.saveAndUpdate(server, node);
-			}
-		}
-		else if (args[2].equals("true") || args[2].equals("false"))
-		{
-			JsonElement json = args[2].equals("true") ? JsonUtils.JSON_TRUE : JsonUtils.JSON_FALSE;
-
-			if (!JsonUtils.nonnull(rank.permissions.put(node, json)).equals(json))
-			{
-				Ranks.INSTANCE.saveAndUpdate(server, node);
-				sender.sendMessage(new TextComponentString("Changed permission '" + node + "' for '" + rank.getName() + "' to '" + args[2].equals("true") + "'")); //LANG
-			}
-			else
-			{
-				sender.sendMessage(new TextComponentString("Nothing changed!")); //LANG
-			}
-		}
-		else
-		{
-			JsonElement element = DataReader.get(StringUtils.joinSpaceUntilEnd(2, args)).safeJson();
-
-			if (element.isJsonObject())
-			{
-				throw FTBLibLang.WIP.commandError();
-			}
-			else if (!element.isJsonNull())
-			{
-				if (!JsonUtils.nonnull(rank.permissions.put(node, element)).equals(element))
+			case "null":
+				if (rank.permissions.remove(node) != null)
 				{
 					Ranks.INSTANCE.saveAndUpdate(server, node);
-					sender.sendMessage(new TextComponentString("Changed permission config '" + node + "' for '" + rank.getName() + "' to '" + element + "'")); //LANG
+				}
+				break;
+			case "true":
+			case "false":
+				JsonElement json = args[2].equals("true") ? JsonUtils.JSON_TRUE : JsonUtils.JSON_FALSE;
+
+				if (!JsonUtils.nonnull(rank.permissions.put(node, json)).equals(json))
+				{
+					Ranks.INSTANCE.saveAndUpdate(server, node);
+					sender.sendMessage(new TextComponentString("Changed permission '" + node + "' for '" + rank.getName() + "' to '" + args[2].equals("true") + "'")); //LANG
 				}
 				else
 				{
 					sender.sendMessage(new TextComponentString("Nothing changed!")); //LANG
 				}
-			}
+				break;
+			default:
+				JsonElement element = DataReader.get(StringUtils.joinSpaceUntilEnd(2, args)).safeJson();
+
+				if (element.isJsonObject())
+				{
+					throw new CommandException("wip");
+				}
+				else if (!element.isJsonNull())
+				{
+					if (!JsonUtils.nonnull(rank.permissions.put(node, element)).equals(element))
+					{
+						Ranks.INSTANCE.saveAndUpdate(server, node);
+						sender.sendMessage(new TextComponentString("Changed permission config '" + node + "' for '" + rank.getName() + "' to '" + element + "'")); //LANG
+					}
+					else
+					{
+						sender.sendMessage(new TextComponentString("Nothing changed!")); //LANG
+					}
+				}
 		}
 	}
 }

@@ -176,13 +176,11 @@ ftbutilities.lang.homes.limit=You can't set any more home locations!
 
 # Backups
 ftbutilities.lang.backup.start=Server Backup started!
-ftbutilities.lang.backup.stop=Server Backup stopped!
 ftbutilities.lang.backup.end_1=Server backup done in %s!
 ftbutilities.lang.backup.end_2=Server backup done in %s! (%s)
 ftbutilities.lang.backup.fail=Failed to save world! (%s)
 ftbutilities.lang.backup.manual_launch=%s launched a manual backup!
 ftbutilities.lang.backup.already_running=Backup in progress!
-ftbutilities.lang.backup.not_running=Backup is not running!
 ftbutilities.lang.backup.size=Current world size: %s, total backups folder size: %s
 ftbutilities.lang.backup.saving_failed=World saving failed!
 

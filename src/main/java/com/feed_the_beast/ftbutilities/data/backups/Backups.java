@@ -9,7 +9,6 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.net.MessageBackupProgress;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -21,6 +20,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.ThreadedFileIOBase;
+import net.minecraftforge.server.command.TextComponentHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -186,7 +186,7 @@ public enum Backups
 			return false;
 		}
 
-		notifyAll(server, player -> FTBUtilitiesLang.BACKUP_START.textComponent(player, sender.getName()), false);
+		notifyAll(server, player -> TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.backup.start", sender.getName()), false);
 		nextBackup = server.getWorld(0).getTotalWorldTime() + FTBUtilitiesConfig.backups.ticks();
 
 		try
@@ -210,7 +210,7 @@ public enum Backups
 			}
 			catch (Exception ex1)
 			{
-				notifyAll(server, FTBUtilitiesLang.BACKUP_SAVING_FAILED::textComponent, true);
+				notifyAll(server, player -> TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.backup.saving_failed"), true);
 			}
 		}
 		catch (Exception ex)
@@ -360,11 +360,11 @@ public enum Backups
 				{
 					String sizeB = FileUtils.getSizeString(dstFile);
 					String sizeT = FileUtils.getSizeString(backupsFolder);
-					notifyAll(server, player -> FTBUtilitiesLang.BACKUP_END_2.textComponent(player, getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT))), false);
+					notifyAll(server, player -> TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.backup.end_2", getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT))), false);
 				}
 				else
 				{
-					notifyAll(server, player -> FTBUtilitiesLang.BACKUP_END_1.textComponent(player, getDoneTime(time.getTimeInMillis())), false);
+					notifyAll(server, player -> TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.backup.end_1", getDoneTime(time.getTimeInMillis())), false);
 				}
 			}
 		}
@@ -372,7 +372,7 @@ public enum Backups
 		{
 			if (!FTBUtilitiesConfig.backups.silent)
 			{
-				notifyAll(server, player -> FTBUtilitiesLang.BACKUP_FAIL.textComponent(player, ex.getClass().getName()), true);
+				notifyAll(server, player -> TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.backup.fail", ex.getClass().getName()), true);
 			}
 
 			ex.printStackTrace();

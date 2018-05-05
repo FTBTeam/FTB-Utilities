@@ -18,6 +18,6 @@ public class FTBUtilitiesNotifications
 
 	public static void sendCantModifyChunk(MinecraftServer server, EntityPlayerMP player)
 	{
-		Notification.of(new ResourceLocation(FTBUtilities.MOD_ID, "cant_modify_chunk"), TextComponentHelper.createComponentTranslation(player, FTBUtilities.MOD_ID + ".lang.chunks.cant_modify_chunk")).setError().send(server, player);
+		Notification.of(new ResourceLocation(FTBUtilities.MOD_ID, "cant_modify_chunk"), TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.chunks.cant_modify_chunk")).setError().send(server, player);
 	}
 }

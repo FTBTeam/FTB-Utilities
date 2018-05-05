@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbutilities;
 
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.events.LeaderboardRegistryEvent;
@@ -41,13 +40,13 @@ public class FTBUtilitiesLeaderboards
 				player -> getDPH(player) >= 0D));
 
 		event.register(new Leaderboard(
-				new ResourceLocation(FTBUtilities.MOD_ID + ":last_seen"),
+				new ResourceLocation("ftbutilities:last_seen"),
 				new TextComponentTranslation("ftbutilities.stat.last_seen"),
 				player ->
 				{
 					if (player.isOnline())
 					{
-						ITextComponent component = GuiLang.ONLINE.textComponent(null);
+						ITextComponent component = new TextComponentTranslation("gui.online");
 						component.getStyle().setColor(TextFormatting.GREEN);
 						return component;
 					}

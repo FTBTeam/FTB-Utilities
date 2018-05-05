@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbutilities.cmd;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.server.command.TextComponentHelper;
 
 public class CmdKickme extends CmdBase
 {
@@ -18,7 +18,7 @@ public class CmdKickme extends CmdBase
 	{
 		if (server.isDedicatedServer())
 		{
-			getCommandSenderAsPlayer(sender).connection.disconnect(FTBUtilitiesLang.KICKME.textComponent(sender));
+			getCommandSenderAsPlayer(sender).connection.disconnect(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.kickme"));
 		}
 		else
 		{

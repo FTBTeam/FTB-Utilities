@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbutilities;
 
-import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
@@ -26,7 +25,7 @@ import java.util.List;
 		version = FTBUtilities.VERSION,
 		acceptableRemoteVersions = "*",
 		acceptedMinecraftVersions = "[1.12,)",
-		dependencies = "required-after:" + FTBLib.MOD_ID
+		dependencies = "required-after:ftblib"
 )
 public class FTBUtilities
 {

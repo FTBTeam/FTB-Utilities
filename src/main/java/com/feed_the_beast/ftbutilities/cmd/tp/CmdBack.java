@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
@@ -29,7 +28,7 @@ public class CmdBack extends CmdBase
 
 		if (data.lastDeath == null)
 		{
-			throw FTBUtilitiesLang.WARP_NO_DP.commandError();
+			throw new CommandException("ftbutilities.lang.warps.no_dp");
 		}
 
 		ServerUtils.teleportEntity(player, data.lastDeath);

@@ -3,13 +3,13 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.server.command.TextComponentHelper;
 
 public class CmdSetWarp extends CmdBase
 {
@@ -40,7 +40,7 @@ public class CmdSetWarp extends CmdBase
 		}
 
 		FTBUtilitiesUniverseData.WARPS.set(args[0], new BlockDimPos(c, player.dimension));
-		FTBUtilitiesLang.WARP_SET.sendMessage(sender, args[0]);
+		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.set", args[0]));
 		Universe.get().markDirty();
 	}
 }

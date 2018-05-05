@@ -7,7 +7,6 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.cmd.CmdShutdown;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
@@ -31,6 +30,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.server.command.TextComponentHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -104,7 +104,7 @@ public class FTBUtilitiesWorldEventHandler
 				{
 					for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
 					{
-						Notification.of(RESTART_TIMER_ID, StringUtils.color(FTBUtilitiesLang.TIMER_SHUTDOWN.textComponent(player, StringUtils.getTimeStringTicks(t)), TextFormatting.LIGHT_PURPLE)).send(universe.server, player);
+						Notification.of(RESTART_TIMER_ID, StringUtils.color(TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.timer.shutdown", StringUtils.getTimeStringTicks(t)), TextFormatting.LIGHT_PURPLE)).send(universe.server, player);
 					}
 				}
 			}

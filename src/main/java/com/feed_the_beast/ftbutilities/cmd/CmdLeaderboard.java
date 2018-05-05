@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbutilities.cmd;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
@@ -17,6 +16,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class CmdLeaderboard extends CmdBase
 		if (args.length == 0)
 		{
 			ITextComponent component = new TextComponentString("");
-			component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, StringUtils.color(FTBLibLang.CLICK_HERE.textComponent(sender), TextFormatting.GOLD)));
+			component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, StringUtils.color(TextComponentHelper.createComponentTranslation(sender, "click_here"), TextFormatting.GOLD)));
 			boolean first = true;
 
 			for (Leaderboard leaderboard : FTBUtilitiesCommon.LEADERBOARDS.values())

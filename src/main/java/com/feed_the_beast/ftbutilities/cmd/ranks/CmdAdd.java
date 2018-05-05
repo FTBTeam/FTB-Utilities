@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbutilities.cmd.ranks;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.CommandException;
@@ -24,7 +22,7 @@ public class CmdAdd extends CmdBase
 	{
 		if (Ranks.INSTANCE == null)
 		{
-			throw FTBLibLang.FEATURE_DISABLED_SERVER.commandError();
+			throw new CommandException("feature_disabled_server");
 		}
 
 		checkArgs(sender, args, 2);
@@ -33,14 +31,14 @@ public class CmdAdd extends CmdBase
 
 		if (Ranks.INSTANCE.getRankNames().contains(id))
 		{
-			throw FTBUtilitiesLang.RANK_ID_EXISTS.commandError(id);
+			throw new CommandException("ftbutilities.lang.rank.id_exists", id);
 		}
 
 		Rank parent = args.length == 1 ? Ranks.INSTANCE.builtinPlayerRank : Ranks.INSTANCE.getRank(args[1], null);
 
 		if (parent == null)
 		{
-			throw FTBUtilitiesLang.RANK_NOT_FOUND.commandError(id);
+			throw new CommandException("ftbutilities.lang.rank.not_found", id);
 		}
 
 		Ranks.INSTANCE.addRank(new Rank(Ranks.INSTANCE, id, parent));

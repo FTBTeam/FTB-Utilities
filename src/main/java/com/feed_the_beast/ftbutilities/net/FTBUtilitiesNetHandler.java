@@ -6,9 +6,9 @@ import com.feed_the_beast.ftbutilities.FTBUtilities;
 public class FTBUtilitiesNetHandler
 {
 	static final NetworkWrapper GENERAL = NetworkWrapper.newWrapper(FTBUtilities.MOD_ID);
-	static final NetworkWrapper CLAIMS = NetworkWrapper.newWrapper(FTBUtilities.MOD_ID + "_claims");
-	static final NetworkWrapper FILES = NetworkWrapper.newWrapper(FTBUtilities.MOD_ID + "_files");
-	static final NetworkWrapper STATS = NetworkWrapper.newWrapper(FTBUtilities.MOD_ID + "_stats");
+	static final NetworkWrapper CLAIMS = NetworkWrapper.newWrapper("ftbutilities_claims");
+	static final NetworkWrapper FILES = NetworkWrapper.newWrapper("ftbutilities_files");
+	static final NetworkWrapper STATS = NetworkWrapper.newWrapper("ftbutilities_stats");
 
 	public static void init()
 	{

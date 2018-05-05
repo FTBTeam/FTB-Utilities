@@ -93,7 +93,7 @@ public class Badges
 		{
 			BADGE_CACHE.clear();
 			LOCAL_BADGES.clear();
-			File file = new File(CommonUtils.folderLocal, FTBUtilities.MOD_ID + "/server_badges.json");
+			File file = new File(CommonUtils.folderLocal, "ftbutilities/server_badges.json");
 
 			if (!file.exists())
 			{

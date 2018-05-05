@@ -2,13 +2,13 @@ package com.feed_the_beast.ftbutilities.cmd.ranks;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -49,17 +49,17 @@ public class CmdSet extends CmdBase
 
 		if (r == Ranks.INSTANCE.builtinPlayerRank)
 		{
-			FTBUtilitiesLang.RANK_USE_DEOP.sendMessage(sender, args[0]);
+			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.rank.use_deop", args[0]));
 			return;
 		}
 		else if (r == Ranks.INSTANCE.builtinOPRank)
 		{
-			FTBUtilitiesLang.RANK_USE_OP.sendMessage(sender, args[0]);
+			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.rank.use_op", args[0]));
 			return;
 		}
 		else if (!Ranks.INSTANCE.getRankNames().contains(args[1]))
 		{
-			throw FTBUtilitiesLang.RANK_NOT_FOUND.commandError(args[1]);
+			throw new CommandException("ftbutilities.lang.rank.not_found", args[1]);
 		}
 
 		ForgePlayer p = getForgePlayer(sender, args[0]);
@@ -67,11 +67,11 @@ public class CmdSet extends CmdBase
 
 		if (r == null)
 		{
-			FTBUtilitiesLang.RANK_UNSET.sendMessage(sender, p.getName());
+			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.rank.unset", p.getName()));
 		}
 		else
 		{
-			FTBUtilitiesLang.RANK_SET.sendMessage(sender, p.getName(), r.getName());
+			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.rank.set", p.getName(), r.getName()));
 		}
 	}
 }

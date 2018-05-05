@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.client.FTBUtilitiesClientConfig;
 import com.feed_the_beast.ftbutilities.gui.ClientClaimedChunks;
 import com.feed_the_beast.ftbutilities.gui.UpdateClientDataEvent;
@@ -19,6 +18,7 @@ import journeymap.client.api.model.MapPolygon;
 import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.model.TextProperties;
 import journeymap.client.api.util.PolygonHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
@@ -102,7 +102,7 @@ public class JourneyMapIntegration implements IClientPlugin
 				MapPolygon poly = PolygonHelper.createChunkPolygon(pos.x, 0, pos.z);
 				p = new PolygonOverlay(FTBUtilities.MOD_ID, "claimed_" + pos.x + '_' + pos.z, dim, (ShapeProperties) chunk.team.shapeProperties, poly);
 				p.setOverlayGroupName("claimed_chunks");
-				p.setTitle(chunk.team.formattedName + '\n' + TextFormatting.GREEN + FTBUtilitiesLang.CHUNKS_CLAIMED_AREA.translate());
+				p.setTitle(chunk.team.formattedName + '\n' + TextFormatting.GREEN + I18n.format("ftbutilities.lang.chunks.claimed_area"));
 				/*
 				DEFAULT_SCALE = 1.0F;
    				DEFAULT_COLOR = 16777215;

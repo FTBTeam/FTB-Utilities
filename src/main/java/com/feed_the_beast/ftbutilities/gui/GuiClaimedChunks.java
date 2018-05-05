@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbutilities.gui;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.events.client.OpenGuideEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
 import com.feed_the_beast.ftblib.lib.EventHandler;
@@ -9,14 +8,12 @@ import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
-import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiChunkSelectorBase;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesLang;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksModify;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksRequest;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;
@@ -218,7 +215,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	@Override
 	public void addCornerButtons(Panel panel)
 	{
-		panel.add(new ButtonSide(panel, GuiLang.CLOSE.translate(), GuiIcons.ACCEPT)
+		panel.add(new ButtonSide(panel, I18n.format("gui.close"), GuiIcons.ACCEPT)
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -228,7 +225,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			}
 		});
 
-		panel.add(new ButtonSide(panel, GuiLang.REFRESH.translate(), GuiIcons.REFRESH)
+		panel.add(new ButtonSide(panel, I18n.format("selectServer.refresh"), GuiIcons.REFRESH)
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -241,13 +238,13 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 
 		if (maxClaimedChunks >= 0)
 		{
-			panel.add(new ButtonSide(panel, FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL_DIM.translate(currentDimName), GuiIcons.REMOVE)
+			panel.add(new ButtonSide(panel, I18n.format("ftbutilities.lang.chunks.unclaim_all_dim", currentDimName), GuiIcons.REMOVE)
 			{
 				@Override
 				public void onClicked(MouseButton button)
 				{
 					GuiHelper.playClickSound();
-					String s = FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
+					String s = I18n.format("ftbutilities.lang.chunks.unclaim_all_dim_q", currentDimName);
 					ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
 					{
 						if (set)
@@ -261,13 +258,13 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 				}
 			});
 
-			panel.add(new ButtonSide(panel, FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL.translate(), GuiIcons.REMOVE)
+			panel.add(new ButtonSide(panel, I18n.format("ftbutilities.lang.chunks.unclaim_all"), GuiIcons.REMOVE)
 			{
 				@Override
 				public void onClicked(MouseButton button)
 				{
 					GuiHelper.playClickSound();
-					String s = FTBUtilitiesLang.CHUNKS_UNCLAIM_ALL_Q.translate();
+					String s = I18n.format("ftbutilities.lang.chunks.unclaim_all_q");
 					ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
 					{
 						if (set)
@@ -284,7 +281,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 
 		if (new OpenGuideEvent().post())
 		{
-			panel.add(new ButtonSide(panel, GuiLang.INFO.translate(), GuiIcons.INFO)
+			panel.add(new ButtonSide(panel, I18n.format("gui.info"), GuiIcons.INFO)
 			{
 				@Override
 				public void onClicked(MouseButton button)
@@ -305,11 +302,11 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			{
 				if (maxClaimedChunks == -2)
 				{
-					list.add(TextFormatting.RED + FTBLibLang.TEAM_NO_TEAM.translate());
+					list.add(TextFormatting.RED + I18n.format("ftblib.lang.team.error.no_team"));
 				}
 				else
 				{
-					list.add(TextFormatting.RED + FTBLibLang.FEATURE_DISABLED_SERVER.translate());
+					list.add(TextFormatting.RED + I18n.format("feature_disabled_server"));
 				}
 			}
 
@@ -319,8 +316,8 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 		switch (corner)
 		{
 			case BOTTOM_RIGHT:
-				list.add(FTBUtilitiesLang.CHUNKS_CLAIMED_COUNT.translate(claimedChunks, maxClaimedChunks));
-				list.add(FTBUtilitiesLang.CHUNKS_LOADED_COUNT.translate(loadedChunks, maxLoadedChunks));
+				list.add(I18n.format("ftbutilities.lang.chunks.claimed_count", claimedChunks, maxClaimedChunks));
+				list.add(I18n.format("ftbutilities.lang.chunks.loaded_count", loadedChunks, maxLoadedChunks));
 				break;
 		}
 	}
@@ -333,7 +330,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 		if (data != null)
 		{
 			list.add(data.team.formattedName);
-			list.add(TextFormatting.GREEN + FTBUtilitiesLang.CHUNKS_CLAIMED_AREA.translate());
+			list.add(TextFormatting.GREEN + I18n.format("ftbutilities.lang.chunks.claimed_area"));
 
 			if (data.isLoaded())
 			{
@@ -342,7 +339,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 		}
 		else
 		{
-			list.add(TextFormatting.DARK_GREEN + FTBUtilitiesLang.CHUNKS_WILDERNESS.translate());
+			list.add(TextFormatting.DARK_GREEN + I18n.format("ftbutilities.lang.chunks.wilderness"));
 		}
 
 		if (isCtrlKeyDown())

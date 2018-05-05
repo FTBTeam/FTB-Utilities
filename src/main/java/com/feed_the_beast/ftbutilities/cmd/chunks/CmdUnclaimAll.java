@@ -1,10 +1,8 @@
 package com.feed_the_beast.ftbutilities.cmd.chunks;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
-import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
@@ -52,7 +50,7 @@ public class CmdUnclaimAll extends CmdBase
 	{
 		if (ClaimedChunks.instance == null)
 		{
-			throw FTBLibLang.FEATURE_DISABLED_SERVER.commandError();
+			throw new CommandException("feature_disabled_server");
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
@@ -65,7 +63,7 @@ public class CmdUnclaimAll extends CmdBase
 		{
 			if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS))
 			{
-				throw FTBLibLang.COMMAND_PERMISSION.commandError();
+				throw new CommandException("commands.generic.permission");
 			}
 
 			p = getForgePlayer(sender, args[1]);
@@ -79,7 +77,7 @@ public class CmdUnclaimAll extends CmdBase
 		{
 			boolean allDimensions = args.length == 0 || parseBoolean(args[0]);
 			ClaimedChunks.instance.unclaimAllChunks(p.team, allDimensions ? OptionalInt.empty() : OptionalInt.of(player.dimension));
-			Notification.of(FTBUtilitiesNotifications.UNCLAIMED_ALL, TextComponentHelper.createComponentTranslation(player, FTBUtilities.MOD_ID + ".lang.chunks.unclaimed_all")).send(server, player);
+			Notification.of(FTBUtilitiesNotifications.UNCLAIMED_ALL, TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.chunks.unclaimed_all")).send(server, player);
 		}
 	}
 }

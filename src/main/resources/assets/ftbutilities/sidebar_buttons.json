@@ -1,7 +1,7 @@
 {
 	"leaderboards": {
 		"group": "ftblib:util",
-		"icon": "item:minecraft:sign",
+		"icon": "minecraft:items/sign",
 		"x": 170,
 		"click": "custom:ftbutilities:leaderboards_gui",
 		"required_server_mods": ["ftbutilities"],

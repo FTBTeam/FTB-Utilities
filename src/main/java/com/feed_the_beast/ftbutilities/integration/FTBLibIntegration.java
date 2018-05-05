@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbutilities.integration;
 
 import com.feed_the_beast.ftblib.events.RegisterAdminPanelActionsEvent;
-import com.feed_the_beast.ftblib.events.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftblib.events.RegisterSyncDataEvent;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
@@ -86,12 +85,6 @@ public class FTBLibIntegration
 		{
 			event.failedToReload(RELOAD_BADGES);
 		}
-	}
-
-	@SubscribeEvent
-	public static void registerOptionalServerMod(RegisterOptionalServerModsEvent event)
-	{
-		event.register(FTBUtilities.MOD_ID);
 	}
 
 	@SubscribeEvent

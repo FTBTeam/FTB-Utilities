@@ -11,9 +11,6 @@ import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamDataEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamDeletedEvent;
-import com.feed_the_beast.ftblib.events.team.ForgeTeamOwnerChangedEvent;
-import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
-import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerLeftEvent;
 import com.feed_the_beast.ftblib.events.team.RegisterTeamGuiActionsEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
@@ -59,10 +56,10 @@ import java.util.OptionalInt;
 @EventHandler
 public class FTBLibIntegration
 {
-	public static final ResourceLocation RELOAD_CONFIG = new ResourceLocation(FTBUtilities.MOD_ID, "config");
-	public static final ResourceLocation RELOAD_RANKS = new ResourceLocation(FTBUtilities.MOD_ID, "ranks");
-	public static final ResourceLocation RELOAD_BADGES = new ResourceLocation(FTBUtilities.MOD_ID, "badges");
-	public static final ResourceLocation LOGIN_STARTING_ITEMS = new ResourceLocation(FTBUtilities.MOD_ID, "starting_items");
+	public static final ResourceLocation RELOAD_CONFIG = new ResourceLocation("ftbutilities:config");
+	public static final ResourceLocation RELOAD_RANKS = new ResourceLocation("ftbutilities:ranks");
+	public static final ResourceLocation RELOAD_BADGES = new ResourceLocation("ftbutilities:badges");
+	public static final ResourceLocation LOGIN_STARTING_ITEMS = new ResourceLocation("ftbutilities:starting_items");
 
 	@SubscribeEvent
 	public static void registerReloadIds(ServerReloadEvent.RegisterIds event)
@@ -189,6 +186,7 @@ public class FTBLibIntegration
 		ClaimedChunks.instance.unclaimAllChunks(event.getTeam(), OptionalInt.empty());
 	}
 
+	/*
 	@SubscribeEvent
 	public static void onTeamPlayerJoined(ForgeTeamPlayerJoinedEvent event)
 	{
@@ -206,11 +204,12 @@ public class FTBLibIntegration
 	{
 		//printMessage(FTBLibLang.TEAM_TRANSFERRED_OWNERSHIP.textComponent(p1.getName()));
 	}
+	*/
 
 	@SubscribeEvent
 	public static void registerTeamGuiActions(RegisterTeamGuiActionsEvent event)
 	{
-		/*event.register(new Action(new ResourceLocation(FTBUtilities.MOD_ID, "chat"), new TextComponentTranslation("sidebar_button." + FTBUtilities.MOD_ID + ".chats.team"), GuiIcons.CHAT, -10)
+		/*event.register(new Action(new ResourceLocation(FTBUtilities.MOD_ID+":chat"), new TextComponentTranslation("sidebar_button." + FTBUtilities.MOD_ID + ".chats.team"), GuiIcons.CHAT, -10)
 		{
 			@Override
 			public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -228,7 +227,7 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void registerAdminPanelActions(RegisterAdminPanelActionsEvent event)
 	{
-		event.register(new Action(new ResourceLocation(FTBUtilities.MOD_ID, "view_crash_reports"), new TextComponentTranslation("admin_panel.ftbutilities.crash_reports"), ItemIcon.getItemIcon(new ItemStack(Blocks.BARRIER)), 0)
+		event.register(new Action("ftbutilities:view_crash_reports", new TextComponentTranslation("admin_panel.ftbutilities.crash_reports"), ItemIcon.getItemIcon(new ItemStack(Blocks.BARRIER)), 0)
 		{
 			@Override
 			public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -243,39 +242,29 @@ public class FTBLibIntegration
 			}
 		});
 
-		event.register(new Action(new ResourceLocation(FTBUtilities.MOD_ID, "gamerules"), new TextComponentTranslation("admin_panel.ftbutilities.gamerules"), GuiIcons.NOTES, 0)
+		event.register(new Action("ftbutilities:edit_world", new TextComponentTranslation("admin_panel.ftbutilities.edit_world"), GuiIcons.GLOBE, 0)
 		{
 			@Override
 			public Type getType(ForgePlayer player, NBTTagCompound data)
 			{
-				GameRules gameRules = player.team.universe.world.getGameRules();
-
-				for (String s : gameRules.getRules())
-				{
-					if (player.hasPermission(FTBUtilitiesPermissions.getGameruleNode(s)))
-					{
-						return Type.ENABLED;
-					}
-				}
-
-				return Type.DISABLED;
+				return Type.fromBoolean(player.hasPermission(FTBUtilitiesPermissions.EDIT_WORLD_GAMERULES));
 			}
 
 			@Override
 			public void onAction(ForgePlayer player, NBTTagCompound data)
 			{
-				ConfigGroup group = new ConfigGroup(new TextComponentTranslation("admin_panel.ftbutilities.gamerules"));
+				ConfigGroup group = new ConfigGroup(new TextComponentTranslation("admin_panel.ftbutilities.edit_world"));
 
-				GameRules gameRules = player.team.universe.world.getGameRules();
-
-				for (String key : gameRules.getRules())
+				if (player.hasPermission(FTBUtilitiesPermissions.EDIT_WORLD_GAMERULES))
 				{
-					if (player.hasPermission(FTBUtilitiesPermissions.getGameruleNode(key)))
+					GameRules gameRules = player.team.universe.world.getGameRules();
+
+					for (String key : gameRules.getRules())
 					{
 						switch (getType(gameRules, key))
 						{
 							case BOOLEAN_VALUE:
-								group.add("", key, new ConfigBoolean(gameRules.getBoolean(key))
+								group.add("gamerules", key, new ConfigBoolean(gameRules.getBoolean(key))
 								{
 									@Override
 									public boolean getBoolean()
@@ -291,7 +280,7 @@ public class FTBLibIntegration
 								}).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
 								break;
 							case NUMERICAL_VALUE:
-								group.add("", key, new ConfigInt(gameRules.getInt(key))
+								group.add("gamerules", key, new ConfigInt(gameRules.getInt(key))
 								{
 									@Override
 									public int getInt()
@@ -307,7 +296,7 @@ public class FTBLibIntegration
 								}).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
 								break;
 							default:
-								group.add("", key, new ConfigString(gameRules.getString(key))
+								group.add("gamerules", key, new ConfigString(gameRules.getString(key))
 								{
 									@Override
 									public String getString()

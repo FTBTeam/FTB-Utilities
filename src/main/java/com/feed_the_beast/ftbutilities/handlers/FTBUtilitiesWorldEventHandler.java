@@ -44,7 +44,7 @@ import java.util.function.Function;
 @Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
 public class FTBUtilitiesWorldEventHandler
 {
-	private static final ResourceLocation RESTART_TIMER_ID = new ResourceLocation(FTBUtilities.MOD_ID, "restart_timer");
+	private static final ResourceLocation RESTART_TIMER_ID = new ResourceLocation("ftbutilities:restart_timer");
 
 	@SubscribeEvent
 	public static void onMobSpawned(EntityJoinWorldEvent event) //FIXME: LivingSpawnEvent.CheckSpawn

@@ -23,7 +23,6 @@ import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
 import com.feed_the_beast.ftblib.lib.item.ItemEntryWithCount;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBTResponse;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -57,7 +56,7 @@ public class GuiEditNBT extends GuiBase
 {
 	private static Icon getIcon(String name)
 	{
-		return IconWithOutline.BUTTON_ROUND_GRAY.combineWith(Icon.getIcon(FTBUtilities.MOD_ID + ":textures/gui/nbt/" + name + ".png"));
+		return IconWithOutline.BUTTON_ROUND_GRAY.combineWith(Icon.getIcon("ftbutilities:textures/gui/nbt/" + name + ".png"));
 	}
 
 	public static final Icon NBT_BYTE = getIcon("byte");

@@ -273,9 +273,9 @@ public class Ranks
 		saveRanks();
 		Universe.get().clearCache();
 
-		for (EntityPlayerMP playerMP : server.getPlayerList().getPlayers())
+		for (EntityPlayerMP player : server.getPlayerList().getPlayers())
 		{
-			server.getPlayerList().updatePermissionLevel(playerMP);
+			server.getPlayerList().updatePermissionLevel(player);
 		}
 	}
 

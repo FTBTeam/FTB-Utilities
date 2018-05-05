@@ -38,7 +38,7 @@ public enum Backups
 {
 	INSTANCE;
 
-	public static final ResourceLocation NOTIFICATION_ID = new ResourceLocation(FTBUtilities.MOD_ID, "backup");
+	public static final ResourceLocation NOTIFICATION_ID = new ResourceLocation("ftbutilities:backup");
 
 	public final List<Backup> backups = new ArrayList<>();
 	public File backupsFolder;

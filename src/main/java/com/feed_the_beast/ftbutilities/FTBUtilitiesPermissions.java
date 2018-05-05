@@ -38,33 +38,33 @@ import javax.annotation.Nullable;
 public class FTBUtilitiesPermissions
 {
 	// Display //
-	public static final String DISPLAY_ADMIN_INFO = FTBUtilities.MOD_ID + ".display.admin_info";
-	public static final Node BADGE = Node.get(FTBUtilities.MOD_ID + ".badge");
+	public static final String DISPLAY_ADMIN_INFO = "ftbutilities.display.admin_info";
+	public static final Node BADGE = Node.get("ftbutilities.badge");
 
 	// Homes //
-	public static final String HOMES_CROSS_DIM = FTBUtilities.MOD_ID + ".homes.cross_dim";
-	public static final Node HOMES_MAX = Node.get(FTBUtilities.MOD_ID + ".homes.max");
-	public static final String HOMES_LIST_OTHER = FTBUtilities.MOD_ID + ".homes.list_other";
-	public static final String HOMES_TELEPORT_OTHER = FTBUtilities.MOD_ID + ".homes.teleport_other";
+	public static final String HOMES_CROSS_DIM = "ftbutilities.homes.cross_dim";
+	public static final Node HOMES_MAX = Node.get("ftbutilities.homes.max");
+	public static final String HOMES_LIST_OTHER = "ftbutilities.homes.list_other";
+	public static final String HOMES_TELEPORT_OTHER = "ftbutilities.homes.teleport_other";
 
 	// Claims //
-	public static final String CLAIMS_CHUNKS_MODIFY_OTHERS = FTBUtilities.MOD_ID + ".claims.modify.others";
-	public static final Node CLAIMS_MAX_CHUNKS = Node.get(FTBUtilities.MOD_ID + ".claims.max_chunks");
-	public static final String CLAIMS_BLOCK_CNB = FTBUtilities.MOD_ID + ".claims.block.cnb";
-	private static final String CLAIMS_BLOCK_EDIT_PREFIX = FTBUtilities.MOD_ID + ".claims.block.edit.";
-	private static final String CLAIMS_BLOCK_INTERACT_PREFIX = FTBUtilities.MOD_ID + ".claims.block.interact.";
-	private static final String CLAIMS_ITEM_PREFIX = FTBUtilities.MOD_ID + ".claims.item.";
+	public static final String CLAIMS_CHUNKS_MODIFY_OTHERS = "ftbutilities.claims.modify.others";
+	public static final Node CLAIMS_MAX_CHUNKS = Node.get("ftbutilities.claims.max_chunks");
+	public static final String CLAIMS_BLOCK_CNB = "ftbutilities.claims.block.cnb";
+	private static final String CLAIMS_BLOCK_EDIT_PREFIX = "ftbutilities.claims.block.edit.";
+	private static final String CLAIMS_BLOCK_INTERACT_PREFIX = "ftbutilities.claims.block.interact.";
+	private static final String CLAIMS_ITEM_PREFIX = "ftbutilities.claims.item.";
 
 	// Chunkloader //
-	public static final Node CHUNKLOADER_MAX_CHUNKS = Node.get(FTBUtilities.MOD_ID + ".chunkloader.max_chunks");
+	public static final Node CHUNKLOADER_MAX_CHUNKS = Node.get("ftbutilities.chunkloader.max_chunks");
 	//public static final String CHUNKLOADER_OFFLINE_TIMER = FTBUtilities.MOD_ID + ".chunkloader.offline_timer";
-	public static final String CHUNKLOADER_LOAD_OFFLINE = FTBUtilities.MOD_ID + ".chunkloader.load_offline";
+	public static final String CHUNKLOADER_LOAD_OFFLINE = "ftbutilities.chunkloader.load_offline";
 
 	// Other //
-	public static final String INFINITE_BACK_USAGE = FTBUtilities.MOD_ID + ".back.infinite";
-	public static final String VIEW_CRASH_REPORTS = "admin_panel." + FTBUtilities.MOD_ID + ".view_crash_reports";
-	private static final String LEADERBOARD_PREFIX = FTBUtilities.MOD_ID + ".leaderboard.";
-	private static final String EDIT_GAMERULE = "admin_panel." + FTBUtilities.MOD_ID + ".edit_gamerule.";
+	public static final String INFINITE_BACK_USAGE = "ftbutilities.back.infinite";
+	public static final String VIEW_CRASH_REPORTS = "admin_panel.ftbutilities.view_crash_reports";
+	private static final String LEADERBOARD_PREFIX = "ftbutilities.leaderboard.";
+	public static final String EDIT_WORLD_GAMERULES = "admin_panel.ftbutilities.edit_world.gamerules";
 
 	@SubscribeEvent
 	public static void registerRankConfigHandler(RegisterRankConfigHandlerEvent event)
@@ -87,6 +87,7 @@ public class FTBUtilitiesPermissions
 		event.registerNode(CHUNKLOADER_LOAD_OFFLINE, DefaultPermissionLevel.ALL, "Keep loaded chunks working when player goes offline");
 		event.registerNode(INFINITE_BACK_USAGE, DefaultPermissionLevel.NONE, "Allow to use 'back' command infinite times");
 		event.registerNode(VIEW_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to view crash reports via Admin Panel");
+		event.registerNode(EDIT_WORLD_GAMERULES, DefaultPermissionLevel.OP, "Allow to edit gamerules via Admin Panel");
 
 		for (Block block : Block.REGISTRY)
 		{
@@ -130,7 +131,6 @@ public class FTBUtilitiesPermissions
 		event.register(new NodeEntry(Node.get(CLAIMS_BLOCK_INTERACT_PREFIX), DefaultPermissionLevel.OP, "Permission for blocks that players can right-click within claimed chunks"));
 		event.register(new NodeEntry(Node.get(CLAIMS_ITEM_PREFIX), DefaultPermissionLevel.ALL, "Permission for items that players can right-click in air within claimed chunks"));
 		event.register(new NodeEntry(Node.get(LEADERBOARD_PREFIX), DefaultPermissionLevel.ALL, "Permission for leaderboards that players can view"));
-		event.register(new NodeEntry(Node.get(EDIT_GAMERULE), DefaultPermissionLevel.OP, "Permission for editing specific gamerules in Admin Panel"));
 	}
 
 	private static String formatId(@Nullable IForgeRegistryEntry item)
@@ -161,10 +161,5 @@ public class FTBUtilitiesPermissions
 	public static String getLeaderboardNode(Leaderboard leaderboard)
 	{
 		return LEADERBOARD_PREFIX + leaderboard.id.getResourceDomain() + "." + leaderboard.id.getResourcePath();
-	}
-
-	public static String getGameruleNode(String gamerule)
-	{
-		return EDIT_GAMERULE + gamerule;
 	}
 }

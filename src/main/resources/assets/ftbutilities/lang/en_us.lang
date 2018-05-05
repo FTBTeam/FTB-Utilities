@@ -115,7 +115,7 @@ admin_panel.ftbutilities.loaded_chunks=View All Loaded Chunks
 admin_panel.ftbutilities.shops=Edit Shops
 admin_panel.ftbutilities.whitelist=Edit Whitelist
 admin_panel.ftbutilities.ops=Edit OPs
-admin_panel.ftbutilities.gamerules=Edit Gamerules
+admin_panel.ftbutilities.edit_world=Edit World
 
 # Keys
 key.categories.ftbu=FTBMods
@@ -124,6 +124,7 @@ key.ftbutilities.light_values=Toggle Light Values
 key.ftbutilities.warp=Warp GUI
 
 # Misc
+gamerules=Gamerules
 ftbutilities.lang.timer.shutdown=Server shuts down in %s
 ftbutilities.lang.timer.backup=Server backup in: %s
 ftbutilities.lang.killed_entities=Killed %d entities with type '%s'

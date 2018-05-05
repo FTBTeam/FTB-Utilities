@@ -11,10 +11,10 @@ import net.minecraftforge.server.command.TextComponentHelper;
  */
 public class FTBUtilitiesNotifications
 {
-	public static final ResourceLocation CHUNK_MODIFIED = new ResourceLocation(FTBUtilities.MOD_ID, "chunk_modified");
-	public static final ResourceLocation CHUNK_CHANGED = new ResourceLocation(FTBUtilities.MOD_ID, "chunk_changed");
-	public static final ResourceLocation CHUNK_CANT_CLAIM = new ResourceLocation(FTBUtilities.MOD_ID, "cant_claim_chunk");
-	public static final ResourceLocation UNCLAIMED_ALL = new ResourceLocation(FTBUtilities.MOD_ID, "unclaimed_all");
+	public static final ResourceLocation CHUNK_MODIFIED = new ResourceLocation("ftbutilities:chunk_modified");
+	public static final ResourceLocation CHUNK_CHANGED = new ResourceLocation("ftbutilities:chunk_changed");
+	public static final ResourceLocation CHUNK_CANT_CLAIM = new ResourceLocation("ftbutilities:cant_claim_chunk");
+	public static final ResourceLocation UNCLAIMED_ALL = new ResourceLocation("ftbutilities:unclaimed_all");
 
 	public static void sendCantModifyChunk(MinecraftServer server, EntityPlayerMP player)
 	{

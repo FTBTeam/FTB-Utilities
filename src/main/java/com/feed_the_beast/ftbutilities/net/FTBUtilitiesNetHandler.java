@@ -1,11 +1,10 @@
 package com.feed_the_beast.ftbutilities.net;
 
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbutilities.FTBUtilities;
 
 public class FTBUtilitiesNetHandler
 {
-	static final NetworkWrapper GENERAL = NetworkWrapper.newWrapper(FTBUtilities.MOD_ID);
+	static final NetworkWrapper GENERAL = NetworkWrapper.newWrapper("ftbutilities");
 	static final NetworkWrapper CLAIMS = NetworkWrapper.newWrapper("ftbutilities_claims");
 	static final NetworkWrapper FILES = NetworkWrapper.newWrapper("ftbutilities_files");
 	static final NetworkWrapper STATS = NetworkWrapper.newWrapper("ftbutilities_stats");

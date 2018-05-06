@@ -67,6 +67,7 @@ public class GuiLeaderboard extends GuiButtonListBase
 	public GuiLeaderboard(ITextComponent c, List<LeaderboardValue> l)
 	{
 		setTitle(I18n.format("sidebar_button.ftbutilities.leaderboards") + " > " + c.getFormattedText());
+		setHasSearchBox(true);
 		leaderboard = l;
 	}
 
@@ -83,5 +84,11 @@ public class GuiLeaderboard extends GuiButtonListBase
 			value.rank = ++i;
 			panel.add(new LeaderboardEntry(panel, value));
 		}
+	}
+
+	@Override
+	public String getFilterText(Widget widget)
+	{
+		return ((LeaderboardEntry) widget).value.username;
 	}
 }

@@ -44,6 +44,7 @@ public class FTBUtilitiesPermissions
 	// Homes //
 	public static final String HOMES_CROSS_DIM = "ftbutilities.homes.cross_dim";
 	public static final Node HOMES_MAX = Node.get("ftbutilities.homes.max");
+	public static final Node HOMES_COOLDOWN = Node.get("ftbutilities.homes.cooldown");
 	public static final String HOMES_LIST_OTHER = "ftbutilities.homes.list_other";
 	public static final String HOMES_TELEPORT_OTHER = "ftbutilities.homes.teleport_other";
 
@@ -118,6 +119,7 @@ public class FTBUtilitiesPermissions
 	{
 		event.register(BADGE, new ConfigString(""), new ConfigString(""));
 		event.register(HOMES_MAX, new ConfigInt(1, 0, 30000), new ConfigInt(100));
+		event.register(HOMES_COOLDOWN, new ConfigInt(10 * 60),new ConfigInt(0));
 		event.register(CLAIMS_MAX_CHUNKS, new ConfigInt(100, 0, 30000), new ConfigInt(1000));
 		event.register(CHUNKLOADER_MAX_CHUNKS, new ConfigInt(50, 0, 30000), new ConfigInt(64));
 		//event.register(CHUNKLOADER_OFFLINE_TIMER, new ConfigDouble(-1D).setMin(-1D), new ConfigDouble(-1D));

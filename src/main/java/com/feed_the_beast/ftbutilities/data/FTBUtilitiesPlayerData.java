@@ -21,6 +21,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 
 	public final ForgePlayer player;
 	public BlockDimPos lastDeath, lastSafePos;
+	private long lastGoHome;
 	public ForgeTeam lastChunkTeam;
 	public final BlockDimPosStorage homes;
 	public boolean fly;
@@ -61,6 +62,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 			nbt.setIntArray("LastDeath", lastDeath.toIntArray());
 		}
 
+		nbt.setLong("LastGoHome",lastGoHome);
 		return nbt;
 	}
 
@@ -84,6 +86,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 			int[] ai = nbt.getIntArray("LastDeath");
 			lastDeath = (ai.length == 4) ? new BlockDimPos(ai) : null;
 		}
+		lastGoHome = nbt.getLong("LastGoHome");
 	}
 
 	public void addConfig(ForgePlayerConfigEvent event)
@@ -107,5 +110,16 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 	public boolean enablePVP()
 	{
 		return enablePVP.getBoolean();
+	}
+
+	public void setLastGoHome (long timestamp)
+	{
+		lastGoHome = timestamp;
+		player.markDirty();
+	}
+
+	public long getLastGoHome()
+	{
+		return lastGoHome;
 	}
 }

@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.cmd.tp;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
@@ -23,6 +24,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public class CmdHome extends CmdBase
@@ -147,7 +149,14 @@ public class CmdHome extends CmdBase
 			throw new CommandException("ftbutilities.lang.homes.cross_dim");
 		}
 
+		long now = new Date().getTime();
+		long cooldown = data.getLastGoHome() + RankConfigAPI.get(player,FTBUtilitiesPermissions.HOMES_COOLDOWN).getInt() * 1000 - now;
+		if ( data.getLastGoHome() != 0 && cooldown > 0)
+		{
+			throw new CommandException("ftbutilities.lang.homes.in_cooldown",cooldown / 1000);
+		}
 		ServerUtils.teleportEntity(player, pos);
+		data.setLastGoHome(now);
 		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0]));
 	}
 }

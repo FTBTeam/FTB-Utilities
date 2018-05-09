@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbutilities.gui;
 
-import com.feed_the_beast.ftblib.events.client.OpenGuideEvent;
+import com.feed_the_beast.ftblib.events.client.GuideEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
 import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.client.CachedVertexData;
@@ -279,7 +279,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			});
 		}
 
-		if (new OpenGuideEvent().post())
+		if (GuideEvent.check("/ftbutilities/chunk_claiming"))
 		{
 			panel.add(new ButtonSide(panel, I18n.format("gui.info"), GuiIcons.INFO)
 			{
@@ -287,7 +287,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 				public void onClicked(MouseButton button)
 				{
 					GuiHelper.playClickSound();
-					new OpenGuideEvent("/ftbutilities/chunk_claiming").post();
+					GuideEvent.open("/ftbutilities/chunk_claiming");
 				}
 			});
 		}

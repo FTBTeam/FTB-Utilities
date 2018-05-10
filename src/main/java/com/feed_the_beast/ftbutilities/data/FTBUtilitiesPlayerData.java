@@ -4,8 +4,10 @@ import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
+import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -61,8 +63,33 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 		{
 			nbt.setIntArray("LastDeath", lastDeath.toIntArray());
 		}
-
+		nbt.setLong("GoHomeCooldownLeft",this.serializeLastGoHome());
 		return nbt;
+	}
+
+	private long getTotalWorldTime()
+	{
+		return Universe.get().server.getWorld(0).getTotalWorldTime();
+	}
+
+	public long getGoHomeCooldown()
+	{
+		return getNextGoHomeTick() - getTotalWorldTime();
+	}
+
+	private long getNextGoHomeTick() {
+		return lastGoHome + player.getRankConfig(FTBUtilitiesPermissions.HOMES_COOLDOWN).getInt();
+	}
+
+	private void deserializeLastGoHome (long cooldownLeft)
+	{
+		if (cooldownLeft <= 0) return;
+		lastGoHome = getTotalWorldTime()  - (player.getRankConfig(FTBUtilitiesPermissions.HOMES_COOLDOWN).getInt() - cooldownLeft);
+	}
+
+	private long serializeLastGoHome ()
+	{
+		return getGoHomeCooldown() <= 0 ? 0 : getGoHomeCooldown();
 	}
 
 	@Override
@@ -85,6 +112,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 			int[] ai = nbt.getIntArray("LastDeath");
 			lastDeath = (ai.length == 4) ? new BlockDimPos(ai) : null;
 		}
+		deserializeLastGoHome(nbt.getLong("GoHomeCooldownLeft"));
 	}
 
 	public void addConfig(ForgePlayerConfigEvent event)
@@ -110,9 +138,9 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 		return enablePVP.getBoolean();
 	}
 
-	public void setLastGoHome (long timestamp)
+	public void setLastGoHome (long tick)
 	{
-		lastGoHome = timestamp;
+		lastGoHome = tick;
 		player.markDirty();
 	}
 

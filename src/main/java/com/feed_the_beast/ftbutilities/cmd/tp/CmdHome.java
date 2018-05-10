@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbutilities.cmd.tp;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
-import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
@@ -150,7 +149,7 @@ public class CmdHome extends CmdBase
 		}
 
 		long now = server.getWorld(0).getTotalWorldTime();
-		long cooldown = data.getLastGoHome() + RankConfigAPI.get(player,FTBUtilitiesPermissions.HOMES_COOLDOWN).getInt() - now;
+		long cooldown = data.getGoHomeCooldown();
 		if ( data.getLastGoHome() != 0 && cooldown > 0)
 		{
 			throw new CommandException("ftbutilities.lang.homes.in_cooldown", StringUtils.getTimeStringTicks(cooldown));

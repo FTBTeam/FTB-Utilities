@@ -172,7 +172,7 @@ ftbutilities.lang.warps.spawn=Teleported to spawn
 ftbutilities.lang.homes.set=Home '%s' set!
 ftbutilities.lang.homes.del=Home '%s' deleted!
 ftbutilities.lang.homes.not_set=Unknown Home: '%s'!
-ftbutilities.lang.homes.in_cooldown=You can use home after %d seconds.
+ftbutilities.lang.homes.in_cooldown=You can only use home in %s!
 ftbutilities.lang.homes.cross_dim=You can't teleport to another dimension!
 ftbutilities.lang.homes.limit=You can't set any more home locations!
 

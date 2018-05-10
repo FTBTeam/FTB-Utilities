@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
@@ -24,7 +25,6 @@ import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 public class CmdHome extends CmdBase
@@ -149,11 +149,11 @@ public class CmdHome extends CmdBase
 			throw new CommandException("ftbutilities.lang.homes.cross_dim");
 		}
 
-		long now = new Date().getTime();
-		long cooldown = data.getLastGoHome() + RankConfigAPI.get(player,FTBUtilitiesPermissions.HOMES_COOLDOWN).getInt() * 1000 - now;
+		long now = server.getWorld(0).getTotalWorldTime();
+		long cooldown = data.getLastGoHome() + RankConfigAPI.get(player,FTBUtilitiesPermissions.HOMES_COOLDOWN).getInt() - now;
 		if ( data.getLastGoHome() != 0 && cooldown > 0)
 		{
-			throw new CommandException("ftbutilities.lang.homes.in_cooldown",cooldown / 1000);
+			throw new CommandException("ftbutilities.lang.homes.in_cooldown", StringUtils.getTimeStringTicks(cooldown));
 		}
 		ServerUtils.teleportEntity(player, pos);
 		data.setLastGoHome(now);

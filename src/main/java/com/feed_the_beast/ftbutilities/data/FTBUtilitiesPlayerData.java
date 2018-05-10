@@ -62,7 +62,6 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 			nbt.setIntArray("LastDeath", lastDeath.toIntArray());
 		}
 
-		nbt.setLong("LastGoHome",lastGoHome);
 		return nbt;
 	}
 
@@ -86,7 +85,6 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 			int[] ai = nbt.getIntArray("LastDeath");
 			lastDeath = (ai.length == 4) ? new BlockDimPos(ai) : null;
 		}
-		lastGoHome = nbt.getLong("LastGoHome");
 	}
 
 	public void addConfig(ForgePlayerConfigEvent event)

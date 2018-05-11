@@ -164,6 +164,7 @@ ftbutilities.lang.chunks.upgrade.no_pvp=Ally PVP Disabled
 ftbutilities.lang.warps.set=Warp '%s' set!
 ftbutilities.lang.warps.del=Warp '%s' deleted!
 ftbutilities.lang.warps.not_set=Unknown Warp: '%s'!
+ftbutilities.lang.warps.in_cooldown=You can only use warp in %s!
 ftbutilities.lang.warps.tp=Teleported to '%s'!
 ftbutilities.lang.warps.no_dp=You can only go back once!
 ftbutilities.lang.warps.spawn=Teleported to spawn

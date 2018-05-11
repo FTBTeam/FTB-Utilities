@@ -22,7 +22,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 
 	public final ForgePlayer player;
 	public BlockDimPos lastDeath, lastSafePos;
-	private long lastGoHome;
+	private long lastGoHome,lastWarp;
 	public ForgeTeam lastChunkTeam;
 	public final BlockDimPosStorage homes;
 	public boolean fly;
@@ -66,16 +66,6 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 		nbt.setLong("LastGoHome", lastGoHome);
 
 		return nbt;
-	}
-
-	private long getTotalWorldTime()
-	{
-		return player.team.universe.server.getWorld(0).getTotalWorldTime();
-	}
-
-	public long getGoHomeCooldown()
-	{
-		return lastGoHome + player.getRankConfig(FTBUtilitiesPermissions.HOMES_COOLDOWN).getInt() - getTotalWorldTime();
 	}
 
 	@Override
@@ -134,4 +124,31 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 	{
 		return lastGoHome;
 	}
+
+	private long getTotalWorldTime()
+	{
+		return player.team.universe.server.getWorld(0).getTotalWorldTime();
+	}
+
+	public long getGoHomeCooldown()
+	{
+		return lastGoHome + player.getRankConfig(FTBUtilitiesPermissions.HOMES_COOLDOWN).getInt() - getTotalWorldTime();
+	}
+
+	public void setLastWarp (long tick)
+	{
+		lastWarp = tick;
+		player.markDirty();
+	}
+
+	public long getLastWarp()
+	{
+		return lastWarp;
+	}
+
+	public long getWarpCooldown()
+	{
+		return lastWarp + player.getRankConfig(FTBUtilitiesPermissions.WARPS_COOLDOWN).getInt() - getTotalWorldTime();
+	}
+
 }

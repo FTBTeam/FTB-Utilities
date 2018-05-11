@@ -150,7 +150,7 @@ public class CmdHome extends CmdBase
 
 		long now = server.getWorld(0).getTotalWorldTime();
 		long cooldown = data.getGoHomeCooldown();
-		if ( data.getLastGoHome() != 0 && cooldown > 0)
+		if (cooldown > 0)
 		{
 			throw new CommandException("ftbutilities.lang.homes.in_cooldown", StringUtils.getTimeStringTicks(cooldown));
 		}

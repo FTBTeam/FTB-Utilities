@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
-import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
@@ -63,33 +62,20 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 		{
 			nbt.setIntArray("LastDeath", lastDeath.toIntArray());
 		}
-		nbt.setLong("GoHomeCooldownLeft",this.serializeLastGoHome());
+
+		nbt.setLong("LastGoHome", lastGoHome);
+
 		return nbt;
 	}
 
 	private long getTotalWorldTime()
 	{
-		return Universe.get().server.getWorld(0).getTotalWorldTime();
+		return player.team.universe.server.getWorld(0).getTotalWorldTime();
 	}
 
 	public long getGoHomeCooldown()
 	{
-		return getNextGoHomeTick() - getTotalWorldTime();
-	}
-
-	private long getNextGoHomeTick() {
-		return lastGoHome + player.getRankConfig(FTBUtilitiesPermissions.HOMES_COOLDOWN).getInt();
-	}
-
-	private void deserializeLastGoHome (long cooldownLeft)
-	{
-		if (cooldownLeft <= 0) return;
-		lastGoHome = getTotalWorldTime()  - (player.getRankConfig(FTBUtilitiesPermissions.HOMES_COOLDOWN).getInt() - cooldownLeft);
-	}
-
-	private long serializeLastGoHome ()
-	{
-		return getGoHomeCooldown() <= 0 ? 0 : getGoHomeCooldown();
+		return lastGoHome + player.getRankConfig(FTBUtilitiesPermissions.HOMES_COOLDOWN).getInt() - getTotalWorldTime();
 	}
 
 	@Override
@@ -112,7 +98,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 			int[] ai = nbt.getIntArray("LastDeath");
 			lastDeath = (ai.length == 4) ? new BlockDimPos(ai) : null;
 		}
-		deserializeLastGoHome(nbt.getLong("GoHomeCooldownLeft"));
+		lastGoHome = nbt.getLong("LastGoHome");
 	}
 
 	public void addConfig(ForgePlayerConfigEvent event)

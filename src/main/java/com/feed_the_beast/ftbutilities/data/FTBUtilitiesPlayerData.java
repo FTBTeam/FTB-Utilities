@@ -11,6 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.INBTSerializable;
 
+import javax.annotation.Nullable;
+
 /**
  * @author LatvianModder
  */
@@ -21,11 +23,12 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 	private final ConfigBoolean enablePVP = new ConfigBoolean(true);
 
 	public final ForgePlayer player;
-	public BlockDimPos lastDeath, lastSafePos;
-	private long lastGoHome,lastWarp;
 	public ForgeTeam lastChunkTeam;
+
+	private BlockDimPos lastDeath, lastSafePos;
+	private long lastHome, lastWarp;
 	public final BlockDimPosStorage homes;
-	public boolean fly;
+	private boolean fly;
 
 	public FTBUtilitiesPlayerData(ForgePlayer p)
 	{
@@ -45,25 +48,16 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 		nbt.setBoolean("RenderBadge", renderBadge.getBoolean());
 		nbt.setBoolean("DisableGlobalBadges", disableGlobalBadge.getBoolean());
 		nbt.setBoolean("EnablePVP", enablePVP.getBoolean());
-
-		NBTTagCompound homesTag = homes.serializeNBT();
-
-		if (!homesTag.hasNoTags())
-		{
-			nbt.setTag("Homes", homesTag);
-		}
-
-		if (fly)
-		{
-			nbt.setBoolean("AllowFlying", true);
-		}
+		nbt.setTag("Homes", homes.serializeNBT());
+		nbt.setBoolean("AllowFlying", fly);
 
 		if (lastDeath != null)
 		{
 			nbt.setIntArray("LastDeath", lastDeath.toIntArray());
 		}
 
-		nbt.setLong("LastGoHome", lastGoHome);
+		nbt.setLong("LastHome", lastHome);
+		nbt.setLong("LastWarp", lastWarp);
 
 		return nbt;
 	}
@@ -81,14 +75,9 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 		enablePVP.setBoolean(!nbt.hasKey("EnablePVP") || nbt.getBoolean("EnablePVP"));
 		homes.deserializeNBT(nbt.getCompoundTag("Homes"));
 		fly = nbt.getBoolean("AllowFlying");
-
-		lastDeath = null;
-		if (nbt.hasKey("LastDeath"))
-		{
-			int[] ai = nbt.getIntArray("LastDeath");
-			lastDeath = (ai.length == 4) ? new BlockDimPos(ai) : null;
-		}
-		lastGoHome = nbt.getLong("LastGoHome");
+		lastDeath = BlockDimPos.fromIntArray(nbt.getIntArray("LastDeath"));
+		lastHome = nbt.getLong("LastHome");
+		lastWarp = nbt.getLong("LastWarp");
 	}
 
 	public void addConfig(ForgePlayerConfigEvent event)
@@ -114,41 +103,60 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 		return enablePVP.getBoolean();
 	}
 
-	public void setLastGoHome (long tick)
+	public void setFly(boolean v)
 	{
-		lastGoHome = tick;
+		fly = v;
 		player.markDirty();
 	}
 
-	public long getLastGoHome()
+	public boolean getFly()
 	{
-		return lastGoHome;
+		return fly;
 	}
 
-	private long getTotalWorldTime()
+	public void setLastDeath(@Nullable BlockDimPos pos)
 	{
-		return player.team.universe.server.getWorld(0).getTotalWorldTime();
-	}
-
-	public long getGoHomeCooldown()
-	{
-		return lastGoHome + player.getRankConfig(FTBUtilitiesPermissions.HOMES_COOLDOWN).getInt() - getTotalWorldTime();
-	}
-
-	public void setLastWarp (long tick)
-	{
-		lastWarp = tick;
+		lastDeath = pos;
 		player.markDirty();
 	}
 
-	public long getLastWarp()
+	@Nullable
+	public BlockDimPos getLastDeath()
 	{
-		return lastWarp;
+		return lastDeath;
+	}
+
+	public void setLastSafePos(@Nullable BlockDimPos pos)
+	{
+		lastSafePos = pos;
+		player.markDirty();
+	}
+
+	@Nullable
+	public BlockDimPos getLastSafePos()
+	{
+		return lastSafePos;
+	}
+
+	public void updateLastHome()
+	{
+		lastHome = player.team.universe.world.getTotalWorldTime();
+		player.markDirty();
+	}
+
+	public long getHomeCooldown()
+	{
+		return lastHome + player.getRankConfig(FTBUtilitiesPermissions.HOMES_COOLDOWN).getInt() - player.team.universe.world.getTotalWorldTime();
+	}
+
+	public void updateLastWarp()
+	{
+		lastWarp = player.team.universe.world.getTotalWorldTime();
+		player.markDirty();
 	}
 
 	public long getWarpCooldown()
 	{
-		return lastWarp + player.getRankConfig(FTBUtilitiesPermissions.WARPS_COOLDOWN).getInt() - getTotalWorldTime();
+		return lastWarp + player.getRankConfig(FTBUtilitiesPermissions.WARPS_COOLDOWN).getInt() - player.team.universe.world.getTotalWorldTime();
 	}
-
 }

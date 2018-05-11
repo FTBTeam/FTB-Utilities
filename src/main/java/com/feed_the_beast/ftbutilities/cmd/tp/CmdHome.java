@@ -148,14 +148,15 @@ public class CmdHome extends CmdBase
 			throw new CommandException("ftbutilities.lang.homes.cross_dim");
 		}
 
-		long now = server.getWorld(0).getTotalWorldTime();
-		long cooldown = data.getGoHomeCooldown();
+		long cooldown = data.getHomeCooldown();
+
 		if (cooldown > 0)
 		{
 			throw new CommandException("ftbutilities.lang.homes.in_cooldown", StringUtils.getTimeStringTicks(cooldown));
 		}
+
 		ServerUtils.teleportEntity(player, pos);
-		data.setLastGoHome(now);
+		data.updateLastHome();
 		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0]));
 	}
 }

@@ -28,15 +28,18 @@ public class CmdFly extends CmdBase
 	{
 		EntityPlayerMP player = getSelfOrOther(sender, args, 0);
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(getForgePlayer(player));
-		data.fly = !data.fly;
-		player.capabilities.allowFlying = data.fly;
+		data.setFly(!data.getFly());
 
-		if (!data.fly)
+		if (data.getFly())
 		{
+			player.capabilities.allowFlying = true;
+		}
+		else
+		{
+			player.capabilities.allowFlying = false;
 			player.capabilities.isFlying = false;
 		}
 
-		data.player.markDirty();
 		player.sendPlayerAbilities();
 	}
 }

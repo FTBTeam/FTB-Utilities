@@ -66,7 +66,7 @@ public class FTBUtilitiesWorldEventHandler
 
 		Universe universe = Universe.get();
 
-		long now = universe.server.getWorld(0).getTotalWorldTime();
+		long now = universe.world.getTotalWorldTime();
 
 		if (event.phase == TickEvent.Phase.START)
 		{
@@ -79,7 +79,7 @@ public class FTBUtilitiesWorldEventHandler
 		{
 			for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
 			{
-				if (!player.capabilities.isCreativeMode && FTBUtilitiesPlayerData.get(universe.getPlayer(player)).fly)
+				if (!player.capabilities.isCreativeMode && FTBUtilitiesPlayerData.get(universe.getPlayer(player)).getFly())
 				{
 					boolean fly = player.capabilities.allowFlying;
 					player.capabilities.allowFlying = true;

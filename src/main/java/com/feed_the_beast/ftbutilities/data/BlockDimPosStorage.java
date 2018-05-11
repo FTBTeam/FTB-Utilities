@@ -84,7 +84,12 @@ public final class BlockDimPosStorage implements INBTSerializable<NBTTagCompound
 
 		for (String name : nbt.getKeySet())
 		{
-			map.put(name, new BlockDimPos(nbt.getIntArray(name)));
+			BlockDimPos pos = BlockDimPos.fromIntArray(nbt.getIntArray(name));
+
+			if (pos != null)
+			{
+				map.put(name, pos);
+			}
 		}
 
 		names.addAll(map.keySet());

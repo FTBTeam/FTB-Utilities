@@ -41,8 +41,7 @@ public class FTBUtilitiesPlayerEventHandler
 		if (event.getEntity() instanceof EntityPlayerMP)
 		{
 			FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(Universe.get().getPlayer(event.getEntity()));
-			data.lastDeath = new BlockDimPos(event.getEntity());
-			data.player.markDirty();
+			data.setLastDeath(new BlockDimPos(event.getEntity()));
 		}
 	}
 
@@ -62,8 +61,7 @@ public class FTBUtilitiesPlayerEventHandler
 			return;
 		}
 
-		FTBUtilitiesPlayerData.get(p).lastSafePos = new BlockDimPos(player);
-		p.markDirty();
+		FTBUtilitiesPlayerData.get(p).setLastSafePos(new BlockDimPos(player));
 		updateChunkMessage(player, new ChunkDimPos(event.getNewChunkX(), event.getNewChunkZ(), player.dimension));
 	}
 

@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
@@ -122,8 +123,8 @@ public class FTBUtilitiesPermissions
 	{
 		event.register(BADGE, new ConfigString(""), new ConfigString(""));
 		event.register(HOMES_MAX, new ConfigInt(1, 0, 30000), new ConfigInt(100));
-		event.register(HOMES_COOLDOWN, new ConfigInt(12000,0,Integer.MAX_VALUE),new ConfigInt(0));
-		event.register(WARPS_COOLDOWN, new ConfigInt(12000,0,Integer.MAX_VALUE),new ConfigInt(0));
+		event.register(HOMES_COOLDOWN, new ConfigInt((int) (CommonUtils.TICKS_MINUTE * 5), 0, Integer.MAX_VALUE), new ConfigInt(0));
+		event.register(WARPS_COOLDOWN, new ConfigInt((int) CommonUtils.TICKS_MINUTE, 0, Integer.MAX_VALUE), new ConfigInt(0));
 		event.register(CLAIMS_MAX_CHUNKS, new ConfigInt(100, 0, 30000), new ConfigInt(1000));
 		event.register(CHUNKLOADER_MAX_CHUNKS, new ConfigInt(50, 0, 30000), new ConfigInt(64));
 		//event.register(CHUNKLOADER_OFFLINE_TIMER, new ConfigDouble(-1D).setMin(-1D), new ConfigDouble(-1D));

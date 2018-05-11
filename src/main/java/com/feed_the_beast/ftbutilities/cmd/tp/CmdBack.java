@@ -26,17 +26,16 @@ public class CmdBack extends CmdBase
 
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
 
-		if (data.lastDeath == null)
+		if (data.getLastDeath() == null)
 		{
 			throw new CommandException("ftbutilities.lang.warps.no_dp");
 		}
 
-		ServerUtils.teleportEntity(player, data.lastDeath);
+		ServerUtils.teleportEntity(player, data.getLastDeath());
 
 		if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.INFINITE_BACK_USAGE))
 		{
-			data.lastDeath = null;
-			data.player.markDirty();
+			data.setLastDeath(null);
 		}
 	}
 }

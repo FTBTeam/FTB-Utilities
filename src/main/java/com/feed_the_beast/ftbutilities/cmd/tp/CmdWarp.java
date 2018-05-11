@@ -61,18 +61,22 @@ public class CmdWarp extends CmdBase
 		}
 
 		BlockDimPos p = FTBUtilitiesUniverseData.WARPS.get(args[0]);
+
 		if (p == null)
 		{
 			throw new CommandException("ftbutilities.lang.warps.not_set", args[0]);
 		}
+
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(getForgePlayer(player));
 		long cooldown = data.getWarpCooldown();
+
 		if (cooldown > 0)
 		{
 			throw new CommandException("ftbutilities.lang.warps.in_cooldown", StringUtils.getTimeStringTicks(cooldown));
 		}
+
 		ServerUtils.teleportEntity(player, p);
-		data.setLastWarp(server.getWorld(0).getTotalWorldTime());
+		data.updateLastWarp();
 		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0]));
 	}
 }

@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
@@ -147,7 +148,14 @@ public class CmdHome extends CmdBase
 			throw new CommandException("ftbutilities.lang.homes.cross_dim");
 		}
 
+		long now = server.getWorld(0).getTotalWorldTime();
+		long cooldown = data.getGoHomeCooldown();
+		if (cooldown > 0)
+		{
+			throw new CommandException("ftbutilities.lang.homes.in_cooldown", StringUtils.getTimeStringTicks(cooldown));
+		}
 		ServerUtils.teleportEntity(player, pos);
+		data.setLastGoHome(now);
 		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0]));
 	}
 }

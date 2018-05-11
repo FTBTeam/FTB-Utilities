@@ -4,6 +4,8 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import com.feed_the_beast.ftbutilities.net.MessageSendWarpList;
 import net.minecraft.command.CommandException;
@@ -63,8 +65,14 @@ public class CmdWarp extends CmdBase
 		{
 			throw new CommandException("ftbutilities.lang.warps.not_set", args[0]);
 		}
-
+		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(getForgePlayer(player));
+		long cooldown = data.getWarpCooldown();
+		if (cooldown > 0)
+		{
+			throw new CommandException("ftbutilities.lang.warps.in_cooldown", StringUtils.getTimeStringTicks(cooldown));
+		}
 		ServerUtils.teleportEntity(player, p);
+		data.setLastWarp(server.getWorld(0).getTotalWorldTime());
 		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0]));
 	}
 }

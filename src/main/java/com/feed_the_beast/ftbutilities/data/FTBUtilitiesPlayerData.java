@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -21,6 +22,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 
 	public final ForgePlayer player;
 	public BlockDimPos lastDeath, lastSafePos;
+	private long lastGoHome,lastWarp;
 	public ForgeTeam lastChunkTeam;
 	public final BlockDimPosStorage homes;
 	public boolean fly;
@@ -61,6 +63,8 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 			nbt.setIntArray("LastDeath", lastDeath.toIntArray());
 		}
 
+		nbt.setLong("LastGoHome", lastGoHome);
+
 		return nbt;
 	}
 
@@ -84,6 +88,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 			int[] ai = nbt.getIntArray("LastDeath");
 			lastDeath = (ai.length == 4) ? new BlockDimPos(ai) : null;
 		}
+		lastGoHome = nbt.getLong("LastGoHome");
 	}
 
 	public void addConfig(ForgePlayerConfigEvent event)
@@ -108,4 +113,42 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 	{
 		return enablePVP.getBoolean();
 	}
+
+	public void setLastGoHome (long tick)
+	{
+		lastGoHome = tick;
+		player.markDirty();
+	}
+
+	public long getLastGoHome()
+	{
+		return lastGoHome;
+	}
+
+	private long getTotalWorldTime()
+	{
+		return player.team.universe.server.getWorld(0).getTotalWorldTime();
+	}
+
+	public long getGoHomeCooldown()
+	{
+		return lastGoHome + player.getRankConfig(FTBUtilitiesPermissions.HOMES_COOLDOWN).getInt() - getTotalWorldTime();
+	}
+
+	public void setLastWarp (long tick)
+	{
+		lastWarp = tick;
+		player.markDirty();
+	}
+
+	public long getLastWarp()
+	{
+		return lastWarp;
+	}
+
+	public long getWarpCooldown()
+	{
+		return lastWarp + player.getRankConfig(FTBUtilitiesPermissions.WARPS_COOLDOWN).getInt() - getTotalWorldTime();
+	}
+
 }

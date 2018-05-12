@@ -76,6 +76,7 @@ player_config.ftbutilities.chat_links=Chat Links
 player_config.ftbutilities.disable_global_badge=Disable Global Badge
 player_config.ftbutilities.render_badge=Render My Badge
 player_config.ftbutilities.enable_pvp=Enable PVP
+player_config.ftbutilities.nickname=Nickname
 
 # Team Settings
 team_config.ftbutilities.blocks_edit=Required Level for Block Editing

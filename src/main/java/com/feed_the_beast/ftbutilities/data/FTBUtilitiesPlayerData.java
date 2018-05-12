@@ -2,8 +2,10 @@ package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
+import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
+import com.feed_the_beast.ftblib.lib.data.IHasCache;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
@@ -18,13 +20,15 @@ import java.util.HashSet;
 /**
  * @author LatvianModder
  */
-public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
+public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>, IHasCache
 {
+	public final ForgePlayer player;
+
 	private final ConfigBoolean renderBadge = new ConfigBoolean(true);
 	private final ConfigBoolean disableGlobalBadge = new ConfigBoolean(false);
 	private final ConfigBoolean enablePVP = new ConfigBoolean(true);
+	private final ConfigString nickname = new ConfigString("");
 
-	public final ForgePlayer player;
 	public ForgeTeam lastChunkTeam;
 	public final Collection<ForgePlayer> tpaRequestsFrom;
 
@@ -60,23 +64,20 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 			nbt.setIntArray("LastDeath", lastDeath.toIntArray());
 		}
 
+		nbt.setString("Nickname", nickname.getString());
 		return nbt;
 	}
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		if (nbt == null)
-		{
-			return;
-		}
-
 		renderBadge.setBoolean(!nbt.hasKey("RenderBadge") || nbt.getBoolean("RenderBadge"));
 		disableGlobalBadge.setBoolean(nbt.getBoolean("DisableGlobalBadges"));
 		enablePVP.setBoolean(!nbt.hasKey("EnablePVP") || nbt.getBoolean("EnablePVP"));
 		homes.deserializeNBT(nbt.getCompoundTag("Homes"));
 		fly = nbt.getBoolean("AllowFlying");
 		lastDeath = BlockDimPos.fromIntArray(nbt.getIntArray("LastDeath"));
+		nickname.setString(nbt.getString("Nickname"));
 	}
 
 	public void addConfig(ForgePlayerConfigEvent event)
@@ -85,6 +86,11 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 		event.getConfig().add(FTBUtilities.MOD_ID, "render_badge", renderBadge);
 		event.getConfig().add(FTBUtilities.MOD_ID, "disable_global_badge", disableGlobalBadge);
 		event.getConfig().add(FTBUtilities.MOD_ID, "enable_pvp", enablePVP);
+
+		if (event.getPlayer().hasPermission(FTBUtilitiesPermissions.NICKNAME))
+		{
+			event.getConfig().add(FTBUtilities.MOD_ID, "nickname", nickname);
+		}
 	}
 
 	public boolean renderBadge()
@@ -100,6 +106,11 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 	public boolean enablePVP()
 	{
 		return enablePVP.getBoolean();
+	}
+
+	public String getNickname()
+	{
+		return nickname.getString();
 	}
 
 	public void setFly(boolean v)
@@ -165,5 +176,14 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 	public long getTPACooldown()
 	{
 		return lastTPA + player.getRankConfig(FTBUtilitiesPermissions.TPA_COOLDOWN).getInt() - player.team.universe.world.getTotalWorldTime();
+	}
+
+	@Override
+	public void clearCache()
+	{
+		if (player.isOnline())
+		{
+			player.getPlayer().refreshDisplayName();
+		}
 	}
 }

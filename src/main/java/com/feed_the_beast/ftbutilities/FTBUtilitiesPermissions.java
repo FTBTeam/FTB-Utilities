@@ -71,6 +71,7 @@ public class FTBUtilitiesPermissions
 	private static final String LEADERBOARD_PREFIX = "ftbutilities.leaderboard.";
 	public static final String EDIT_WORLD_GAMERULES = "admin_panel.ftbutilities.edit_world.gamerules";
 	public static final Node TPA_COOLDOWN = Node.get("ftbutilities.tpa.cooldown");
+	public static final String NICKNAME = "ftbutilities.nickname";
 
 	@SubscribeEvent
 	public static void registerRankConfigHandler(RegisterRankConfigHandlerEvent event)
@@ -94,6 +95,7 @@ public class FTBUtilitiesPermissions
 		event.registerNode(INFINITE_BACK_USAGE, DefaultPermissionLevel.NONE, "Allow to use 'back' command infinite times");
 		event.registerNode(VIEW_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to view crash reports via Admin Panel");
 		event.registerNode(EDIT_WORLD_GAMERULES, DefaultPermissionLevel.OP, "Allow to edit gamerules via Admin Panel");
+		event.registerNode(NICKNAME, DefaultPermissionLevel.OP, "Allow to change nickname");
 
 		for (Block block : Block.REGISTRY)
 		{

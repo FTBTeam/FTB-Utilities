@@ -31,7 +31,7 @@ public class CmdBack extends CmdBase
 			throw new CommandException("ftbutilities.lang.warps.no_dp");
 		}
 
-		ServerUtils.teleportEntity(player, data.getLastDeath());
+		ServerUtils.teleportEntity(server, player, data.getLastDeath());
 
 		if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.INFINITE_BACK_USAGE))
 		{

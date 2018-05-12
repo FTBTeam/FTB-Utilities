@@ -12,8 +12,8 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * @author LatvianModder
@@ -26,7 +26,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 
 	public final ForgePlayer player;
 	public ForgeTeam lastChunkTeam;
-	public final Map<ForgePlayer, Long> tpaRequestsFrom;
+	public final Collection<ForgePlayer> tpaRequestsFrom;
 
 	private BlockDimPos lastDeath, lastSafePos;
 	private long lastHome, lastWarp, lastTPA;
@@ -37,7 +37,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 	{
 		player = p;
 		homes = new BlockDimPosStorage();
-		tpaRequestsFrom = new HashMap<>();
+		tpaRequestsFrom = new HashSet<>();
 	}
 
 	public static FTBUtilitiesPlayerData get(ForgePlayer player)

@@ -72,10 +72,10 @@ public class CmdWarp extends CmdBase
 
 		if (cooldown > 0)
 		{
-			throw new CommandException("ftbutilities.lang.warps.cooldown", StringUtils.getTimeStringTicks(cooldown));
+			throw new CommandException("cant_use_now_cooldown", StringUtils.getTimeStringTicks(cooldown));
 		}
 
-		ServerUtils.teleportEntity(player, p);
+		ServerUtils.teleportEntity(server, player, p);
 		data.updateLastWarp();
 		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0]));
 	}

@@ -30,7 +30,7 @@ public class CmdSpawn extends CmdBase
 			spawnpoint = spawnpoint.up(2);
 		}
 
-		ServerUtils.teleportEntity(player, new BlockDimPos(spawnpoint, 0));
+		ServerUtils.teleportEntity(server, player, new BlockDimPos(spawnpoint, 0));
 		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.spawn"));
 	}
 }

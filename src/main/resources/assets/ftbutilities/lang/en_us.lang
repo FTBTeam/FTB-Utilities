@@ -178,17 +178,13 @@ ftbutilities.lang.homes.cross_dim=You can't teleport to another dimension!
 ftbutilities.lang.homes.limit=You can't set any more home locations!
 
 # TPA
-ftbutilities.lang.tpa.request_received=%s requests to teleport to you!
-ftbutilities.lang.tpa.accept=[Accept]
-ftbutilities.lang.tpa.deny=[Deny]
-ftbutilities.lang.tpa.question=%s or %s, request will expire in 30 seconds.
-ftbutilities.lang.tpa.request_sent=Request sent to %s!
+ftbutilities.lang.tpa.from_to=%s -> %s
+ftbutilities.lang.tpa.request_received=%s requests TPA! %s to accept.
+ftbutilities.lang.tpa.request_sent=Request sent!
 ftbutilities.lang.tpa.no_request=%s is not requesting to teleport to you!
-ftbutilities.lang.tpa.cant_request=Can't request to teleport to %s!
-ftbutilities.lang.tpa.request_expired=Request to teleport to %s expired!
-ftbutilities.lang.tpa.request_accepted=Request to teleport to %s accepted! Teleporting...
-ftbutilities.lang.tpa.request_denied=Request to teleport to %s denied!
-ftbutilities.lang.tpa.cooldown=You can only use tpa in %s!
+ftbutilities.lang.tpa.cant_request=Can't request TPA!
+ftbutilities.lang.tpa.request_expired=TPA request expired!
+ftbutilities.lang.tpa.request_accepted=TPA Request accepted!
 
 # Backups
 ftbutilities.lang.backup.start=Server Backup started!

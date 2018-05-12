@@ -36,7 +36,7 @@ public class CmdTplast extends CmdBase
 			double x = parseDouble(player.posX, args[0], -30000000, 30000000, true);
 			double y = parseDouble(player.posY, args[1], -30000000, 30000000, true);
 			double z = parseDouble(player.posZ, args[2], -30000000, 30000000, true);
-			ServerUtils.teleportEntity(player, new BlockDimPos(x, y, z, player.dimension));
+			ServerUtils.teleportEntity(server, player, new BlockDimPos(x, y, z, player.dimension));
 			return;
 		}
 
@@ -67,6 +67,6 @@ public class CmdTplast extends CmdBase
 			p = new BlockDimPos(posList.getDoubleAt(0), posList.getDoubleAt(1), posList.getDoubleAt(2), nbt.getInteger("Dimension"));
 		}
 
-		ServerUtils.teleportEntity(who, p);
+		ServerUtils.teleportEntity(server, who, p);
 	}
 }

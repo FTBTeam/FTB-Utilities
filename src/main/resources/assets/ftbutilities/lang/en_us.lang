@@ -41,6 +41,7 @@ ftbutilities.world.spawn_radius=Spawn Radius
 ftbutilities.ranks=Ranks
 ftbutilities.ranks.enabled=Enabled
 ftbutilities.ranks.override_chat=Override Chat
+ftbutilities.ranks.crash_client_side_permissions=Crash Client-Side Permissions
 
 ftbutilities.debugging.log_chunkloading=Log Chunkloading
 

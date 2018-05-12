@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.config.IRankConfigHandler;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
@@ -39,13 +40,20 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 	@Override
 	public boolean hasPermission(GameProfile profile, String nodeS, @Nullable IContext context)
 	{
-		if (context != null && context.getWorld() != null && context.getWorld().isRemote)
-		{
-			throw new RuntimeException("Do not check permissions on client side! Node: " + nodeS);
-		}
-		else if (Ranks.INSTANCE == null)
+		if (Ranks.INSTANCE == null)
 		{
 			return DefaultPermissionHandler.INSTANCE.hasPermission(profile, nodeS, context);
+		}
+		else if (context != null && context.getWorld() != null && context.getWorld().isRemote)
+		{
+			if (FTBUtilitiesConfig.ranks.crash_client_side_permissions)
+			{
+				throw new RuntimeException("Do not check permissions on client side! Node: " + nodeS);
+			}
+			else
+			{
+				return DefaultPermissionHandler.INSTANCE.hasPermission(profile, nodeS, context);
+			}
 		}
 
 		Node node = Node.get(nodeS);

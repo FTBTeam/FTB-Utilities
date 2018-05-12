@@ -230,6 +230,9 @@ public class FTBUtilitiesConfig
 
 		@Config.Comment("Adds chat colors/rank-specific syntax.")
 		public boolean override_chat = true;
+
+		@Config.Comment("Will crash when something tries to check permissions on client side.")
+		public boolean crash_client_side_permissions = false;
 	}
 
 	public static class WorldConfig

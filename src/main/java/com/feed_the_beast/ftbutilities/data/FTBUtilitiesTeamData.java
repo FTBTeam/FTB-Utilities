@@ -100,9 +100,9 @@ public class FTBUtilitiesTeamData implements INBTSerializable<NBTTagCompound>, I
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
 		explosions.setBoolean(nbt.getBoolean("Explosions"));
-		editBlocks.setValueFromString(nbt.getString("EditBlocks"), false);
-		interactWithBlocks.setValueFromString(nbt.getString("InteractWithBlocks"), false);
-		attackEntities.setValueFromString(nbt.getString("AttackEntities"), false);
+		editBlocks.setValue(nbt.getString("EditBlocks"));
+		interactWithBlocks.setValue(nbt.getString("InteractWithBlocks"));
+		attackEntities.setValue(nbt.getString("AttackEntities"));
 
 		if (ClaimedChunks.instance != null)
 		{

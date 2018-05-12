@@ -183,7 +183,7 @@ ftbutilities.lang.homes.limit=You can't set any more home locations!
 ftbutilities.lang.tpa.from_to=%s -> %s
 ftbutilities.lang.tpa.request_received=%s requests TPA! %s to accept.
 ftbutilities.lang.tpa.request_sent=Request sent!
-ftbutilities.lang.tpa.no_request=%s is not requesting to teleport to you!
+ftbutilities.lang.tpa.no_request=%s is not requesting TPA!
 ftbutilities.lang.tpa.cant_request=Can't request TPA!
 ftbutilities.lang.tpa.request_expired=TPA request expired!
 ftbutilities.lang.tpa.request_accepted=TPA Request accepted!
@@ -256,4 +256,6 @@ commands.ftb.nbtedit.player.usage=/ftb nbtedit player <player>
 commands.ftb.tpa.usage=/ftb tpa <player>
 commands.ftb.tpaccept.usage=/ftb tpaccept <player>
 commands.ftb.tpdeny.usage=/ftb tpdeny <player>
+commands.ftb.nick.usage=/ftb nick <name...>
+
 commands.ftbc.shrug.usage=/shrug

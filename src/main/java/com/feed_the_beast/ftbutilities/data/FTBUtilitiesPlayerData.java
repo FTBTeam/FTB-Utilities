@@ -8,6 +8,7 @@ import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.IHasCache;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
@@ -87,7 +88,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		event.getConfig().add(FTBUtilities.MOD_ID, "disable_global_badge", disableGlobalBadge);
 		event.getConfig().add(FTBUtilities.MOD_ID, "enable_pvp", enablePVP);
 
-		if (event.getPlayer().hasPermission(FTBUtilitiesPermissions.NICKNAME))
+		if (FTBUtilitiesConfig.commands.nick && event.getPlayer().hasPermission(FTBUtilitiesPermissions.NICKNAME))
 		{
 			event.getConfig().add(FTBUtilities.MOD_ID, "nickname", nickname);
 		}
@@ -111,6 +112,13 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 	public String getNickname()
 	{
 		return nickname.getString();
+	}
+
+	public void setNickname(String name)
+	{
+		nickname.setString(name);
+		player.markDirty();
+		clearCache();
 	}
 
 	public void setFly(boolean v)

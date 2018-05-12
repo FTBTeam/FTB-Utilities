@@ -126,5 +126,10 @@ public class FTBUtilitiesCommands
 			event.add(new CmdTPA());
 			event.add(new CmdTPAccept());
 		}
+
+		if (FTBUtilitiesConfig.commands.nick)
+		{
+			event.add(new CmdNick());
+		}
 	}
 }

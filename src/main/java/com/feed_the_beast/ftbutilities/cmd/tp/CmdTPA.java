@@ -46,11 +46,8 @@ public class CmdTPA extends CmdBase
 
 		FTBUtilitiesPlayerData other = FTBUtilitiesPlayerData.get(getForgePlayer(sender, args[0]));
 
-		ITextComponent selfName = self.player.getPlayer().getDisplayName();
-		selfName.getStyle().setColor(TextFormatting.BLUE);
-
-		ITextComponent otherName = other.player.getPlayer().getDisplayName();
-		otherName.getStyle().setColor(TextFormatting.BLUE);
+		ITextComponent selfName = StringUtils.color(self.player.getPlayer().getDisplayName(), TextFormatting.BLUE);
+		ITextComponent otherName = StringUtils.color(other.player.getPlayer().getDisplayName(), TextFormatting.BLUE);
 
 		if (self.player.equalsPlayer(other.player) || !other.player.isOnline() || other.tpaRequestsFrom.contains(self.player))
 		{
@@ -61,7 +58,9 @@ public class CmdTPA extends CmdBase
 			return;
 		}
 
-		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.tpa.request_sent", otherName));
+		ITextComponent c = TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.tpa.request_sent");
+		c.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.tpa.from_to", selfName, otherName)));
+		sender.sendMessage(c);
 
 		other.tpaRequestsFrom.add(self.player);
 

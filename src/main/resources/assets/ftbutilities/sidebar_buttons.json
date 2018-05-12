@@ -20,7 +20,7 @@
 		"icon": "ftblib:icons/bin",
 		"x": 150,
 		"click": "command:/trash_can",
-		"required_mods": ["ftbutilities"],
+		"required_server_mods": ["ftbutilities"],
 		"loading_screen": true
 	},
 	"shop": {

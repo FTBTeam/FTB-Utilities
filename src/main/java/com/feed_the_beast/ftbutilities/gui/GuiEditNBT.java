@@ -690,7 +690,7 @@ public class GuiEditNBT extends GuiBase
 
 				boolean canRename = selected.parent instanceof ButtonNBTMap;
 
-				add(new SimpleButton(this, "Rename", canRename ? GuiIcons.INFO : GuiIcons.INFO_GRAY, (gui, button) -> //LANG
+				add(new SimpleButton(this, I18n.format("gui.rename"), canRename ? GuiIcons.INFO : GuiIcons.INFO_GRAY, (gui, button) -> //LANG
 				{
 					if (canRename)
 					{

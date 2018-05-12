@@ -9,6 +9,7 @@ import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
@@ -184,7 +185,7 @@ public class FTBUtilitiesPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public static void onNameFormat(PlayerEvent.NameFormat event)
 	{
-		if (event.getEntityPlayer() instanceof EntityPlayerMP)
+		if (FTBUtilitiesConfig.commands.nick && event.getEntityPlayer() instanceof EntityPlayerMP)
 		{
 			FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(Universe.get().getPlayer(event.getEntityPlayer()));
 

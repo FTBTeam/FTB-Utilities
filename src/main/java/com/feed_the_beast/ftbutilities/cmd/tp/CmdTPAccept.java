@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -36,11 +37,8 @@ public class CmdTPAccept extends CmdBase
 		FTBUtilitiesPlayerData self = FTBUtilitiesPlayerData.get(getForgePlayer(selfPlayer));
 		FTBUtilitiesPlayerData other = FTBUtilitiesPlayerData.get(getForgePlayer(sender, args[0]));
 
-		ITextComponent selfName = other.player.getPlayer().getDisplayName();
-		selfName.getStyle().setColor(TextFormatting.BLUE);
-
-		ITextComponent otherName = other.player.getPlayer().getDisplayName();
-		otherName.getStyle().setColor(TextFormatting.BLUE);
+		ITextComponent selfName = StringUtils.color(self.player.getPlayer().getDisplayName(), TextFormatting.BLUE);
+		ITextComponent otherName = StringUtils.color(other.player.getPlayer().getDisplayName(), TextFormatting.BLUE);
 
 		if (self.player.equalsPlayer(other.player) || !other.player.isOnline() || !self.tpaRequestsFrom.contains(other.player))
 		{
@@ -50,11 +48,11 @@ public class CmdTPAccept extends CmdBase
 		self.tpaRequestsFrom.remove(other.player);
 		other.updateLastTPA();
 		ITextComponent component = TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.tpa.request_accepted");
-		component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.tpa.from_to", selfName, otherName)));
+		component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.tpa.from_to", otherName, selfName)));
 		sender.sendMessage(component);
 
 		component = TextComponentHelper.createComponentTranslation(other.player.getPlayer(), "ftbutilities.lang.tpa.request_accepted");
-		component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponentHelper.createComponentTranslation(other.player.getPlayer(), "ftbutilities.lang.tpa.from_to", selfName, otherName)));
+		component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponentHelper.createComponentTranslation(other.player.getPlayer(), "ftbutilities.lang.tpa.from_to", otherName, selfName)));
 		other.player.getPlayer().sendMessage(component);
 
 		ServerUtils.teleportEntity(selfPlayer.mcServer, other.player.getPlayer(), selfPlayer.posX, selfPlayer.posY, selfPlayer.posZ, selfPlayer.dimension);

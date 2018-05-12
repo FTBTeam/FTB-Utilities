@@ -38,9 +38,9 @@ public class CmdUnloadAll extends CmdBase
 	}
 
 	@Override
-	public boolean isUsernameIndex(String[] args, int i)
+	public boolean isUsernameIndex(String[] args, int index)
 	{
-		return i == 1;
+		return index == 1;
 	}
 
 	@Override

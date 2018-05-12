@@ -131,9 +131,9 @@ public class CmdEditNBT extends CmdTreeBase
 		}
 
 		@Override
-		public boolean isUsernameIndex(String[] args, int i)
+		public boolean isUsernameIndex(String[] args, int index)
 		{
-			return i == 0;
+			return index == 0;
 		}
 
 		@Override

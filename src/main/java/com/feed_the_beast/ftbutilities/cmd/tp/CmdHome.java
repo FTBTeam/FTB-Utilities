@@ -152,7 +152,7 @@ public class CmdHome extends CmdBase
 
 		if (cooldown > 0)
 		{
-			throw new CommandException("ftbutilities.lang.homes.in_cooldown", StringUtils.getTimeStringTicks(cooldown));
+			throw new CommandException("ftbutilities.lang.homes.cooldown", StringUtils.getTimeStringTicks(cooldown));
 		}
 
 		ServerUtils.teleportEntity(player, pos);

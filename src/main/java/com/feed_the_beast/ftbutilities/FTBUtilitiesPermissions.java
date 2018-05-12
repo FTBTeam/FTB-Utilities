@@ -70,6 +70,7 @@ public class FTBUtilitiesPermissions
 	public static final String VIEW_CRASH_REPORTS = "admin_panel.ftbutilities.view_crash_reports";
 	private static final String LEADERBOARD_PREFIX = "ftbutilities.leaderboard.";
 	public static final String EDIT_WORLD_GAMERULES = "admin_panel.ftbutilities.edit_world.gamerules";
+	public static final Node TPA_COOLDOWN = Node.get("ftbutilities.tpa.cooldown");
 
 	@SubscribeEvent
 	public static void registerRankConfigHandler(RegisterRankConfigHandlerEvent event)
@@ -125,6 +126,7 @@ public class FTBUtilitiesPermissions
 		event.register(HOMES_MAX, new ConfigInt(1, 0, 30000), new ConfigInt(100));
 		event.register(HOMES_COOLDOWN, new ConfigInt((int) (CommonUtils.TICKS_MINUTE * 5), 0, Integer.MAX_VALUE), new ConfigInt(0));
 		event.register(WARPS_COOLDOWN, new ConfigInt((int) CommonUtils.TICKS_MINUTE, 0, Integer.MAX_VALUE), new ConfigInt(0));
+		event.register(TPA_COOLDOWN, new ConfigInt((int) (CommonUtils.TICKS_MINUTE * 3), 0, Integer.MAX_VALUE), new ConfigInt(0));
 		event.register(CLAIMS_MAX_CHUNKS, new ConfigInt(100, 0, 30000), new ConfigInt(1000));
 		event.register(CHUNKLOADER_MAX_CHUNKS, new ConfigInt(50, 0, 30000), new ConfigInt(64));
 		//event.register(CHUNKLOADER_OFFLINE_TIMER, new ConfigDouble(-1D).setMin(-1D), new ConfigDouble(-1D));

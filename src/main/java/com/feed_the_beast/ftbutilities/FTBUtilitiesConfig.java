@@ -138,6 +138,7 @@ public class FTBUtilitiesConfig
 		public boolean fly = true;
 		public boolean leaderboard = true;
 		public boolean cycle_block_state = true;
+		public boolean tpa = true;
 	}
 
 	public static class Login

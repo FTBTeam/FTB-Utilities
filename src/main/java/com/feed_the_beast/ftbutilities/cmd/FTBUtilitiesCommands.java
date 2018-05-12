@@ -12,6 +12,9 @@ import com.feed_the_beast.ftbutilities.cmd.tp.CmdHome;
 import com.feed_the_beast.ftbutilities.cmd.tp.CmdSetHome;
 import com.feed_the_beast.ftbutilities.cmd.tp.CmdSetWarp;
 import com.feed_the_beast.ftbutilities.cmd.tp.CmdSpawn;
+import com.feed_the_beast.ftbutilities.cmd.tp.CmdTPA;
+import com.feed_the_beast.ftbutilities.cmd.tp.CmdTPAccept;
+import com.feed_the_beast.ftbutilities.cmd.tp.CmdTPDeny;
 import com.feed_the_beast.ftbutilities.cmd.tp.CmdTplast;
 import com.feed_the_beast.ftbutilities.cmd.tp.CmdWarp;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -117,6 +120,13 @@ public class FTBUtilitiesCommands
 		if (FTBUtilitiesConfig.commands.cycle_block_state)
 		{
 			event.add(new CmdCycleBlockState());
+		}
+
+		if (FTBUtilitiesConfig.commands.tpa)
+		{
+			event.add(new CmdTPA());
+			event.add(new CmdTPAccept());
+			event.add(new CmdTPDeny());
 		}
 	}
 }

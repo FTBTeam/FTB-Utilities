@@ -12,6 +12,8 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author LatvianModder
@@ -24,9 +26,10 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 
 	public final ForgePlayer player;
 	public ForgeTeam lastChunkTeam;
+	public final Map<ForgePlayer, Long> tpaRequestsFrom;
 
 	private BlockDimPos lastDeath, lastSafePos;
-	private long lastHome, lastWarp;
+	private long lastHome, lastWarp, lastTPA;
 	public final BlockDimPosStorage homes;
 	private boolean fly;
 
@@ -34,6 +37,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 	{
 		player = p;
 		homes = new BlockDimPosStorage();
+		tpaRequestsFrom = new HashMap<>();
 	}
 
 	public static FTBUtilitiesPlayerData get(ForgePlayer player)
@@ -56,9 +60,6 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 			nbt.setIntArray("LastDeath", lastDeath.toIntArray());
 		}
 
-		nbt.setLong("LastHome", lastHome);
-		nbt.setLong("LastWarp", lastWarp);
-
 		return nbt;
 	}
 
@@ -76,8 +77,6 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 		homes.deserializeNBT(nbt.getCompoundTag("Homes"));
 		fly = nbt.getBoolean("AllowFlying");
 		lastDeath = BlockDimPos.fromIntArray(nbt.getIntArray("LastDeath"));
-		lastHome = nbt.getLong("LastHome");
-		lastWarp = nbt.getLong("LastWarp");
 	}
 
 	public void addConfig(ForgePlayerConfigEvent event)
@@ -141,7 +140,6 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 	public void updateLastHome()
 	{
 		lastHome = player.team.universe.world.getTotalWorldTime();
-		player.markDirty();
 	}
 
 	public long getHomeCooldown()
@@ -152,11 +150,20 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>
 	public void updateLastWarp()
 	{
 		lastWarp = player.team.universe.world.getTotalWorldTime();
-		player.markDirty();
 	}
 
 	public long getWarpCooldown()
 	{
 		return lastWarp + player.getRankConfig(FTBUtilitiesPermissions.WARPS_COOLDOWN).getInt() - player.team.universe.world.getTotalWorldTime();
+	}
+
+	public void updateLastTPA()
+	{
+		lastTPA = player.team.universe.world.getTotalWorldTime();
+	}
+
+	public long getTPACooldown()
+	{
+		return lastTPA + player.getRankConfig(FTBUtilitiesPermissions.TPA_COOLDOWN).getInt() - player.team.universe.world.getTotalWorldTime();
 	}
 }

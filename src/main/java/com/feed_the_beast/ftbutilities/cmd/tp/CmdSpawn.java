@@ -3,6 +3,8 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
+import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -31,6 +33,6 @@ public class CmdSpawn extends CmdBase
 		}
 
 		ServerUtils.teleportEntity(server, player, new BlockDimPos(spawnpoint, 0));
-		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.spawn"));
+		Notification.of(FTBUtilitiesNotifications.TELEPORT, TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.spawn")).send(server, player);
 	}
 }

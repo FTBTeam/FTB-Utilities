@@ -6,6 +6,8 @@ import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
@@ -157,6 +159,6 @@ public class CmdHome extends CmdBase
 
 		ServerUtils.teleportEntity(server, player, pos);
 		data.updateLastHome();
-		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0]));
+		Notification.of(FTBUtilitiesNotifications.TELEPORT, TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0])).send(server, player);
 	}
 }

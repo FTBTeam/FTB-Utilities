@@ -4,9 +4,7 @@ import com.feed_the_beast.ftblib.lib.client.CachedVertexData;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
-import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.LoadingIcon;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
@@ -15,7 +13,6 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 
@@ -71,6 +68,7 @@ public class GuiWarps extends GuiBase
 		public ArcButton(GuiBase gui, MessageSendWarpList.WarpItem w, int i)
 		{
 			super(gui);
+			setSize(0, 0);
 			setTitle(w.cmd);
 			warpItem = w;
 			index = i;
@@ -80,6 +78,12 @@ public class GuiWarps extends GuiBase
 		public boolean collidesWith(int x, int y, int w, int h)
 		{
 			return true;
+		}
+
+		@Override
+		public boolean checkMouseOver(int mouseX, int mouseY)
+		{
+			return this == buttonOver;
 		}
 
 		@Override
@@ -113,12 +117,6 @@ public class GuiWarps extends GuiBase
 
 			getGui().closeGui();
 		}
-	}
-
-	@Override
-	public boolean isMouseOver(Widget widget)
-	{
-		return (widget instanceof ArcButton) ? widget == buttonOver : super.isMouseOver(widget);
 	}
 
 	public GuiWarps()
@@ -192,11 +190,7 @@ public class GuiWarps extends GuiBase
 
 		if (isLoaded)
 		{
-			if (dist < SIZE_I || dist > SIZE_2)
-			{
-				drawString(TextFormatting.BOLD + I18n.format("gui.cancel"), ax, ay, DARK | CENTERED);
-			}
-			else
+			if (dist >= SIZE_I && dist <= SIZE_2)
 			{
 				if (dist < SIZE_C)
 				{
@@ -210,12 +204,12 @@ public class GuiWarps extends GuiBase
 
 			if (buttonOver.warpItem.isSpecial())
 			{
-				drawString(TextFormatting.BOLD + buttonOver.warpItem.name, ax, ay, DARK | CENTERED);
+				drawString(TextFormatting.BOLD + buttonOver.warpItem.name, ax, ay - 4, DARK | CENTERED);
 			}
 			else
 			{
-				drawString(TextFormatting.BOLD + (buttonOver.warpItem.innerCircle() ? "Home" : "Warp"), ax, ay - 5, DARK | CENTERED);
-				drawString(buttonOver.warpItem.name, ax, ay + 5, DARK | CENTERED);
+				drawString(TextFormatting.BOLD + (buttonOver.warpItem.innerCircle() ? "Home" : "Warp"), ax, ay - 9, DARK | CENTERED);
+				drawString(buttonOver.warpItem.name, ax, ay + 1, DARK | CENTERED);
 			}
 		}
 	}
@@ -267,11 +261,5 @@ public class GuiWarps extends GuiBase
 	public boolean drawDefaultBackground()
 	{
 		return false;
-	}
-
-	@Override
-	public Icon getIcon()
-	{
-		return Icon.EMPTY;
 	}
 }

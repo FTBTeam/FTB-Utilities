@@ -15,6 +15,7 @@ public class FTBUtilitiesNotifications
 	public static final ResourceLocation CHUNK_CHANGED = new ResourceLocation("ftbutilities:chunk_changed");
 	public static final ResourceLocation CHUNK_CANT_CLAIM = new ResourceLocation("ftbutilities:cant_claim_chunk");
 	public static final ResourceLocation UNCLAIMED_ALL = new ResourceLocation("ftbutilities:unclaimed_all");
+	public static final ResourceLocation TELEPORT = new ResourceLocation("ftbutilities:teleport");
 
 	public static void sendCantModifyChunk(MinecraftServer server, EntityPlayerMP player)
 	{

@@ -5,6 +5,8 @@ import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import com.feed_the_beast.ftbutilities.net.MessageSendWarpList;
@@ -77,6 +79,6 @@ public class CmdWarp extends CmdBase
 
 		ServerUtils.teleportEntity(server, player, p);
 		data.updateLastWarp();
-		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0]));
+		Notification.of(FTBUtilitiesNotifications.TELEPORT, TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0])).send(server, player);
 	}
 }

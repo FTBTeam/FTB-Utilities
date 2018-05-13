@@ -55,7 +55,7 @@ public class MessageLeaderboardResponse extends MessageToClient
 		{
 			ForgePlayer p = players.get(i);
 			LeaderboardValue value = new LeaderboardValue();
-			value.username = p.getName();
+			value.username = p.getDisplayName();
 			value.value = leaderboard.createValue(p);
 
 			if (p == p0)

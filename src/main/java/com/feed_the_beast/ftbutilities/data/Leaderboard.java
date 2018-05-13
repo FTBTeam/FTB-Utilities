@@ -28,7 +28,7 @@ public class Leaderboard
 		id = _id;
 		title = t;
 		playerToValue = v;
-		comparator = c.thenComparing((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
+		comparator = c.thenComparing((o1, o2) -> o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName()));
 		validValue = vv;
 	}
 

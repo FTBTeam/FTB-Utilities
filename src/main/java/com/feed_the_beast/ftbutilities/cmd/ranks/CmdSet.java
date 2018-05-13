@@ -67,11 +67,11 @@ public class CmdSet extends CmdBase
 
 		if (r == null)
 		{
-			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.rank.unset", p.getName()));
+			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.rank.unset", p.getDisplayName()));
 		}
 		else
 		{
-			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.rank.set", p.getName(), r.getName()));
+			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.rank.set", p.getDisplayName(), r.getName()));
 		}
 	}
 }

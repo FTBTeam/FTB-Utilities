@@ -78,6 +78,6 @@ public class CmdUnloadAll extends CmdBase
 			}
 		}
 
-		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.chunks.unloaded_for", p.getName()));
+		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.chunks.unloaded_for", p.getDisplayName()));
 	}
 }

@@ -134,6 +134,8 @@ ftbutilities.lang.kickme=You kicked yourself!
 ftbutilities.lang.perm_for=%s for %s is %s
 ftbutilities.lang.upload_crash=Upload Crash Report
 ftbutilities.lang.uploaded_crash=Crash Report Uploaded! %s
+ftbutilities.lang.nickname_changed=Nickname changed to '%s'
+ftbutilities.lang.nickname_reset=Nickname reset
 
 ftbutilities.stat.dph=Deaths Per Hour
 ftbutilities.stat.last_seen=Last Seen

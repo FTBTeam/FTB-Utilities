@@ -116,7 +116,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 
 	public void setNickname(String name)
 	{
-		nickname.setString(name);
+		nickname.setString(name.equals(player.getName()) ? "" : name);
 		player.markDirty();
 		clearCache();
 	}

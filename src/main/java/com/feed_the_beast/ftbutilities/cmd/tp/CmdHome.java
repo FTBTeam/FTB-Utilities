@@ -82,7 +82,7 @@ public class CmdHome extends CmdBase
 			FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
 
 			Collection<String> list = data.homes.list();
-			ITextComponent msg = new TextComponentString(p.getName() + ": " + list.size() + " / " + p.getRankConfig(FTBUtilitiesPermissions.HOMES_MAX).getInt() + ": ");
+			ITextComponent msg = new TextComponentString(p.getDisplayName() + ": " + list.size() + " / " + p.getRankConfig(FTBUtilitiesPermissions.HOMES_MAX).getInt() + ": ");
 
 			if (!list.isEmpty())
 			{

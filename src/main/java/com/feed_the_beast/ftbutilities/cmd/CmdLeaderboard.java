@@ -83,7 +83,7 @@ public class CmdLeaderboard extends CmdBase
 			for (int i = 0; i < players.size(); i++)
 			{
 				ForgePlayer p = players.get(i);
-				ITextComponent component = new TextComponentString("#" + StringUtils.add0s(i + 1, players.size()) + " " + p.getName() + ": ");
+				ITextComponent component = new TextComponentString("#" + StringUtils.add0s(i + 1, players.size()) + " " + p.getDisplayName() + ": ");
 				component.appendSibling(leaderboard.createValue(p));
 
 				if (p == p0)

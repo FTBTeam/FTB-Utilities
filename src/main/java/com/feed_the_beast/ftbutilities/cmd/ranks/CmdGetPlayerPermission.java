@@ -52,11 +52,11 @@ public class CmdGetPlayerPermission extends CmdBase
 
 		if (info != null)
 		{
-			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.perm_for", args[1], player.getName(), player.getRankConfig(node).toString()));
+			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.perm_for", args[1], player.getDisplayName(), player.getRankConfig(node).toString()));
 		}
 		else
 		{
-			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.perm_for", args[1], player.getName(), Boolean.toString(player.hasPermission(args[1]))));
+			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.perm_for", args[1], player.getDisplayName(), Boolean.toString(player.hasPermission(args[1]))));
 		}
 	}
 }

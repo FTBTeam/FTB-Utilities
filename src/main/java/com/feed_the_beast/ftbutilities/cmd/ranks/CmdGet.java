@@ -33,7 +33,7 @@ public class CmdGet extends CmdBase
 		checkArgs(sender, args, 1);
 		ForgePlayer p = getForgePlayer(sender, args[0]);
 		Rank rank = Ranks.INSTANCE.getRank(p);
-		ITextComponent name = new TextComponentString(rank.getName() + " - " + rank.getFormattedName(p.getName()));
+		ITextComponent name = new TextComponentString(rank.getName() + " - " + rank.getFormattedName(p.getDisplayName()));
 		name.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + p.getName() + " "));
 		name.getStyle().setInsertion(p.getName());
 		sender.sendMessage(name);

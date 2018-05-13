@@ -185,13 +185,18 @@ public class FTBUtilitiesPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public static void onNameFormat(PlayerEvent.NameFormat event)
 	{
-		if (FTBUtilitiesConfig.commands.nick && event.getEntityPlayer() instanceof EntityPlayerMP)
+		if (FTBUtilitiesConfig.commands.nick && Universe.loaded() && event.getEntityPlayer() instanceof EntityPlayerMP)
 		{
-			FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(Universe.get().getPlayer(event.getEntityPlayer()));
+			ForgePlayer p = Universe.get().getPlayer(event.getEntityPlayer().getGameProfile());
 
-			if (!data.getNickname().isEmpty() && PermissionAPI.hasPermission(event.getEntityPlayer(), FTBUtilitiesPermissions.NICKNAME))
+			if (p != null)
 			{
-				event.setDisplayname(data.getNickname());
+				FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
+
+				if (!data.getNickname().isEmpty() && PermissionAPI.hasPermission(event.getEntityPlayer(), FTBUtilitiesPermissions.NICKNAME))
+				{
+					event.setDisplayname(data.getNickname());
+				}
 			}
 		}
 	}

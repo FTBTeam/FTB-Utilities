@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.cmd;
 
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
@@ -116,7 +117,7 @@ public class FTBUtilitiesCommands
 			event.add(new CmdLeaderboard());
 		}
 
-		if (FTBUtilitiesConfig.commands.cycle_block_state)
+		if (FTBLibConfig.debugging.special_commands)
 		{
 			event.add(new CmdCycleBlockState());
 		}

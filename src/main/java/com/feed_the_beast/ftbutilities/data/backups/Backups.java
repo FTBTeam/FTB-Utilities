@@ -12,6 +12,7 @@ import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.net.MessageBackupProgress;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -63,50 +64,19 @@ public enum Backups
 			{
 				for (JsonElement e : element.getAsJsonArray())
 				{
-					backups.add(new Backup(e.getAsJsonObject()));
+					JsonObject json = e.getAsJsonObject();
+
+					if (!json.has("size"))
+					{
+						json.addProperty("size", FileUtils.getSize(new File(backupsFolder, json.get("file").getAsString())));
+					}
+
+					backups.add(new Backup(json));
 				}
 			}
 			catch (Throwable ex)
 			{
 				ex.printStackTrace();
-			}
-		}
-		else if (backupsFolder.exists())
-		{
-			String[] files = backupsFolder.list();
-			int index = 0;
-
-			if (files != null)
-			{
-				for (String s : files)
-				{
-					if (s.equals("backups.json"))
-					{
-						continue;
-					}
-
-					String[] s1 = s.split("-");
-
-					if (s1.length >= 6)
-					{
-						int year = Integer.parseInt(s1[0]);
-						int month = Integer.parseInt(s1[1]);
-						int day = Integer.parseInt(s1[2]);
-						int hours = Integer.parseInt(s1[3]);
-						int minutes = Integer.parseInt(s1[4]);
-						int seconds = Integer.parseInt(s1[5].replace(".zip", ""));
-
-						Calendar c = Calendar.getInstance();
-						c.set(year, month, day, hours, minutes, seconds);
-
-						if (FTBUtilitiesConfig.backups.compression_level > 0)
-						{
-							s += ".zip";
-						}
-
-						backups.add(new Backup(c.getTimeInMillis(), s, ++index, true));
-					}
-				}
 			}
 		}
 
@@ -382,7 +352,7 @@ public enum Backups
 			}
 		}
 
-		backups.add(new Backup(time.getTimeInMillis(), out.toString().replace('\\', '/'), getLastIndex() + 1, success));
+		backups.add(new Backup(time.getTimeInMillis(), out.toString().replace('\\', '/'), getLastIndex() + 1, success, FileUtils.getSize(dstFile)));
 		cleanupAndSave();
 		doingBackup = 2;
 	}

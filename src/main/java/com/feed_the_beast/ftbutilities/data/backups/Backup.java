@@ -13,18 +13,20 @@ public class Backup implements Comparable<Backup>
 	public final String fileId;
 	public final int index;
 	public final boolean success;
+	public final long size;
 
-	public Backup(long t, String f, int i, boolean s)
+	public Backup(long t, String f, int i, boolean s, long fs)
 	{
 		time = t;
 		fileId = f;
 		index = i;
 		success = s;
+		size = fs;
 	}
 
 	public Backup(JsonObject o)
 	{
-		this(o.get("time").getAsLong(), o.get("file").getAsString(), o.get("index").getAsInt(), o.get("success").getAsBoolean());
+		this(o.get("time").getAsLong(), o.get("file").getAsString(), o.get("index").getAsInt(), o.get("success").getAsBoolean(), o.get("size").getAsLong());
 	}
 
 	public JsonObject toJsonObject()
@@ -34,6 +36,7 @@ public class Backup implements Comparable<Backup>
 		o.addProperty("file", fileId);
 		o.addProperty("index", index);
 		o.addProperty("success", success);
+		o.addProperty("size", size);
 		return o;
 	}
 

@@ -7,7 +7,6 @@ import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
@@ -46,11 +45,13 @@ public class FTBUtilitiesPermissions
 	public static final String HOMES_CROSS_DIM = "ftbutilities.homes.cross_dim";
 	public static final Node HOMES_MAX = Node.get("ftbutilities.homes.max");
 	public static final Node HOMES_COOLDOWN = Node.get("ftbutilities.homes.cooldown");
+	public static final Node HOMES_WARMUP = Node.get("ftbutilities.homes.warmup");
 	public static final String HOMES_LIST_OTHER = "ftbutilities.homes.list_other";
 	public static final String HOMES_TELEPORT_OTHER = "ftbutilities.homes.teleport_other";
 
 	// Warps //
 	public static final Node WARPS_COOLDOWN = Node.get("ftbutilities.wraps.cooldown");
+	public static final Node WARPS_WARMUP = Node.get("ftbutilities.wraps.warmup");
 
 	// Claims //
 	public static final String CLAIMS_CHUNKS_MODIFY_OTHERS = "ftbutilities.claims.modify.others";
@@ -71,6 +72,11 @@ public class FTBUtilitiesPermissions
 	private static final String LEADERBOARD_PREFIX = "ftbutilities.leaderboard.";
 	public static final String EDIT_WORLD_GAMERULES = "admin_panel.ftbutilities.edit_world.gamerules";
 	public static final Node TPA_COOLDOWN = Node.get("ftbutilities.tpa.cooldown");
+	public static final Node SPAWN_COOLDOWN = Node.get("ftbutilities.spawn.cooldown");
+	public static final Node BACK_COOLDOWN = Node.get("ftbutilities.back.cooldown");
+	public static final Node TPA_WARMUP = Node.get("ftbutilities.tpa.warmup");
+	public static final Node SPAWN_WARMUP = Node.get("ftbutilities.spawn.warmup");
+	public static final Node BACK_WARMUP = Node.get("ftbutilities.back.warmup");
 	public static final String NICKNAME = "ftbutilities.nickname";
 
 	@SubscribeEvent
@@ -126,9 +132,18 @@ public class FTBUtilitiesPermissions
 	{
 		event.register(BADGE, new ConfigString(""), new ConfigString(""));
 		event.register(HOMES_MAX, new ConfigInt(1, 0, 30000), new ConfigInt(100));
-		event.register(HOMES_COOLDOWN, new ConfigInt((int) (CommonUtils.TICKS_MINUTE * 5), 0, Integer.MAX_VALUE), new ConfigInt(0));
-		event.register(WARPS_COOLDOWN, new ConfigInt((int) CommonUtils.TICKS_MINUTE, 0, Integer.MAX_VALUE), new ConfigInt(0));
-		event.register(TPA_COOLDOWN, new ConfigInt((int) (CommonUtils.TICKS_MINUTE * 3), 0, Integer.MAX_VALUE), new ConfigInt(0));
+		event.register(HOMES_COOLDOWN, new ConfigInt(300, 0, Integer.MAX_VALUE), new ConfigInt(0));
+		event.register(WARPS_COOLDOWN, new ConfigInt(60, 0, Integer.MAX_VALUE), new ConfigInt(0));
+		event.register(TPA_COOLDOWN, new ConfigInt(180, 0, Integer.MAX_VALUE), new ConfigInt(0));
+		event.register(SPAWN_COOLDOWN, new ConfigInt(60, 0, Integer.MAX_VALUE), new ConfigInt(0));
+		event.register(BACK_COOLDOWN, new ConfigInt(180, 0, Integer.MAX_VALUE), new ConfigInt(0));
+
+		event.register(HOMES_WARMUP, new ConfigInt(5, 0, 60), new ConfigInt(0));
+		event.register(WARPS_WARMUP, new ConfigInt(5, 0, 60), new ConfigInt(0));
+		event.register(TPA_WARMUP, new ConfigInt(5, 0, 60), new ConfigInt(0));
+		event.register(SPAWN_WARMUP, new ConfigInt(5, 0, 60), new ConfigInt(0));
+		event.register(BACK_WARMUP, new ConfigInt(5, 0, 60), new ConfigInt(0));
+
 		event.register(CLAIMS_MAX_CHUNKS, new ConfigInt(100, 0, 30000), new ConfigInt(1000));
 		event.register(CHUNKLOADER_MAX_CHUNKS, new ConfigInt(50, 0, 30000), new ConfigInt(64));
 		//event.register(CHUNKLOADER_OFFLINE_TIMER, new ConfigDouble(-1D).setMin(-1D), new ConfigDouble(-1D));

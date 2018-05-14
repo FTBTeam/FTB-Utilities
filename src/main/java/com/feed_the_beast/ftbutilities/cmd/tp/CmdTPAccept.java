@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbutilities.cmd.tp;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
@@ -46,7 +45,7 @@ public class CmdTPAccept extends CmdBase
 		}
 
 		self.tpaRequestsFrom.remove(other.player);
-		other.updateLastTPA();
+
 		ITextComponent component = TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.tpa.request_accepted");
 		component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.tpa.from_to", otherName, selfName)));
 		sender.sendMessage(component);
@@ -55,6 +54,6 @@ public class CmdTPAccept extends CmdBase
 		component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponentHelper.createComponentTranslation(other.player.getPlayer(), "ftbutilities.lang.tpa.from_to", otherName, selfName)));
 		other.player.getPlayer().sendMessage(component);
 
-		ServerUtils.teleportEntity(selfPlayer.mcServer, other.player.getPlayer(), selfPlayer.posX, selfPlayer.posY, selfPlayer.posZ, selfPlayer.dimension);
+		FTBUtilitiesPlayerData.Timer.TPA.teleport(other.player.getPlayer(), selfPlayer.posX, selfPlayer.posY, selfPlayer.posZ, selfPlayer.dimension, null);
 	}
 }

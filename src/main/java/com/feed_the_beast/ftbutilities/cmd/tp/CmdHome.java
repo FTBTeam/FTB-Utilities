@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
@@ -53,12 +52,14 @@ public class CmdHome extends CmdBase
 	}
 
 	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args0) throws CommandException
 	{
-		if (args.length == 0)
+		if (args0.length == 0)
 		{
-			args = new String[] {"home"};
+			args0 = new String[] {"home"};
 		}
+
+		String[] args = args0;
 
 		if (args[0].equals("list"))
 		{
@@ -150,15 +151,13 @@ public class CmdHome extends CmdBase
 			throw new CommandException("ftbutilities.lang.homes.cross_dim");
 		}
 
-		long cooldown = data.getHomeCooldown();
+		long cooldown = data.getTeleportCooldown(FTBUtilitiesPlayerData.Timer.HOME);
 
 		if (cooldown > 0)
 		{
 			throw new CommandException("cant_use_now_cooldown", StringUtils.getTimeStringTicks(cooldown));
 		}
 
-		ServerUtils.teleportEntity(server, player, pos);
-		data.updateLastHome();
-		Notification.of(FTBUtilitiesNotifications.TELEPORT, TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0])).send(server, player);
+		FTBUtilitiesPlayerData.Timer.HOME.teleport(player, pos, universe -> Notification.of(FTBUtilitiesNotifications.TELEPORT, TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0])).send(server, player));
 	}
 }

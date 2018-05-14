@@ -3,16 +3,25 @@ package com.feed_the_beast.ftbutilities.data;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
+import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.IHasCache;
+import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
+import com.feed_the_beast.ftblib.lib.util.ServerUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.misc.IScheduledTask;
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -23,6 +32,104 @@ import java.util.HashSet;
  */
 public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>, IHasCache
 {
+	public enum Timer
+	{
+		HOME(FTBUtilitiesPermissions.HOMES_COOLDOWN, FTBUtilitiesPermissions.HOMES_WARMUP),
+		WARP(FTBUtilitiesPermissions.WARPS_COOLDOWN, FTBUtilitiesPermissions.WARPS_WARMUP),
+		BACK(FTBUtilitiesPermissions.BACK_COOLDOWN, FTBUtilitiesPermissions.BACK_WARMUP),
+		SPAWN(FTBUtilitiesPermissions.SPAWN_COOLDOWN, FTBUtilitiesPermissions.SPAWN_WARMUP),
+		TPA(FTBUtilitiesPermissions.TPA_COOLDOWN, FTBUtilitiesPermissions.TPA_WARMUP);
+
+		public static final Timer[] VALUES = values();
+
+		private final Node cooldown;
+		private final Node warmup;
+
+		Timer(Node c, Node w)
+		{
+			cooldown = c;
+			warmup = w;
+		}
+
+		public void teleport(EntityPlayerMP player, double x, double y, double z, int dim, @Nullable IScheduledTask extraTask)
+		{
+			Universe universe = Universe.get();
+			int seconds = RankConfigAPI.get(player, warmup).getInt();
+
+			if (seconds > 0)
+			{
+				player.sendStatusMessage(StringUtils.color(TextComponentHelper.createComponentTranslation(player, "stand_still", seconds).appendText(" [" + seconds + "]"), TextFormatting.GOLD), true);
+				universe.scheduleTask(universe.world.getTotalWorldTime() + 20L, new TeleportTask(player, this, seconds, seconds, x, y, z, dim, extraTask));
+			}
+			else
+			{
+				new TeleportTask(player, this, 0, 0, x, y, z, dim, extraTask).execute(universe);
+			}
+		}
+
+		public void teleport(EntityPlayerMP player, BlockDimPos pos, @Nullable IScheduledTask extraTask)
+		{
+			teleport(player, pos.posX + 0.5D, pos.posY + 0.1D, pos.posZ + 0.5D, pos.dim, extraTask);
+		}
+	}
+
+	private static class TeleportTask implements IScheduledTask
+	{
+		private final EntityPlayerMP player;
+		private final Timer timer;
+		private final BlockDimPos startPos;
+		private final double toX, toY, toZ;
+		private final float startHP;
+		private final int toDim, startSeconds, secondsLeft;
+		private final IScheduledTask extraTask;
+
+		private TeleportTask(EntityPlayerMP p, Timer t, int ss, int s, double x, double y, double z, int dim, @Nullable IScheduledTask e)
+		{
+			player = p;
+			timer = t;
+			startPos = new BlockDimPos(player);
+			startHP = player.getHealth();
+			toX = x;
+			toY = y;
+			toZ = z;
+			toDim = dim;
+			startSeconds = ss;
+			secondsLeft = s;
+			extraTask = e;
+		}
+
+		@Override
+		public void execute(Universe universe)
+		{
+			if (!startPos.equalsPos(new BlockDimPos(player)) || startHP != player.getHealth())
+			{
+				player.sendStatusMessage(StringUtils.color(TextComponentHelper.createComponentTranslation(player, "stand_still_failed"), TextFormatting.RED), true);
+			}
+			else if (secondsLeft <= 1)
+			{
+				ServerUtils.teleportEntity(player.mcServer, player, toX, toY, toZ, toDim);
+				FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(universe.getPlayer(player));
+				data.lastTeleport[timer.ordinal()] = universe.world.getTotalWorldTime();
+
+				if (secondsLeft != 0)
+				{
+					player.sendStatusMessage(TextComponentHelper.createComponentTranslation(player, "teleporting"), true);
+				}
+
+				if (extraTask != null)
+				{
+					extraTask.execute(universe);
+				}
+			}
+			else
+			{
+				universe.scheduleTask(universe.world.getTotalWorldTime() + 20L, new TeleportTask(player, timer, startSeconds, secondsLeft - 1, toX, toY, toZ, toDim, extraTask));
+				player.sendStatusMessage(new TextComponentString(Integer.toString(secondsLeft - 1)), true);
+				player.sendStatusMessage(StringUtils.color(TextComponentHelper.createComponentTranslation(player, "stand_still", startSeconds).appendText(" [" + (secondsLeft - 1) + "]"), TextFormatting.GOLD), true);
+			}
+		}
+	}
+
 	public final ForgePlayer player;
 
 	private final ConfigBoolean renderBadge = new ConfigBoolean(true);
@@ -34,7 +141,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 	public final Collection<ForgePlayer> tpaRequestsFrom;
 
 	private BlockDimPos lastDeath, lastSafePos;
-	private long lastHome, lastWarp, lastTPA;
+	private long[] lastTeleport;
 	public final BlockDimPosStorage homes;
 	private boolean fly;
 
@@ -43,6 +150,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		player = p;
 		homes = new BlockDimPosStorage();
 		tpaRequestsFrom = new HashSet<>();
+		lastTeleport = new long[Timer.VALUES.length];
 	}
 
 	public static FTBUtilitiesPlayerData get(ForgePlayer player)
@@ -156,34 +264,9 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		return lastSafePos;
 	}
 
-	public void updateLastHome()
+	public long getTeleportCooldown(Timer timer)
 	{
-		lastHome = player.team.universe.world.getTotalWorldTime();
-	}
-
-	public long getHomeCooldown()
-	{
-		return lastHome + player.getRankConfig(FTBUtilitiesPermissions.HOMES_COOLDOWN).getInt() - player.team.universe.world.getTotalWorldTime();
-	}
-
-	public void updateLastWarp()
-	{
-		lastWarp = player.team.universe.world.getTotalWorldTime();
-	}
-
-	public long getWarpCooldown()
-	{
-		return lastWarp + player.getRankConfig(FTBUtilitiesPermissions.WARPS_COOLDOWN).getInt() - player.team.universe.world.getTotalWorldTime();
-	}
-
-	public void updateLastTPA()
-	{
-		lastTPA = player.team.universe.world.getTotalWorldTime();
-	}
-
-	public long getTPACooldown()
-	{
-		return lastTPA + player.getRankConfig(FTBUtilitiesPermissions.TPA_COOLDOWN).getInt() - player.team.universe.world.getTotalWorldTime();
+		return lastTeleport[timer.ordinal()] + player.getRankConfig(timer.cooldown).getInt() * 20 - player.team.universe.world.getTotalWorldTime();
 	}
 
 	@Override

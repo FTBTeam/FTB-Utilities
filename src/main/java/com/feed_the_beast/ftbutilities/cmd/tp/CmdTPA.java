@@ -37,7 +37,7 @@ public class CmdTPA extends CmdBase
 		checkArgs(sender, args, 1);
 		FTBUtilitiesPlayerData self = FTBUtilitiesPlayerData.get(getForgePlayer(sender));
 
-		long cooldown = self.getTPACooldown();
+		long cooldown = self.getTeleportCooldown(FTBUtilitiesPlayerData.Timer.TPA);
 
 		if (cooldown > 0)
 		{
@@ -71,7 +71,7 @@ public class CmdTPA extends CmdBase
 
 		other.player.getPlayer().sendMessage(TextComponentHelper.createComponentTranslation(other.player.getPlayer(), "ftbutilities.lang.tpa.request_received", otherName, accept));
 
-		Universe.get().scheduleTask(server.getWorld(0).getTotalWorldTime() + CommonUtils.TICKS_SECOND * 30L, () -> {
+		Universe.get().scheduleTask(server.getWorld(0).getTotalWorldTime() + CommonUtils.TICKS_SECOND * 30L, universe -> {
 			if (other.tpaRequestsFrom.remove(self.player))
 			{
 				ITextComponent component = TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.tpa.request_expired");

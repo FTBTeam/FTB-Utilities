@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.cmd.ICommandWithCustomPermission;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
-import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
@@ -36,11 +35,11 @@ public class CmdNick extends CmdBase implements ICommandWithCustomPermission
 
 		if (data.getNickname().isEmpty())
 		{
-			Notification.of(Notification.VANILLA_STATUS, TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.nickname_reset")).send(server, player);
+			player.sendStatusMessage(TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.nickname_reset"), true);
 		}
 		else
 		{
-			Notification.of(Notification.VANILLA_STATUS, TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.nickname_changed", data.getNickname())).send(server, player);
+			player.sendStatusMessage(TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.nickname_changed", data.getNickname()), true);
 		}
 	}
 

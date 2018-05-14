@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
@@ -31,11 +31,19 @@ public class CmdBack extends CmdBase
 			throw new CommandException("ftbutilities.lang.warps.no_dp");
 		}
 
-		ServerUtils.teleportEntity(server, player, data.getLastDeath());
+		long cooldown = data.getTeleportCooldown(FTBUtilitiesPlayerData.Timer.BACK);
 
-		if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.INFINITE_BACK_USAGE))
+		if (cooldown > 0)
 		{
-			data.setLastDeath(null);
+			throw new CommandException("cant_use_now_cooldown", StringUtils.getTimeStringTicks(cooldown));
 		}
+
+		FTBUtilitiesPlayerData.Timer.BACK.teleport(player, data.getLastDeath(), universe ->
+		{
+			if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.INFINITE_BACK_USAGE))
+			{
+				data.setLastDeath(null);
+			}
+		});
 	}
 }

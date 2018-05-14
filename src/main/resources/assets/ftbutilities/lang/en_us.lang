@@ -171,7 +171,6 @@ ftbutilities.lang.warps.not_set=Unknown Warp: '%s'!
 ftbutilities.lang.warps.cooldown=You can only use warp in %s!
 ftbutilities.lang.warps.tp=Teleported to '%s'!
 ftbutilities.lang.warps.no_dp=You can only go back once!
-ftbutilities.lang.warps.spawn=Teleported to spawn
 
 # Homes
 ftbutilities.lang.homes.set=Home '%s' set!

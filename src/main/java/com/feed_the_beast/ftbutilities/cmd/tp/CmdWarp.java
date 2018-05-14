@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
@@ -70,15 +69,13 @@ public class CmdWarp extends CmdBase
 		}
 
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(getForgePlayer(player));
-		long cooldown = data.getWarpCooldown();
+		long cooldown = data.getTeleportCooldown(FTBUtilitiesPlayerData.Timer.WARP);
 
 		if (cooldown > 0)
 		{
 			throw new CommandException("cant_use_now_cooldown", StringUtils.getTimeStringTicks(cooldown));
 		}
 
-		ServerUtils.teleportEntity(server, player, p);
-		data.updateLastWarp();
-		Notification.of(FTBUtilitiesNotifications.TELEPORT, TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0])).send(server, player);
+		FTBUtilitiesPlayerData.Timer.WARP.teleport(player, p, universe -> Notification.of(FTBUtilitiesNotifications.TELEPORT, TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0])).send(server, player));
 	}
 }

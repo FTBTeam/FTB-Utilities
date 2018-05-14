@@ -174,7 +174,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 
 	public GuiClaimedChunks()
 	{
-		currentDimName = ServerUtils.getDimensionName(null, ClientUtils.MC.world.provider.getDimension()).getFormattedText();
+		currentDimName = ServerUtils.getDimensionName(ClientUtils.MC.world.provider.getDimension()).getFormattedText();
 	}
 
 	@Override

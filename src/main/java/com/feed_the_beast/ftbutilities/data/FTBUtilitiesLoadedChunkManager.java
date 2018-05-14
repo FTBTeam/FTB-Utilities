@@ -118,12 +118,12 @@ public class FTBUtilitiesLoadedChunkManager implements ForgeChunkManager.Loading
 
 			if (FTBUtilitiesConfig.debugging.log_chunkloading)
 			{
-				FTBUtilities.LOGGER.info(chunk.getTeam().getTitle().getUnformattedText() + " forced " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(null, pos.dim).getUnformattedText());
+				FTBUtilities.LOGGER.info(chunk.getTeam().getTitle().getUnformattedText() + " forced " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(pos.dim).getUnformattedText());
 			}
 		}
 		catch (Exception ex)
 		{
-			FTBUtilities.LOGGER.error("Failed to force chunk " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(null, pos.dim).getUnformattedText() + " from " + chunk.getTeam().getTitle().getUnformattedText() + ": " + ex);
+			FTBUtilities.LOGGER.error("Failed to force chunk " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(pos.dim).getUnformattedText() + " from " + chunk.getTeam().getTitle().getUnformattedText() + ": " + ex);
 		}
 	}
 
@@ -154,7 +154,7 @@ public class FTBUtilitiesLoadedChunkManager implements ForgeChunkManager.Loading
 
 		if (FTBUtilitiesConfig.debugging.log_chunkloading)
 		{
-			FTBUtilities.LOGGER.info(chunk.getTeam().getTitle().getUnformattedText() + " unforced " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(null, pos.dim).getUnformattedText());
+			FTBUtilities.LOGGER.info(chunk.getTeam().getTitle().getUnformattedText() + " unforced " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(pos.dim).getUnformattedText());
 		}
 	}
 

@@ -50,8 +50,8 @@ public class FTBUtilitiesPermissions
 	public static final String HOMES_TELEPORT_OTHER = "ftbutilities.homes.teleport_other";
 
 	// Warps //
-	public static final Node WARPS_COOLDOWN = Node.get("ftbutilities.wraps.cooldown");
-	public static final Node WARPS_WARMUP = Node.get("ftbutilities.wraps.warmup");
+	public static final Node WARPS_COOLDOWN = Node.get("ftbutilities.warps.cooldown");
+	public static final Node WARPS_WARMUP = Node.get("ftbutilities.warps.warmup");
 
 	// Claims //
 	public static final String CLAIMS_CHUNKS_MODIFY_OTHERS = "ftbutilities.claims.modify.others";

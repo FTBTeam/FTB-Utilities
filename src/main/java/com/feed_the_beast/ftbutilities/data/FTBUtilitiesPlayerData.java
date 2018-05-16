@@ -9,7 +9,7 @@ import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.IHasCache;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
+import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.IScheduledTask;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
@@ -51,7 +51,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 			warmup = w;
 		}
 
-		public void teleport(EntityPlayerMP player, double x, double y, double z, int dim, @Nullable IScheduledTask extraTask)
+		public void teleport(EntityPlayerMP player, TeleporterDimPos pos, @Nullable IScheduledTask extraTask)
 		{
 			Universe universe = Universe.get();
 			int seconds = RankConfigAPI.get(player, warmup).getInt();
@@ -59,17 +59,17 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 			if (seconds > 0)
 			{
 				player.sendStatusMessage(StringUtils.color(TextComponentHelper.createComponentTranslation(player, "stand_still", seconds).appendText(" [" + seconds + "]"), TextFormatting.GOLD), true);
-				universe.scheduleTask(universe.world.getTotalWorldTime() + 20L, new TeleportTask(player, this, seconds, seconds, x, y, z, dim, extraTask));
+				universe.scheduleTask(universe.world.getTotalWorldTime() + 20L, new TeleportTask(player, this, seconds, seconds, pos, extraTask));
 			}
 			else
 			{
-				new TeleportTask(player, this, 0, 0, x, y, z, dim, extraTask).execute(universe);
+				new TeleportTask(player, this, 0, 0, pos, extraTask).execute(universe);
 			}
 		}
 
 		public void teleport(EntityPlayerMP player, BlockDimPos pos, @Nullable IScheduledTask extraTask)
 		{
-			teleport(player, pos.posX + 0.5D, pos.posY + 0.1D, pos.posZ + 0.5D, pos.dim, extraTask);
+			teleport(player, pos.teleporter(), extraTask);
 		}
 	}
 
@@ -78,21 +78,18 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		private final EntityPlayerMP player;
 		private final Timer timer;
 		private final BlockDimPos startPos;
-		private final double toX, toY, toZ;
+		private final TeleporterDimPos pos;
 		private final float startHP;
-		private final int toDim, startSeconds, secondsLeft;
+		private final int startSeconds, secondsLeft;
 		private final IScheduledTask extraTask;
 
-		private TeleportTask(EntityPlayerMP p, Timer t, int ss, int s, double x, double y, double z, int dim, @Nullable IScheduledTask e)
+		private TeleportTask(EntityPlayerMP p, Timer t, int ss, int s, TeleporterDimPos to, @Nullable IScheduledTask e)
 		{
 			player = p;
 			timer = t;
 			startPos = new BlockDimPos(player);
 			startHP = player.getHealth();
-			toX = x;
-			toY = y;
-			toZ = z;
-			toDim = dim;
+			pos = to;
 			startSeconds = ss;
 			secondsLeft = s;
 			extraTask = e;
@@ -107,7 +104,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 			}
 			else if (secondsLeft <= 1)
 			{
-				ServerUtils.teleportEntity(player.mcServer, player, toX, toY, toZ, toDim);
+				pos.teleport(player);
 				FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(universe.getPlayer(player));
 				data.lastTeleport[timer.ordinal()] = universe.world.getTotalWorldTime();
 
@@ -123,7 +120,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 			}
 			else
 			{
-				universe.scheduleTask(universe.world.getTotalWorldTime() + 20L, new TeleportTask(player, timer, startSeconds, secondsLeft - 1, toX, toY, toZ, toDim, extraTask));
+				universe.scheduleTask(universe.world.getTotalWorldTime() + 20L, new TeleportTask(player, timer, startSeconds, secondsLeft - 1, pos, extraTask));
 				player.sendStatusMessage(new TextComponentString(Integer.toString(secondsLeft - 1)), true);
 				player.sendStatusMessage(StringUtils.color(TextComponentHelper.createComponentTranslation(player, "stand_still", startSeconds).appendText(" [" + (secondsLeft - 1) + "]"), TextFormatting.GOLD), true);
 			}

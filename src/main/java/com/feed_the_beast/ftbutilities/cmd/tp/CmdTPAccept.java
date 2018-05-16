@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.cmd.tp;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
@@ -54,6 +55,6 @@ public class CmdTPAccept extends CmdBase
 		component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponentHelper.createComponentTranslation(other.player.getPlayer(), "ftbutilities.lang.tpa.from_to", otherName, selfName)));
 		other.player.getPlayer().sendMessage(component);
 
-		FTBUtilitiesPlayerData.Timer.TPA.teleport(other.player.getPlayer(), selfPlayer.posX, selfPlayer.posY, selfPlayer.posZ, selfPlayer.dimension, null);
+		FTBUtilitiesPlayerData.Timer.TPA.teleport(other.player.getPlayer(), TeleporterDimPos.of(selfPlayer), null);
 	}
 }

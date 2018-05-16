@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
+import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -36,7 +36,7 @@ public class CmdTplast extends CmdBase
 			double x = parseDouble(player.posX, args[0], -30000000, 30000000, true);
 			double y = parseDouble(player.posY, args[1], -30000000, 30000000, true);
 			double z = parseDouble(player.posZ, args[2], -30000000, 30000000, true);
-			ServerUtils.teleportEntity(server, player, new BlockDimPos(x, y, z, player.dimension));
+			TeleporterDimPos.of(x, y, z, player.dimension).teleport(player);
 			return;
 		}
 
@@ -67,6 +67,6 @@ public class CmdTplast extends CmdBase
 			p = new BlockDimPos(posList.getDoubleAt(0), posList.getDoubleAt(1), posList.getDoubleAt(2), nbt.getInteger("Dimension"));
 		}
 
-		ServerUtils.teleportEntity(server, who, p);
+		p.teleporter().teleport(who);
 	}
 }

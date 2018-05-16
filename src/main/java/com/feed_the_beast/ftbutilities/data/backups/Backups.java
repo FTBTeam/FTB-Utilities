@@ -9,6 +9,7 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
+import com.feed_the_beast.ftbutilities.events.BackupEvent;
 import com.feed_the_beast.ftbutilities.net.MessageBackupProgress;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -221,6 +222,8 @@ public enum Backups
 			out.append(customName);
 		}
 
+		Exception error = null;
+
 		try
 		{
 			LinkedHashMap<File, String> fileMap = new LinkedHashMap<>();
@@ -350,9 +353,13 @@ public enum Backups
 			{
 				FileUtils.delete(dstFile);
 			}
+
+			error = ex;
 		}
 
-		backups.add(new Backup(time.getTimeInMillis(), out.toString().replace('\\', '/'), getLastIndex() + 1, success, FileUtils.getSize(dstFile)));
+		Backup backup = new Backup(time.getTimeInMillis(), out.toString().replace('\\', '/'), getLastIndex() + 1, success, FileUtils.getSize(dstFile));
+		backups.add(backup);
+		new BackupEvent(backup, error).post();
 		cleanupAndSave();
 		doingBackup = 2;
 	}

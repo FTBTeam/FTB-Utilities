@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -31,7 +32,7 @@ public class CmdSpawn extends CmdBase
 			throw new CommandException("cant_use_now_cooldown", StringUtils.getTimeStringTicks(cooldown));
 		}
 
-		World w = server.getWorld(0);
+		World w = server.getWorld(FTBUtilitiesConfig.world.spawn_dimension);
 		BlockPos spawnpoint = w.getSpawnPoint();
 
 		while (w.getBlockState(spawnpoint).isFullCube())
@@ -39,6 +40,6 @@ public class CmdSpawn extends CmdBase
 			spawnpoint = spawnpoint.up(2);
 		}
 
-		FTBUtilitiesPlayerData.Timer.SPAWN.teleport(player, new BlockDimPos(spawnpoint, 0), null);
+		FTBUtilitiesPlayerData.Timer.SPAWN.teleport(player, new BlockDimPos(spawnpoint, FTBUtilitiesConfig.world.spawn_dimension), null);
 	}
 }

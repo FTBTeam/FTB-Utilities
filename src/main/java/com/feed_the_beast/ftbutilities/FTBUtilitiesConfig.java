@@ -265,6 +265,9 @@ public class FTBUtilitiesConfig
 		@Config.Comment("Spawn radius. You must set spawn-protection in server.properties file to 0!")
 		public int spawn_radius = 0;
 
+		@Config.Comment("Spawn dimension. Overworld by default.")
+		public int spawn_dimension = 0;
+
 		public boolean allowDimension(int dimension)
 		{
 			if (ClaimedChunks.instance == null)

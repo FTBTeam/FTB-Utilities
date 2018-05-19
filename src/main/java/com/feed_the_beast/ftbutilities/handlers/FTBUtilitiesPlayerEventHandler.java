@@ -30,7 +30,6 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.server.command.TextComponentHelper;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 /**
@@ -98,7 +97,7 @@ public class FTBUtilitiesPlayerEventHandler
 			}
 			else
 			{
-				Notification.of(FTBUtilitiesNotifications.CHUNK_CHANGED, StringUtils.color(TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.chunks.wilderness"), TextFormatting.DARK_GREEN)).send(player.mcServer, player);
+				Notification.of(FTBUtilitiesNotifications.CHUNK_CHANGED, StringUtils.color(FTBUtilities.lang(player, "ftbutilities.lang.chunks.wilderness"), TextFormatting.DARK_GREEN)).send(player.mcServer, player);
 			}
 		}
 	}

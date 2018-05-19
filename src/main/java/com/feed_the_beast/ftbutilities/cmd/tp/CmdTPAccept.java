@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -11,7 +12,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 /**
  * @author LatvianModder
@@ -47,12 +47,12 @@ public class CmdTPAccept extends CmdBase
 
 		self.tpaRequestsFrom.remove(other.player);
 
-		ITextComponent component = TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.tpa.request_accepted");
-		component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.tpa.from_to", otherName, selfName)));
+		ITextComponent component = FTBUtilities.lang(sender, "ftbutilities.lang.tpa.request_accepted");
+		component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBUtilities.lang(sender, "ftbutilities.lang.tpa.from_to", otherName, selfName)));
 		sender.sendMessage(component);
 
-		component = TextComponentHelper.createComponentTranslation(other.player.getPlayer(), "ftbutilities.lang.tpa.request_accepted");
-		component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponentHelper.createComponentTranslation(other.player.getPlayer(), "ftbutilities.lang.tpa.from_to", otherName, selfName)));
+		component = FTBUtilities.lang(other.player.getPlayer(), "ftbutilities.lang.tpa.request_accepted");
+		component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBUtilities.lang(other.player.getPlayer(), "ftbutilities.lang.tpa.from_to", otherName, selfName)));
 		other.player.getPlayer().sendMessage(component);
 
 		FTBUtilitiesPlayerData.Timer.TPA.teleport(other.player.getPlayer(), TeleporterDimPos.of(selfPlayer), null);

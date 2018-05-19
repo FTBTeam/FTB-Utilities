@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbutilities.cmd.chunks;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
@@ -11,7 +12,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.server.command.TextComponentHelper;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
@@ -77,7 +77,7 @@ public class CmdUnclaimAll extends CmdBase
 		{
 			boolean allDimensions = args.length == 0 || parseBoolean(args[0]);
 			ClaimedChunks.instance.unclaimAllChunks(p.team, allDimensions ? OptionalInt.empty() : OptionalInt.of(player.dimension));
-			Notification.of(FTBUtilitiesNotifications.UNCLAIMED_ALL, TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.chunks.unclaimed_all")).send(server, player);
+			Notification.of(FTBUtilitiesNotifications.UNCLAIMED_ALL, FTBUtilities.lang(player, "ftbutilities.lang.chunks.unclaimed_all")).send(server, player);
 		}
 	}
 }

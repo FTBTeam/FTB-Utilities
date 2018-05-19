@@ -3,12 +3,12 @@ package com.feed_the_beast.ftbutilities.cmd;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 public class CmdBackup extends CmdTreeBase
 {
@@ -26,12 +26,12 @@ public class CmdBackup extends CmdTreeBase
 			{
 				for (EntityPlayerMP player : server.getPlayerList().getPlayers())
 				{
-					player.sendMessage(TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.backup.manual_launch", sender.getName()));
+					player.sendMessage(FTBUtilities.lang(player, "ftbutilities.lang.backup.manual_launch", sender.getName()));
 				}
 			}
 			else
 			{
-				sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.backup.already_running"));
+				sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.backup.already_running"));
 			}
 		}
 	}
@@ -48,7 +48,7 @@ public class CmdBackup extends CmdTreeBase
 		{
 			String sizeW = FileUtils.getSizeString(server.getWorld(0).getSaveHandler().getWorldDirectory());
 			String sizeT = FileUtils.getSizeString(Backups.INSTANCE.backupsFolder);
-			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.backup.size", sizeW, sizeT));
+			sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.backup.size", sizeW, sizeT));
 		}
 	}
 

@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbutilities.cmd.chunks;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
@@ -10,7 +11,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.server.command.TextComponentHelper;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
@@ -78,6 +78,6 @@ public class CmdUnloadAll extends CmdBase
 			}
 		}
 
-		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.chunks.unloaded_for", p.getDisplayName()));
+		sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.chunks.unloaded_for", p.getDisplayName()));
 	}
 }

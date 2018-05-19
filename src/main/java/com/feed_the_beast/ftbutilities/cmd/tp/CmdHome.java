@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
@@ -20,7 +21,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.server.command.TextComponentHelper;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
@@ -158,6 +158,6 @@ public class CmdHome extends CmdBase
 			throw new CommandException("cant_use_now_cooldown", StringUtils.getTimeStringTicks(cooldown));
 		}
 
-		FTBUtilitiesPlayerData.Timer.HOME.teleport(player, pos, universe -> Notification.of(FTBUtilitiesNotifications.TELEPORT, TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.tp", args[0])).send(server, player));
+		FTBUtilitiesPlayerData.Timer.HOME.teleport(player, pos, universe -> Notification.of(FTBUtilitiesNotifications.TELEPORT, FTBUtilities.lang(sender, "ftbutilities.lang.warps.tp", args[0])).send(server, player));
 	}
 }

@@ -24,12 +24,12 @@ public class FTBUtilitiesLeaderboards
 	@SubscribeEvent
 	public static void registerLeaderboards(LeaderboardRegistryEvent event)
 	{
-		event.register(new Leaderboard.FromStat(new ResourceLocation("ftbutilities:deaths"), StatList.DEATHS, false, Leaderboard.FromStat.DEFAULT));
-		event.register(new Leaderboard.FromStat(new ResourceLocation("ftbutilities:mob_kills"), StatList.MOB_KILLS, false, Leaderboard.FromStat.DEFAULT));
-		event.register(new Leaderboard.FromStat(new ResourceLocation("ftbutilities:time_played"), StatList.PLAY_ONE_MINUTE, false, Leaderboard.FromStat.TIME));
+		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUtilities.MOD_ID, "deaths"), StatList.DEATHS, false, Leaderboard.FromStat.DEFAULT));
+		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUtilities.MOD_ID, "mob_kills"), StatList.MOB_KILLS, false, Leaderboard.FromStat.DEFAULT));
+		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUtilities.MOD_ID, "time_played"), StatList.PLAY_ONE_MINUTE, false, Leaderboard.FromStat.TIME));
 
 		event.register(new Leaderboard(
-				new ResourceLocation("ftbutilities:deaths_per_hour"),
+				new ResourceLocation(FTBUtilities.MOD_ID, "deaths_per_hour"),
 				new TextComponentTranslation("ftbutilities.stat.dph"),
 				player ->
 				{
@@ -40,7 +40,7 @@ public class FTBUtilitiesLeaderboards
 				player -> getDPH(player) >= 0D));
 
 		event.register(new Leaderboard(
-				new ResourceLocation("ftbutilities:last_seen"),
+				new ResourceLocation(FTBUtilities.MOD_ID, "last_seen"),
 				new TextComponentTranslation("ftbutilities.stat.last_seen"),
 				player ->
 				{

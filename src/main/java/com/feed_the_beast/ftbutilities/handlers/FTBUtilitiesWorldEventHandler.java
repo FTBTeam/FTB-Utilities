@@ -30,7 +30,6 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +43,7 @@ import java.util.function.Function;
 @Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
 public class FTBUtilitiesWorldEventHandler
 {
-	private static final ResourceLocation RESTART_TIMER_ID = new ResourceLocation("ftbutilities:restart_timer");
+	private static final ResourceLocation RESTART_TIMER_ID = new ResourceLocation(FTBUtilities.MOD_ID, "restart_timer");
 
 	@SubscribeEvent
 	public static void onMobSpawned(EntityJoinWorldEvent event) //FIXME: LivingSpawnEvent.CheckSpawn
@@ -104,7 +103,7 @@ public class FTBUtilitiesWorldEventHandler
 				{
 					for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
 					{
-						Notification.of(RESTART_TIMER_ID, StringUtils.color(TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.timer.shutdown", StringUtils.getTimeStringTicks(t)), TextFormatting.LIGHT_PURPLE)).send(universe.server, player);
+						Notification.of(RESTART_TIMER_ID, StringUtils.color(FTBUtilities.lang(player, "ftbutilities.lang.timer.shutdown", StringUtils.getTimeStringTicks(t)), TextFormatting.LIGHT_PURPLE)).send(universe.server, player);
 					}
 				}
 			}

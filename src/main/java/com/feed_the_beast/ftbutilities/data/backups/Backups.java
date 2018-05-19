@@ -22,7 +22,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.ThreadedFileIOBase;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +31,7 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -40,7 +40,7 @@ public enum Backups
 {
 	INSTANCE;
 
-	public static final ResourceLocation NOTIFICATION_ID = new ResourceLocation("ftbutilities:backup");
+	public static final ResourceLocation NOTIFICATION_ID = new ResourceLocation(FTBUtilities.MOD_ID, "backup");
 
 	public final List<Backup> backups = new ArrayList<>();
 	public File backupsFolder;
@@ -81,7 +81,6 @@ public enum Backups
 			}
 		}
 
-		cleanupAndSave();
 		FTBUtilities.LOGGER.info("Backups folder - " + backupsFolder.getAbsolutePath());
 	}
 
@@ -157,7 +156,7 @@ public enum Backups
 			return false;
 		}
 
-		notifyAll(server, player -> TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.backup.start", sender.getName()), false);
+		notifyAll(server, player -> FTBUtilities.lang(player, "ftbutilities.lang.backup.start", sender.getName()), false);
 		nextBackup = server.getWorld(0).getTotalWorldTime() + FTBUtilitiesConfig.backups.ticks();
 
 		try
@@ -181,7 +180,7 @@ public enum Backups
 			}
 			catch (Exception ex1)
 			{
-				notifyAll(server, player -> TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.backup.saving_failed"), true);
+				notifyAll(server, player -> FTBUtilities.lang(player, "ftbutilities.lang.backup.saving_failed"), true);
 			}
 		}
 		catch (Exception ex)
@@ -223,22 +222,15 @@ public enum Backups
 		}
 
 		Exception error = null;
+		long totalSize = 0L;
 
 		try
 		{
 			LinkedHashMap<File, String> fileMap = new LinkedHashMap<>();
-
-			for (File file : FileUtils.listTree(src))
-			{
-				String filePath = file.getAbsolutePath();
-				fileMap.put(file, src.getName() + File.separator + filePath.substring(src.getAbsolutePath().length() + 1, filePath.length()));
-			}
-
 			String mcdir = server.getDataDirectory().getCanonicalFile().getAbsolutePath();
 
-			for (String s : FTBUtilitiesConfig.backups.extra_files)
-			{
-				for (File file : FileUtils.listTree(new File(s)))
+			Consumer<File> consumer = file0 -> {
+				for (File file : FileUtils.listTree(file0))
 				{
 					String s1 = file.getAbsolutePath().replace(mcdir, "");
 
@@ -249,9 +241,23 @@ public enum Backups
 
 					fileMap.put(file, "_extra_" + File.separator + s1);
 				}
+			};
+
+			for (String s : FTBUtilitiesConfig.backups.extra_files)
+			{
+				consumer.accept(new File(s));
 			}
 
-			FTBUtilities.LOGGER.info("Backing up " + fileMap.size() + " files...");
+			new BackupEvent.Pre(consumer).post();
+
+			for (File file : FileUtils.listTree(src))
+			{
+				String filePath = file.getAbsolutePath();
+				fileMap.put(file, src.getName() + File.separator + filePath.substring(src.getAbsolutePath().length() + 1, filePath.length()));
+			}
+
+			totalFiles = fileMap.size();
+			FTBUtilities.LOGGER.info("Backing up " + totalFiles + " files...");
 
 			if (FTBUtilitiesConfig.backups.compression_level > 0)
 			{
@@ -265,9 +271,8 @@ public enum Backups
 
 				byte[] buffer = new byte[4096];
 
-				FTBUtilities.LOGGER.info("Compressing " + fileMap.size() + " files!");
+				FTBUtilities.LOGGER.info("Compressing " + totalFiles + " files...");
 
-				totalFiles = fileMap.size();
 				currentFile = 0;
 				for (Map.Entry<File, String> entry : fileMap.entrySet())
 				{
@@ -297,14 +302,13 @@ public enum Backups
 
 				zos.close();
 
-				FTBUtilities.LOGGER.info("Done compressing in " + getDoneTime(start) + " seconds (" + FileUtils.getSizeString(dstFile) + ")!");
+				FTBUtilities.LOGGER.info("Done compressing in " + StringUtils.getTimeString(System.currentTimeMillis() - start) + " seconds (" + FileUtils.getSizeString(dstFile) + ")!");
 			}
 			else
 			{
 				dstFile = new File(new File(backupsFolder, out.toString()), src.getName());
 				dstFile.mkdirs();
 
-				totalFiles = fileMap.size();
 				currentFile = 0;
 				for (Map.Entry<File, String> entry : fileMap.entrySet())
 				{
@@ -333,11 +337,11 @@ public enum Backups
 				{
 					String sizeB = FileUtils.getSizeString(dstFile);
 					String sizeT = FileUtils.getSizeString(backupsFolder);
-					notifyAll(server, player -> TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.backup.end_2", getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT))), false);
+					notifyAll(server, player -> FTBUtilities.lang(player, "ftbutilities.lang.backup.end_2", StringUtils.getTimeString(System.currentTimeMillis() - time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT))), false);
 				}
 				else
 				{
-					notifyAll(server, player -> TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.backup.end_1", getDoneTime(time.getTimeInMillis())), false);
+					notifyAll(server, player -> FTBUtilities.lang(player, "ftbutilities.lang.backup.end_1", StringUtils.getTimeString(System.currentTimeMillis() - time.getTimeInMillis())), false);
 				}
 			}
 		}
@@ -345,35 +349,30 @@ public enum Backups
 		{
 			if (!FTBUtilitiesConfig.backups.silent)
 			{
-				notifyAll(server, player -> TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.backup.fail", ex.getClass().getName()), true);
+				notifyAll(server, player -> FTBUtilities.lang(player, "ftbutilities.lang.backup.fail", ex.getClass().getName()), true);
 			}
 
 			ex.printStackTrace();
+			error = ex;
+		}
+
+		if (error != null)
+		{
 			if (dstFile != null)
 			{
 				FileUtils.delete(dstFile);
 			}
-
-			error = ex;
 		}
-
-		Backup backup = new Backup(time.getTimeInMillis(), out.toString().replace('\\', '/'), getLastIndex() + 1, success, FileUtils.getSize(dstFile));
-		backups.add(backup);
-		new BackupEvent(backup, error).post();
-		cleanupAndSave();
-		doingBackup = 2;
-	}
-
-	private String getDoneTime(long l)
-	{
-		l = System.currentTimeMillis() - l;
-
-		if (l < 1000L)
+		else
 		{
-			return l + "ms";
+			totalSize = FileUtils.getSize(dstFile);
 		}
 
-		return StringUtils.getTimeString(l);
+		Backup backup = new Backup(time.getTimeInMillis(), out.toString().replace('\\', '/'), getLastIndex() + 1, success, totalSize);
+		backups.add(backup);
+		new BackupEvent.Post(backup, error).post();
+		cleanupAndSave(totalSize);
+		doingBackup = 2;
 	}
 
 	private void appendNum(StringBuilder sb, int num, char c)
@@ -389,13 +388,31 @@ public enum Backups
 		}
 	}
 
-	public void cleanupAndSave()
+	public long cleanupAndSave(long fileSize)
 	{
-		JsonArray a = new JsonArray();
+		long totalSize = 0L;
 
 		if (!backups.isEmpty())
 		{
 			backups.sort(null);
+
+			for (Backup backup : backups)
+			{
+				totalSize += backup.size;
+			}
+
+			if (fileSize > 0L)
+			{
+				long freeSpace = backupsFolder.getFreeSpace();
+
+				while (totalSize + fileSize > freeSpace && !backups.isEmpty())
+				{
+					Backup backup = backups.get(0);
+					totalSize -= backup.size;
+					FTBUtilities.LOGGER.info("Deleting old backup: " + backup.fileId);
+					FileUtils.delete(backup.getFile());
+				}
+			}
 
 			int backupsToKeep = FTBUtilitiesConfig.backups.backups_to_keep;
 
@@ -410,29 +427,25 @@ public enum Backups
 						for (int i = toDelete - 1; i >= 0; i--)
 						{
 							Backup b = backups.get(i);
-							FTBUtilities.LOGGER.info("Deleting old backup: " + b.fileId);
-							FileUtils.delete(b.getFile());
+
 							backups.remove(i);
 						}
 					}
 				}
 
-				for (int i = backups.size() - 1; i >= 0; i--)
-				{
-					if (!backups.get(i).getFile().exists())
-					{
-						backups.remove(i);
-					}
-				}
-			}
-
-			for (Backup t : backups)
-			{
-				a.add(t.toJsonObject());
+				backups.removeIf(backup -> !backup.getFile().exists());
 			}
 		}
 
-		JsonUtils.toJsonSafe(new File(backupsFolder, "backups.json"), a);
+		JsonArray array = new JsonArray();
+
+		for (Backup backup : backups)
+		{
+			array.add(backup.toJsonObject());
+		}
+
+		JsonUtils.toJsonSafe(new File(backupsFolder, "backups.json"), array);
+		return totalSize;
 	}
 
 	private int getLastIndex()

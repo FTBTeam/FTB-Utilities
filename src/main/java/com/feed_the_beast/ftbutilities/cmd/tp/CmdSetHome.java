@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
@@ -11,7 +12,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -58,7 +58,7 @@ public class CmdSetHome extends CmdBase
 		}
 
 		data.homes.set(args[0], new BlockDimPos(player));
-		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.homes.set", args[0]));
+		sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.homes.set", args[0]));
 		data.player.markDirty();
 	}
 }

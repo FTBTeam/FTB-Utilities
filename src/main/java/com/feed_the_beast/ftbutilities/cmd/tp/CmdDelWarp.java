@@ -2,12 +2,12 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -39,7 +39,7 @@ public class CmdDelWarp extends CmdBase
 
 		if (FTBUtilitiesUniverseData.WARPS.set(args[0], null))
 		{
-			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.del", args[0]));
+			sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.warps.del", args[0]));
 			Universe.get().markDirty();
 		}
 		else

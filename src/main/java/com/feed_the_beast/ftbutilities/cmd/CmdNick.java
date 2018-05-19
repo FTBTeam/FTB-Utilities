@@ -4,13 +4,13 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.cmd.ICommandWithCustomPermission;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.server.command.TextComponentHelper;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 public class CmdNick extends CmdBase implements ICommandWithCustomPermission
@@ -35,11 +35,11 @@ public class CmdNick extends CmdBase implements ICommandWithCustomPermission
 
 		if (data.getNickname().isEmpty())
 		{
-			player.sendStatusMessage(TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.nickname_reset"), true);
+			player.sendStatusMessage(FTBUtilities.lang(player, "ftbutilities.lang.nickname_reset"), true);
 		}
 		else
 		{
-			player.sendStatusMessage(TextComponentHelper.createComponentTranslation(player, "ftbutilities.lang.nickname_changed", data.getNickname()), true);
+			player.sendStatusMessage(FTBUtilities.lang(player, "ftbutilities.lang.nickname_changed", data.getNickname()), true);
 		}
 	}
 

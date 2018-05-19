@@ -26,6 +26,7 @@ public class FTBUtilitiesNetHandler
 		FILES.register(new MessageViewCrashList());
 		FILES.register(new MessageViewCrash());
 		FILES.register(new MessageViewCrashResponse());
+		FILES.register(new MessageViewCrashDelete());
 
 		STATS.register(new MessageLeaderboardList());
 		STATS.register(new MessageLeaderboardListResponse());

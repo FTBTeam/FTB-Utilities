@@ -2,11 +2,14 @@ package com.feed_the_beast.ftbutilities;
 
 import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import com.feed_the_beast.ftbutilities.ranks.CommandOverride;
 import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -16,6 +19,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +43,11 @@ public class FTBUtilities
 
 	@SidedProxy(serverSide = "com.feed_the_beast.ftbutilities.FTBUtilitiesCommon", clientSide = "com.feed_the_beast.ftbutilities.client.FTBUtilitiesClient")
 	public static FTBUtilitiesCommon PROXY;
+
+	public static ITextComponent lang(@Nullable ICommandSender sender, String key, Object... args)
+	{
+		return SidedUtils.lang(sender, MOD_ID, key, args);
+	}
 
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event)

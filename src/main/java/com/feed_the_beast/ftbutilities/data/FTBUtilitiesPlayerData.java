@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.data;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
@@ -21,7 +22,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -58,7 +58,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 
 			if (seconds > 0)
 			{
-				player.sendStatusMessage(StringUtils.color(TextComponentHelper.createComponentTranslation(player, "stand_still", seconds).appendText(" [" + seconds + "]"), TextFormatting.GOLD), true);
+				player.sendStatusMessage(StringUtils.color(FTBLib.lang(player, "stand_still", seconds).appendText(" [" + seconds + "]"), TextFormatting.GOLD), true);
 				universe.scheduleTask(universe.world.getTotalWorldTime() + 20L, new TeleportTask(player, this, seconds, seconds, pos, extraTask));
 			}
 			else
@@ -100,7 +100,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		{
 			if (!startPos.equalsPos(new BlockDimPos(player)) || startHP != player.getHealth())
 			{
-				player.sendStatusMessage(StringUtils.color(TextComponentHelper.createComponentTranslation(player, "stand_still_failed"), TextFormatting.RED), true);
+				player.sendStatusMessage(StringUtils.color(FTBLib.lang(player, "stand_still_failed"), TextFormatting.RED), true);
 			}
 			else if (secondsLeft <= 1)
 			{
@@ -110,7 +110,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 
 				if (secondsLeft != 0)
 				{
-					player.sendStatusMessage(TextComponentHelper.createComponentTranslation(player, "teleporting"), true);
+					player.sendStatusMessage(FTBLib.lang(player, "teleporting"), true);
 				}
 
 				if (extraTask != null)
@@ -122,7 +122,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 			{
 				universe.scheduleTask(universe.world.getTotalWorldTime() + 20L, new TeleportTask(player, timer, startSeconds, secondsLeft - 1, pos, extraTask));
 				player.sendStatusMessage(new TextComponentString(Integer.toString(secondsLeft - 1)), true);
-				player.sendStatusMessage(StringUtils.color(TextComponentHelper.createComponentTranslation(player, "stand_still", startSeconds).appendText(" [" + (secondsLeft - 1) + "]"), TextFormatting.GOLD), true);
+				player.sendStatusMessage(StringUtils.color(FTBLib.lang(player, "stand_still", startSeconds).appendText(" [" + (secondsLeft - 1) + "]"), TextFormatting.GOLD), true);
 			}
 		}
 	}

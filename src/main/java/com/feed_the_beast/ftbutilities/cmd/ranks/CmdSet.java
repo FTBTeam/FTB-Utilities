@@ -2,13 +2,13 @@ package com.feed_the_beast.ftbutilities.cmd.ranks;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -49,12 +49,12 @@ public class CmdSet extends CmdBase
 
 		if (r == Ranks.INSTANCE.builtinPlayerRank)
 		{
-			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.rank.use_deop", args[0]));
+			sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.rank.use_deop", args[0]));
 			return;
 		}
 		else if (r == Ranks.INSTANCE.builtinOPRank)
 		{
-			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.rank.use_op", args[0]));
+			sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.rank.use_op", args[0]));
 			return;
 		}
 		else if (!Ranks.INSTANCE.getRankNames().contains(args[1]))
@@ -67,11 +67,11 @@ public class CmdSet extends CmdBase
 
 		if (r == null)
 		{
-			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.rank.unset", p.getDisplayName()));
+			sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.rank.unset", p.getDisplayName()));
 		}
 		else
 		{
-			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.rank.set", p.getDisplayName(), r.getName()));
+			sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.rank.set", p.getDisplayName(), r.getName()));
 		}
 	}
 }

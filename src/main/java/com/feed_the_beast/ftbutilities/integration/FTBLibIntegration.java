@@ -17,7 +17,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
-import com.feed_the_beast.ftblib.lib.data.Action;
+import com.feed_the_beast.ftblib.lib.data.AdminPanelAction;
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
@@ -55,10 +55,10 @@ import java.util.OptionalInt;
 @EventHandler
 public class FTBLibIntegration
 {
-	public static final ResourceLocation RELOAD_CONFIG = new ResourceLocation("ftbutilities:config");
-	public static final ResourceLocation RELOAD_RANKS = new ResourceLocation("ftbutilities:ranks");
-	public static final ResourceLocation RELOAD_BADGES = new ResourceLocation("ftbutilities:badges");
-	public static final ResourceLocation LOGIN_STARTING_ITEMS = new ResourceLocation("ftbutilities:starting_items");
+	public static final ResourceLocation RELOAD_CONFIG = new ResourceLocation(FTBUtilities.MOD_ID, "config");
+	public static final ResourceLocation RELOAD_RANKS = new ResourceLocation(FTBUtilities.MOD_ID, "ranks");
+	public static final ResourceLocation RELOAD_BADGES = new ResourceLocation(FTBUtilities.MOD_ID, "badges");
+	public static final ResourceLocation LOGIN_STARTING_ITEMS = new ResourceLocation(FTBUtilities.MOD_ID, "starting_items");
 
 	@SubscribeEvent
 	public static void registerReloadIds(ServerReloadEvent.RegisterIds event)
@@ -220,7 +220,7 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void registerAdminPanelActions(RegisterAdminPanelActionsEvent event)
 	{
-		event.register(new Action("ftbutilities:view_crash_reports", new TextComponentTranslation("admin_panel.ftbutilities.crash_reports"), ItemIcon.getItemIcon(new ItemStack(Blocks.BARRIER)), 0)
+		event.register(new AdminPanelAction(FTBUtilities.MOD_ID, "crash_reports", ItemIcon.getItemIcon(new ItemStack(Blocks.BARRIER)), 0)
 		{
 			@Override
 			public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -235,7 +235,7 @@ public class FTBLibIntegration
 			}
 		});
 
-		event.register(new Action("ftbutilities:edit_world", new TextComponentTranslation("admin_panel.ftbutilities.edit_world"), GuiIcons.GLOBE, 0)
+		event.register(new AdminPanelAction(FTBUtilities.MOD_ID, "edit_world", GuiIcons.GLOBE, 0)
 		{
 			@Override
 			public Type getType(ForgePlayer player, NBTTagCompound data)

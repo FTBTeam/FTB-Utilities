@@ -5,12 +5,12 @@ import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -52,11 +52,11 @@ public class CmdGetPlayerPermission extends CmdBase
 
 		if (info != null)
 		{
-			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.perm_for", args[1], player.getDisplayName(), player.getRankConfig(node).toString()));
+			sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.perm_for", args[1], player.getDisplayName(), player.getRankConfig(node).toString()));
 		}
 		else
 		{
-			sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.perm_for", args[1], player.getDisplayName(), Boolean.toString(player.hasPermission(args[1]))));
+			sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.perm_for", args[1], player.getDisplayName(), Boolean.toString(player.hasPermission(args[1]))));
 		}
 	}
 }

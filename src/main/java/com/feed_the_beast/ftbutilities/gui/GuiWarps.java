@@ -4,8 +4,6 @@ import com.feed_the_beast.ftblib.lib.client.CachedVertexData;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
-import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.icon.LoadingIcon;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbutilities.net.MessageSendWarpList;
@@ -149,7 +147,7 @@ public class GuiWarps extends GuiBase
 
 		if (!isLoaded)
 		{
-			LoadingIcon.INSTANCE.draw(ax - SIZE_2, ay - SIZE_2, SIZE, SIZE, Color4I.WHITE);
+			//LoadingIcon.INSTANCE.draw(ax - SIZE_2, ay - SIZE_2, SIZE, SIZE, Color4I.WHITE);
 			return;
 		}
 

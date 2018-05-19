@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.client.FTBUtilitiesClient;
+import com.feed_the_beast.ftbutilities.client.FTBUtilitiesClientConfig;
 import com.feed_the_beast.ftbutilities.gui.GuiWarps;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -24,7 +25,7 @@ public class FTBUtilitiesClientEventHandler
 	@SubscribeEvent
 	public static void onDebugInfoEvent(RenderGameOverlayEvent.Text event)
 	{
-		if (totalBackupFiles > 0 && totalBackupFiles > currentBackupFile)
+		if (totalBackupFiles > 0 && totalBackupFiles > currentBackupFile && FTBUtilitiesClientConfig.general.show_backup_progress)
 		{
 			event.getLeft().add(TextFormatting.LIGHT_PURPLE + "[" + currentBackupFile + " / " + totalBackupFiles + " | " + StringUtils.formatDouble((currentBackupFile / (double) totalBackupFiles) * 100D) + "%]");
 		}

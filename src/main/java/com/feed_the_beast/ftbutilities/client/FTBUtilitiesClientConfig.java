@@ -20,14 +20,18 @@ public class FTBUtilitiesClientConfig
 
 	public static class General
 	{
+		@Config.Comment("Render Badges.")
 		public boolean render_badges = true;
+
+		@Config.Comment("Enable JourneyMap overlay.")
+		@Config.Ignore
 		public boolean journeymap_overlay = true;
 
-		@Config.Comment("Will be called first. If item ID starts with any of these strings, it won't skip this item")
+		@Config.Comment("Will be called first. If item ID starts with any of these strings, it won't skip this item.")
 		public String[] scan_items_whitelist = {
 		};
 
-		@Config.Comment("Will be called after scan_items_whitelist. If item ID starts with any of these strings, it will skip this item")
+		@Config.Comment("Will be called after scan_items_whitelist. If item ID starts with any of these strings, it will skip this item.")
 		public String[] scan_items_blacklist = {
 				"minecraft:arrow",
 				"minecraft:tipped_arrow",
@@ -61,6 +65,9 @@ public class FTBUtilitiesClientConfig
 				"actuallyadditions:item_potion_ring_advanced",
 				"thermaldynamics:cover"
 		};
+
+		@Config.Comment("Show backup completion percentage in corner.")
+		public boolean show_backup_progress = true;
 	}
 
 	public static void sync()

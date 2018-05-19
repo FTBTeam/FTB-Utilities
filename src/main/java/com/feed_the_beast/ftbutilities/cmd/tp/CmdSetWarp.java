@@ -6,9 +6,7 @@ import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.server.command.TextComponentHelper;
 
 public class CmdSetWarp extends CmdBase
@@ -22,24 +20,27 @@ public class CmdSetWarp extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		checkArgs(sender, args, 1);
-		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-		BlockPos c;
+		BlockDimPos pos;
 
 		args[0] = args[0].toLowerCase();
 
-		if (args.length >= 4)
+		if (args.length == 2)
+		{
+			pos = new BlockDimPos(getPlayer(server, sender, args[1]));
+		}
+		else if (args.length >= 4)
 		{
 			int x = parseInt(args[1]);
 			int y = parseInt(args[2]);
 			int z = parseInt(args[3]);
-			c = new BlockPos(x, y, z);
+			pos = new BlockDimPos(x, y, z, args.length >= 5 ? parseInt(args[4]) : sender.getEntityWorld().provider.getDimension());
 		}
 		else
 		{
-			c = player.getPosition();
+			pos = new BlockDimPos(sender);
 		}
 
-		FTBUtilitiesUniverseData.WARPS.set(args[0], new BlockDimPos(c, player.dimension));
+		FTBUtilitiesUniverseData.WARPS.set(args[0], pos);
 		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftbutilities.lang.warps.set", args[0]));
 		Universe.get().markDirty();
 	}

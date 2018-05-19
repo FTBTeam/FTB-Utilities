@@ -17,7 +17,9 @@ import com.feed_the_beast.ftblib.lib.io.RequestMethod;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftbutilities.net.MessageViewCrashDelete;
 import com.google.gson.JsonElement;
+import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -79,7 +81,7 @@ public class GuiViewCrash extends GuiBase
 	private final TextField name;
 	private final Panel textPanel;
 	private final PanelScrollBar scrollH, scrollV;
-	private final Button close, upload, reset;
+	private final Button close, upload, delete, reset;
 
 	public GuiViewCrash(String n, Collection<String> l)
 	{
@@ -155,6 +157,22 @@ public class GuiViewCrash extends GuiBase
 			}
 		};
 
+		delete = new SimpleButton(this, I18n.format("selectServer.delete"), GuiIcons.REMOVE, (widget, button) -> ClientUtils.MC.displayGuiScreen(new GuiYesNo((result, id) -> {
+			GuiViewCrash.this.openGui();
+
+			if (result)
+			{
+				new MessageViewCrashDelete(name.text[0]).sendToServer();
+			}
+		}, I18n.format("delete_item", name.text[0]), "", 0)))
+		{
+			@Override
+			public Icon getIcon()
+			{
+				return getButtonBackground().withBorder(-2).combineWith(super.getIcon());
+			}
+		};
+
 		reset = new SimpleButton(this, "", Icon.EMPTY, (widget, button) ->
 		{
 			scrollH.setValue(0);
@@ -176,6 +194,7 @@ public class GuiViewCrash extends GuiBase
 		add(scrollV);
 		add(close);
 		add(upload);
+		add(delete);
 		add(reset);
 		add(name);
 	}
@@ -185,6 +204,7 @@ public class GuiViewCrash extends GuiBase
 	{
 		close.setPos(width - 24, 8);
 		upload.setPos(width - 48, 8);
+		delete.setPos(width - 72, 8);
 		reset.setPos(width - 24, height - 24);
 		scrollH.setPosAndSize(8, height - 24, width - 32, 16);
 		scrollV.setPosAndSize(width - 24, 32, 16, height - 56);

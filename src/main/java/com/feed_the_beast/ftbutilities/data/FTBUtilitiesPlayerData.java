@@ -1,8 +1,10 @@
 package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.FTBLib;
-import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
+import com.feed_the_beast.ftblib.lib.EnumMessageLocation;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
+import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
+import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
@@ -133,9 +135,11 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 	private final ConfigBoolean disableGlobalBadge = new ConfigBoolean(false);
 	private final ConfigBoolean enablePVP = new ConfigBoolean(true);
 	private final ConfigString nickname = new ConfigString("");
+	private final ConfigEnum<EnumMessageLocation> afkMesageLocation = new ConfigEnum<>(EnumMessageLocation.NAME_MAP);
 
 	public ForgeTeam lastChunkTeam;
 	public final Collection<ForgePlayer> tpaRequestsFrom;
+	public int afkTime;
 
 	private BlockDimPos lastDeath, lastSafePos;
 	private long[] lastTeleport;
@@ -184,18 +188,24 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		fly = nbt.getBoolean("AllowFlying");
 		lastDeath = BlockDimPos.fromIntArray(nbt.getIntArray("LastDeath"));
 		nickname.setString(nbt.getString("Nickname"));
+		afkMesageLocation.setValue(nbt.getString("AFK"));
 	}
 
-	public void addConfig(ForgePlayerConfigEvent event)
+	public void addConfig(ConfigGroup group)
 	{
-		event.getConfig().setGroupName(FTBUtilities.MOD_ID, new TextComponentString(FTBUtilities.MOD_NAME));
-		event.getConfig().add(FTBUtilities.MOD_ID, "render_badge", renderBadge);
-		event.getConfig().add(FTBUtilities.MOD_ID, "disable_global_badge", disableGlobalBadge);
-		event.getConfig().add(FTBUtilities.MOD_ID, "enable_pvp", enablePVP);
+		group.setGroupName(FTBUtilities.MOD_ID, new TextComponentString(FTBUtilities.MOD_NAME));
+		group.add(FTBUtilities.MOD_ID, "render_badge", renderBadge);
+		group.add(FTBUtilities.MOD_ID, "disable_global_badge", disableGlobalBadge);
+		group.add(FTBUtilities.MOD_ID, "enable_pvp", enablePVP);
 
-		if (FTBUtilitiesConfig.commands.nick && event.getPlayer().hasPermission(FTBUtilitiesPermissions.NICKNAME))
+		if (FTBUtilitiesConfig.commands.nick && player.hasPermission(FTBUtilitiesPermissions.NICKNAME))
 		{
-			event.getConfig().add(FTBUtilities.MOD_ID, "nickname", nickname);
+			group.add(FTBUtilities.MOD_ID, "nickname", nickname);
+		}
+
+		if (FTBUtilitiesConfig.afk.isEnabled(player.team.universe.server))
+		{
+			group.add(FTBUtilities.MOD_ID, "afk", afkMesageLocation);
 		}
 	}
 
@@ -224,6 +234,11 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		nickname.setString(name.equals(player.getName()) ? "" : name);
 		player.markDirty();
 		clearCache();
+	}
+
+	public EnumMessageLocation getAFKMessageLocation()
+	{
+		return afkMesageLocation.getValue();
 	}
 
 	public void setFly(boolean v)

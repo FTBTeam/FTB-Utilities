@@ -149,7 +149,7 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void getPlayerSettings(ForgePlayerConfigEvent event)
 	{
-		FTBUtilitiesPlayerData.get(event.getPlayer()).addConfig(event);
+		FTBUtilitiesPlayerData.get(event.getPlayer()).addConfig(event.getConfig());
 	}
 	
 	/*

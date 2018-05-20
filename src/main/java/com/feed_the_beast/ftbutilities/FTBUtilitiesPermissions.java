@@ -68,7 +68,8 @@ public class FTBUtilitiesPermissions
 
 	// Other //
 	public static final String INFINITE_BACK_USAGE = "ftbutilities.back.infinite";
-	public static final String VIEW_CRASH_REPORTS = "admin_panel.ftbutilities.view_crash_reports";
+	public static final String VIEW_CRASH_REPORTS = "admin_panel.ftbutilities.crash_reports.view";
+	public static final String DELETE_CRASH_REPORTS = "admin_panel.ftbutilities.crash_reports.delete";
 	private static final String LEADERBOARD_PREFIX = "ftbutilities.leaderboard.";
 	public static final String EDIT_WORLD_GAMERULES = "admin_panel.ftbutilities.edit_world.gamerules";
 	public static final Node TPA_COOLDOWN = Node.get("ftbutilities.tpa.cooldown");
@@ -78,6 +79,7 @@ public class FTBUtilitiesPermissions
 	public static final Node SPAWN_WARMUP = Node.get("ftbutilities.spawn.warmup");
 	public static final Node BACK_WARMUP = Node.get("ftbutilities.back.warmup");
 	public static final String NICKNAME = "ftbutilities.nickname";
+	public static final Node AFK_TIMER = Node.get("ftbutilities.afk.timer");
 
 	@SubscribeEvent
 	public static void registerRankConfigHandler(RegisterRankConfigHandlerEvent event)
@@ -100,6 +102,7 @@ public class FTBUtilitiesPermissions
 		event.registerNode(CHUNKLOADER_LOAD_OFFLINE, DefaultPermissionLevel.ALL, "Keep loaded chunks working when player goes offline");
 		event.registerNode(INFINITE_BACK_USAGE, DefaultPermissionLevel.NONE, "Allow to use 'back' command infinite times");
 		event.registerNode(VIEW_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to view crash reports via Admin Panel");
+		event.registerNode(DELETE_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to delete crash reports. Depends on 'admin_panel.ftbutilities.crash_reports.view'");
 		event.registerNode(EDIT_WORLD_GAMERULES, DefaultPermissionLevel.OP, "Allow to edit gamerules via Admin Panel");
 		event.registerNode(NICKNAME, DefaultPermissionLevel.OP, "Allow to change nickname");
 
@@ -137,16 +140,15 @@ public class FTBUtilitiesPermissions
 		event.register(TPA_COOLDOWN, new ConfigInt(180, 0, Integer.MAX_VALUE), new ConfigInt(0));
 		event.register(SPAWN_COOLDOWN, new ConfigInt(60, 0, Integer.MAX_VALUE), new ConfigInt(0));
 		event.register(BACK_COOLDOWN, new ConfigInt(180, 0, Integer.MAX_VALUE), new ConfigInt(0));
-
 		event.register(HOMES_WARMUP, new ConfigInt(5, 0, 60), new ConfigInt(0));
 		event.register(WARPS_WARMUP, new ConfigInt(5, 0, 60), new ConfigInt(0));
 		event.register(TPA_WARMUP, new ConfigInt(5, 0, 60), new ConfigInt(0));
 		event.register(SPAWN_WARMUP, new ConfigInt(5, 0, 60), new ConfigInt(0));
 		event.register(BACK_WARMUP, new ConfigInt(5, 0, 60), new ConfigInt(0));
-
 		event.register(CLAIMS_MAX_CHUNKS, new ConfigInt(100, 0, 30000), new ConfigInt(1000));
 		event.register(CHUNKLOADER_MAX_CHUNKS, new ConfigInt(50, 0, 30000), new ConfigInt(64));
 		//event.register(CHUNKLOADER_OFFLINE_TIMER, new ConfigDouble(-1D).setMin(-1D), new ConfigDouble(-1D));
+		event.register(AFK_TIMER, new ConfigInt(0, 0, Integer.MAX_VALUE), new ConfigInt(0));
 	}
 
 	@SubscribeEvent

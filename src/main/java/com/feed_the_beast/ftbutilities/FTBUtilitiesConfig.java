@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -26,6 +27,8 @@ public class FTBUtilitiesConfig
 {
 	@Config.RequiresWorldRestart
 	public static final AutoShutdown auto_shutdown = new AutoShutdown();
+
+	public static final AFK afk = new AFK();
 
 	public static final Chat chat = new Chat();
 
@@ -57,6 +60,24 @@ public class FTBUtilitiesConfig
 				"It will look for closest value available that is not equal to current time."
 		})
 		public String[] times = {"04:00", "16:00"};
+	}
+
+	public static class AFK
+	{
+		@Config.LangKey("addServer.resourcePack.enabled")
+		@Config.Comment("Enables afk timer")
+		public boolean enabled = true;
+
+		@Config.Comment("Enables afk timer")
+		public boolean enabled_singleplayer = false;
+
+		@Config.RangeInt(min = 10)
+		public int notification_seconds = 60;
+
+		public boolean isEnabled(MinecraftServer server)
+		{
+			return enabled && (enabled_singleplayer || !server.isSinglePlayer());
+		}
 	}
 
 	public static class Chat

@@ -2,6 +2,10 @@
 ftbutilities.auto_shutdown=Auto Shutdown
 ftbutilities.auto_shutdown.times=Shutdown Times
 
+ftbutilities.afk=AFK
+ftbutilities.afk.enabled_singleplayer=Enabled in Singleplayer
+ftbutilities.afk.notification_seconds=Notification Timer in Seconds
+
 ftbutilities.server_info=Server Info
 ftbutilities.server_info.difficulty=Difficulty
 ftbutilities.server_info.admin_quick_access=Admin Quick Access
@@ -52,13 +56,6 @@ ftbutilities_client.general.scan_items_whitelist=/scan_items Whitelist
 ftbutilities_client.general.scan_items_blacklist=/scan_items Blacklist
 ftbutilities_client.general.show_backup_progress=Show Backup Progress
 
-# Server Settings
-my_server_settings.ftbu=FTBUtilities
-my_server_settings.ftbutilities.render_badge=Render My Badge
-my_server_settings.ftbutilities.chat_links=Chat Links
-my_server_settings.ftbutilities.explosions=Explosions
-my_server_settings.ftbutilities.security_level=Block Security Level
-
 # Rank Config
 rank_config.ftbutilities.badge=Badge
 rank_config.ftbutilities.badge.tooltip=Badge (icon on chest). Must be an URL
@@ -94,6 +91,8 @@ rank_config.ftbutilities.spawn.warmup.tooltip=Warmup timer in seconds
 rank_config.ftbutilities.back.warmup.tooltip=Warmup timer in seconds
 rank_config.ftbutilities.afk.timer=AFK Timer
 rank_config.ftbutilities.afk.timer.tooltip=AFK Timer in minutes
+rank_config.ftbutilities.afk.timer.is_afk=%s is now AFK
+rank_config.ftbutilities.afk.timer.isnt_afk=%s is no longer AFK
 
 # Player Settings
 player_config.ftbutilities.chat_links=Chat Links
@@ -101,6 +100,7 @@ player_config.ftbutilities.disable_global_badge=Disable Global Badge
 player_config.ftbutilities.render_badge=Render My Badge
 player_config.ftbutilities.enable_pvp=Enable PVP
 player_config.ftbutilities.nickname=Nickname
+player_config.ftbutilities.afk=AFK Notification Position
 
 # Team Settings
 team_config.ftbutilities.blocks_edit=Required Level for Block Editing

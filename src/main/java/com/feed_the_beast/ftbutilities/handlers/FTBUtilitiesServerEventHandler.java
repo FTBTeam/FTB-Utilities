@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.handlers;
 
 import com.feed_the_beast.ftblib.lib.EnumMessageLocation;
+import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -13,24 +14,23 @@ import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
-import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
-import net.minecraft.entity.EntityList;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.server.permission.context.IContext;
+import net.minecraftforge.server.permission.context.PlayerContext;
 
 /**
  * @author LatvianModder
@@ -44,36 +44,21 @@ public class FTBUtilitiesServerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onServerChatEvent(ServerChatEvent event)
 	{
-		String msg = event.getMessage().trim();
-
-		if (FTBUtilitiesConfig.ranks.override_chat)
+		if (!FTBUtilitiesConfig.ranks.override_chat || Ranks.INSTANCE == null)
 		{
-			Rank rank = Ranks.INSTANCE.getRank(event.getPlayer());
-
-			ITextComponent main = new TextComponentString("");
-			ITextComponent name = new TextComponentString(rank.getFormattedName(event.getPlayer().getDisplayNameString()));
-
-			name.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + event.getPlayer().getName() + " "));
-
-			NBTTagCompound hoverNBT = new NBTTagCompound();
-			String s = EntityList.getEntityString(event.getPlayer());
-			hoverNBT.setString("id", event.getPlayer().getCachedUniqueIdString());
-
-			if (s != null)
-			{
-				hoverNBT.setString("type", s);
-			}
-
-			hoverNBT.setString("name", event.getPlayer().getName());
-
-			name.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ENTITY, new TextComponentString(hoverNBT.toString())));
-			name.getStyle().setInsertion(event.getPlayer().getName());
-
-			main.appendSibling(name);
-			main.appendSibling(ForgeHooks.newChatWithLinks(msg));
-
-			event.setComponent(main);
+			return;
 		}
+
+		EntityPlayerMP player = event.getPlayer();
+		MinecraftServer server = player.mcServer;
+		IContext context = new PlayerContext(player);
+		GameProfile profile = player.getGameProfile();
+		ITextComponent main = new TextComponentString("");
+		main.appendSibling(FTBUtilitiesPermissions.CHAT_PREFIX.format(server, profile, context, new TextComponentString(RankConfigAPI.get(server, profile, FTBUtilitiesPermissions.CHAT_PREFIX_TEXT, context).getString())));
+		main.appendSibling(FTBUtilitiesPermissions.CHAT_NAME.format(server, profile, context, player.getDisplayName()));
+		main.appendSibling(FTBUtilitiesPermissions.CHAT_SUFFIX.format(server, profile, context, new TextComponentString(RankConfigAPI.get(server, profile, FTBUtilitiesPermissions.CHAT_SUFFIX_TEXT, context).getString())));
+		main.appendSibling(FTBUtilitiesPermissions.CHAT_TEXT.format(server, profile, context, ForgeHooks.newChatWithLinks(event.getMessage().trim())));
+		event.setComponent(main);
 	}
 
 	@SubscribeEvent

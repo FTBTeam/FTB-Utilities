@@ -25,22 +25,28 @@ public class CmdAdd extends CmdBase
 			throw new CommandException("feature_disabled_server");
 		}
 
-		checkArgs(sender, args, 2);
+		checkArgs(sender, args, 1);
 
 		String id = args[0].toLowerCase();
 
 		if (Ranks.INSTANCE.getRankNames().contains(id))
 		{
-			throw new CommandException("ftbutilities.lang.rank.id_exists", id);
+			throw new CommandException("commands.ftb.ranks.add.id_exists", id);
 		}
 
-		Rank parent = args.length == 1 ? Ranks.INSTANCE.builtinPlayerRank : Ranks.INSTANCE.getRank(args[1], null);
+		Rank rank = new Rank(Ranks.INSTANCE, id);
 
-		if (parent == null)
+		if (args.length == 2)
 		{
-			throw new CommandException("ftbutilities.lang.rank.not_found", id);
+			String pid = args[1].toLowerCase();
+			rank.parent = Ranks.INSTANCE.getRank(pid);
+
+			if (rank.parent == null)
+			{
+				throw new CommandException("commands.ftb.ranks.not_found", pid);
+			}
 		}
 
-		Ranks.INSTANCE.addRank(new Rank(Ranks.INSTANCE, id, parent));
+		Ranks.INSTANCE.addRank(rank);
 	}
 }

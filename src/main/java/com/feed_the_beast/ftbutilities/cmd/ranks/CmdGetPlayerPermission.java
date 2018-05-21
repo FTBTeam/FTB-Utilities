@@ -13,6 +13,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,7 +23,13 @@ public class CmdGetPlayerPermission extends CmdBase
 {
 	public CmdGetPlayerPermission()
 	{
-		super("get_player_permission", Level.OP);
+		super("get_permission", Level.OP);
+	}
+
+	@Override
+	public List<String> getAliases()
+	{
+		return Collections.singletonList("getp");
 	}
 
 	@Override

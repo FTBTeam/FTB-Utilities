@@ -11,6 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.command.CommandTreeBase;
+import net.minecraftforge.server.permission.context.PlayerContext;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -71,7 +72,8 @@ public class CommandOverride implements ICommandWithParent
 	{
 		if (sender instanceof EntityPlayerMP)
 		{
-			Event.Result result = Ranks.INSTANCE.getRank((EntityPlayerMP) sender).hasPermission(node);
+			EntityPlayerMP player = (EntityPlayerMP) sender;
+			Event.Result result = FTBUtilitiesPermissionHandler.INSTANCE.getPermissionResult(player.getGameProfile(), node.toString(), new PlayerContext(player));
 
 			if (result != Event.Result.DEFAULT)
 			{

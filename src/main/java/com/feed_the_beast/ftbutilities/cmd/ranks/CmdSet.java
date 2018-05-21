@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbutilities.cmd.ranks;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
@@ -9,6 +10,9 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -50,33 +54,18 @@ public class CmdSet extends CmdBase
 
 		checkArgs(sender, args, 2);
 
-		Rank r = (args[1].equalsIgnoreCase("none") || args[1].equals("-")) ? null : Ranks.INSTANCE.getRank(args[1], null);
+		Rank r = (args[1].equalsIgnoreCase("none") || args[1].equals("-")) ? null : Ranks.INSTANCE.getRank(args[1]);
 
-		if (r == Ranks.INSTANCE.builtinPlayerRank)
+		if (!Ranks.INSTANCE.getRankNames().contains(args[1]))
 		{
-			sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.rank.use_deop", args[0]));
-			return;
-		}
-		else if (r == Ranks.INSTANCE.builtinOPRank)
-		{
-			sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.rank.use_op", args[0]));
-			return;
-		}
-		else if (!Ranks.INSTANCE.getRankNames().contains(args[1]))
-		{
-			throw new CommandException("ftbutilities.lang.rank.not_found", args[1]);
+			throw new CommandException("commands.ftb.ranks.not_found", args[1]);
 		}
 
 		ForgePlayer p = getForgePlayer(sender, args[0]);
 		Ranks.INSTANCE.setRank(p.getId(), r);
 
-		if (r == null)
-		{
-			sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.rank.unset", p.getDisplayName()));
-		}
-		else
-		{
-			sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.rank.set", p.getDisplayName(), r.getName()));
-		}
+		ITextComponent rankText = r == null ? FTBUtilities.lang(sender, "commands.ftb.ranks.none") : new TextComponentString(r.getName());
+		rankText.getStyle().setColor(r == null ? TextFormatting.DARK_GRAY : TextFormatting.DARK_GREEN);
+		sender.sendMessage(FTBUtilities.lang(sender, "commands.ftb.ranks.set.set", StringUtils.color(p.getDisplayName(), TextFormatting.BLUE), rankText));
 	}
 }

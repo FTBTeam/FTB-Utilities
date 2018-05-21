@@ -4,12 +4,14 @@ import com.feed_the_beast.ftblib.lib.config.ConfigNull;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.DefaultRankConfigHandler;
 import com.feed_the_beast.ftblib.lib.config.IRankConfigHandler;
+import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
+import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.IPermissionHandler;
@@ -37,12 +39,11 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 		return DefaultPermissionHandler.INSTANCE.getRegisteredNodes();
 	}
 
-	@Override
-	public boolean hasPermission(GameProfile profile, String nodeS, @Nullable IContext context)
+	public Event.Result getPermissionResult(GameProfile profile, String nodeS, @Nullable IContext context)
 	{
 		if (Ranks.INSTANCE == null)
 		{
-			return DefaultPermissionHandler.INSTANCE.hasPermission(profile, nodeS, context);
+			return Event.Result.DEFAULT;
 		}
 		else if (context != null && context.getWorld() != null && context.getWorld().isRemote)
 		{
@@ -50,23 +51,41 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 			{
 				throw new RuntimeException("Do not check permissions on client side! Node: " + nodeS);
 			}
-			else
-			{
-				return DefaultPermissionHandler.INSTANCE.hasPermission(profile, nodeS, context);
-			}
+
+			return Event.Result.DEFAULT;
 		}
 
 		Node node = Node.get(nodeS);
 		MinecraftServer server = context != null && context.getWorld() != null ? context.getWorld().getMinecraftServer() : null;
+		Rank rank = Ranks.INSTANCE.getRank(server, profile, context);
 
-		switch (Ranks.INSTANCE.getRank(server, profile, context).hasPermission(node))
+		if (rank == null)
+		{
+			return Event.Result.DEFAULT;
+		}
+
+		Event.Result result = rank.cachedPermissions.get(node);
+
+		if (result == null)
+		{
+			result = rank.getPermissionRaw(node);
+			rank.cachedPermissions.put(node, result);
+		}
+
+		return result;
+	}
+
+	@Override
+	public boolean hasPermission(GameProfile profile, String nodeS, @Nullable IContext context)
+	{
+		switch (getPermissionResult(profile, nodeS, context))
 		{
 			case ALLOW:
 				return true;
 			case DENY:
 				return false;
 			default:
-				return DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(node.toString()) == DefaultPermissionLevel.ALL || ServerUtils.isOP(server, profile);
+				return DefaultPermissionHandler.INSTANCE.hasPermission(profile, nodeS, context);
 		}
 	}
 
@@ -95,7 +114,31 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 
 		if (Ranks.INSTANCE != null)
 		{
-			value = Ranks.INSTANCE.getRank(server, profile, context).getConfig(node);
+			Rank rank = Ranks.INSTANCE.getRank(server, profile, context);
+
+			if (rank != null)
+			{
+				value = rank.cachedConfig.get(node);
+
+				if (value == null)
+				{
+					value = ConfigNull.INSTANCE;
+					JsonElement json = rank.getConfigRaw(node);
+
+					if (!json.isJsonNull())
+					{
+						RankConfigValueInfo info = RankConfigAPI.getHandler().getInfo(node);
+
+						if (info != null)
+						{
+							value = info.defaultValue.copy();
+							value.fromJson(json);
+						}
+					}
+
+					rank.cachedConfig.put(node, value);
+				}
+			}
 		}
 
 		return value.isNull() ? DefaultRankConfigHandler.INSTANCE.getConfigValue(server, profile, node, context) : value;

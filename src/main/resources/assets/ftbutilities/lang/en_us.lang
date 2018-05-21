@@ -3,6 +3,7 @@ ftbutilities.auto_shutdown=Auto Shutdown
 ftbutilities.auto_shutdown.times=Shutdown Times
 
 ftbutilities.afk=AFK
+ftbutilities.afk_kicked=You will be kicked after: %s
 ftbutilities.afk.enabled_singleplayer=Enabled in Singleplayer
 ftbutilities.afk.notification_seconds=Notification Timer in Seconds
 
@@ -60,7 +61,6 @@ ftbutilities_client.general.show_backup_progress=Show Backup Progress
 rank_config.ftbutilities.badge=Badge
 rank_config.ftbutilities.badge.tooltip=Badge (icon on chest). Must be an URL
 rank_config.ftbutilities.homes.max=Max Homes
-rank_config.ftbutilities.homes.max.tooltip=Max home count
 rank_config.ftbutilities.claims.max_chunks=Max Claimable Chunks
 rank_config.ftbutilities.claims.max_chunks.tooltip=Max amount of chunks that player can claim\n0 - Disabled
 rank_config.ftbutilities.claims.blocked_dimensions=Blocked Claiming Dimensions
@@ -74,25 +74,20 @@ rank_config.ftbutilities.warps.cooldown=/warp Cooldown Timer
 rank_config.ftbutilities.tpa.cooldown=/tpa Cooldown Timer
 rank_config.ftbutilities.spawn.cooldown=/spawn Cooldown Timer
 rank_config.ftbutilities.back.cooldown=/back Cooldown Timer
-rank_config.ftbutilities.homes.cooldown.tooltip=Cooldown timer in seconds
-rank_config.ftbutilities.warps.cooldown.tooltip=Cooldown timer in seconds
-rank_config.ftbutilities.tpa.cooldown.tooltip=Cooldown timer in seconds
-rank_config.ftbutilities.spawn.cooldown.tooltip=Cooldown timer in seconds
-rank_config.ftbutilities.back.cooldown.tooltip=Cooldown timer in seconds
 rank_config.ftbutilities.homes.warmup=/home Warmup Timer
 rank_config.ftbutilities.warps.warmup=/warp Warmup Timer
 rank_config.ftbutilities.tpa.warmup=/tpa Warmup Timer
 rank_config.ftbutilities.spawn.warmup=/spawn Warmup Timer
 rank_config.ftbutilities.back.warmup=/back Warmup Timer
-rank_config.ftbutilities.homes.warmup.tooltip=Warmup timer in seconds
-rank_config.ftbutilities.warps.warmup.tooltip=Warmup timer in seconds
-rank_config.ftbutilities.tpa.warmup.tooltip=Warmup timer in seconds
-rank_config.ftbutilities.spawn.warmup.tooltip=Warmup timer in seconds
-rank_config.ftbutilities.back.warmup.tooltip=Warmup timer in seconds
 rank_config.ftbutilities.afk.timer=AFK Timer
-rank_config.ftbutilities.afk.timer.tooltip=AFK Timer in minutes
 rank_config.ftbutilities.afk.timer.is_afk=%s is now AFK
 rank_config.ftbutilities.afk.timer.isnt_afk=%s is no longer AFK
+rank_config.ftbutilities.chat.name.color=Chat Name Color
+rank_config.ftbutilities.chat.prefix.color=Chat Prefix Color
+rank_config.ftbutilities.chat.suffix.color=Chat Suffix Color
+rank_config.ftbutilities.chat.text.color=Chat Text Color
+rank_config.ftbutilities.chat.prefix.text=Chat Prefix Text
+rank_config.ftbutilities.chat.suffix.text=Chat Suffix Text
 
 # Player Settings
 player_config.ftbutilities.chat_links=Chat Links
@@ -223,14 +218,6 @@ ftbutilities.lang.backup.already_running=Backup in progress!
 ftbutilities.lang.backup.size=Current world size: %s, total backups folder size: %s
 ftbutilities.lang.backup.saving_failed=World saving failed!
 
-# Ranks
-ftbutilities.lang.rank.id_exists=Rank '%s' already exists!
-ftbutilities.lang.rank.not_found=Rank '%s' not found!
-ftbutilities.lang.rank.use_deop=Can't set rank as builtin_player, use /deop %s
-ftbutilities.lang.rank.use_op=Can't set rank as builtin_op, use /op %s
-ftbutilities.lang.rank.set=%s now is %s
-ftbutilities.lang.rank.unset=%s now is unset
-
 # Commands
 commands.ftb.shutdown.usage=/ftb shutdown
 commands.ftb.inv.usage=/ftb inv
@@ -264,11 +251,17 @@ commands.ftb.chunks.unload_all.usage=/ftb chunks unload_all [all dimensions] [pl
 commands.ftb.chunks.claim_for.usage=/ftb chunks claim_for <player> <chunkX> <chunkZ> [dimension]
 commands.ftb.kickme.usage=/ftb kickme
 commands.ftb.ranks.usage=/ftb ranks
+commands.ftb.ranks.not_found=Rank '%s' not found!
 commands.ftb.ranks.add.usage=/ftb ranks add <id> [parent]
+commands.ftb.ranks.none=none
+commands.ftb.ranks.add.id_exists=Rank '%s' already exists!
 commands.ftb.ranks.get.usage=/ftb ranks get <player>
 commands.ftb.ranks.set.usage=/ftb ranks set <player> <rank|none>
+commands.ftb.ranks.set.set=Set rank for %s to %s
 commands.ftb.ranks.get_permission.usage=/ftb ranks get_permission <player> <permission>
-commands.ftb.ranks.set_permission.usage=/ftb ranks set_permission <rank> <permission> <true|false|value|null>
+commands.ftb.ranks.set_permission.usage=/ftb ranks set_permission <rank> <permission> <true|false|value|none>
+commands.ftb.ranks.set_permission.nothing_changed=Nothing changed!
+commands.ftb.ranks.set_permission.set=%s for %s set to %s
 commands.ftb.upload_crash_report.usage=/ftb upload_crash_report <file>
 commands.ftb.heal.usage=/ftb heal
 commands.ftb.set_hour.usage=/ftb set_hour <hour>

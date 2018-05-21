@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftbutilities.cmd.ranks;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
-import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
-import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
@@ -16,9 +15,12 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,9 +29,17 @@ import java.util.List;
  */
 public class CmdSetPermission extends CmdBase
 {
+	public static final List<String> PERM_VARIANTS = Arrays.asList("true", "false", "null");
+
 	public CmdSetPermission()
 	{
 		super("set_permission", Level.OP);
+	}
+
+	@Override
+	public List<String> getAliases()
+	{
+		return Collections.singletonList("setp");
 	}
 
 	@Override
@@ -54,7 +64,7 @@ public class CmdSetPermission extends CmdBase
 				return getListOfStringsMatchingLastWord(args, info.defaultValue.getVariants());
 			}
 
-			return getListOfStringsMatchingLastWord(args, ConfigBoolean.VARIANTS);
+			return getListOfStringsMatchingLastWord(args, PERM_VARIANTS);
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -69,56 +79,56 @@ public class CmdSetPermission extends CmdBase
 		}
 
 		checkArgs(sender, args, 3);
-		Rank rank = Ranks.INSTANCE.getRank(args[0], null);
+		Rank rank = Ranks.INSTANCE.getRank(args[0]);
 
 		if (rank == null)
 		{
-			throw new CommandException("ftbutilities.lang.rank.not_found", args[0]);
+			throw new CommandException("commands.ftb.ranks.not_found", args[0]);
 		}
 
 		Node node = Node.get(args[1]);
+		JsonElement element = DataReader.get(StringUtils.joinSpaceUntilEnd(2, args)).safeJson();
 
-		switch (args[2])
+		if (element.isJsonObject())
 		{
-			case "null":
-				if (rank.permissions.remove(node) != null)
-				{
-					Ranks.INSTANCE.saveAndUpdate(server, node);
-				}
-				break;
-			case "true":
-			case "false":
-				JsonElement json = args[2].equals("true") ? JsonUtils.JSON_TRUE : JsonUtils.JSON_FALSE;
+			throw new CommandException("wip");
+		}
 
-				if (!JsonUtils.nonnull(rank.permissions.put(node, json)).equals(json))
-				{
-					Ranks.INSTANCE.saveAndUpdate(server, node);
-					sender.sendMessage(new TextComponentString("Changed permission '" + node + "' for '" + rank.getName() + "' to '" + args[2].equals("true") + "'")); //LANG
-				}
-				else
-				{
-					sender.sendMessage(new TextComponentString("Nothing changed!")); //LANG
-				}
-				break;
-			default:
-				JsonElement element = DataReader.get(StringUtils.joinSpaceUntilEnd(2, args)).safeJson();
+		String set = rank.setPermission(node, element);
 
-				if (element.isJsonObject())
-				{
-					throw new CommandException("wip");
-				}
-				else if (!element.isJsonNull())
-				{
-					if (!JsonUtils.nonnull(rank.permissions.put(node, element)).equals(element))
-					{
-						Ranks.INSTANCE.saveAndUpdate(server, node);
-						sender.sendMessage(new TextComponentString("Changed permission config '" + node + "' for '" + rank.getName() + "' to '" + element + "'")); //LANG
-					}
-					else
-					{
-						sender.sendMessage(new TextComponentString("Nothing changed!")); //LANG
-					}
-				}
+		if (set.isEmpty())
+		{
+			sender.sendMessage(FTBUtilities.lang(sender, "commands.ftb.ranks.set_permission.nothing_changed"));
+		}
+		else
+		{
+			Ranks.INSTANCE.saveAndUpdate(server, node);
+			ITextComponent nodeText = new TextComponentString(node.toString());
+			nodeText.getStyle().setColor(TextFormatting.GOLD);
+
+			ITextComponent rankText = new TextComponentString(rank.getName());
+			rankText.getStyle().setColor(TextFormatting.DARK_GREEN);
+
+			ITextComponent setText = new TextComponentString(set);
+
+			if (set.equals("true"))
+			{
+				setText.getStyle().setColor(TextFormatting.GREEN);
+			}
+			else if (set.equals("false"))
+			{
+				setText.getStyle().setColor(TextFormatting.RED);
+			}
+			else if (set.equals("none"))
+			{
+				setText.getStyle().setColor(TextFormatting.DARK_GRAY);
+			}
+			else
+			{
+				setText.getStyle().setColor(TextFormatting.BLUE);
+			}
+
+			sender.sendMessage(FTBUtilities.lang(sender, "commands.ftb.ranks.set_permission.set", nodeText, rankText, setText));
 		}
 	}
 }

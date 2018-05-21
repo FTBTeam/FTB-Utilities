@@ -4,17 +4,22 @@ import com.feed_the_beast.ftblib.events.RegisterPermissionsEvent;
 import com.feed_the_beast.ftblib.events.RegisterRankConfigEvent;
 import com.feed_the_beast.ftblib.events.RegisterRankConfigHandlerEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
+import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigTimer;
+import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockDoor;
@@ -23,7 +28,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
@@ -67,6 +75,78 @@ public class FTBUtilitiesPermissions
 	public static final Node CHUNKLOADER_MAX_CHUNKS = Node.get("ftbutilities.chunkloader.max_chunks");
 	//public static final String CHUNKLOADER_OFFLINE_TIMER = FTBUtilities.MOD_ID + ".chunkloader.offline_timer";
 	public static final String CHUNKLOADER_LOAD_OFFLINE = "ftbutilities.chunkloader.load_offline";
+
+	public static class ChatPart
+	{
+		public final String id;
+		public final Node color;
+		public final String bold, italic, underlined, strikethrough, obfuscated;
+
+		public ChatPart(String s)
+		{
+			id = s;
+			color = Node.get("ftbutilities.chat." + id + ".color");
+			bold = "ftbutilities.chat." + id + ".bold";
+			italic = "ftbutilities.chat." + id + ".italic";
+			underlined = "ftbutilities.chat." + id + ".underlined";
+			strikethrough = "ftbutilities.chat." + id + ".strikethrough";
+			obfuscated = "ftbutilities.chat." + id + ".obfuscated";
+		}
+
+		public void registerPermissions(RegisterPermissionsEvent event)
+		{
+			event.registerNode(bold, DefaultPermissionLevel.NONE, "Make the " + id + " bold");
+			event.registerNode(italic, DefaultPermissionLevel.NONE, "Make the " + id + " italic");
+			event.registerNode(underlined, DefaultPermissionLevel.NONE, "Make the " + id + " underlined");
+			event.registerNode(strikethrough, DefaultPermissionLevel.NONE, "Make the " + id + " strikethrough");
+			event.registerNode(obfuscated, DefaultPermissionLevel.NONE, "Make the " + id + " obfuscated");
+		}
+
+		public ITextComponent format(MinecraftServer server, GameProfile profile, IContext context, ITextComponent component)
+		{
+			TextFormatting colortf = (TextFormatting) RankConfigAPI.get(server, profile, color, context).getValue();
+
+			if (colortf != TextFormatting.WHITE)
+			{
+				component.getStyle().setColor(colortf);
+			}
+
+			if (PermissionAPI.hasPermission(profile, bold, context))
+			{
+				component.getStyle().setBold(true);
+			}
+
+			if (PermissionAPI.hasPermission(profile, italic, context))
+			{
+				component.getStyle().setItalic(true);
+			}
+
+			if (PermissionAPI.hasPermission(profile, underlined, context))
+			{
+				component.getStyle().setUnderlined(true);
+			}
+
+			if (PermissionAPI.hasPermission(profile, strikethrough, context))
+			{
+				component.getStyle().setStrikethrough(true);
+			}
+
+			if (PermissionAPI.hasPermission(profile, obfuscated, context))
+			{
+				component.getStyle().setObfuscated(true);
+			}
+
+			return component;
+		}
+	}
+
+	// Chat //
+	public static final ChatPart CHAT_NAME = new ChatPart("name");
+	public static final ChatPart CHAT_PREFIX = new ChatPart("prefix");
+	public static final ChatPart CHAT_SUFFIX = new ChatPart("suffix");
+	public static final ChatPart CHAT_TEXT = new ChatPart("text");
+	public static final Node CHAT_PREFIX_TEXT = Node.get("ftbutilities.chat.prefix.text");
+	public static final Node CHAT_SUFFIX_TEXT = Node.get("ftbutilities.chat.suffix.text");
 
 	// Other //
 	public static final String INFINITE_BACK_USAGE = "ftbutilities.back.infinite";
@@ -130,12 +210,17 @@ public class FTBUtilitiesPermissions
 		{
 			event.registerNode(getLeaderboardNode(leaderboard), DefaultPermissionLevel.ALL);
 		}
+
+		CHAT_NAME.registerPermissions(event);
+		CHAT_PREFIX.registerPermissions(event);
+		CHAT_SUFFIX.registerPermissions(event);
+		CHAT_TEXT.registerPermissions(event);
 	}
 
 	@SubscribeEvent
 	public static void registerConfigs(RegisterRankConfigEvent event)
 	{
-		event.register(BADGE, new ConfigString(""), new ConfigString(""));
+		event.register(BADGE, new ConfigString(""));
 		event.register(HOMES_MAX, new ConfigInt(1, 0, 30000), new ConfigInt(100));
 		event.register(HOMES_COOLDOWN, new ConfigTimer(Ticks.mt(5)), new ConfigTimer(0L));
 		event.register(WARPS_COOLDOWN, new ConfigTimer(Ticks.mt(1)), new ConfigTimer(0L));
@@ -150,7 +235,15 @@ public class FTBUtilitiesPermissions
 		event.register(CLAIMS_MAX_CHUNKS, new ConfigInt(100, 0, 30000), new ConfigInt(1000));
 		event.register(CHUNKLOADER_MAX_CHUNKS, new ConfigInt(50, 0, 30000), new ConfigInt(64));
 		//event.register(CHUNKLOADER_OFFLINE_TIMER, new ConfigDouble(-1D).setMin(-1D), new ConfigDouble(-1D));
-		event.register(AFK_TIMER, new ConfigTimer(0), new ConfigTimer(0));
+		event.register(AFK_TIMER, new ConfigTimer(0));
+
+		NameMap<TextFormatting> textFormattingNameMap = StringUtils.TEXT_FORMATTING_NAME_MAP.withDefault(TextFormatting.WHITE);
+		event.register(CHAT_NAME.color, new ConfigEnum<>(textFormattingNameMap), new ConfigEnum<>(textFormattingNameMap.withDefault(TextFormatting.DARK_GREEN)));
+		event.register(CHAT_PREFIX.color, new ConfigEnum<>(textFormattingNameMap));
+		event.register(CHAT_SUFFIX.color, new ConfigEnum<>(textFormattingNameMap));
+		event.register(CHAT_TEXT.color, new ConfigEnum<>(textFormattingNameMap));
+		event.register(CHAT_PREFIX_TEXT, new ConfigString("<"));
+		event.register(CHAT_SUFFIX_TEXT, new ConfigString("> "));
 	}
 
 	@SubscribeEvent

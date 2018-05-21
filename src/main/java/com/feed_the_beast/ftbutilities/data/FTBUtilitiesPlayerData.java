@@ -176,6 +176,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		}
 
 		nbt.setString("Nickname", nickname.getString());
+		nbt.setString("AFK", afkMesageLocation.getString());
 		return nbt;
 	}
 

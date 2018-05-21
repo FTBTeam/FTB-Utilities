@@ -3,8 +3,9 @@ package com.feed_the_beast.ftbutilities;
 import com.feed_the_beast.ftblib.lib.config.EnumTristate;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -65,14 +66,18 @@ public class FTBUtilitiesConfig
 	public static class AFK
 	{
 		@Config.LangKey("addServer.resourcePack.enabled")
-		@Config.Comment("Enables afk timer")
+		@Config.Comment("Enables afk timer.")
 		public boolean enabled = true;
 
-		@Config.Comment("Enables afk timer")
+		@Config.Comment("Enables afk timer in singleplayer.")
 		public boolean enabled_singleplayer = false;
 
 		@Config.RangeInt(min = 10)
+		@Config.Comment("After how many seconds it will display notification to all players.")
 		public int notification_seconds = 60;
+
+		@Config.Comment("Will print in console when someone goes/comes back from AFK.")
+		public boolean log_afk = true;
 
 		public boolean isEnabled(MinecraftServer server)
 		{
@@ -135,9 +140,31 @@ public class FTBUtilitiesConfig
 		@Config.Comment("Add extra files that will be placed in backup _extra_/ folder")
 		public String[] extra_files = { };
 
+		public String max_total_size = "50 GB";
+
 		public long ticks()
 		{
-			return (long) (backup_timer * CommonUtils.TICKS_HOUR);
+			return (long) (backup_timer * Ticks.HOUR);
+		}
+
+		public long getMaxTotalSize()
+		{
+			String s = StringUtils.removeAllWhitespace(max_total_size).toUpperCase();
+
+			if (s.endsWith("GB"))
+			{
+				return Long.parseLong(s.substring(0, s.length() - 2)) * 1024L * 1024L * 1024L;
+			}
+			else if (s.endsWith("MB"))
+			{
+				return Long.parseLong(s.substring(0, s.length() - 2)) * 1024L * 1024L;
+			}
+			else if (s.endsWith("KB"))
+			{
+				return Long.parseLong(s.substring(0, s.length() - 2)) * 1024L;
+			}
+
+			return Long.parseLong(s);
 		}
 	}
 

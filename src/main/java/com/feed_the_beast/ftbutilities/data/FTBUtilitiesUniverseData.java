@@ -6,7 +6,7 @@ import com.feed_the_beast.ftblib.events.universe.UniverseSavedEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
@@ -99,7 +99,7 @@ public class FTBUtilitiesUniverseData
 			{
 				if (time > currentTime)
 				{
-					FTBUtilitiesUniverseData.shutdownTime = start + (time - currentTime) * CommonUtils.TICKS_SECOND;
+					FTBUtilitiesUniverseData.shutdownTime = start + Ticks.st(time - currentTime);
 					FTBUtilities.LOGGER.info("Server shuts down in " + StringUtils.getTimeStringTicks(FTBUtilitiesUniverseData.shutdownTime));
 					break;
 				}

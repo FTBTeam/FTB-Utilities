@@ -13,6 +13,7 @@ import com.feed_the_beast.ftblib.lib.data.IHasCache;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.IScheduledTask;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
@@ -56,7 +57,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		public void teleport(EntityPlayerMP player, TeleporterDimPos pos, @Nullable IScheduledTask extraTask)
 		{
 			Universe universe = Universe.get();
-			int seconds = RankConfigAPI.get(player, warmup).getInt();
+			int seconds = (int) (Ticks.ts(RankConfigAPI.get(player, warmup).getLong()));
 
 			if (seconds > 0)
 			{
@@ -139,7 +140,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 
 	public ForgeTeam lastChunkTeam;
 	public final Collection<ForgePlayer> tpaRequestsFrom;
-	public int afkTime;
+	public long afkTicks;
 
 	private BlockDimPos lastDeath, lastSafePos;
 	private long[] lastTeleport;
@@ -278,7 +279,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 
 	public long getTeleportCooldown(Timer timer)
 	{
-		return lastTeleport[timer.ordinal()] + player.getRankConfig(timer.cooldown).getInt() * 20 - player.team.universe.world.getTotalWorldTime();
+		return lastTeleport[timer.ordinal()] + player.getRankConfig(timer.cooldown).getLong() - player.team.universe.world.getTotalWorldTime();
 	}
 
 	@Override

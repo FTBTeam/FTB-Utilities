@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbutilities.handlers;
 
 import com.feed_the_beast.ftblib.lib.EnumMessageLocation;
 import com.feed_the_beast.ftblib.lib.data.Universe;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
@@ -116,9 +116,9 @@ public class FTBUtilitiesServerEventHandler
 						}
 					}
 
-					boolean prevIsAfk = data.afkTime >= FTBUtilitiesConfig.afk.notification_seconds;
-					data.afkTime = (int) ((System.currentTimeMillis() - player.getLastActiveTime()) / 1000L);
-					boolean isAFK = data.afkTime >= FTBUtilitiesConfig.afk.notification_seconds;
+					boolean prevIsAfk = data.afkTicks >= Ticks.st(FTBUtilitiesConfig.afk.notification_seconds);
+					data.afkTicks = (int) ((System.currentTimeMillis() - player.getLastActiveTime()) * Ticks.SECOND / 1000L);
+					boolean isAFK = data.afkTicks >= Ticks.st(FTBUtilitiesConfig.afk.notification_seconds);
 
 					if (prevIsAfk != isAFK)
 					{
@@ -141,13 +141,15 @@ public class FTBUtilitiesServerEventHandler
 								}
 							}
 						}
+
+						FTBUtilities.LOGGER.info(player.getName() + (isAFK ? "is now AFK" : " is no longer AFK"));
 					}
 
-					if (isAFK && playerToKickForAfk == null)
+					if (playerToKickForAfk == null)
 					{
-						int maxSeconds = data.player.getRankConfig(FTBUtilitiesPermissions.AFK_TIMER).getInt() * 60;
+						long maxTicks = data.player.getRankConfig(FTBUtilitiesPermissions.AFK_TIMER).getLong();
 
-						if (maxSeconds > 0 && data.afkTime >= maxSeconds)
+						if (maxTicks > 0L && data.afkTicks >= maxTicks)
 						{
 							playerToKickForAfk = player;
 						}
@@ -169,7 +171,7 @@ public class FTBUtilitiesServerEventHandler
 					CmdShutdown.shutdown(universe.server);
 					return;
 				}
-				else if ((t <= CommonUtils.TICKS_SECOND * 10L && t % CommonUtils.TICKS_SECOND == CommonUtils.TICKS_SECOND - 1L) || t == CommonUtils.TICKS_MINUTE || t == CommonUtils.TICKS_MINUTE * 5L || t == CommonUtils.TICKS_MINUTE * 10L || t == CommonUtils.TICKS_MINUTE * 30L)
+				else if ((t <= Ticks.st(10L) && t % Ticks.SECOND == Ticks.SECOND - 1L) || t == Ticks.mt(1L) || t == Ticks.mt(5L) || t == Ticks.mt(10L) || t == Ticks.mt(30L))
 				{
 					for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
 					{

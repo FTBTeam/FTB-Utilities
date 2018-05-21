@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ public class CmdSetPermission extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, Ranks.INSTANCE.getRankNames());
+			return Ranks.INSTANCE == null ? Collections.emptyList() : getListOfStringsMatchingLastWord(args, Ranks.INSTANCE.getRankNames());
 		}
 		else if (args.length == 2)
 		{
@@ -62,6 +63,11 @@ public class CmdSetPermission extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
+		if (Ranks.INSTANCE == null)
+		{
+			throw new CommandException("feature_disabled_server");
+		}
+
 		checkArgs(sender, args, 3);
 		Rank rank = Ranks.INSTANCE.getRank(args[0], null);
 

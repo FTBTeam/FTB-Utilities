@@ -6,7 +6,7 @@ import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.events.chunks.ChunkModifiedEvent;
@@ -105,7 +105,7 @@ public class ClaimedChunks
 	{
 		if (nextChunkloaderUpdate <= now)
 		{
-			nextChunkloaderUpdate = now + CommonUtils.TICKS_MINUTE;
+			nextChunkloaderUpdate = now + Ticks.MINUTE;
 			markDirty();
 		}
 

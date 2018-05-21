@@ -6,7 +6,9 @@ import com.feed_the_beast.ftblib.events.RegisterRankConfigHandlerEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
+import com.feed_the_beast.ftblib.lib.config.ConfigTimer;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
@@ -135,20 +137,20 @@ public class FTBUtilitiesPermissions
 	{
 		event.register(BADGE, new ConfigString(""), new ConfigString(""));
 		event.register(HOMES_MAX, new ConfigInt(1, 0, 30000), new ConfigInt(100));
-		event.register(HOMES_COOLDOWN, new ConfigInt(300, 0, Integer.MAX_VALUE), new ConfigInt(0));
-		event.register(WARPS_COOLDOWN, new ConfigInt(60, 0, Integer.MAX_VALUE), new ConfigInt(0));
-		event.register(TPA_COOLDOWN, new ConfigInt(180, 0, Integer.MAX_VALUE), new ConfigInt(0));
-		event.register(SPAWN_COOLDOWN, new ConfigInt(60, 0, Integer.MAX_VALUE), new ConfigInt(0));
-		event.register(BACK_COOLDOWN, new ConfigInt(180, 0, Integer.MAX_VALUE), new ConfigInt(0));
-		event.register(HOMES_WARMUP, new ConfigInt(5, 0, 60), new ConfigInt(0));
-		event.register(WARPS_WARMUP, new ConfigInt(5, 0, 60), new ConfigInt(0));
-		event.register(TPA_WARMUP, new ConfigInt(5, 0, 60), new ConfigInt(0));
-		event.register(SPAWN_WARMUP, new ConfigInt(5, 0, 60), new ConfigInt(0));
-		event.register(BACK_WARMUP, new ConfigInt(5, 0, 60), new ConfigInt(0));
+		event.register(HOMES_COOLDOWN, new ConfigTimer(Ticks.mt(5)), new ConfigTimer(0L));
+		event.register(WARPS_COOLDOWN, new ConfigTimer(Ticks.mt(1)), new ConfigTimer(0L));
+		event.register(TPA_COOLDOWN, new ConfigTimer(Ticks.mt(3)), new ConfigTimer(0L));
+		event.register(SPAWN_COOLDOWN, new ConfigTimer(Ticks.mt(1)), new ConfigTimer(0L));
+		event.register(BACK_COOLDOWN, new ConfigTimer(Ticks.mt(3)), new ConfigTimer(0L));
+		event.register(HOMES_WARMUP, new ConfigTimer(Ticks.st(5), 60), new ConfigTimer(0L));
+		event.register(WARPS_WARMUP, new ConfigTimer(Ticks.st(5), 60), new ConfigTimer(0L));
+		event.register(TPA_WARMUP, new ConfigTimer(Ticks.st(5), 60), new ConfigTimer(0L));
+		event.register(SPAWN_WARMUP, new ConfigTimer(Ticks.st(5), 60), new ConfigTimer(0L));
+		event.register(BACK_WARMUP, new ConfigTimer(Ticks.st(5), 60), new ConfigTimer(0L));
 		event.register(CLAIMS_MAX_CHUNKS, new ConfigInt(100, 0, 30000), new ConfigInt(1000));
 		event.register(CHUNKLOADER_MAX_CHUNKS, new ConfigInt(50, 0, 30000), new ConfigInt(64));
 		//event.register(CHUNKLOADER_OFFLINE_TIMER, new ConfigDouble(-1D).setMin(-1D), new ConfigDouble(-1D));
-		event.register(AFK_TIMER, new ConfigInt(0, 0, Integer.MAX_VALUE), new ConfigInt(0));
+		event.register(AFK_TIMER, new ConfigTimer(0), new ConfigTimer(0));
 	}
 
 	@SubscribeEvent

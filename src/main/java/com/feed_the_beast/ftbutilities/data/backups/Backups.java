@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbutilities.data.backups;
 
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
@@ -118,7 +119,7 @@ public enum Backups
 		}
 		else if (doingBackup > 0)
 		{
-			if (currentFile == 0 || now % CommonUtils.TICKS_SECOND * 2L == 0 || currentFile == totalFiles - 1)
+			if (currentFile == 0 || now % Ticks.SECOND * 2L == 0 || currentFile == totalFiles - 1)
 			{
 				FTBUtilities.LOGGER.info("[" + currentFile + " | " + StringUtils.formatDouble((currentFile / (double) totalFiles) * 100D) + "%]: " + currentFileName);
 			}
@@ -222,7 +223,7 @@ public enum Backups
 		}
 
 		Exception error = null;
-		long totalSize = 0L;
+		long fileSize = 0L;
 
 		try
 		{
@@ -254,6 +255,58 @@ public enum Backups
 			{
 				String filePath = file.getAbsolutePath();
 				fileMap.put(file, src.getName() + File.separator + filePath.substring(src.getAbsolutePath().length() + 1, filePath.length()));
+			}
+
+			for (Map.Entry<File, String> entry : fileMap.entrySet())
+			{
+				fileSize += FileUtils.getSize(entry.getKey());
+			}
+
+			long totalSize = 0L;
+
+			if (!backups.isEmpty())
+			{
+				backups.sort(null);
+
+				for (Backup backup : backups)
+				{
+					totalSize += backup.size;
+				}
+
+				if (fileSize > 0L)
+				{
+					long freeSpace = Math.min(FTBUtilitiesConfig.backups.getMaxTotalSize(), backupsFolder.getFreeSpace());
+
+					while (totalSize + fileSize > freeSpace && !backups.isEmpty())
+					{
+						Backup backup = backups.get(0);
+						totalSize -= backup.size;
+						FTBUtilities.LOGGER.info("Deleting old backup: " + backup.fileId);
+						FileUtils.delete(backup.getFile());
+					}
+				}
+
+				int backupsToKeep = FTBUtilitiesConfig.backups.backups_to_keep;
+
+				if (backupsToKeep > 0)
+				{
+					if (backups.size() > backupsToKeep)
+					{
+						int toDelete = backups.size() - backupsToKeep;
+
+						if (toDelete > 0)
+						{
+							for (int i = toDelete - 1; i >= 0; i--)
+							{
+								Backup b = backups.get(i);
+
+								backups.remove(i);
+							}
+						}
+					}
+
+					backups.removeIf(backup -> !backup.getFile().exists());
+				}
 			}
 
 			totalFiles = fileMap.size();
@@ -365,14 +418,22 @@ public enum Backups
 		}
 		else
 		{
-			totalSize = FileUtils.getSize(dstFile);
+			fileSize = FileUtils.getSize(dstFile);
 		}
 
-		Backup backup = new Backup(time.getTimeInMillis(), out.toString().replace('\\', '/'), getLastIndex() + 1, success, totalSize);
+		Backup backup = new Backup(time.getTimeInMillis(), out.toString().replace('\\', '/'), getLastIndex() + 1, success, fileSize);
 		backups.add(backup);
 		new BackupEvent.Post(backup, error).post();
-		cleanupAndSave(totalSize);
 		doingBackup = 2;
+
+		JsonArray array = new JsonArray();
+
+		for (Backup backup1 : backups)
+		{
+			array.add(backup1.toJsonObject());
+		}
+
+		JsonUtils.toJson(new File(backupsFolder, "backups.json"), array);
 	}
 
 	private void appendNum(StringBuilder sb, int num, char c)
@@ -386,66 +447,6 @@ public enum Backups
 		{
 			sb.append(c);
 		}
-	}
-
-	public long cleanupAndSave(long fileSize)
-	{
-		long totalSize = 0L;
-
-		if (!backups.isEmpty())
-		{
-			backups.sort(null);
-
-			for (Backup backup : backups)
-			{
-				totalSize += backup.size;
-			}
-
-			if (fileSize > 0L)
-			{
-				long freeSpace = backupsFolder.getFreeSpace();
-
-				while (totalSize + fileSize > freeSpace && !backups.isEmpty())
-				{
-					Backup backup = backups.get(0);
-					totalSize -= backup.size;
-					FTBUtilities.LOGGER.info("Deleting old backup: " + backup.fileId);
-					FileUtils.delete(backup.getFile());
-				}
-			}
-
-			int backupsToKeep = FTBUtilitiesConfig.backups.backups_to_keep;
-
-			if (backupsToKeep > 0)
-			{
-				if (backups.size() > backupsToKeep)
-				{
-					int toDelete = backups.size() - backupsToKeep;
-
-					if (toDelete > 0)
-					{
-						for (int i = toDelete - 1; i >= 0; i--)
-						{
-							Backup b = backups.get(i);
-
-							backups.remove(i);
-						}
-					}
-				}
-
-				backups.removeIf(backup -> !backup.getFile().exists());
-			}
-		}
-
-		JsonArray array = new JsonArray();
-
-		for (Backup backup : backups)
-		{
-			array.add(backup.toJsonObject());
-		}
-
-		JsonUtils.toJsonSafe(new File(backupsFolder, "backups.json"), array);
-		return totalSize;
 	}
 
 	private int getLastIndex()

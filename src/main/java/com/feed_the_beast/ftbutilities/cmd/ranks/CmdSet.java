@@ -43,6 +43,11 @@ public class CmdSet extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
+		if (Ranks.INSTANCE == null)
+		{
+			throw new CommandException("feature_disabled_server");
+		}
+
 		checkArgs(sender, args, 2);
 
 		Rank r = (args[1].equalsIgnoreCase("none") || args[1].equals("-")) ? null : Ranks.INSTANCE.getRank(args[1], null);

@@ -279,7 +279,7 @@ public class Ranks
 		}
 	}
 
-	private void savePlayerRanks()
+	public void savePlayerRanks()
 	{
 		JsonObject json = new JsonObject();
 

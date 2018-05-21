@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbutilities.cmd.tp;
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.Universe;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
@@ -72,7 +72,7 @@ public class CmdTPA extends CmdBase
 
 		other.player.getPlayer().sendMessage(FTBUtilities.lang(other.player.getPlayer(), "ftbutilities.lang.tpa.request_received", otherName, accept));
 
-		Universe.get().scheduleTask(server.getWorld(0).getTotalWorldTime() + CommonUtils.TICKS_SECOND * 30L, universe -> {
+		Universe.get().scheduleTask(server.getWorld(0).getTotalWorldTime() + Ticks.st(30L), universe -> {
 			if (other.tpaRequestsFrom.remove(self.player))
 			{
 				ITextComponent component = FTBUtilities.lang(sender, "ftbutilities.lang.tpa.request_expired");

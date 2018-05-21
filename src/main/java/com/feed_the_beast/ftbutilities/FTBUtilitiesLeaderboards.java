@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbutilities;
 
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.events.LeaderboardRegistryEvent;
 import net.minecraft.stats.StatList;
@@ -77,7 +77,7 @@ public class FTBUtilitiesLeaderboards
 
 		if (playTime > 0)
 		{
-			double hours = (double) playTime / CommonUtils.TICKS_HOUR;
+			double hours = (double) playTime / Ticks.HOUR;
 
 			if (hours >= 1D)
 			{

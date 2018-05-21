@@ -30,6 +30,11 @@ public class CmdGet extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
+		if (Ranks.INSTANCE == null)
+		{
+			throw new CommandException("feature_disabled_server");
+		}
+
 		checkArgs(sender, args, 1);
 		ForgePlayer p = getForgePlayer(sender, args[0]);
 		Rank rank = Ranks.INSTANCE.getRank(p);

@@ -346,7 +346,12 @@ public class Ranks
 				{
 					for (String tag : iss[1].split(","))
 					{
-						currentRank.tags.add(StringUtils.trimAllWhitespace(tag));
+						String s = StringUtils.removeAllWhitespace(tag);
+
+						if (!s.isEmpty())
+						{
+							currentRank.tags.add(s);
+						}
 					}
 				}
 
@@ -354,7 +359,12 @@ public class Ranks
 				{
 					for (String tag : extendss[1].split(","))
 					{
-						parents.add(StringUtils.removeAllWhitespace(tag));
+						String s = StringUtils.removeAllWhitespace(tag);
+
+						if (!s.isEmpty())
+						{
+							parents.add(s);
+						}
 					}
 				}
 
@@ -387,7 +397,12 @@ public class Ranks
 		{
 			for (String s : rankParents.get(rank.getName()))
 			{
-				rank.parents.add(ranks.get(s));
+				Rank r = ranks.get(s);
+
+				if (r != null)
+				{
+					rank.parents.add(r);
+				}
 			}
 
 			if (rank.tags.contains("default_player_rank"))

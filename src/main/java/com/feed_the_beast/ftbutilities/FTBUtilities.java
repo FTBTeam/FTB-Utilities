@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
+import com.feed_the_beast.ftbutilities.cmd.FTBUtilitiesCommands;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import com.feed_the_beast.ftbutilities.ranks.CommandOverride;
 import net.minecraft.command.ICommand;
@@ -16,6 +17,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -65,6 +67,12 @@ public class FTBUtilities
 	public void onPostInit(FMLPostInitializationEvent event)
 	{
 		PROXY.postInit();
+	}
+
+	@Mod.EventHandler
+	public void onServerStarting(FMLServerStartingEvent event)
+	{
+		FTBUtilitiesCommands.registerCommands(event);
 	}
 
 	@Mod.EventHandler

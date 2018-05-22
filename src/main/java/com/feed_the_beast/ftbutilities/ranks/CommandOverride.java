@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
-import com.feed_the_beast.ftblib.lib.cmd.ICommandWithCustomPermission;
-import com.feed_the_beast.ftblib.lib.cmd.ICommandWithParent;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -19,7 +17,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class CommandOverride implements ICommandWithParent
+public class CommandOverride implements ICommand
 {
 	public static ICommand create(ICommand command, Node parent)
 	{
@@ -35,12 +33,11 @@ public class CommandOverride implements ICommandWithParent
 
 	public final ICommand mirrored;
 	public final Node node;
-	private ICommand parent;
 
 	private CommandOverride(ICommand c, Node parent)
 	{
 		mirrored = c;
-		node = mirrored instanceof ICommandWithCustomPermission ? ((ICommandWithCustomPermission) mirrored).getCustomPermissionNode() : parent.append(mirrored.getName());
+		node = parent.append(mirrored.getName());
 	}
 
 	@Override
@@ -100,18 +97,5 @@ public class CommandOverride implements ICommandWithParent
 	public int compareTo(ICommand o)
 	{
 		return getName().compareTo(o.getName());
-	}
-
-	@Override
-	public void setParent(@Nullable ICommand c)
-	{
-		parent = c;
-	}
-
-	@Nullable
-	@Override
-	public ICommand getParent()
-	{
-		return parent;
 	}
 }

@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbutilities;
 
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesLoadedChunkManager;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
@@ -13,7 +11,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.server.permission.PermissionAPI;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,13 +24,6 @@ public class FTBUtilitiesCommon
 	public void preInit()
 	{
 		FTBUtilitiesConfig.sync();
-
-		File oldConfig = new File(CommonUtils.folderLocal, "ftbu");
-
-		if (oldConfig.exists())
-		{
-			FileUtils.delete(oldConfig);
-		}
 
 		if (FTBUtilitiesConfig.ranks.enabled)
 		{

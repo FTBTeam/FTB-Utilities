@@ -39,11 +39,15 @@ public class CmdAdd extends CmdBase
 		if (args.length == 2)
 		{
 			String pid = args[1].toLowerCase();
-			rank.parent = Ranks.INSTANCE.getRank(pid);
+			Rank p = Ranks.INSTANCE.getRank(pid);
 
-			if (rank.parent == null)
+			if (p == null)
 			{
 				throw new CommandException("commands.ftb.ranks.not_found", pid);
+			}
+			else
+			{
+				rank.parents.add(p);
 			}
 		}
 

@@ -12,11 +12,9 @@ import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
-import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
 import com.mojang.authlib.GameProfile;
@@ -237,11 +235,10 @@ public class FTBUtilitiesPermissions
 		//event.register(CHUNKLOADER_OFFLINE_TIMER, new ConfigDouble(-1D).setMin(-1D), new ConfigDouble(-1D));
 		event.register(AFK_TIMER, new ConfigTimer(0));
 
-		NameMap<TextFormatting> textFormattingNameMap = StringUtils.TEXT_FORMATTING_NAME_MAP.withDefault(TextFormatting.WHITE);
-		event.register(CHAT_NAME.color, new ConfigEnum<>(textFormattingNameMap), new ConfigEnum<>(textFormattingNameMap.withDefault(TextFormatting.DARK_GREEN)));
-		event.register(CHAT_PREFIX.color, new ConfigEnum<>(textFormattingNameMap));
-		event.register(CHAT_SUFFIX.color, new ConfigEnum<>(textFormattingNameMap));
-		event.register(CHAT_TEXT.color, new ConfigEnum<>(textFormattingNameMap));
+		event.register(CHAT_NAME.color, new ConfigEnum<>(StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP));
+		event.register(CHAT_PREFIX.color, new ConfigEnum<>(StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP));
+		event.register(CHAT_SUFFIX.color, new ConfigEnum<>(StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP));
+		event.register(CHAT_TEXT.color, new ConfigEnum<>(StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP));
 		event.register(CHAT_PREFIX_TEXT, new ConfigString("<"));
 		event.register(CHAT_SUFFIX_TEXT, new ConfigString("> "));
 	}
@@ -249,11 +246,11 @@ public class FTBUtilitiesPermissions
 	@SubscribeEvent
 	public static void registerCustomPermissionPrefixes(CustomPermissionPrefixesRegistryEvent event)
 	{
-		event.register(new NodeEntry(Node.COMMAND, DefaultPermissionLevel.OP, "Permission for commands, if FTBUtilities command overriding is enabled. If not, this node will be inactive"));
-		event.register(new NodeEntry(Node.get(CLAIMS_BLOCK_EDIT_PREFIX), DefaultPermissionLevel.OP, "Permission for blocks that players can break and place within claimed chunks"));
-		event.register(new NodeEntry(Node.get(CLAIMS_BLOCK_INTERACT_PREFIX), DefaultPermissionLevel.OP, "Permission for blocks that players can right-click within claimed chunks"));
-		event.register(new NodeEntry(Node.get(CLAIMS_ITEM_PREFIX), DefaultPermissionLevel.ALL, "Permission for items that players can right-click in air within claimed chunks"));
-		event.register(new NodeEntry(Node.get(LEADERBOARD_PREFIX), DefaultPermissionLevel.ALL, "Permission for leaderboards that players can view"));
+		event.register(Node.COMMAND, DefaultPermissionLevel.OP, "Permission for commands, if FTBUtilities command overriding is enabled. If not, this node will be inactive");
+		event.register(Node.get(CLAIMS_BLOCK_EDIT_PREFIX), DefaultPermissionLevel.OP, "Permission for blocks that players can break and place within claimed chunks");
+		event.register(Node.get(CLAIMS_BLOCK_INTERACT_PREFIX), DefaultPermissionLevel.OP, "Permission for blocks that players can right-click within claimed chunks");
+		event.register(Node.get(CLAIMS_ITEM_PREFIX), DefaultPermissionLevel.ALL, "Permission for items that players can right-click in air within claimed chunks");
+		event.register(Node.get(LEADERBOARD_PREFIX), DefaultPermissionLevel.ALL, "Permission for leaderboards that players can view");
 	}
 
 	private static String formatId(@Nullable IForgeRegistryEntry item)

@@ -20,6 +20,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +30,7 @@ import java.util.List;
  */
 public class CmdSetPermission extends CmdBase
 {
-	public static final List<String> PERM_VARIANTS = Arrays.asList("true", "false", "null");
+	public static final List<String> PERM_VARIANTS = Arrays.asList("true", "false", "none");
 
 	public CmdSetPermission()
 	{
@@ -51,17 +52,17 @@ public class CmdSetPermission extends CmdBase
 		}
 		else if (args.length == 2)
 		{
-			return getListOfStringsMatchingLastWord(args, FTBUtilitiesPermissionHandler.INSTANCE.getRegisteredNodes());
+			return getListOfStringsMatchingLastWord(args, Ranks.INSTANCE == null ? FTBUtilitiesPermissionHandler.INSTANCE.getRegisteredNodes() : Ranks.INSTANCE.getPermissionNodes());
 		}
 		else if (args.length == 3)
 		{
-			Node node = Node.get(args[1]);
-
-			RankConfigValueInfo info = RankConfigAPI.getHandler().getInfo(node);
+			RankConfigValueInfo info = RankConfigAPI.getHandler().getInfo(Node.get(args[1]));
 
 			if (info != null && !info.defaultValue.isNull())
 			{
-				return getListOfStringsMatchingLastWord(args, info.defaultValue.getVariants());
+				List<String> list = new ArrayList<>(info.defaultValue.getVariants());
+				list.add("none");
+				return getListOfStringsMatchingLastWord(args, list);
 			}
 
 			return getListOfStringsMatchingLastWord(args, PERM_VARIANTS);

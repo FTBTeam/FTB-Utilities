@@ -9,8 +9,10 @@ import com.google.gson.JsonNull;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
 public class Rank extends FinalIDObject
@@ -19,7 +21,6 @@ public class Rank extends FinalIDObject
 	{
 		public final Node node;
 		public JsonElement json = JsonNull.INSTANCE;
-		public String comment = "";
 
 		public Entry(Node n)
 		{
@@ -28,16 +29,18 @@ public class Rank extends FinalIDObject
 	}
 
 	public final Ranks ranks;
-	public Rank parent;
+	public final Collection<Rank> parents;
+	public final Collection<String> tags;
 	public final Map<Node, Entry> permissions;
 	public final Map<Node, Event.Result> cachedPermissions;
 	public final Map<Node, ConfigValue> cachedConfig;
-	public String comment;
 
 	public Rank(Ranks r, String id)
 	{
 		super(id);
 		ranks = r;
+		parents = new LinkedHashSet<>();
+		tags = new LinkedHashSet<>();
 		permissions = new LinkedHashMap<>();
 		cachedPermissions = new HashMap<>();
 		cachedConfig = new HashMap<>();
@@ -46,11 +49,11 @@ public class Rank extends FinalIDObject
 
 	public void setDefaults()
 	{
-		parent = null;
+		parents.clear();
+		tags.clear();
 		permissions.clear();
 		cachedPermissions.clear();
 		cachedConfig.clear();
-		comment = "";
 	}
 
 	public String setPermission(Node node, @Nullable JsonElement json)
@@ -96,7 +99,22 @@ public class Rank extends FinalIDObject
 			}
 		}
 
-		return result != Event.Result.DEFAULT ? result : parent == null ? Event.Result.DEFAULT : parent.getPermissionRaw(node);
+		if (result != Event.Result.DEFAULT)
+		{
+			return result;
+		}
+
+		for (Rank parent : parents)
+		{
+			result = parent.getPermissionRaw(node);
+
+			if (result != Event.Result.DEFAULT)
+			{
+				return result;
+			}
+		}
+
+		return Event.Result.DEFAULT;
 	}
 
 	public JsonElement getConfigRaw(Node node)
@@ -108,6 +126,16 @@ public class Rank extends FinalIDObject
 			return entry.json;
 		}
 
-		return parent == null ? JsonNull.INSTANCE : parent.getConfigRaw(node);
+		for (Rank parent : parents)
+		{
+			JsonElement json = parent.getConfigRaw(node);
+
+			if (!JsonUtils.isNull(json))
+			{
+				return json;
+			}
+		}
+
+		return JsonNull.INSTANCE;
 	}
 }

@@ -43,6 +43,7 @@ ftbutilities.world.safe_spawn=Safe Spawn
 ftbutilities.world.spawn_area_in_sp=Spawn Area In Singleplayer
 ftbutilities.world.spawn_radius=Spawn Radius
 ftbutilities.world.spawn_dimension=Spawn Dimension
+ftbutilities.world.unload_erroring_chunks=Unload Erroring Chunks
 
 ftbutilities.ranks=Ranks
 ftbutilities.ranks.enabled=Enabled

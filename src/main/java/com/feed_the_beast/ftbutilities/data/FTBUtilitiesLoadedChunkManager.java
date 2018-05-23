@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.data;
 
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
@@ -123,7 +124,25 @@ public class FTBUtilitiesLoadedChunkManager implements ForgeChunkManager.Loading
 		}
 		catch (Exception ex)
 		{
-			FTBUtilities.LOGGER.error("Failed to force chunk " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(pos.dim).getUnformattedText() + " from " + chunk.getTeam().getTitle().getUnformattedText() + ": " + ex);
+			if (!DimensionManager.isDimensionRegistered(chunk.getPos().dim))
+			{
+				FTBUtilities.LOGGER.error("Failed to force chunk " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(pos.dim).getUnformattedText() + " from " + chunk.getTeam().getTitle().getUnformattedText() + ": Dimension " + chunk.getPos().dim + " not registered!");
+			}
+			else
+			{
+				FTBUtilities.LOGGER.error("Failed to force chunk " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(pos.dim).getUnformattedText() + " from " + chunk.getTeam().getTitle().getUnformattedText() + ": " + ex);
+
+				if (FTBLibConfig.debugging.print_more_errors)
+				{
+					ex.printStackTrace();
+				}
+			}
+
+			if (FTBUtilitiesConfig.world.unload_erroring_chunks)
+			{
+				FTBUtilities.LOGGER.warn("Unloading erroring chunk at " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(pos.dim).getUnformattedText());
+				chunk.setLoaded(false);
+			}
 		}
 	}
 

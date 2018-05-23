@@ -316,6 +316,9 @@ public class FTBUtilitiesConfig
 		@Config.Comment("Spawn dimension. Overworld by default.")
 		public int spawn_dimension = 0;
 
+		@Config.Comment("Unloads erroring chunks if dimension isn't loaded or some other problem occurs.")
+		public boolean unload_erroring_chunks = false;
+
 		public boolean allowDimension(int dimension)
 		{
 			if (ClaimedChunks.instance == null)

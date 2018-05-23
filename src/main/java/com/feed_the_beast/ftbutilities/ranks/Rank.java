@@ -9,15 +9,17 @@ import com.google.gson.JsonNull;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 
 public class Rank extends FinalIDObject
 {
-	public static class Entry
+	public static class Entry implements Comparable<Entry>
 	{
 		public final Node node;
 		public JsonElement json = JsonNull.INSTANCE;
@@ -26,12 +28,18 @@ public class Rank extends FinalIDObject
 		{
 			node = n;
 		}
+
+		@Override
+		public int compareTo(Entry o)
+		{
+			return node.compareTo(o.node);
+		}
 	}
 
 	public final Ranks ranks;
-	public final Collection<Rank> parents;
+	public Rank parent;
 	public final Collection<String> tags;
-	public final Map<Node, Entry> permissions;
+	public final List<Entry> permissions;
 	public final Map<Node, Event.Result> cachedPermissions;
 	public final Map<Node, ConfigValue> cachedConfig;
 
@@ -39,9 +47,8 @@ public class Rank extends FinalIDObject
 	{
 		super(id);
 		ranks = r;
-		parents = new LinkedHashSet<>();
 		tags = new LinkedHashSet<>();
-		permissions = new LinkedHashMap<>();
+		permissions = new ArrayList<>();
 		cachedPermissions = new HashMap<>();
 		cachedConfig = new HashMap<>();
 		setDefaults();
@@ -49,39 +56,53 @@ public class Rank extends FinalIDObject
 
 	public void setDefaults()
 	{
-		parents.clear();
+		parent = null;
 		tags.clear();
 		permissions.clear();
 		cachedPermissions.clear();
 		cachedConfig.clear();
 	}
 
-	public String setPermission(Node node, @Nullable JsonElement json)
+	public boolean setPermission(Node node, @Nullable JsonElement json)
 	{
 		if (JsonUtils.isNull(json))
 		{
-			return permissions.remove(node) != null ? "none" : "";
+			Iterator<Entry> iterator = permissions.iterator();
+
+			while (iterator.hasNext())
+			{
+				if (iterator.next().node.equals(node))
+				{
+					iterator.remove();
+					return true;
+				}
+			}
+
+			return false;
 		}
 		else if (json.isJsonObject())
 		{
-			return "";
+			return false;
 		}
 
-		Entry entry = permissions.get(node);
-
-		if (entry == null)
+		for (Entry entry : permissions)
 		{
-			entry = new Entry(node);
-			permissions.put(entry.node, entry);
+			if (entry.node.equals(node))
+			{
+				if (!entry.json.equals(json))
+				{
+					entry.json = json;
+					return true;
+				}
+
+				return false;
+			}
 		}
 
-		if (!entry.json.equals(json))
-		{
-			entry.json = json;
-			return json.toString();
-		}
-
-		return "";
+		Entry entry = new Entry(node);
+		entry.json = json;
+		permissions.add(entry);
+		return true;
 	}
 
 	public Event.Result getPermissionRaw(Node node)
@@ -90,7 +111,7 @@ public class Rank extends FinalIDObject
 
 		int parts = 0;
 
-		for (Entry entry : permissions.values())
+		for (Entry entry : permissions)
 		{
 			if (entry.node.getPartCount() > parts && entry.json.isJsonPrimitive() && entry.json.getAsJsonPrimitive().isBoolean() && entry.node.matches(node))
 			{
@@ -99,43 +120,19 @@ public class Rank extends FinalIDObject
 			}
 		}
 
-		if (result != Event.Result.DEFAULT)
-		{
-			return result;
-		}
-
-		for (Rank parent : parents)
-		{
-			result = parent.getPermissionRaw(node);
-
-			if (result != Event.Result.DEFAULT)
-			{
-				return result;
-			}
-		}
-
-		return Event.Result.DEFAULT;
+		return result != Event.Result.DEFAULT || parent == null ? result : parent.getPermissionRaw(node);
 	}
 
 	public JsonElement getConfigRaw(Node node)
 	{
-		Entry entry = permissions.get(node);
-
-		if (entry != null && !JsonUtils.isNull(entry.json))
+		for (Entry entry : permissions)
 		{
-			return entry.json;
-		}
-
-		for (Rank parent : parents)
-		{
-			JsonElement json = parent.getConfigRaw(node);
-
-			if (!JsonUtils.isNull(json))
+			if (entry.node.equals(node) && !JsonUtils.isNull(entry.json))
 			{
-				return json;
+				return entry.json;
 			}
 		}
 
-		return JsonNull.INSTANCE;
+		return parent == null ? JsonNull.INSTANCE : parent.getConfigRaw(node);
 	}
 }

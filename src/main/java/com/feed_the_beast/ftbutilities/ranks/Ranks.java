@@ -247,12 +247,7 @@ public class Ranks
 						JsonObject o = json0.getAsJsonObject();
 						if (o.has("parent"))
 						{
-							Rank p = ranks.get(o.get("parent").getAsString());
-
-							if (p != null)
-							{
-								rank.parents.add(p);
-							}
+							rank.parent = ranks.get(o.get("parent").getAsString());
 						}
 
 						if (o.has("permissions"))
@@ -268,9 +263,8 @@ public class Ranks
 									String id = a.get(i).getAsString();
 									char firstChar = id.charAt(0);
 									String key = (firstChar == '-' || firstChar == '+' || firstChar == '~') ? id.substring(1) : id;
-									Rank.Entry entry = new Rank.Entry(Node.get(key));
-									entry.json = firstChar == '-' ? JsonUtils.JSON_FALSE : JsonUtils.JSON_TRUE;
-									rank.permissions.put(entry.node, entry);
+									key = key.replace("command.ftb", "command");
+									rank.setPermission(Node.get(key), firstChar == '-' ? JsonUtils.JSON_FALSE : JsonUtils.JSON_TRUE);
 								}
 							}
 							else
@@ -279,9 +273,9 @@ public class Ranks
 
 								for (Map.Entry<String, JsonElement> entry : o1.entrySet())
 								{
-									Rank.Entry entry1 = new Rank.Entry(Node.get(entry.getKey()));
-									entry1.json = entry.getValue();
-									rank.permissions.put(entry1.node, entry1);
+									String key = entry.getKey();
+									key = key.replace("command.ftb", "command");
+									rank.setPermission(Node.get(key), entry.getValue());
 								}
 							}
 						}
@@ -290,9 +284,7 @@ public class Ranks
 						{
 							for (Map.Entry<String, JsonElement> entry : o.get("config").getAsJsonObject().entrySet())
 							{
-								Rank.Entry entry1 = new Rank.Entry(Node.get(entry.getKey()));
-								entry1.json = entry.getValue();
-								rank.permissions.put(entry1.node, entry1);
+								rank.setPermission(Node.get(entry.getKey()), entry.getValue());
 							}
 						}
 					}
@@ -301,8 +293,26 @@ public class Ranks
 				if (json.has("default_ranks"))
 				{
 					JsonObject dr = json.get("default_ranks").getAsJsonObject();
-					defaultPlayerRank = dr.has("player") ? ranks.get(dr.get("player").getAsString()) : null;
-					defaultOPRank = dr.has("op") ? ranks.get(dr.get("op").getAsString()) : null;
+
+					if (dr.has("player"))
+					{
+						Rank r = ranks.get(dr.get("player").getAsString());
+
+						if (r != null)
+						{
+							r.tags.add("default_player_rank");
+						}
+					}
+
+					if (dr.has("op"))
+					{
+						Rank r = ranks.get(dr.get("op").getAsString());
+
+						if (r != null)
+						{
+							r.tags.add("default_op_rank");
+						}
+					}
 				}
 			}
 
@@ -316,19 +326,19 @@ public class Ranks
 		{
 			Rank pRank = new Rank(this, "player");
 			ranks.put(pRank.getName(), pRank);
-			defaultPlayerRank = pRank;
+			pRank.tags.add("default_player_rank");
+			pRank.setPermission(Node.get("example.permission"), JsonUtils.JSON_TRUE);
+			pRank.setPermission(Node.get("example.other_permission"), JsonUtils.JSON_FALSE);
 
 			Rank oRank = new Rank(this, "admin");
 			ranks.put(oRank.getName(), oRank);
-			defaultOPRank = oRank;
-			oRank.parents.add(pRank);
-			Rank.Entry nameColor = new Rank.Entry(FTBUtilitiesPermissions.CHAT_NAME.color);
-			nameColor.json = new JsonPrimitive("dark_green");
-			oRank.permissions.put(nameColor.node, nameColor);
+			oRank.tags.add("default_op_rank");
+			oRank.parent = pRank;
+			oRank.setPermission(FTBUtilitiesPermissions.CHAT_NAME.color, new JsonPrimitive("dark_green"));
 		}
 
 		Rank currentRank = null;
-		Map<String, LinkedHashSet<String>> rankParents = new LinkedHashMap<>();
+		Map<String, String> rankParents = new HashMap<>();
 
 		for (String line : DataReader.get(ranksFile).safeStringList())
 		{
@@ -344,7 +354,7 @@ public class Ranks
 
 				currentRank = new Rank(this, StringUtils.removeAllWhitespace(extendss[0]));
 				ranks.put(currentRank.getName(), currentRank);
-				LinkedHashSet<String> parents = new LinkedHashSet<>();
+				String parent = "";
 
 				if (iss.length == 2)
 				{
@@ -361,18 +371,10 @@ public class Ranks
 
 				if (extendss.length == 2)
 				{
-					for (String tag : extendss[1].split(","))
-					{
-						String s = StringUtils.removeAllWhitespace(tag);
-
-						if (!s.isEmpty())
-						{
-							parents.add(s);
-						}
-					}
+					parent = StringUtils.removeAllWhitespace(extendss[1]);
 				}
 
-				rankParents.put(currentRank.getName(), parents);
+				rankParents.put(currentRank.getName(), parent);
 			}
 			else if (currentRank != null)
 			{
@@ -380,13 +382,12 @@ public class Ranks
 
 				if (s1.length == 2)
 				{
-					JsonElement json = DataReader.get(StringUtils.trimAllWhitespace(s1[1])).safeJson();
+					String[] s2 = s1[1].split(" // ");
+					JsonElement json = DataReader.get(StringUtils.trimAllWhitespace(s2[0])).safeJson();
 
 					if (!JsonUtils.isNull(json))
 					{
-						Rank.Entry entry = new Rank.Entry(Node.get(StringUtils.removeAllWhitespace(s1[0])));
-						entry.json = json;
-						currentRank.permissions.put(entry.node, entry);
+						currentRank.setPermission(Node.get(StringUtils.removeAllWhitespace(s1[0])), json);
 					}
 				}
 			}
@@ -398,14 +399,11 @@ public class Ranks
 
 		for (Rank rank : ranks.values())
 		{
-			for (String s : rankParents.get(rank.getName()))
-			{
-				Rank r = ranks.get(s);
+			Rank r = ranks.get(rankParents.get(rank.getName()));
 
-				if (r != null)
-				{
-					rank.parents.add(r);
-				}
+			if (r != rank)
+			{
+				rank.parent = r;
 			}
 
 			if (rank.tags.contains("default_player_rank"))
@@ -496,15 +494,15 @@ public class Ranks
 	public void saveRanks()
 	{
 		List<String> list = new ArrayList<>();
-		list.add("// This file stores rank definitions.");
-		list.add("// ");
-		list.add("// [name]");
-		list.add("// permission: value");
-		list.add("// ");
-		list.add("// Add [name extends parent_name] to make this rank include all permissions from parent. You can specify multiple parents seperated by comma.");
-		list.add("// Add [name is default_player_rank] or [name is default_op_rank] to make this rank default for players/ops that don't have a rank set explicitly.");
-		list.add("// ");
-		list.add("// For more info visit https://guides.latmod.com/ftbutilities/ranks/");
+		list.add("/// This file stores rank definitions.");
+		list.add("/// ");
+		list.add("/// [name]");
+		list.add("/// permission: value");
+		list.add("/// ");
+		list.add("/// Add [name extends parent_name] to make this rank include all permissions from parent_name rank.");
+		list.add("/// Add [name is default_player_rank] or [name is default_op_rank] to make this rank default for players/ops that don't have a rank set explicitly.");
+		list.add("/// ");
+		list.add("/// For more info visit https://guides.latmod.com/ftbutilities/ranks/");
 
 		StringBuilder line = new StringBuilder();
 
@@ -516,10 +514,10 @@ public class Ranks
 			line.append('[');
 			line.append(rank);
 
-			if (!rank.parents.isEmpty())
+			if (rank.parent != null)
 			{
 				line.append(" extends ");
-				line.append(StringJoiner.with(", ").join(rank.parents));
+				line.append(rank.parent);
 			}
 
 			if (!rank.tags.isEmpty())
@@ -531,7 +529,7 @@ public class Ranks
 			line.append(']');
 			list.add(line.toString());
 
-			for (Rank.Entry entry : rank.permissions.values())
+			for (Rank.Entry entry : rank.permissions)
 			{
 				list.add(entry.node + ": " + entry.json);
 			}

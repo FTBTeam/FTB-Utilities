@@ -9,7 +9,7 @@ import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
-import com.feed_the_beast.ftbutilities.cmd.CmdShutdown;
+import com.feed_the_beast.ftbutilities.command.CmdShutdown;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;

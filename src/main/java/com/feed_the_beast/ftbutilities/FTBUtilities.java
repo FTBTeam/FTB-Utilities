@@ -4,7 +4,7 @@ import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
-import com.feed_the_beast.ftbutilities.cmd.FTBUtilitiesCommands;
+import com.feed_the_beast.ftbutilities.command.FTBUtilitiesCommands;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import com.feed_the_beast.ftbutilities.ranks.CommandOverride;
 import net.minecraft.command.ICommand;

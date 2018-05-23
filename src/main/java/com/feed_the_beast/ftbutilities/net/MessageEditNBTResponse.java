@@ -9,7 +9,6 @@ import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftbutilities.cmd.CmdEditNBT;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -62,15 +61,9 @@ public class MessageEditNBTResponse extends MessageToServer
 				{
 					ForgePlayer player1 = Universe.get().getPlayer(info.getUniqueId("id"));
 
-					if (player1 != null && player1.isOnline())
+					if (player1 != null)
 					{
-						EntityPlayer entity = player1.getPlayer();
-						entity.deserializeNBT(mainNbt);
-
-						if (entity.isEntityAlive())
-						{
-							player.world.updateEntityWithOptionalForce(entity, true);
-						}
+						player1.setPlayerNBT(mainNbt);
 					}
 
 					break;

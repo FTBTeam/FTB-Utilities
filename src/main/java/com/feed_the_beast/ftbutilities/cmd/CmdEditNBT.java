@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbutilities.cmd;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBT;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBTRequest;
@@ -45,8 +46,7 @@ public class CmdEditNBT extends CmdTreeBase
 		{
 			EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 			NBTTagCompound info = new NBTTagCompound();
-			NBTTagCompound nbt = new NBTTagCompound();
-			editNBT(player, info, nbt, args);
+			NBTTagCompound nbt = editNBT(player, info, args);
 
 			if (info.hasKey("type"))
 			{
@@ -56,8 +56,9 @@ public class CmdEditNBT extends CmdTreeBase
 			}
 		}
 
-		public void editNBT(EntityPlayerMP player, NBTTagCompound info, NBTTagCompound nbt, String[] args) throws CommandException
+		public NBTTagCompound editNBT(EntityPlayerMP player, NBTTagCompound info, String[] args) throws CommandException
 		{
+			return new NBTTagCompound();
 		}
 	}
 
@@ -69,7 +70,7 @@ public class CmdEditNBT extends CmdTreeBase
 		}
 
 		@Override
-		public void editNBT(EntityPlayerMP player, NBTTagCompound info, NBTTagCompound nbt, String[] args) throws CommandException
+		public NBTTagCompound editNBT(EntityPlayerMP player, NBTTagCompound info, String[] args) throws CommandException
 		{
 			checkArgs(player, args, 3);
 			int x = parseInt(args[0]);
@@ -83,6 +84,7 @@ public class CmdEditNBT extends CmdTreeBase
 			}
 
 			TileEntity tile = player.world.getTileEntity(pos);
+			NBTTagCompound nbt = new NBTTagCompound();
 
 			if (tile != null)
 			{
@@ -97,6 +99,8 @@ public class CmdEditNBT extends CmdTreeBase
 				info.setString("id", nbt.getString("id"));
 				nbt.removeTag("id");
 			}
+
+			return nbt;
 		}
 	}
 
@@ -108,11 +112,12 @@ public class CmdEditNBT extends CmdTreeBase
 		}
 
 		@Override
-		public void editNBT(EntityPlayerMP player, NBTTagCompound info, NBTTagCompound nbt, String[] args) throws CommandException
+		public NBTTagCompound editNBT(EntityPlayerMP player, NBTTagCompound info, String[] args) throws CommandException
 		{
 			checkArgs(player, args, 1);
 			int id = parseInt(args[0]);
 			Entity entity = player.world.getEntityByID(id);
+			NBTTagCompound nbt = new NBTTagCompound();
 
 			if (entity != null)
 			{
@@ -120,6 +125,8 @@ public class CmdEditNBT extends CmdTreeBase
 				info.setInteger("id", id);
 				entity.writeToNBT(nbt);
 			}
+
+			return nbt;
 		}
 	}
 
@@ -137,13 +144,16 @@ public class CmdEditNBT extends CmdTreeBase
 		}
 
 		@Override
-		public void editNBT(EntityPlayerMP player, NBTTagCompound info, NBTTagCompound nbt, String[] args) throws CommandException
+		public NBTTagCompound editNBT(EntityPlayerMP player, NBTTagCompound info, String[] args) throws CommandException
 		{
 			checkArgs(player, args, 1);
-			EntityPlayerMP player1 = getPlayer(player.mcServer, player, args[0]);
+			ForgePlayer p = getForgePlayer(player, args[0]);
+			info.setBoolean("online", p.isOnline());
 			info.setString("type", "player");
-			info.setUniqueId("id", player1.getUniqueID());
-			player1.writeToNBT(nbt);
+			info.setUniqueId("id", p.getId());
+			NBTTagCompound nbt = p.getPlayerNBT();
+			nbt.removeTag("id");
+			return nbt;
 		}
 	}
 

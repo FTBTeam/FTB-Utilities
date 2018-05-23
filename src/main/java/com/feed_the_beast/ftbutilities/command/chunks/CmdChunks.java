@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbutilities.handlers.FTBUtilitiesPlayerEventHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.server.command.CommandTreeHelp;
 
 /**
  * @author LatvianModder
@@ -24,5 +25,6 @@ public class CmdChunks extends CmdTreeBase
 		addSubcommand(new CmdUnload());
 		addSubcommand(new CmdUnclaimAll());
 		addSubcommand(new CmdUnloadAll());
+		addSubcommand(new CommandTreeHelp(this));
 	}
 }

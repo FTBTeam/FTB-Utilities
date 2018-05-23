@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.server.command.CommandTreeHelp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +33,7 @@ public class CmdEditNBT extends CmdTreeBase
 		addSubcommand(new CmdTile());
 		addSubcommand(new CmdEntity());
 		addSubcommand(new CmdPlayer());
+		addSubcommand(new CommandTreeHelp(this));
 	}
 
 	public static class CmdNBT extends CmdBase

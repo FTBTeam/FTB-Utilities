@@ -9,6 +9,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.server.command.CommandTreeHelp;
 
 public class CmdBackup extends CmdTreeBase
 {
@@ -57,5 +58,6 @@ public class CmdBackup extends CmdTreeBase
 		super("backup");
 		addSubcommand(new CmdStart());
 		addSubcommand(new CmdGetSize());
+		addSubcommand(new CommandTreeHelp(this));
 	}
 }

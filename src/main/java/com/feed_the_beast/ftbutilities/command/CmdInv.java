@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.server.command.CommandTreeHelp;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -191,5 +192,6 @@ public class CmdInv extends CmdTreeBase
 		addSubcommand(new CmdSave());
 		addSubcommand(new CmdLoad());
 		//addSubcommand(new CmdList());
+		addSubcommand(new CommandTreeHelp(this));
 	}
 }

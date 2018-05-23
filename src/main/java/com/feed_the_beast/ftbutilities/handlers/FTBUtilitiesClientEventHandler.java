@@ -5,7 +5,7 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.client.FTBUtilitiesClient;
 import com.feed_the_beast.ftbutilities.client.FTBUtilitiesClientConfig;
-import com.feed_the_beast.ftbutilities.gui.GuiWarps;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -36,9 +36,10 @@ public class FTBUtilitiesClientEventHandler
 	{
 		if (FTBUtilitiesClient.KEY_WARP.isPressed())
 		{
-			GuiWarps.INSTANCE = new GuiWarps();
-			GuiWarps.INSTANCE.openGui();
-			ClientUtils.execClientCommand("/ftb warp gui");
+			ClientUtils.MC.player.sendStatusMessage(new TextComponentString("Feature disabled for now!"), true); //LANG
+			//GuiWarps.INSTANCE = new GuiWarps();
+			//GuiWarps.INSTANCE.openGui();
+			//ClientUtils.execClientCommand("/ftb warp gui");
 		}
 	}
 }

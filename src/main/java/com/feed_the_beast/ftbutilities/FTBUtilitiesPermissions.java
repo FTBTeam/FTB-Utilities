@@ -158,6 +158,7 @@ public class FTBUtilitiesPermissions
 	public static final Node TPA_WARMUP = Node.get("ftbutilities.tpa.warmup");
 	public static final Node SPAWN_WARMUP = Node.get("ftbutilities.spawn.warmup");
 	public static final Node BACK_WARMUP = Node.get("ftbutilities.back.warmup");
+	public static final String TPA_CROSS_DIM = "ftbutilities.tpa.cross_dim";
 	public static final String NICKNAME = "ftbutilities.nickname";
 	public static final Node AFK_TIMER = Node.get("ftbutilities.afk.timer");
 
@@ -184,6 +185,7 @@ public class FTBUtilitiesPermissions
 		event.registerNode(VIEW_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to view crash reports via Admin Panel");
 		event.registerNode(DELETE_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to delete crash reports. Depends on 'admin_panel.ftbutilities.crash_reports.view'");
 		event.registerNode(EDIT_WORLD_GAMERULES, DefaultPermissionLevel.OP, "Allow to edit gamerules via Admin Panel");
+		event.registerNode(TPA_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /tpa to teleport to/from another dimension");
 		event.registerNode(NICKNAME, DefaultPermissionLevel.OP, "Allow to change nickname");
 
 		for (Block block : Block.REGISTRY)

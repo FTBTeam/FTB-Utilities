@@ -46,6 +46,12 @@ public class CmdTPAccept extends CmdBase
 			throw new CommandException("ftbutilities.lang.tpa.no_request", otherName);
 		}
 
+		if (selfPlayer.dimension != other.player.getPlayer().dimension && !other.player.hasPermission(FTBUtilitiesPermissions.TPA_CROSS_DIM))
+		{
+			other.player.getPlayer().sendMessage(StringUtils.color(FTBUtilities.lang(other.player.getPlayer(), "ftbutilities.lang.homes.cross_dim"), TextFormatting.RED));
+			throw new CommandException("ftbutilities.lang.homes.cross_dim", otherName);
+		}
+
 		self.tpaRequestsFrom.remove(other.player);
 
 		ITextComponent component = FTBUtilities.lang(sender, "ftbutilities.lang.tpa.request_accepted");

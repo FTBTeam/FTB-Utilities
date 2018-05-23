@@ -1,12 +1,16 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
+import com.feed_the_beast.ftblib.lib.config.ConfigDouble;
+import com.feed_the_beast.ftblib.lib.config.ConfigInt;
+import com.feed_the_beast.ftblib.lib.config.ConfigTimer;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
@@ -372,16 +376,15 @@ public class Ranks
 			}
 			else if (currentRank != null)
 			{
-				String[] s1 = line.split(":", 2);
+				String[] s1 = line.split(": ", 2);
 
 				if (s1.length == 2)
 				{
-					Node node = Node.get(StringUtils.removeAllWhitespace(s1[0]));
 					JsonElement json = DataReader.get(StringUtils.trimAllWhitespace(s1[1])).safeJson();
 
 					if (!JsonUtils.isNull(json))
 					{
-						Rank.Entry entry = new Rank.Entry(node);
+						Rank.Entry entry = new Rank.Entry(Node.get(StringUtils.removeAllWhitespace(s1[0])));
 						entry.json = json;
 						currentRank.permissions.put(entry.node, entry);
 					}
@@ -478,6 +481,18 @@ public class Ranks
 		return result;
 	}
 
+	private String fixHTML(JsonElement json)
+	{
+		String s = json.toString();
+
+		if (s.length() > 2 && s.startsWith("\"") && s.endsWith("\"") && s.indexOf(' ') == -1)
+		{
+			s = s.substring(1, s.length() - 1);
+		}
+
+		return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+	}
+
 	public void saveRanks()
 	{
 		List<String> list = new ArrayList<>();
@@ -486,7 +501,7 @@ public class Ranks
 		list.add("// [name]");
 		list.add("// permission: value");
 		list.add("// ");
-		list.add("// Add [name extends parent_name] to make this rank include all permissions from parent.");
+		list.add("// Add [name extends parent_name] to make this rank include all permissions from parent. You can specify multiple parents seperated by comma.");
 		list.add("// Add [name is default_player_rank] or [name is default_op_rank] to make this rank default for players/ops that don't have a rank set explicitly.");
 		list.add("// ");
 		list.add("// For more info visit https://guides.latmod.com/ftbutilities/ranks/");
@@ -606,7 +621,7 @@ public class Ranks
 
 		for (RankConfigValueInfo info : RankConfigAPI.getHandler().getRegisteredConfigs())
 		{
-			String desc = new TextComponentTranslation(info.node.toString()).getUnformattedText();
+			String desc = new TextComponentTranslation("rank_config." + info.node).getUnformattedText();
 			allNodes.add(new NodeEntry(info.node, info.defaultValue, info.defaultOPValue, desc.equals(info.node.toString()) ? "" : desc, null));
 		}
 
@@ -625,35 +640,55 @@ public class Ranks
 		list.add("td.other{background-color:#42A3FFAA;}");
 		list.add("th,td.true,td.false,td.other{text-align:center;}");
 		list.add("</style></head><body><h1>Permissions</h1><h3>Modifying this file won't have any effect!</h3><table>");
-		list.add("<tr><th>Node</th><th>Player</th><th>OP</th><th>Variants</th><th>Info</th></tr>");
+		list.add("<tr><th>Node</th><th>Type</th><th>Player</th><th>OP</th><th>Info (Mouse over for variants)</th></tr>");
 
 		for (NodeEntry entry : allNodes)
 		{
-			list.add("<tr><td>" + entry.getNode() + "</td><td class='" + classOf(entry.player) + "'>" + entry.player.getSerializableElement() + "</td><td class='" + classOf(entry.op) + "'>" + entry.op.getSerializableElement() + "</td><td>");
+			list.add("<tr>");
+			list.add("<td>" + entry.getNode() + "</td>");
+			list.add("<td>" + entry.player.getName() + "</td>");
+			list.add("<td class='" + classOf(entry.player) + "'>" + fixHTML(entry.player.getSerializableElement()) + "</td>");
+			list.add("<td class='" + classOf(entry.op) + "'>" + fixHTML(entry.op.getSerializableElement()) + "</td><td title='");
+
+			List<String> variants = new ArrayList<>();
 
 			if (entry.player instanceof ConfigBoolean)
 			{
-				list.add("true / false");
+				variants.add("true");
+				variants.add("false");
+			}
+			else if (entry.player instanceof ConfigInt)
+			{
+				int min = ((ConfigInt) entry.player).getMin();
+				int max = ((ConfigInt) entry.player).getMax();
+				variants.add(String.format("%s to %s", min == Integer.MIN_VALUE ? "-\u221E" : String.valueOf(min), max == Integer.MAX_VALUE ? "\u221E" : String.valueOf(max)));
+			}
+			else if (entry.player instanceof ConfigDouble)
+			{
+				double min = ((ConfigDouble) entry.player).getMin();
+				double max = ((ConfigDouble) entry.player).getMax();
+
+				variants.add(String.format("%s to %s", min == Double.NEGATIVE_INFINITY ? "-\u221E" : StringUtils.formatDouble(min), max == Double.POSITIVE_INFINITY ? "\u221E" : StringUtils.formatDouble(max)));
+			}
+			else if (entry.player instanceof ConfigTimer)
+			{
+				long max = ((ConfigTimer) entry.player).getMax();
+				variants.add(String.format("0s to %s", max == Long.MAX_VALUE ? "\u221E" : Ticks.toString(max)));
 			}
 			else
 			{
-				List<String> variants = entry.player.getVariants();
-
-				if (!variants.isEmpty())
-				{
-					variants = new ArrayList<>(variants);
-					variants.sort(StringUtils.IGNORE_CASE_COMPARATOR);
-
-					for (String s : variants)
-					{
-						list.add("<p>" + TextFormatting.getTextWithoutFormattingCodes(s) + "</p>");
-					}
-				}
+				variants = new ArrayList<>(entry.player.getVariants());
+				variants.sort(StringUtils.IGNORE_CASE_COMPARATOR);
 			}
 
-			list.add("</td><td>");
+			for (String s : variants)
+			{
+				list.add(TextFormatting.getTextWithoutFormattingCodes(s) + " ");
+			}
 
-			if (entry.desc.isEmpty())
+			list.add("'>");
+
+			if (!entry.desc.isEmpty())
 			{
 				for (String s1 : entry.desc.split("\n"))
 				{

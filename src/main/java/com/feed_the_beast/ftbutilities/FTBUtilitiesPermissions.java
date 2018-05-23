@@ -225,11 +225,11 @@ public class FTBUtilitiesPermissions
 		event.register(TPA_COOLDOWN, new ConfigTimer(Ticks.mt(3)), new ConfigTimer(0L));
 		event.register(SPAWN_COOLDOWN, new ConfigTimer(Ticks.mt(1)), new ConfigTimer(0L));
 		event.register(BACK_COOLDOWN, new ConfigTimer(Ticks.mt(3)), new ConfigTimer(0L));
-		event.register(HOMES_WARMUP, new ConfigTimer(Ticks.st(5), 60), new ConfigTimer(0L));
-		event.register(WARPS_WARMUP, new ConfigTimer(Ticks.st(5), 60), new ConfigTimer(0L));
-		event.register(TPA_WARMUP, new ConfigTimer(Ticks.st(5), 60), new ConfigTimer(0L));
-		event.register(SPAWN_WARMUP, new ConfigTimer(Ticks.st(5), 60), new ConfigTimer(0L));
-		event.register(BACK_WARMUP, new ConfigTimer(Ticks.st(5), 60), new ConfigTimer(0L));
+		event.register(HOMES_WARMUP, new ConfigTimer(Ticks.st(5), Ticks.mt(1)), new ConfigTimer(0L));
+		event.register(WARPS_WARMUP, new ConfigTimer(Ticks.st(5), Ticks.mt(1)), new ConfigTimer(0L));
+		event.register(TPA_WARMUP, new ConfigTimer(Ticks.st(5), Ticks.mt(1)), new ConfigTimer(0L));
+		event.register(SPAWN_WARMUP, new ConfigTimer(Ticks.st(5), Ticks.mt(1)), new ConfigTimer(0L));
+		event.register(BACK_WARMUP, new ConfigTimer(Ticks.st(5), Ticks.mt(1)), new ConfigTimer(0L));
 		event.register(CLAIMS_MAX_CHUNKS, new ConfigInt(100, 0, 30000), new ConfigInt(1000));
 		event.register(CHUNKLOADER_MAX_CHUNKS, new ConfigInt(50, 0, 30000), new ConfigInt(64));
 		//event.register(CHUNKLOADER_OFFLINE_TIMER, new ConfigDouble(-1D).setMin(-1D), new ConfigDouble(-1D));

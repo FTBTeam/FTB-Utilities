@@ -29,7 +29,7 @@ public class CmdAdd extends CmdBase
 
 		String id = args[0].toLowerCase();
 
-		if (Ranks.INSTANCE.getRankNames().contains(id))
+		if (id.equals("none") || Ranks.INSTANCE.getRankNames().contains(id))
 		{
 			throw new CommandException("commands.ranks.add.id_exists", id);
 		}

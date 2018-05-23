@@ -71,7 +71,13 @@ public class Ranks
 	@Nullable
 	public Rank getRank(String id)
 	{
-		return ranks.get(id);
+		if (id.isEmpty() || id.charAt(0) == '–')
+		{
+			return null;
+		}
+
+		String s = id.toLowerCase();
+		return s.equals("none") || s.equals("null") ? null : ranks.get(s);
 	}
 
 	@Nullable
@@ -232,12 +238,15 @@ public class Ranks
 			{
 				for (Map.Entry<String, JsonElement> entry : json.get("ranks").getAsJsonObject().entrySet())
 				{
-					ranks.put(entry.getKey(), new Rank(this, entry.getKey()));
+					if (!entry.getKey().equals("none"))
+					{
+						ranks.put(entry.getKey(), new Rank(this, entry.getKey()));
+					}
 				}
 
 				for (Map.Entry<String, JsonElement> rankEntry : json.get("ranks").getAsJsonObject().entrySet())
 				{
-					Rank rank = ranks.get(rankEntry.getKey());
+					Rank rank = getRank(rankEntry.getKey());
 					rank.setDefaults();
 
 					JsonElement json0 = rankEntry.getValue();
@@ -247,7 +256,7 @@ public class Ranks
 						JsonObject o = json0.getAsJsonObject();
 						if (o.has("parent"))
 						{
-							rank.parent = ranks.get(o.get("parent").getAsString());
+							rank.parent = getRank(o.get("parent").getAsString());
 						}
 
 						if (o.has("permissions"))
@@ -296,7 +305,7 @@ public class Ranks
 
 					if (dr.has("player"))
 					{
-						Rank r = ranks.get(dr.get("player").getAsString());
+						Rank r = getRank(dr.get("player").getAsString());
 
 						if (r != null)
 						{
@@ -306,7 +315,7 @@ public class Ranks
 
 					if (dr.has("op"))
 					{
-						Rank r = ranks.get(dr.get("op").getAsString());
+						Rank r = getRank(dr.get("op").getAsString());
 
 						if (r != null)
 						{
@@ -320,7 +329,7 @@ public class Ranks
 			FileUtils.delete(ranksFile);
 		}
 
-		ranksFile = new File(CommonUtils.folderLocal, "ftbutilities/ranks.txt");
+		ranksFile = FTBUtilitiesConfig.ranks.load_from_config_folder ? new File(CommonUtils.folderConfig, "ftbutilities_ranks.txt") : new File(CommonUtils.folderLocal, "ftbutilities/ranks.txt");
 
 		if (!loadedOldFile && !ranksFile.exists())
 		{
@@ -399,7 +408,7 @@ public class Ranks
 
 		for (Rank rank : ranks.values())
 		{
-			Rank r = ranks.get(rankParents.get(rank.getName()));
+			Rank r = getRank(rankParents.get(rank.getName()));
 
 			if (r != rank)
 			{
@@ -436,7 +445,7 @@ public class Ranks
 
 				if (player != null)
 				{
-					Rank rank = ranks.get(entry.getValue().getAsString());
+					Rank rank = getRank(entry.getValue().getAsString());
 
 					if (rank != null)
 					{
@@ -465,7 +474,7 @@ public class Ranks
 
 				if (player != null)
 				{
-					Rank rank = ranks.get(StringUtils.trimAllWhitespace(s1[1]));
+					Rank rank = getRank(StringUtils.trimAllWhitespace(s1[1]));
 
 					if (rank != null)
 					{

@@ -281,6 +281,9 @@ public class FTBUtilitiesConfig
 
 		@Config.Comment("Will crash when something tries to check permissions on client side.")
 		public boolean crash_client_side_permissions = false;
+
+		@Config.Comment("Will load config/ftbutilities_ranks.txt instead of local/ftbutilities/ranks.txt.")
+		public boolean load_from_config_folder = false;
 	}
 
 	public static class WorldConfig

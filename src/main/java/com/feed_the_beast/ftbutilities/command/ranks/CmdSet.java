@@ -54,7 +54,7 @@ public class CmdSet extends CmdBase
 
 		checkArgs(sender, args, 2);
 
-		Rank r = (args[1].equalsIgnoreCase("none") || args[1].equals("-")) ? null : Ranks.INSTANCE.getRank(args[1]);
+		Rank r = Ranks.INSTANCE.getRank(args[1]);
 
 		if (!Ranks.INSTANCE.getRankNames().contains(args[1]))
 		{

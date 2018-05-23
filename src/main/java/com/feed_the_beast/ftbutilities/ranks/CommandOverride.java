@@ -70,7 +70,7 @@ public class CommandOverride implements ICommand
 		if (sender instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP player = (EntityPlayerMP) sender;
-			Event.Result result = FTBUtilitiesPermissionHandler.INSTANCE.getPermissionResult(player.getGameProfile(), node.toString(), new PlayerContext(player));
+			Event.Result result = FTBUtilitiesPermissionHandler.INSTANCE.getPermissionResult(player.getGameProfile(), node, new PlayerContext(player));
 
 			if (result != Event.Result.DEFAULT)
 			{

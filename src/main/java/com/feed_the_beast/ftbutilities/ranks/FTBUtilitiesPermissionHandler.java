@@ -39,7 +39,7 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 		return DefaultPermissionHandler.INSTANCE.getRegisteredNodes();
 	}
 
-	public Event.Result getPermissionResult(GameProfile profile, String nodeS, @Nullable IContext context)
+	public Event.Result getPermissionResult(GameProfile profile, Node node, @Nullable IContext context)
 	{
 		if (Ranks.INSTANCE == null)
 		{
@@ -49,13 +49,12 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 		{
 			if (FTBUtilitiesConfig.ranks.crash_client_side_permissions)
 			{
-				throw new RuntimeException("Do not check permissions on client side! Node: " + nodeS);
+				throw new RuntimeException("Do not check permissions on client side! Node: " + node);
 			}
 
 			return Event.Result.DEFAULT;
 		}
 
-		Node node = Node.get(nodeS);
 		MinecraftServer server = context != null && context.getWorld() != null ? context.getWorld().getMinecraftServer() : null;
 		Rank rank = Ranks.INSTANCE.getRank(server, profile, context);
 
@@ -78,7 +77,7 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 	@Override
 	public boolean hasPermission(GameProfile profile, String nodeS, @Nullable IContext context)
 	{
-		switch (getPermissionResult(profile, nodeS, context))
+		switch (getPermissionResult(profile, Node.get(nodeS), context))
 		{
 			case ALLOW:
 				return true;

@@ -12,6 +12,9 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -20,9 +23,9 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class CmdGetPlayerPermission extends CmdBase
+public class CmdGetPermission extends CmdBase
 {
-	public CmdGetPlayerPermission()
+	public CmdGetPermission()
 	{
 		super("get_permission", Level.OP);
 	}
@@ -56,15 +59,28 @@ public class CmdGetPlayerPermission extends CmdBase
 		checkArgs(sender, args, 2);
 		ForgePlayer player = getForgePlayer(sender, args[0]);
 		Node node = Node.get(args[1]);
+
+		ITextComponent nodeText = new TextComponentString(node.toString());
+		nodeText.getStyle().setColor(TextFormatting.GOLD);
+
+		ITextComponent nameText = player.getDisplayName();
+		nameText.getStyle().setColor(TextFormatting.DARK_GREEN);
+
 		RankConfigValueInfo info = RankConfigAPI.getHandler().getInfo(node);
+		ITextComponent valueText;
 
 		if (info != null)
 		{
-			sender.sendMessage(FTBUtilities.lang(sender, "commands.ranks.get_permission.text", args[1], player.getDisplayName(), player.getRankConfig(node).toString()));
+			valueText = new TextComponentString(player.getRankConfig(node).toString());
+			valueText.getStyle().setColor(TextFormatting.BLUE);
 		}
 		else
 		{
-			sender.sendMessage(FTBUtilities.lang(sender, "commands.ranks.get_permission.text", args[1], player.getDisplayName(), Boolean.toString(player.hasPermission(args[1]))));
+			boolean value = player.hasPermission(args[1]);
+			valueText = new TextComponentString(value ? "true" : "false");
+			valueText.getStyle().setColor(value ? TextFormatting.GREEN : TextFormatting.RED);
 		}
+
+		sender.sendMessage(FTBUtilities.lang(sender, "commands.ranks.get_permission.text", nodeText, nameText, valueText));
 	}
 }

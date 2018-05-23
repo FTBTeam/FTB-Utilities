@@ -14,7 +14,7 @@ public class CmdRanks extends CmdTreeBase
 		addSubcommand(new CmdAdd());
 		addSubcommand(new CmdGet());
 		addSubcommand(new CmdSet());
-		addSubcommand(new CmdGetPlayerPermission());
+		addSubcommand(new CmdGetPermission());
 		addSubcommand(new CmdSetPermission());
 	}
 }

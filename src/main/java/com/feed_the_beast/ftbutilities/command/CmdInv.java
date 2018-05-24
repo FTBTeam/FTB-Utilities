@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbutilities.command;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
+import com.feed_the_beast.ftblib.lib.cmd.CmdTreeHelp;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -14,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.server.command.CommandTreeHelp;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -192,6 +192,6 @@ public class CmdInv extends CmdTreeBase
 		addSubcommand(new CmdSave());
 		addSubcommand(new CmdLoad());
 		//addSubcommand(new CmdList());
-		addSubcommand(new CommandTreeHelp(this));
+		addSubcommand(new CmdTreeHelp(this));
 	}
 }

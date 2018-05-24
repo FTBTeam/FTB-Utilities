@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbutilities.command.ranks;
 
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
-import net.minecraftforge.server.command.CommandTreeHelp;
+import com.feed_the_beast.ftblib.lib.cmd.CmdTreeHelp;
 
 /**
  * @author LatvianModder
@@ -17,6 +17,6 @@ public class CmdRanks extends CmdTreeBase
 		addSubcommand(new CmdSet());
 		addSubcommand(new CmdGetPermission());
 		addSubcommand(new CmdSetPermission());
-		addSubcommand(new CommandTreeHelp(this));
+		addSubcommand(new CmdTreeHelp(this));
 	}
 }

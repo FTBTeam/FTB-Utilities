@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbutilities.command;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
+import com.feed_the_beast.ftblib.lib.cmd.CmdTreeHelp;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
@@ -9,7 +10,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.server.command.CommandTreeHelp;
 
 public class CmdBackup extends CmdTreeBase
 {
@@ -58,6 +58,6 @@ public class CmdBackup extends CmdTreeBase
 		super("backup");
 		addSubcommand(new CmdStart());
 		addSubcommand(new CmdGetSize());
-		addSubcommand(new CommandTreeHelp(this));
+		addSubcommand(new CmdTreeHelp(this));
 	}
 }

@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbutilities.command;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
+import com.feed_the_beast.ftblib.lib.cmd.CmdTreeHelp;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBT;
@@ -14,7 +15,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.server.command.CommandTreeHelp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class CmdEditNBT extends CmdTreeBase
 		addSubcommand(new CmdTile());
 		addSubcommand(new CmdEntity());
 		addSubcommand(new CmdPlayer());
-		addSubcommand(new CommandTreeHelp(this));
+		addSubcommand(new CmdTreeHelp(this));
 	}
 
 	public static class CmdNBT extends CmdBase

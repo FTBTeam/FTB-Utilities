@@ -657,7 +657,7 @@ public class Ranks
 
 		list.add("<html><head><title>Permissions</title><style>");
 		list.add("table{font-family:arial, sans-serif;border-collapse:collapse;}");
-		list.add("td,th{border:1px solid #666666;text-align:left;padding:8px;}");
+		list.add("td,th{border:1px solid #666666;text-align:left;padding:8px;min-width:45px;}");
 		list.add("th{background-color:#CCCCCC;}");
 		list.add("p{margin:0;}");
 		list.add("tr:nth-child(even){background-color:#D8D8D8;}");
@@ -674,8 +674,20 @@ public class Ranks
 			list.add("<tr>");
 			list.add("<td><code>" + entry.getNode() + "</code></td>");
 			list.add("<td><code>" + entry.player.getName() + "</code></td>");
-			list.add("<td class='" + classOf(entry.player) + "'><code>" + fixHTML(entry.player.getSerializableElement()) + "</code></td>");
-			list.add("<td class='" + classOf(entry.op) + "'><code>" + fixHTML(entry.op.getSerializableElement()) + "</code></td><td title='");
+			String playerText = fixHTML(entry.player.getSerializableElement());
+			String opText = fixHTML(entry.op.getSerializableElement());
+
+			if (playerText.equals(opText))
+			{
+				list.add("<td class='" + classOf(entry.player) + "' colspan='2'><code>" + playerText + "</code></td>");
+			}
+			else
+			{
+				list.add("<td class='" + classOf(entry.player) + "'><code>" + playerText + "</code></td>");
+				list.add("<td class='" + classOf(entry.op) + "'><code>" + opText + "</code></td>");
+			}
+
+			list.add("<td title='");
 
 			List<String> variants = new ArrayList<>();
 
@@ -688,19 +700,19 @@ public class Ranks
 			{
 				int min = ((ConfigInt) entry.player).getMin();
 				int max = ((ConfigInt) entry.player).getMax();
-				variants.add(String.format("%s to %s", min == Integer.MIN_VALUE ? "-\u221E" : String.valueOf(min), max == Integer.MAX_VALUE ? "\u221E" : String.valueOf(max)));
+				variants.add(String.format("%s to %s", min == Integer.MIN_VALUE ? "-&infin;" : String.valueOf(min), max == Integer.MAX_VALUE ? "&infin;" : String.valueOf(max)));
 			}
 			else if (entry.player instanceof ConfigDouble)
 			{
 				double min = ((ConfigDouble) entry.player).getMin();
 				double max = ((ConfigDouble) entry.player).getMax();
 
-				variants.add(String.format("%s to %s", min == Double.NEGATIVE_INFINITY ? "-\u221E" : StringUtils.formatDouble(min), max == Double.POSITIVE_INFINITY ? "\u221E" : StringUtils.formatDouble(max)));
+				variants.add(String.format("%s to %s", min == Double.NEGATIVE_INFINITY ? "-&infin;" : StringUtils.formatDouble(min), max == Double.POSITIVE_INFINITY ? "&infin;" : StringUtils.formatDouble(max)));
 			}
 			else if (entry.player instanceof ConfigTimer)
 			{
 				long max = ((ConfigTimer) entry.player).getMax();
-				variants.add(String.format("0s to %s", max == Long.MAX_VALUE ? "\u221E" : Ticks.toString(max)));
+				variants.add(String.format("0s to %s", max == Long.MAX_VALUE ? "&infin;" : Ticks.toString(max)));
 			}
 			else
 			{

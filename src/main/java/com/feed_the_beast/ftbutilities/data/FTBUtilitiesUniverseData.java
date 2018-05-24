@@ -112,7 +112,6 @@ public class FTBUtilitiesUniverseData
 		}
 
 		Badges.LOCAL_BADGES.clear();
-		Ranks.INSTANCE.generateExampleFiles();
 	}
 
 	@SubscribeEvent

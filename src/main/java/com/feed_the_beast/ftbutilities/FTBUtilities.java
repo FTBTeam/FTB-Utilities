@@ -2,16 +2,19 @@ package com.feed_the_beast.ftbutilities;
 
 import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.command.FTBUtilitiesCommands;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import com.feed_the_beast.ftbutilities.ranks.CommandOverride;
+import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -89,10 +92,13 @@ public class FTBUtilities
 
 			for (ICommand command : commands)
 			{
-				manager.registerCommand(CommandOverride.create(command, Node.COMMAND));
+				ModContainer container = CommonUtils.getModContainerForClass(command.getClass());
+				manager.registerCommand(CommandOverride.create(command, container == null ? Node.COMMAND : Node.COMMAND.append(container.getModId())));
 			}
 
 			LOGGER.info("Overridden " + manager.getCommands().size() + " commands");
 		}
+
+		Ranks.INSTANCE.generateExampleFiles();
 	}
 }

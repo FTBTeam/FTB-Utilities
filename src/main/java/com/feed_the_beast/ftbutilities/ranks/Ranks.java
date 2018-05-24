@@ -33,7 +33,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -145,14 +144,11 @@ public class Ranks
 				permissionNodes.add(entry.node.toString());
 			}
 
-			if (Universe.loaded())
-			{
-				ServerCommandManager manager = (ServerCommandManager) Universe.get().server.getCommandManager();
+			ServerCommandManager manager = (ServerCommandManager) universe.server.getCommandManager();
 
-				for (ICommand command : manager.getCommands().values())
-				{
-					addCommandNode(permissionNodes, Node.COMMAND, command);
-				}
+			for (ICommand command : manager.getCommands().values())
+			{
+				addCommandNode(permissionNodes, command);
 			}
 
 			for (RankConfigValueInfo info : RankConfigAPI.getHandler().getRegisteredConfigs())
@@ -166,17 +162,18 @@ public class Ranks
 		return permissionNodes;
 	}
 
-	private void addCommandNode(Collection<String> permissionNodes, Node parent, ICommand command)
+	private void addCommandNode(Collection<String> permissionNodes, ICommand command)
 	{
-		Node node = parent.append(command.getName());
-		permissionNodes.add(node.toString());
-
-		if (command instanceof CommandTreeBase)
+		if (command instanceof CommandTreeOverride)
 		{
-			for (ICommand command1 : ((CommandTreeBase) command).getSubCommands())
+			for (ICommand command1 : ((CommandTreeOverride) command).getSubCommands())
 			{
-				addCommandNode(permissionNodes, node, command1);
+				addCommandNode(permissionNodes, command1);
 			}
+		}
+		else if (command instanceof CommandOverride)
+		{
+			permissionNodes.add(((CommandOverride) command).node.toString());
 		}
 	}
 
@@ -272,7 +269,10 @@ public class Ranks
 									String id = a.get(i).getAsString();
 									char firstChar = id.charAt(0);
 									String key = (firstChar == '-' || firstChar == '+' || firstChar == '~') ? id.substring(1) : id;
-									key = key.replace("command.ftb", "command");
+									key = key.replace("command.ftb.reload", "command.ftblib.reload");
+									key = key.replace("command.ftb.team", "command.ftblib.team");
+									key = key.replace("command.ftb.my_settings", "command.ftblib.my_settings");
+									key = key.replace("command.ftb", "command.ftbutilities");
 									rank.setPermission(Node.get(key), firstChar == '-' ? JsonUtils.JSON_FALSE : JsonUtils.JSON_TRUE);
 								}
 							}
@@ -283,7 +283,10 @@ public class Ranks
 								for (Map.Entry<String, JsonElement> entry : o1.entrySet())
 								{
 									String key = entry.getKey();
-									key = key.replace("command.ftb", "command");
+									key = key.replace("command.ftb.reload", "command.ftblib.reload");
+									key = key.replace("command.ftb.team", "command.ftblib.team");
+									key = key.replace("command.ftb.my_settings", "command.ftblib.my_settings");
+									key = key.replace("command.ftb", "command.ftbutilities");
 									rank.setPermission(Node.get(key), entry.getValue());
 								}
 							}
@@ -488,18 +491,6 @@ public class Ranks
 		return result;
 	}
 
-	private String fixHTML(JsonElement json)
-	{
-		String s = json.toString();
-
-		if (s.length() > 2 && s.startsWith("\"") && s.endsWith("\"") && s.indexOf(' ') == -1)
-		{
-			s = s.substring(1, s.length() - 1);
-		}
-
-		return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
-	}
-
 	public void saveRanks()
 	{
 		List<String> list = new ArrayList<>();
@@ -551,7 +542,7 @@ public class Ranks
 	{
 		removeNodeFromCaches(node);
 		saveRanks();
-		Universe.get().clearCache();
+		universe.clearCache();
 
 		for (EntityPlayerMP player : server.getPlayerList().getPlayers())
 		{
@@ -593,6 +584,11 @@ public class Ranks
 		{
 			return "other";
 		}
+	}
+
+	private String fixHTML(JsonElement json)
+	{
+		return json.toString().replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 	}
 
 	public void generateExampleFiles()
@@ -646,16 +642,16 @@ public class Ranks
 		list.add("td.false{background-color:#FF6666AA;}");
 		list.add("td.other{background-color:#42A3FFAA;}");
 		list.add("th,td.true,td.false,td.other{text-align:center;}");
-		list.add("</style></head><body><h1>Permissions</h1><h3>Modifying this file won't have any effect!</h3><table>");
+		list.add("</style></head><body><h1>Permissions</h1><h3>Modifying this file won't have any effect, edit ranks.txt!</h3><table>");
 		list.add("<tr><th>Node</th><th>Type</th><th>Player</th><th>OP</th><th>Info (Mouse over for variants)</th></tr>");
 
 		for (NodeEntry entry : allNodes)
 		{
 			list.add("<tr>");
-			list.add("<td>" + entry.getNode() + "</td>");
-			list.add("<td>" + entry.player.getName() + "</td>");
-			list.add("<td class='" + classOf(entry.player) + "'>" + fixHTML(entry.player.getSerializableElement()) + "</td>");
-			list.add("<td class='" + classOf(entry.op) + "'>" + fixHTML(entry.op.getSerializableElement()) + "</td><td title='");
+			list.add("<td><code>" + entry.getNode() + "</code></td>");
+			list.add("<td><code>" + entry.player.getName() + "</code></td>");
+			list.add("<td class='" + classOf(entry.player) + "'><code>" + fixHTML(entry.player.getSerializableElement()) + "</code></td>");
+			list.add("<td class='" + classOf(entry.op) + "'><code>" + fixHTML(entry.op.getSerializableElement()) + "</code></td><td title='");
 
 			List<String> variants = new ArrayList<>();
 
@@ -706,7 +702,27 @@ public class Ranks
 			list.add("</td></tr>");
 		}
 
-		list.add("</table></body></html>");
+		list.add("</table>");
+
+		list.add("<h2>Available command nodes:</h2><ul>");
+		ServerCommandManager manager = (ServerCommandManager) universe.server.getCommandManager();
+		List<String> commandNodes = new ArrayList<>();
+
+		for (ICommand command : manager.getCommands().values())
+		{
+			addCommandNode(commandNodes, command);
+		}
+
+		commandNodes.sort(null);
+
+		for (String s : commandNodes)
+		{
+			list.add("<li><code>" + s + "</code></li>");
+		}
+
+		list.add("</ul>");
+
+		list.add("</body></html>");
 		FileUtils.saveSafe(new File(CommonUtils.folderLocal, "ftbutilities/all_permissions.html"), list);
 		FileUtils.delete(new File(CommonUtils.folderLocal, "ftbutilities/all_configs.html"));
 
@@ -719,8 +735,12 @@ public class Ranks
 
 		Collections.sort(list);
 		list.add(0, PermissionAPI.getPermissionHandler().getRegisteredNodes().size() + " nodes in total");
-		list.add(1, "Modifying this file won't have any effect!");
+		list.add(1, "Modifying this file won't have any effect, edit ranks.txt!");
 		list.add(2, "");
+		list.add("");
+		list.add("Available command nodes:");
+		list.add("");
+		list.addAll(commandNodes);
 		FileUtils.saveSafe(new File(CommonUtils.folderLocal, "ftbutilities/all_permissions_full_list.txt"), list);
 	}
 }

@@ -33,6 +33,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -55,19 +56,47 @@ public class Ranks
 {
 	public static Ranks INSTANCE;
 
-	public final Universe universe;
-	private final Map<String, Rank> ranks = new LinkedHashMap<>();
-	private Collection<String> rankNames = null;
-	private Collection<String> permissionNodes = null;
-	private final Map<UUID, Rank> playerMap = new HashMap<>();
-	private Rank defaultPlayerRank, defaultOPRank;
-
-	public Ranks(Universe u)
+	public static boolean isActive()
 	{
-		universe = u;
+		return INSTANCE != null && PermissionAPI.getPermissionHandler() == FTBUtilitiesPermissionHandler.INSTANCE;
 	}
 
-	public boolean isValidName(String id)
+	public static Event.Result getPermissionResult(GameProfile profile, Node node, @Nullable IContext context)
+	{
+		if (!isActive())
+		{
+			return Event.Result.DEFAULT;
+		}
+		else if (context != null && context.getWorld() != null && context.getWorld().isRemote)
+		{
+			if (FTBUtilitiesConfig.ranks.crash_client_side_permissions)
+			{
+				throw new RuntimeException("Do not check permissions on client side! Node: " + node);
+			}
+
+			return Event.Result.DEFAULT;
+		}
+
+		MinecraftServer server = context != null && context.getWorld() != null ? context.getWorld().getMinecraftServer() : null;
+		Rank rank = INSTANCE.getRank(server, profile, context);
+
+		if (rank == null)
+		{
+			return Event.Result.DEFAULT;
+		}
+
+		Event.Result result = rank.cachedPermissions.get(node);
+
+		if (result == null)
+		{
+			result = rank.getPermissionRaw(node);
+			rank.cachedPermissions.put(node, result);
+		}
+
+		return result;
+	}
+
+	public static boolean isValidName(String id)
 	{
 		if (id.isEmpty() || id.charAt(0) == '–' || id.equals("none") || id.equals("null"))
 		{
@@ -83,6 +112,18 @@ public class Ranks
 		}
 
 		return true;
+	}
+
+	public final Universe universe;
+	private final Map<String, Rank> ranks = new LinkedHashMap<>();
+	private Collection<String> rankNames = null;
+	private Collection<String> permissionNodes = null;
+	private final Map<UUID, Rank> playerMap = new HashMap<>();
+	private Rank defaultPlayerRank, defaultOPRank;
+
+	public Ranks(Universe u)
+	{
+		universe = u;
 	}
 
 	@Nullable
@@ -200,8 +241,13 @@ public class Ranks
 		permissionNodes = null;
 	}
 
-	public Collection<String> getRankNames()
+	public Collection<String> getRankNames(boolean includeNone)
 	{
+		if (!includeNone)
+		{
+			return ranks.keySet();
+		}
+
 		if (rankNames == null)
 		{
 			rankNames = new ArrayList<>(ranks.keySet());

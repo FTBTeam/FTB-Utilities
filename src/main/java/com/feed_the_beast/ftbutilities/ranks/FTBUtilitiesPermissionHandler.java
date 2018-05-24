@@ -7,11 +7,9 @@ import com.feed_the_beast.ftblib.lib.config.IRankConfigHandler;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.IPermissionHandler;
@@ -39,45 +37,10 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 		return DefaultPermissionHandler.INSTANCE.getRegisteredNodes();
 	}
 
-	public Event.Result getPermissionResult(GameProfile profile, Node node, @Nullable IContext context)
-	{
-		if (Ranks.INSTANCE == null)
-		{
-			return Event.Result.DEFAULT;
-		}
-		else if (context != null && context.getWorld() != null && context.getWorld().isRemote)
-		{
-			if (FTBUtilitiesConfig.ranks.crash_client_side_permissions)
-			{
-				throw new RuntimeException("Do not check permissions on client side! Node: " + node);
-			}
-
-			return Event.Result.DEFAULT;
-		}
-
-		MinecraftServer server = context != null && context.getWorld() != null ? context.getWorld().getMinecraftServer() : null;
-		Rank rank = Ranks.INSTANCE.getRank(server, profile, context);
-
-		if (rank == null)
-		{
-			return Event.Result.DEFAULT;
-		}
-
-		Event.Result result = rank.cachedPermissions.get(node);
-
-		if (result == null)
-		{
-			result = rank.getPermissionRaw(node);
-			rank.cachedPermissions.put(node, result);
-		}
-
-		return result;
-	}
-
 	@Override
 	public boolean hasPermission(GameProfile profile, String nodeS, @Nullable IContext context)
 	{
-		switch (getPermissionResult(profile, Node.get(nodeS), context))
+		switch (Ranks.getPermissionResult(profile, Node.get(nodeS), context))
 		{
 			case ALLOW:
 				return true;
@@ -111,7 +74,7 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 	{
 		ConfigValue value = ConfigNull.INSTANCE;
 
-		if (Ranks.INSTANCE != null)
+		if (Ranks.isActive())
 		{
 			Rank rank = Ranks.INSTANCE.getRank(server, profile, context);
 

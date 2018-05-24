@@ -30,7 +30,7 @@ public class CmdGet extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		if (Ranks.INSTANCE == null)
+		if (!Ranks.isActive())
 		{
 			throw new CommandException("feature_disabled_server");
 		}
@@ -41,7 +41,7 @@ public class CmdGet extends CmdBase
 
 		if (rank == null)
 		{
-			throw new CommandException("commands.ftb.ranks.not_found", args[0]);
+			throw new CommandException("commands.ranks.not_found", args[0]);
 		}
 
 		sender.sendMessage(new TextComponentString("").appendSibling(StringUtils.color(p.getDisplayName(), TextFormatting.BLUE)).appendText(" - ").appendSibling(StringUtils.color(new TextComponentString(rank.getName()), TextFormatting.DARK_GREEN)));

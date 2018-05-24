@@ -271,7 +271,7 @@ public class ClaimedChunks
 			return false;
 		}
 
-		return player.hasTeam() && chunk.getTeam().equalsTeam(player.team) || player.hasPermission(FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS);
+		return player.hasTeam() && chunk.getTeam().equalsTeam(player.team) || player.hasPermission(FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHER);
 	}
 
 	public ClaimResult claimChunk(ForgePlayer player, ChunkDimPos pos, boolean checkLimits)

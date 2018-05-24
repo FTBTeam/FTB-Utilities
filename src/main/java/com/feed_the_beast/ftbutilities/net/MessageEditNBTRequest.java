@@ -39,11 +39,11 @@ public class MessageEditNBTRequest extends MessageToClient
 		{
 			if (ray.typeOfHit == RayTraceResult.Type.BLOCK)
 			{
-				ClientUtils.execClientCommand(StringJoiner.with(' ').joinObjects("/ftb nbtedit tile", ray.getBlockPos().getX(), ray.getBlockPos().getY(), ray.getBlockPos().getZ()));
+				ClientUtils.execClientCommand(StringJoiner.with(' ').joinObjects("/nbtedit tile", ray.getBlockPos().getX(), ray.getBlockPos().getY(), ray.getBlockPos().getZ()));
 			}
 			else if (ray.typeOfHit == RayTraceResult.Type.ENTITY && ray.entityHit != null)
 			{
-				ClientUtils.execClientCommand("/ftb nbtedit entity " + ray.entityHit.getEntityId());
+				ClientUtils.execClientCommand("/nbtedit entity " + ray.entityHit.getEntityId());
 			}
 		}
 	}

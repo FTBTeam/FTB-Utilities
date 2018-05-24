@@ -15,6 +15,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,7 +39,7 @@ public class CmdSet extends CmdBase
 	{
 		if (args.length == 2)
 		{
-			return getListOfStringsMatchingLastWord(args, Ranks.INSTANCE.getRankNames());
+			return Ranks.isActive() ? getListOfStringsMatchingLastWord(args, Ranks.INSTANCE.getRankNames(true)) : Collections.emptyList();
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -47,19 +48,19 @@ public class CmdSet extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		if (Ranks.INSTANCE == null)
+		if (!Ranks.isActive())
 		{
 			throw new CommandException("feature_disabled_server");
 		}
 
 		checkArgs(sender, args, 2);
 
-		Rank r = Ranks.INSTANCE.getRank(args[1]);
-
-		if (!Ranks.INSTANCE.getRankNames().contains(args[1]))
+		if (!Ranks.INSTANCE.getRankNames(true).contains(args[1]))
 		{
 			throw new CommandException("commands.ranks.not_found", args[1]);
 		}
+
+		Rank r = Ranks.INSTANCE.getRank(args[1]);
 
 		ForgePlayer p = getForgePlayer(sender, args[0]);
 		Ranks.INSTANCE.setRank(p.getId(), r);

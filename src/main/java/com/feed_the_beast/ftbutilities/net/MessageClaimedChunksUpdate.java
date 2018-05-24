@@ -63,7 +63,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient
 		maxLoadedChunks = teamData.getMaxChunkloaderChunks();
 		teams = new HashMap<>();
 
-		boolean canSeeChunkInfo = PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS);
+		boolean canSeeChunkInfo = PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHER);
 
 		for (int x1 = 0; x1 < ChunkSelectorMap.TILES_GUI; x1++)
 		{

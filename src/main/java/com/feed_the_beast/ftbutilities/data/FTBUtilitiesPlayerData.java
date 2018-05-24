@@ -20,11 +20,15 @@ import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.server.permission.context.IContext;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -141,6 +145,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 	public ForgeTeam lastChunkTeam;
 	public final Collection<ForgePlayer> tpaRequestsFrom;
 	public long afkTicks;
+	public ITextComponent cachedNameForChat;
 
 	private BlockDimPos lastDeath, lastSafePos;
 	private long[] lastTeleport;
@@ -286,9 +291,28 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 	@Override
 	public void clearCache()
 	{
+		cachedNameForChat = null;
+
 		if (player.isOnline())
 		{
 			player.getPlayer().refreshDisplayName();
 		}
+	}
+
+	public ITextComponent getNameForChat(MinecraftServer server, GameProfile profile, IContext context)
+	{
+		if (cachedNameForChat == null)
+		{
+			cachedNameForChat = new TextComponentString("");
+			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_PREFIX_LEFT.getText(server, profile, context));
+			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_PREFIX_BASE.getText(server, profile, context));
+			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_PREFIX_RIGHT.getText(server, profile, context));
+			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_NAME.format(server, profile, context, player.getDisplayName()));
+			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_SUFFIX_LEFT.getText(server, profile, context));
+			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_SUFFIX_BASE.getText(server, profile, context));
+			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_SUFFIX_RIGHT.getText(server, profile, context));
+		}
+
+		return cachedNameForChat;
 	}
 }

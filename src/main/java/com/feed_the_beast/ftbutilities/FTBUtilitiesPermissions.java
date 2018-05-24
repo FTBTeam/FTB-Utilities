@@ -29,6 +29,7 @@ import net.minecraft.item.ItemBucket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -62,7 +63,7 @@ public class FTBUtilitiesPermissions
 	public static final Node WARPS_WARMUP = Node.get("ftbutilities.warps.warmup");
 
 	// Claims //
-	public static final String CLAIMS_CHUNKS_MODIFY_OTHERS = "ftbutilities.claims.modify.others";
+	public static final String CLAIMS_CHUNKS_MODIFY_OTHER = "ftbutilities.claims.modify.other";
 	public static final Node CLAIMS_MAX_CHUNKS = Node.get("ftbutilities.claims.max_chunks");
 	public static final String CLAIMS_BLOCK_CNB = "ftbutilities.claims.block.cnb";
 	private static final String CLAIMS_BLOCK_EDIT_PREFIX = "ftbutilities.claims.block.edit.";
@@ -98,6 +99,11 @@ public class FTBUtilitiesPermissions
 			event.registerNode(underlined, DefaultPermissionLevel.NONE, "Make the " + id + " underlined");
 			event.registerNode(strikethrough, DefaultPermissionLevel.NONE, "Make the " + id + " strikethrough");
 			event.registerNode(obfuscated, DefaultPermissionLevel.NONE, "Make the " + id + " obfuscated");
+		}
+
+		public void registerConfigs(RegisterRankConfigEvent event, String defText)
+		{
+			event.register(color, new ConfigEnum<>(StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP));
 		}
 
 		public ITextComponent format(MinecraftServer server, GameProfile profile, IContext context, ITextComponent component)
@@ -138,13 +144,38 @@ public class FTBUtilitiesPermissions
 		}
 	}
 
+	public static class ChatPartWithText extends ChatPart
+	{
+		public final Node text;
+
+		public ChatPartWithText(String s)
+		{
+			super(s);
+			text = Node.get("ftbutilities.chat." + id + ".text");
+		}
+
+		@Override
+		public void registerConfigs(RegisterRankConfigEvent event, String defText)
+		{
+			super.registerConfigs(event, defText);
+			event.register(text, new ConfigString(defText));
+		}
+
+		public ITextComponent getText(MinecraftServer server, GameProfile profile, IContext context)
+		{
+			return format(server, profile, context, new TextComponentString(RankConfigAPI.get(server, profile, text, context).getString()));
+		}
+	}
+
 	// Chat //
+	public static final ChatPartWithText CHAT_PREFIX_LEFT = new ChatPartWithText("prefix.left");
+	public static final ChatPartWithText CHAT_PREFIX_BASE = new ChatPartWithText("prefix.base");
+	public static final ChatPartWithText CHAT_PREFIX_RIGHT = new ChatPartWithText("prefix.right");
 	public static final ChatPart CHAT_NAME = new ChatPart("name");
-	public static final ChatPart CHAT_PREFIX = new ChatPart("prefix");
-	public static final ChatPart CHAT_SUFFIX = new ChatPart("suffix");
+	public static final ChatPartWithText CHAT_SUFFIX_LEFT = new ChatPartWithText("suffix.left");
+	public static final ChatPartWithText CHAT_SUFFIX_BASE = new ChatPartWithText("suffix.base");
+	public static final ChatPartWithText CHAT_SUFFIX_RIGHT = new ChatPartWithText("suffix.right");
 	public static final ChatPart CHAT_TEXT = new ChatPart("text");
-	public static final Node CHAT_PREFIX_TEXT = Node.get("ftbutilities.chat.prefix.text");
-	public static final Node CHAT_SUFFIX_TEXT = Node.get("ftbutilities.chat.suffix.text");
 
 	// Other //
 	public static final String INFINITE_BACK_USAGE = "ftbutilities.back.infinite";
@@ -178,12 +209,12 @@ public class FTBUtilitiesPermissions
 		event.registerNode(HOMES_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /home to teleport to/from another dimension");
 		event.registerNode(HOMES_LIST_OTHER, DefaultPermissionLevel.OP, "Allow to list other people homes");
 		event.registerNode(HOMES_TELEPORT_OTHER, DefaultPermissionLevel.OP, "Allow to teleport to other people homes");
-		event.registerNode(CLAIMS_CHUNKS_MODIFY_OTHERS, DefaultPermissionLevel.OP, "Allow player to modify other team chunks");
+		event.registerNode(CLAIMS_CHUNKS_MODIFY_OTHER, DefaultPermissionLevel.OP, "Allow player to modify other team chunks");
 		event.registerNode(CLAIMS_BLOCK_CNB, DefaultPermissionLevel.OP, "Allow to edit C&B bits in claimed chunks");
 		event.registerNode(CHUNKLOADER_LOAD_OFFLINE, DefaultPermissionLevel.ALL, "Keep loaded chunks working when player goes offline");
 		event.registerNode(INFINITE_BACK_USAGE, DefaultPermissionLevel.NONE, "Allow to use 'back' command infinite times");
 		event.registerNode(VIEW_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to view crash reports via Admin Panel");
-		event.registerNode(DELETE_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to delete crash reports. Depends on 'admin_panel.ftbutilities.crash_reports.view'");
+		event.registerNode(DELETE_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to delete crash reports, requires " + VIEW_CRASH_REPORTS);
 		event.registerNode(EDIT_WORLD_GAMERULES, DefaultPermissionLevel.OP, "Allow to edit gamerules via Admin Panel");
 		event.registerNode(TPA_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /tpa to teleport to/from another dimension");
 		event.registerNode(NICKNAME, DefaultPermissionLevel.OP, "Allow to change nickname");
@@ -211,9 +242,13 @@ public class FTBUtilitiesPermissions
 			event.registerNode(getLeaderboardNode(leaderboard), DefaultPermissionLevel.ALL);
 		}
 
+		CHAT_PREFIX_LEFT.registerPermissions(event);
+		CHAT_PREFIX_BASE.registerPermissions(event);
+		CHAT_PREFIX_RIGHT.registerPermissions(event);
 		CHAT_NAME.registerPermissions(event);
-		CHAT_PREFIX.registerPermissions(event);
-		CHAT_SUFFIX.registerPermissions(event);
+		CHAT_SUFFIX_LEFT.registerPermissions(event);
+		CHAT_SUFFIX_BASE.registerPermissions(event);
+		CHAT_SUFFIX_RIGHT.registerPermissions(event);
 		CHAT_TEXT.registerPermissions(event);
 	}
 
@@ -237,12 +272,14 @@ public class FTBUtilitiesPermissions
 		//event.register(CHUNKLOADER_OFFLINE_TIMER, new ConfigDouble(-1D).setMin(-1D), new ConfigDouble(-1D));
 		event.register(AFK_TIMER, new ConfigTimer(0));
 
-		event.register(CHAT_NAME.color, new ConfigEnum<>(StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP));
-		event.register(CHAT_PREFIX.color, new ConfigEnum<>(StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP));
-		event.register(CHAT_SUFFIX.color, new ConfigEnum<>(StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP));
-		event.register(CHAT_TEXT.color, new ConfigEnum<>(StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP));
-		event.register(CHAT_PREFIX_TEXT, new ConfigString("<"));
-		event.register(CHAT_SUFFIX_TEXT, new ConfigString("> "));
+		CHAT_PREFIX_LEFT.registerConfigs(event, "");
+		CHAT_PREFIX_BASE.registerConfigs(event, "<");
+		CHAT_PREFIX_RIGHT.registerConfigs(event, "");
+		CHAT_NAME.registerConfigs(event, "");
+		CHAT_SUFFIX_LEFT.registerConfigs(event, "");
+		CHAT_SUFFIX_BASE.registerConfigs(event, "> ");
+		CHAT_SUFFIX_RIGHT.registerConfigs(event, "");
+		CHAT_TEXT.registerConfigs(event, "");
 	}
 
 	@SubscribeEvent

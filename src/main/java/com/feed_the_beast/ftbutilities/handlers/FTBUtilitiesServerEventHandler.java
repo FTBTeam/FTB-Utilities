@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbutilities.handlers;
 
 import com.feed_the_beast.ftblib.lib.EnumMessageLocation;
-import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -54,9 +53,8 @@ public class FTBUtilitiesServerEventHandler
 		IContext context = new PlayerContext(player);
 		GameProfile profile = player.getGameProfile();
 		ITextComponent main = new TextComponentString("");
-		main.appendSibling(FTBUtilitiesPermissions.CHAT_PREFIX.format(server, profile, context, new TextComponentString(RankConfigAPI.get(server, profile, FTBUtilitiesPermissions.CHAT_PREFIX_TEXT, context).getString())));
-		main.appendSibling(FTBUtilitiesPermissions.CHAT_NAME.format(server, profile, context, player.getDisplayName()));
-		main.appendSibling(FTBUtilitiesPermissions.CHAT_SUFFIX.format(server, profile, context, new TextComponentString(RankConfigAPI.get(server, profile, FTBUtilitiesPermissions.CHAT_SUFFIX_TEXT, context).getString())));
+		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(Universe.get().getPlayer(player));
+		main.appendSibling(data.getNameForChat(server, profile, context));
 		main.appendSibling(FTBUtilitiesPermissions.CHAT_TEXT.format(server, profile, context, ForgeHooks.newChatWithLinks(event.getMessage().trim())));
 		event.setComponent(main);
 	}

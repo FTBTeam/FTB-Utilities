@@ -41,7 +41,7 @@ public class CmdGetPermission extends CmdBase
 	{
 		if (args.length == 2)
 		{
-			return getListOfStringsMatchingLastWord(args, Ranks.INSTANCE == null ? FTBUtilitiesPermissionHandler.INSTANCE.getRegisteredNodes() : Ranks.INSTANCE.getPermissionNodes());
+			return getListOfStringsMatchingLastWord(args, Ranks.isActive() ? Ranks.INSTANCE.getPermissionNodes() : FTBUtilitiesPermissionHandler.INSTANCE.getRegisteredNodes());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);

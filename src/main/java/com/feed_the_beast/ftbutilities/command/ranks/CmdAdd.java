@@ -20,7 +20,7 @@ public class CmdAdd extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		if (Ranks.INSTANCE == null)
+		if (!Ranks.isActive())
 		{
 			throw new CommandException("feature_disabled_server");
 		}
@@ -29,7 +29,7 @@ public class CmdAdd extends CmdBase
 
 		String id = args[0].toLowerCase();
 
-		if (id.equals("none") || Ranks.INSTANCE.getRankNames().contains(id))
+		if (!Ranks.isValidName(id) || Ranks.INSTANCE.getRankNames(false).contains(id))
 		{
 			throw new CommandException("commands.ranks.add.id_exists", id);
 		}

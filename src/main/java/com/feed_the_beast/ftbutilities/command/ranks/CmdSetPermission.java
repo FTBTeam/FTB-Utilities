@@ -50,11 +50,11 @@ public class CmdSetPermission extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return Ranks.INSTANCE == null ? Collections.emptyList() : getListOfStringsMatchingLastWord(args, Ranks.INSTANCE.getRankNames());
+			return Ranks.isActive() ? getListOfStringsMatchingLastWord(args, Ranks.INSTANCE.getRankNames(false)) : Collections.emptyList();
 		}
 		else if (args.length == 2)
 		{
-			return getListOfStringsMatchingLastWord(args, Ranks.INSTANCE == null ? FTBUtilitiesPermissionHandler.INSTANCE.getRegisteredNodes() : Ranks.INSTANCE.getPermissionNodes());
+			return getListOfStringsMatchingLastWord(args, Ranks.isActive() ? Ranks.INSTANCE.getPermissionNodes() : FTBUtilitiesPermissionHandler.INSTANCE.getRegisteredNodes());
 		}
 		else if (args.length == 3)
 		{
@@ -76,7 +76,7 @@ public class CmdSetPermission extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		if (Ranks.INSTANCE == null)
+		if (!Ranks.isActive())
 		{
 			throw new CommandException("feature_disabled_server");
 		}

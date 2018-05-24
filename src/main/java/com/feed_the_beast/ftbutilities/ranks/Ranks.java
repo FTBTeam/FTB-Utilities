@@ -67,16 +67,28 @@ public class Ranks
 		universe = u;
 	}
 
+	public boolean isValidName(String id)
+	{
+		if (id.isEmpty() || id.charAt(0) == '–' || id.equals("none") || id.equals("null"))
+		{
+			return false;
+		}
+
+		for (int i = 0; i < id.length(); i++)
+		{
+			if (!Character.isLowerCase(id.charAt(i)))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	@Nullable
 	public Rank getRank(String id)
 	{
-		if (id.isEmpty() || id.charAt(0) == '–')
-		{
-			return null;
-		}
-
-		String s = id.toLowerCase();
-		return s.equals("none") || s.equals("null") ? null : ranks.get(s);
+		return isValidName(id) ? ranks.get(id) : null;
 	}
 
 	@Nullable
@@ -148,7 +160,7 @@ public class Ranks
 
 			for (ICommand command : manager.getCommands().values())
 			{
-				addCommandNode(permissionNodes, command);
+				addCommandNode(permissionNodes, command, null);
 			}
 
 			for (RankConfigValueInfo info : RankConfigAPI.getHandler().getRegisteredConfigs())
@@ -162,18 +174,24 @@ public class Ranks
 		return permissionNodes;
 	}
 
-	private void addCommandNode(Collection<String> permissionNodes, ICommand command)
+	private void addCommandNode(Collection<String> permissionNodes, ICommand command, @Nullable Map<String, String> commandUsage)
 	{
 		if (command instanceof CommandTreeOverride)
 		{
 			for (ICommand command1 : ((CommandTreeOverride) command).getSubCommands())
 			{
-				addCommandNode(permissionNodes, command1);
+				addCommandNode(permissionNodes, command1, commandUsage);
 			}
 		}
 		else if (command instanceof CommandOverride)
 		{
-			permissionNodes.add(((CommandOverride) command).node.toString());
+			String node = ((CommandOverride) command).node.toString();
+			permissionNodes.add(node);
+
+			if (commandUsage != null)
+			{
+				commandUsage.put(node, new TextComponentTranslation(command.getUsage(universe.server)).getUnformattedText());
+			}
 		}
 	}
 
@@ -235,7 +253,7 @@ public class Ranks
 			{
 				for (Map.Entry<String, JsonElement> entry : json.get("ranks").getAsJsonObject().entrySet())
 				{
-					if (!entry.getKey().equals("none"))
+					if (!isValidName(entry.getKey()))
 					{
 						ranks.put(entry.getKey(), new Rank(this, entry.getKey()));
 					}
@@ -365,7 +383,12 @@ public class Ranks
 				String extendss[] = iss[0].split(" extends ", 2);
 
 				currentRank = new Rank(this, StringUtils.removeAllWhitespace(extendss[0]));
-				ranks.put(currentRank.getName(), currentRank);
+
+				if (isValidName(currentRank.getName()))
+				{
+					ranks.put(currentRank.getName(), currentRank);
+				}
+
 				String parent = "";
 
 				if (iss.length == 2)
@@ -494,15 +517,16 @@ public class Ranks
 	public void saveRanks()
 	{
 		List<String> list = new ArrayList<>();
-		list.add("/// This file stores rank definitions.");
-		list.add("/// ");
-		list.add("/// [name]");
-		list.add("/// permission: value");
-		list.add("/// ");
-		list.add("/// Add [name extends parent_name] to make this rank include all permissions from parent_name rank.");
-		list.add("/// Add [name is default_player_rank] or [name is default_op_rank] to make this rank default for players/ops that don't have a rank set explicitly.");
-		list.add("/// ");
-		list.add("/// For more info visit https://guides.latmod.com/ftbutilities/ranks/");
+		list.add("// This file stores rank definitions.");
+		list.add("// ");
+		list.add("// [name]");
+		list.add("// permission: value");
+		list.add("// ");
+		list.add("// Add [name extends parent_name] to make this rank include all permissions from parent_name rank.");
+		list.add("// Add [name is default_player_rank] or [name is default_op_rank] to make this rank default for players/ops that don't have a rank set explicitly.");
+		list.add("// ");
+		list.add("// For more info visit https://guides.latmod.com/ftbutilities/ranks/");
+		list.add("// To see the list of permission nodes, open all_permissions.html in browser or all_permissions_full_list.txt");
 
 		StringBuilder line = new StringBuilder();
 
@@ -702,15 +726,14 @@ public class Ranks
 			list.add("</td></tr>");
 		}
 
-		list.add("</table>");
-
-		list.add("<h2>Available command nodes:</h2><ul>");
+		list.add("</table><br><table><tr><th>Available command nodes</th><th>Usage</th></tr>");
 		ServerCommandManager manager = (ServerCommandManager) universe.server.getCommandManager();
 		LinkedHashSet<String> commandNodes0 = new LinkedHashSet<>();
+		Map<String, String> commandUsage = new HashMap<>();
 
 		for (ICommand command : manager.getCommands().values())
 		{
-			addCommandNode(commandNodes0, command);
+			addCommandNode(commandNodes0, command, commandUsage);
 		}
 
 		List<String> commandNodes = new ArrayList<>(commandNodes0);
@@ -718,10 +741,10 @@ public class Ranks
 
 		for (String s : commandNodes)
 		{
-			list.add("<li><code>" + s + "</code></li>");
+			list.add("<tr><td><code>" + s + "</code></td><td>" + commandUsage.get(s) + "</td></tr>");
 		}
 
-		list.add("</ul>");
+		list.add("</table>");
 
 		list.add("</body></html>");
 		FileUtils.saveSafe(new File(CommonUtils.folderLocal, "ftbutilities/all_permissions.html"), list);

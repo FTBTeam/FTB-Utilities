@@ -5,17 +5,18 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.feed_the_beast.ftblib.lib.util.JsonUtils;
+import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -97,10 +98,39 @@ public class Badges
 
 			if (!file.exists())
 			{
-				JsonObject o = new JsonObject();
-				o.addProperty("uuid", "url_to.png");
-				o.addProperty("username", "url2_to.png");
-				JsonUtils.toJsonSafe(file, o);
+				file = new File(CommonUtils.folderLocal, "ftbutilities/server_badges.txt");
+
+				if (!file.exists())
+				{
+					List<String> list = new ArrayList<>();
+					list.add("// For more info see https://guides.latmod.com/ftbutilities/ranks/badges/");
+					list.add("");
+					list.add("uuid: url_to.png");
+					list.add("username: url2_to.png");
+					FileUtils.saveSafe(file, list);
+				}
+				else
+				{
+					for (String s : DataReader.get(file).safeStringList())
+					{
+						if (s.isEmpty() || s.startsWith("//"))
+						{
+							continue;
+						}
+
+						String[] s1 = StringUtils.trimAllWhitespace(s).split(": ");
+
+						if (s1.length == 2)
+						{
+							ForgePlayer player = universe.getPlayer(s1[0]);
+
+							if (player != null)
+							{
+								LOCAL_BADGES.put(player.getId(), s1[1]);
+							}
+						}
+					}
+				}
 			}
 			else
 			{
@@ -113,6 +143,8 @@ public class Badges
 						LOCAL_BADGES.put(player.getId(), entry.getValue().getAsString());
 					}
 				}
+
+				FileUtils.delete(file);
 			}
 
 			return true;

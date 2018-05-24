@@ -26,7 +26,7 @@ public class CmdFly extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		EntityPlayerMP player = getSelfOrOther(sender, args, 0);
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(getForgePlayer(player));
 		data.setFly(!data.getFly());
 

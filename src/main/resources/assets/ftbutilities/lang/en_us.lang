@@ -84,12 +84,20 @@ rank_config.ftbutilities.back.warmup=/back Warmup Timer
 rank_config.ftbutilities.afk.timer=AFK Timer
 rank_config.ftbutilities.afk.timer.is_afk=%s is now AFK
 rank_config.ftbutilities.afk.timer.isnt_afk=%s is no longer AFK
+rank_config.ftbutilities.chat.prefix.left.color=Chat Prefix Color
+rank_config.ftbutilities.chat.prefix.base.color=Chat Prefix Color
+rank_config.ftbutilities.chat.prefix.right.color=Chat Prefix Color
 rank_config.ftbutilities.chat.name.color=Chat Name Color
-rank_config.ftbutilities.chat.prefix.color=Chat Prefix Color
-rank_config.ftbutilities.chat.suffix.color=Chat Suffix Color
+rank_config.ftbutilities.chat.suffix.left.color=Chat Suffix Color [Left]
+rank_config.ftbutilities.chat.suffix.base.color=Chat Suffix Color [Base]
+rank_config.ftbutilities.chat.suffix.right.color=Chat Suffix Color [Right]
 rank_config.ftbutilities.chat.text.color=Chat Text Color
-rank_config.ftbutilities.chat.prefix.text=Chat Prefix Text
-rank_config.ftbutilities.chat.suffix.text=Chat Suffix Text
+rank_config.ftbutilities.chat.prefix.left.text=Chat Prefix Text
+rank_config.ftbutilities.chat.prefix.base.text=Chat Prefix Text
+rank_config.ftbutilities.chat.prefix.right.text=Chat Prefix Text
+rank_config.ftbutilities.chat.suffix.left.text=Chat Suffix Text [Left]
+rank_config.ftbutilities.chat.suffix.base.text=Chat Suffix Text [Base]
+rank_config.ftbutilities.chat.suffix.right.text=Chat Suffix Text [Right]
 
 # Player Settings
 player_config.ftbutilities.chat_links=Chat Links

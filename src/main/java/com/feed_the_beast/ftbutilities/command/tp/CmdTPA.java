@@ -67,8 +67,8 @@ public class CmdTPA extends CmdBase
 
 		ITextComponent accept = FTBLib.lang(other.player.getPlayer(), "click_here");
 		accept.getStyle().setColor(TextFormatting.GOLD);
-		accept.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb tpaccept " + self.player.getName()));
-		accept.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("/ftb tpaccept " + self.player.getName())));
+		accept.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept " + self.player.getName()));
+		accept.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("/tpaccept " + self.player.getName())));
 
 		other.player.getPlayer().sendMessage(FTBUtilities.lang(other.player.getPlayer(), "ftbutilities.lang.tpa.request_received", otherName, accept));
 

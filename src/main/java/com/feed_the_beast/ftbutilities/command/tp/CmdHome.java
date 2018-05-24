@@ -101,8 +101,8 @@ public class CmdHome extends CmdBase
 					}
 
 					ITextComponent h = new TextComponentString(s);
-					h.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("/ftb home " + s + " " + p.getName())));
-					h.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb home " + s + " " + p.getName()));
+					h.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("/home " + s + " " + p.getName())));
+					h.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/home " + s + " " + p.getName()));
 					h.getStyle().setColor(TextFormatting.GOLD);
 					msg.appendSibling(h);
 				}

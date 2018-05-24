@@ -61,7 +61,7 @@ public class CmdUnclaimAll extends CmdBase
 
 		if (args.length >= 2)
 		{
-			if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS))
+			if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHER))
 			{
 				throw new CommandException("commands.generic.permission");
 			}

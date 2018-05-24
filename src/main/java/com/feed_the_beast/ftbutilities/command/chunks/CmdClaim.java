@@ -40,7 +40,7 @@ public class CmdClaim extends CmdBase
 		{
 			ForgePlayer p1 = getForgePlayer(sender, args[0]);
 
-			if (p != p1 && !PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS))
+			if (p != p1 && !PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHER))
 			{
 				throw new CommandException("commands.generic.permission");
 			}

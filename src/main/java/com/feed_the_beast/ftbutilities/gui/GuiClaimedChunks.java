@@ -249,7 +249,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 					{
 						if (set)
 						{
-							ClientUtils.execClientCommand("/ftb chunks unclaim_all false");
+							ClientUtils.execClientCommand("/chunks unclaim_all false");
 						}
 
 						getGui().openGui();
@@ -269,7 +269,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 					{
 						if (set)
 						{
-							ClientUtils.execClientCommand("/ftb chunks unclaim_all true");
+							ClientUtils.execClientCommand("/chunks unclaim_all true");
 						}
 
 						getGui().openGui();

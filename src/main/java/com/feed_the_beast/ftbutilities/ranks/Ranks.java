@@ -706,13 +706,14 @@ public class Ranks
 
 		list.add("<h2>Available command nodes:</h2><ul>");
 		ServerCommandManager manager = (ServerCommandManager) universe.server.getCommandManager();
-		List<String> commandNodes = new ArrayList<>();
+		LinkedHashSet<String> commandNodes0 = new LinkedHashSet<>();
 
 		for (ICommand command : manager.getCommands().values())
 		{
-			addCommandNode(commandNodes, command);
+			addCommandNode(commandNodes0, command);
 		}
 
+		List<String> commandNodes = new ArrayList<>(commandNodes0);
 		commandNodes.sort(null);
 
 		for (String s : commandNodes)

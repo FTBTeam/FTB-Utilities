@@ -73,7 +73,7 @@ public class FTBUtilitiesServerEventHandler
 
 		if (event.phase == TickEvent.Phase.START)
 		{
-			if (ClaimedChunks.instance != null)
+			if (ClaimedChunks.isActive())
 			{
 				ClaimedChunks.instance.update(universe.server, now);
 			}

@@ -25,13 +25,12 @@ public class CmdUnload extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-
-		if (ClaimedChunks.instance == null)
+		if (!ClaimedChunks.isActive())
 		{
-			FTBUtilitiesNotifications.sendCantModifyChunk(server, player);
-			return;
+			throw new CommandException("feature_disabled_server");
 		}
+
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 
 		ForgePlayer p = getForgePlayer(player);
 		ChunkDimPos pos = new ChunkDimPos(player);

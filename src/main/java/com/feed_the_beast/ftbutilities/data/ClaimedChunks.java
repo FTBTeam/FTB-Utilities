@@ -36,6 +36,11 @@ public class ClaimedChunks
 {
 	public static ClaimedChunks instance;
 
+	public static boolean isActive()
+	{
+		return instance != null && FTBUtilitiesConfig.world.chunk_claiming;
+	}
+
 	public final Universe universe;
 	private final Collection<ClaimedChunk> pendingChunks = new HashSet<>();
 	private final Map<ChunkDimPos, ClaimedChunk> map = new HashMap<>();

@@ -48,7 +48,7 @@ public class CmdUnclaimAll extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		if (ClaimedChunks.instance == null)
+		if (!ClaimedChunks.isActive())
 		{
 			throw new CommandException("feature_disabled_server");
 		}

@@ -58,7 +58,7 @@ public final class ClaimedChunk
 		{
 			loaded = v;
 
-			if (ClaimedChunks.instance != null)
+			if (ClaimedChunks.isActive())
 			{
 				ClaimedChunks.instance.markDirty();
 			}

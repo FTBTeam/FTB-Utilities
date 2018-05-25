@@ -324,7 +324,7 @@ public class FTBUtilitiesConfig
 
 		public boolean allowDimension(int dimension)
 		{
-			if (ClaimedChunks.instance == null)
+			if (!ClaimedChunks.isActive())
 			{
 				return false;
 			}

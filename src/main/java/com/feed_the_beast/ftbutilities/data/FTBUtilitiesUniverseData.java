@@ -106,7 +106,7 @@ public class FTBUtilitiesUniverseData
 			}
 		}
 
-		if (ClaimedChunks.instance != null)
+		if (ClaimedChunks.isActive())
 		{
 			ClaimedChunks.instance.nextChunkloaderUpdate = start + 20L;
 		}
@@ -117,7 +117,7 @@ public class FTBUtilitiesUniverseData
 	@SubscribeEvent
 	public static void onUniverseSaved(UniverseSavedEvent event)
 	{
-		if (ClaimedChunks.instance != null)
+		if (ClaimedChunks.isActive())
 		{
 			ClaimedChunks.instance.processQueue();
 		}
@@ -133,7 +133,7 @@ public class FTBUtilitiesUniverseData
 	@SubscribeEvent
 	public static void onUniverseClosed(UniverseClosedEvent event)
 	{
-		if (ClaimedChunks.instance != null)
+		if (ClaimedChunks.isActive())
 		{
 			ClaimedChunks.instance.clear();
 			ClaimedChunks.instance = null;

@@ -5,9 +5,16 @@ package com.feed_the_beast.ftbutilities.data;
  */
 public enum BlockInteractionType
 {
-	EDIT,
-	INTERACT,
-	CNB_BREAK,
-	CNB_PLACE,
-	ITEM
+	EDIT(false),
+	INTERACT(false),
+	CNB_BREAK(false),
+	CNB_PLACE(false),
+	ITEM(true);
+
+	public final boolean defaultResult;
+
+	BlockInteractionType(boolean d)
+	{
+		defaultResult = d;
+	}
 }

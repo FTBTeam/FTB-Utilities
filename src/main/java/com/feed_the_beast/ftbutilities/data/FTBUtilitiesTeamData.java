@@ -52,7 +52,7 @@ public class FTBUtilitiesTeamData implements INBTSerializable<NBTTagCompound>, I
 		nbt.setString("InteractWithBlocks", interactWithBlocks.getString());
 		nbt.setString("AttackEntities", attackEntities.getString());
 
-		if (ClaimedChunks.instance != null)
+		if (ClaimedChunks.isActive())
 		{
 			Int2ObjectOpenHashMap<NBTTagList> claimedChunks = new Int2ObjectOpenHashMap<>();
 
@@ -104,7 +104,7 @@ public class FTBUtilitiesTeamData implements INBTSerializable<NBTTagCompound>, I
 		interactWithBlocks.setValue(nbt.getString("InteractWithBlocks"));
 		attackEntities.setValue(nbt.getString("AttackEntities"));
 
-		if (ClaimedChunks.instance != null)
+		if (ClaimedChunks.isActive())
 		{
 			NBTTagCompound claimedChunksTag = nbt.getCompoundTag("ClaimedChunks");
 
@@ -155,7 +155,7 @@ public class FTBUtilitiesTeamData implements INBTSerializable<NBTTagCompound>, I
 
 	public int getMaxClaimChunks()
 	{
-		if (ClaimedChunks.instance == null)
+		if (!ClaimedChunks.isActive())
 		{
 			return -1;
 		}
@@ -180,7 +180,7 @@ public class FTBUtilitiesTeamData implements INBTSerializable<NBTTagCompound>, I
 
 	public int getMaxChunkloaderChunks()
 	{
-		if (ClaimedChunks.instance == null)
+		if (!ClaimedChunks.isActive())
 		{
 			return -1;
 		}

@@ -135,7 +135,7 @@ public class Ranks
 	@Nullable
 	public Rank getRank(@Nullable MinecraftServer server, GameProfile profile, @Nullable IContext context)
 	{
-		Rank r = FTBUtilitiesConfig.ranks.enabled ? playerMap.get(profile.getId()) : null;
+		Rank r = isActive() ? playerMap.get(profile.getId()) : null;
 		return (r == null) ? (ServerUtils.isOP(server, profile) ? defaultOPRank : defaultPlayerRank) : r;
 	}
 

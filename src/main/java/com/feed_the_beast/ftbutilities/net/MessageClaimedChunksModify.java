@@ -63,7 +63,7 @@ public class MessageClaimedChunksModify extends MessageToServer
 	@Override
 	public void onMessage(EntityPlayerMP player)
 	{
-		if (ClaimedChunks.instance == null)
+		if (!ClaimedChunks.isActive())
 		{
 			return;
 		}

@@ -129,7 +129,7 @@ public class FTBLibIntegration
 			}
 		}
 
-		if (ClaimedChunks.instance != null)
+		if (ClaimedChunks.isActive())
 		{
 			ClaimedChunks.instance.markDirty();
 		}
@@ -138,7 +138,7 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void onPlayerLoggedOut(ForgePlayerLoggedOutEvent event)
 	{
-		if (ClaimedChunks.instance != null)
+		if (ClaimedChunks.isActive())
 		{
 			ClaimedChunks.instance.markDirty();
 		}
@@ -175,8 +175,12 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void onTeamDeleted(ForgeTeamDeletedEvent event)
 	{
-		//printMessage(FTBLibLang.TEAM_DELETED.textComponent(getTitle()));
-		ClaimedChunks.instance.unclaimAllChunks(event.getTeam(), OptionalInt.empty());
+		//printMessage(FTBLibLang.TEAM_DELETED.textComponent(getTitle()));\
+
+		if (ClaimedChunks.isActive())
+		{
+			ClaimedChunks.instance.unclaimAllChunks(event.getTeam(), OptionalInt.empty());
+		}
 	}
 
 	/*

@@ -70,7 +70,7 @@ public class FTBUtilitiesPlayerEventHandler
 
 	public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)
 	{
-		if (ClaimedChunks.instance == null)
+		if (!ClaimedChunks.isActive())
 		{
 			return;
 		}
@@ -105,7 +105,7 @@ public class FTBUtilitiesPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onEntityAttacked(AttackEntityEvent event)
 	{
-		if (ClaimedChunks.instance != null && event.getEntityPlayer() instanceof EntityPlayerMP)
+		if (ClaimedChunks.isActive() && event.getEntityPlayer() instanceof EntityPlayerMP)
 		{
 			if (!ClaimedChunks.instance.canPlayerAttackEntity((EntityPlayerMP) event.getEntityPlayer(), event.getTarget()))
 			{
@@ -117,7 +117,7 @@ public class FTBUtilitiesPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event)
 	{
-		if (ClaimedChunks.instance != null && event.getEntityPlayer() instanceof EntityPlayerMP)
+		if (ClaimedChunks.isActive() && event.getEntityPlayer() instanceof EntityPlayerMP)
 		{
 			if (!ClaimedChunks.instance.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.INTERACT))
 			{
@@ -129,7 +129,7 @@ public class FTBUtilitiesPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onRightClickItem(PlayerInteractEvent.RightClickItem event)
 	{
-		if (ClaimedChunks.instance != null && event.getEntityPlayer() instanceof EntityPlayerMP)
+		if (ClaimedChunks.isActive() && event.getEntityPlayer() instanceof EntityPlayerMP)
 		{
 			if (!ClaimedChunks.instance.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.ITEM))
 			{
@@ -141,7 +141,7 @@ public class FTBUtilitiesPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onBlockBreak(BlockEvent.BreakEvent event)
 	{
-		if (ClaimedChunks.instance != null && event.getPlayer() instanceof EntityPlayerMP)
+		if (ClaimedChunks.isActive() && event.getPlayer() instanceof EntityPlayerMP)
 		{
 			if (!ClaimedChunks.instance.canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getState()), BlockInteractionType.EDIT))
 			{
@@ -153,7 +153,7 @@ public class FTBUtilitiesPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onBlockPlace(BlockEvent.PlaceEvent event)
 	{
-		if (ClaimedChunks.instance != null && event.getPlayer() instanceof EntityPlayerMP)
+		if (ClaimedChunks.isActive() && event.getPlayer() instanceof EntityPlayerMP)
 		{
 			if (!ClaimedChunks.instance.canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getPlacedBlock()), BlockInteractionType.EDIT))
 			{
@@ -165,7 +165,7 @@ public class FTBUtilitiesPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event)
 	{
-		if (ClaimedChunks.instance != null && event.getEntityPlayer() instanceof EntityPlayerMP)
+		if (ClaimedChunks.isActive() && event.getEntityPlayer() instanceof EntityPlayerMP)
 		{
 			if (!ClaimedChunks.instance.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.EDIT))
 			{

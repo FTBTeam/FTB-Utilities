@@ -45,7 +45,7 @@ public class FTBUtilitiesWorldEventHandler
 	@SubscribeEvent
 	public static void onDimensionUnload(WorldEvent.Unload event)
 	{
-		if (ClaimedChunks.instance != null && event.getWorld().provider.getDimension() != 0)
+		if (ClaimedChunks.isActive() && event.getWorld().provider.getDimension() != 0)
 		{
 			ClaimedChunks.instance.markDirty();
 		}
@@ -99,7 +99,7 @@ public class FTBUtilitiesWorldEventHandler
 			{
 				if (FTBUtilitiesConfig.world.enable_explosions.isDefault())
 				{
-					ClaimedChunk chunk = ClaimedChunks.instance == null ? null : ClaimedChunks.instance.getChunk(pos);
+					ClaimedChunk chunk = ClaimedChunks.isActive() ? ClaimedChunks.instance.getChunk(pos) : null;
 					return chunk == null || chunk.hasExplosions();
 				}
 

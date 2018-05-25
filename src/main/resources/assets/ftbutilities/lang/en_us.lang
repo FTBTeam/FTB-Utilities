@@ -175,7 +175,7 @@ ftbutilities.lang.chunks.chunk_claimed=Chunk claimed
 ftbutilities.lang.chunks.chunk_unclaimed=Chunk unclaimed
 ftbutilities.lang.chunks.chunk_loaded=Chunk loaded
 ftbutilities.lang.chunks.chunk_unloaded=Chunk unloaded
-ftbutilities.lang.chunks.unloaded_for=Unloaded %s's chunks
+ftbutilities.lang.chunks.unloaded_all=Unloaded all chunks
 
 ftbutilities.lang.chunks.unclaim_all=Unclaim all chunks
 ftbutilities.lang.chunks.unclaim_all_dim=Unclaim all chunks in %s

@@ -290,6 +290,7 @@ public class Ranks
 
 		File ranksFile = new File(CommonUtils.folderLocal, "ftbutilities/ranks.json");
 		JsonElement ranksJson = DataReader.get(ranksFile).safeJson();
+		Map<String, String> rankParents = new HashMap<>();
 
 		if (ranksJson.isJsonObject())
 		{
@@ -307,8 +308,13 @@ public class Ranks
 
 				for (Map.Entry<String, JsonElement> rankEntry : json.get("ranks").getAsJsonObject().entrySet())
 				{
-					Rank rank = getRank(rankEntry.getKey());
-					rank.setDefaults();
+					if (!isValidName(rankEntry.getKey()))
+					{
+						continue;
+					}
+
+					Rank rank = new Rank(this, rankEntry.getKey());
+					ranks.put(rank.getName(), rank);
 
 					JsonElement json0 = rankEntry.getValue();
 
@@ -317,7 +323,7 @@ public class Ranks
 						JsonObject o = json0.getAsJsonObject();
 						if (o.has("parent"))
 						{
-							rank.parent = getRank(o.get("parent").getAsString());
+							rankParents.put(rank.getName(), o.get("parent").getAsString());
 						}
 
 						if (o.has("permissions"))
@@ -414,7 +420,6 @@ public class Ranks
 		}
 
 		Rank currentRank = null;
-		Map<String, String> rankParents = new HashMap<>();
 
 		for (String line : DataReader.get(ranksFile).safeStringList())
 		{

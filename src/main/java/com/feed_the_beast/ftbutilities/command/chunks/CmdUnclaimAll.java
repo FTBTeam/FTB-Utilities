@@ -53,31 +53,33 @@ public class CmdUnclaimAll extends CmdBase
 			throw new CommandException("feature_disabled_server");
 		}
 
-		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-
-		checkArgs(sender, args, 1);
-
 		ForgePlayer p;
 
 		if (args.length >= 2)
 		{
-			if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHER))
+			if (!(sender instanceof EntityPlayerMP) || PermissionAPI.hasPermission((EntityPlayerMP) sender, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHER))
+			{
+				p = getForgePlayer(sender, args[1]);
+			}
+			else
 			{
 				throw new CommandException("commands.generic.permission");
 			}
-
-			p = getForgePlayer(sender, args[1]);
 		}
 		else
 		{
-			p = getForgePlayer(player);
+			p = getForgePlayer(sender);
 		}
 
 		if (p.hasTeam())
 		{
 			boolean allDimensions = args.length == 0 || parseBoolean(args[0]);
-			ClaimedChunks.instance.unclaimAllChunks(p.team, allDimensions ? OptionalInt.empty() : OptionalInt.of(player.dimension));
-			Notification.of(FTBUtilitiesNotifications.UNCLAIMED_ALL, FTBUtilities.lang(player, "ftbutilities.lang.chunks.unclaimed_all")).send(server, player);
+			ClaimedChunks.instance.unclaimAllChunks(p.team, allDimensions ? OptionalInt.empty() : OptionalInt.of(sender.getEntityWorld().provider.getDimension()));
+			Notification.of(FTBUtilitiesNotifications.UNCLAIMED_ALL, FTBUtilities.lang(sender, "ftbutilities.lang.chunks.unclaimed_all")).send(server, sender);
+		}
+		else
+		{
+			throw new CommandException("ftblib.lang.team.error.no_team");
 		}
 	}
 }

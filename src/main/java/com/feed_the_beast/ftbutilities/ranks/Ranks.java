@@ -96,9 +96,9 @@ public class Ranks
 		return result;
 	}
 
-	public static boolean isValidName(String id)
+	public static boolean isValidName(@Nullable String id)
 	{
-		if (id.isEmpty() || id.charAt(0) == '–' || id.equals("none") || id.equals("null"))
+		if (id == null || id.isEmpty() || id.charAt(0) == '–' || id.equals("none") || id.equals("null"))
 		{
 			return false;
 		}

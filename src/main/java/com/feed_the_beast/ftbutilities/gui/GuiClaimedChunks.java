@@ -279,18 +279,15 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			});
 		}
 
-		if (GuideEvent.check("/ftbutilities/chunk_claiming"))
+		panel.add(new ButtonSide(panel, I18n.format("gui.info"), GuiIcons.INFO)
 		{
-			panel.add(new ButtonSide(panel, I18n.format("gui.info"), GuiIcons.INFO)
+			@Override
+			public void onClicked(MouseButton button)
 			{
-				@Override
-				public void onClicked(MouseButton button)
-				{
-					GuiHelper.playClickSound();
-					GuideEvent.open("/ftbutilities/chunk_claiming");
-				}
-			});
-		}
+				GuiHelper.playClickSound();
+				GuideEvent.openOrWeb("/ftbutilities/chunk_claiming");
+			}
+		});
 	}
 
 	@Override

@@ -31,6 +31,8 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -231,7 +233,19 @@ public class Ranks
 
 			if (commandUsage != null)
 			{
-				commandUsage.put(node, new TextComponentTranslation(command.getUsage(universe.server)).getUnformattedText());
+				String usage = command.getUsage(universe.server);
+				ITextComponent component;
+
+				if (usage.indexOf('/') != -1 || usage.indexOf('%') != -1 || usage.indexOf(' ') != -1)
+				{
+					component = new TextComponentString(usage);
+				}
+				else
+				{
+					component = new TextComponentTranslation(usage);
+				}
+
+				commandUsage.put(node, component.getUnformattedText());
 			}
 		}
 	}

@@ -27,11 +27,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.command.ICommand;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -60,7 +58,7 @@ public class Ranks
 
 	public static boolean isActive()
 	{
-		return INSTANCE != null && PermissionAPI.getPermissionHandler() == FTBUtilitiesPermissionHandler.INSTANCE;
+		return FTBUtilitiesConfig.ranks.enabled && INSTANCE != null && PermissionAPI.getPermissionHandler() == FTBUtilitiesPermissionHandler.INSTANCE;
 	}
 
 	public static Event.Result getPermissionResult(GameProfile profile, Node node, @Nullable IContext context)
@@ -122,6 +120,7 @@ public class Ranks
 	private Collection<String> permissionNodes = null;
 	private final Map<UUID, Rank> playerMap = new HashMap<>();
 	private Rank defaultPlayerRank, defaultOPRank;
+	public final Map<Node, CommandOverride> commands = new LinkedHashMap<>();
 
 	public Ranks(Universe u)
 	{
@@ -199,11 +198,9 @@ public class Ranks
 				permissionNodes.add(entry.node.toString());
 			}
 
-			ServerCommandManager manager = (ServerCommandManager) universe.server.getCommandManager();
-
-			for (ICommand command : manager.getCommands().values())
+			for (Node node : commands.keySet())
 			{
-				addCommandNode(permissionNodes, command, null);
+				permissionNodes.add(node.toString());
 			}
 
 			for (RankConfigValueInfo info : RankConfigAPI.getHandler().getRegisteredConfigs())
@@ -215,39 +212,6 @@ public class Ranks
 		}
 
 		return permissionNodes;
-	}
-
-	private void addCommandNode(Collection<String> permissionNodes, ICommand command, @Nullable Map<String, String> commandUsage)
-	{
-		if (command instanceof CommandTreeOverride)
-		{
-			for (ICommand command1 : ((CommandTreeOverride) command).getSubCommands())
-			{
-				addCommandNode(permissionNodes, command1, commandUsage);
-			}
-		}
-		else if (command instanceof CommandOverride)
-		{
-			String node = ((CommandOverride) command).node.toString();
-			permissionNodes.add(node);
-
-			if (commandUsage != null)
-			{
-				String usage = command.getUsage(universe.server);
-				ITextComponent component;
-
-				if (usage.indexOf('/') != -1 || usage.indexOf('%') != -1 || usage.indexOf(' ') != -1)
-				{
-					component = new TextComponentString(usage);
-				}
-				else
-				{
-					component = new TextComponentTranslation(usage);
-				}
-
-				commandUsage.put(node, component.getUnformattedText());
-			}
-		}
 	}
 
 	public void updatePermissionNodes()
@@ -294,7 +258,7 @@ public class Ranks
 		defaultPlayerRank = null;
 		defaultOPRank = null;
 
-		if (!FTBUtilitiesConfig.ranks.enabled)
+		if (!isActive())
 		{
 			return true;
 		}
@@ -675,9 +639,9 @@ public class Ranks
 		}
 	}
 
-	private String fixHTML(JsonElement json)
+	private String fixHTML(String string)
 	{
-		return json.toString().replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+		return string.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 	}
 
 	public void generateExampleFiles()
@@ -730,6 +694,7 @@ public class Ranks
 		list.add("td.true{background-color:#72FF85AA;}");
 		list.add("td.false{background-color:#FF6666AA;}");
 		list.add("td.other{background-color:#42A3FFAA;}");
+		list.add("td.error{color:#FF0000;}");
 		list.add("th,td.true,td.false,td.other{text-align:center;}");
 		list.add("</style></head><body><h1>Permissions</h1><h3>Modifying this file won't have any effect, edit ranks.txt!</h3><table>");
 		list.add("<tr><th>Node</th><th>Type</th><th>Player</th><th>OP</th><th>Info (Mouse over for variants)</th></tr>");
@@ -739,8 +704,8 @@ public class Ranks
 			list.add("<tr>");
 			list.add("<td><code>" + entry.getNode() + "</code></td>");
 			list.add("<td><code>" + entry.player.getName() + "</code></td>");
-			String playerText = fixHTML(entry.player.getSerializableElement());
-			String opText = fixHTML(entry.op.getSerializableElement());
+			String playerText = fixHTML(entry.player.getSerializableElement().toString());
+			String opText = fixHTML(entry.op.getSerializableElement().toString());
 
 			if (playerText.equals(opText))
 			{
@@ -805,20 +770,19 @@ public class Ranks
 
 		list.add("</table><br><table><tr><th>Available command nodes</th><th>Usage</th></tr>");
 		ServerCommandManager manager = (ServerCommandManager) universe.server.getCommandManager();
-		LinkedHashSet<String> commandNodes0 = new LinkedHashSet<>();
-		Map<String, String> commandUsage = new HashMap<>();
 
-		for (ICommand command : manager.getCommands().values())
+		for (CommandOverride c : commands.values())
 		{
-			addCommandNode(commandNodes0, command, commandUsage);
-		}
+			String text = fixHTML(c.usage.getUnformattedText()).replace(" OR ", "<br>");
 
-		List<String> commandNodes = new ArrayList<>(commandNodes0);
-		commandNodes.sort(null);
-
-		for (String s : commandNodes)
-		{
-			list.add("<tr><td><code>" + s + "</code></td><td>" + commandUsage.get(s) + "</td></tr>");
+			if (c.usage instanceof TextComponentString)
+			{
+				list.add("<tr><td><code>" + c.node + "</code></td><td class='error' title='Invalid usage language key!'>" + text + "</td></tr>");
+			}
+			else
+			{
+				list.add("<tr><td><code>" + c.node + "</code></td><td>" + text + "</td></tr>");
+			}
 		}
 
 		list.add("</table>");
@@ -841,7 +805,12 @@ public class Ranks
 		list.add("");
 		list.add("Available command nodes:");
 		list.add("");
-		list.addAll(commandNodes);
+
+		for (CommandOverride c : commands.values())
+		{
+			list.add(c.node.toString());
+		}
+
 		FileUtils.saveSafe(new File(CommonUtils.folderLocal, "ftbutilities/all_permissions_full_list.txt"), list);
 	}
 }

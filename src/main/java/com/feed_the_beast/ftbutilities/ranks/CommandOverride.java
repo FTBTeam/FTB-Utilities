@@ -1,12 +1,16 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.context.PlayerContext;
@@ -33,11 +37,25 @@ public class CommandOverride implements ICommand
 
 	public final ICommand mirrored;
 	public final Node node;
+	public final ITextComponent usage;
 
 	private CommandOverride(ICommand c, Node parent)
 	{
 		mirrored = c;
 		node = parent.append(mirrored.getName());
+		Ranks.INSTANCE.commands.put(node, this);
+
+		String usageS = getUsage(Ranks.INSTANCE.universe.server);
+
+		if (usageS.isEmpty() || usageS.indexOf('/') != -1 || usageS.indexOf('%') != -1 || usageS.indexOf(' ') != -1)
+		{
+			FTBUtilities.LOGGER.warn("Command " + getClass().getName() + " with node " + node + " has invalid usage language key: " + usageS);
+			usage = new TextComponentString(usageS);
+		}
+		else
+		{
+			usage = new TextComponentTranslation(usageS);
+		}
 	}
 
 	@Override
@@ -96,6 +114,6 @@ public class CommandOverride implements ICommand
 	@Override
 	public int compareTo(ICommand o)
 	{
-		return getName().compareTo(o.getName());
+		return o instanceof CommandOverride ? node.compareTo(((CommandOverride) o).node) : getName().compareTo(o.getName());
 	}
 }

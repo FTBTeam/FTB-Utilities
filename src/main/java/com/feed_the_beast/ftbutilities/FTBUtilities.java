@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbutilities;
 
 import com.feed_the_beast.ftblib.lib.ATHelper;
-import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
@@ -83,9 +82,10 @@ public class FTBUtilities
 	{
 		Backups.INSTANCE.init();
 
-		if (FTBUtilitiesConfig.ranks.enabled)
+		if (Ranks.isActive())
 		{
-			ServerCommandManager manager = (ServerCommandManager) Universe.get().server.getCommandManager();
+			Ranks.INSTANCE.commands.clear();
+			ServerCommandManager manager = (ServerCommandManager) Ranks.INSTANCE.universe.server.getCommandManager();
 			List<ICommand> commands = new ArrayList<>(manager.getCommands().values());
 			ATHelper.getCommandSet(manager).clear();
 			manager.getCommands().clear();
@@ -96,9 +96,17 @@ public class FTBUtilities
 				manager.registerCommand(CommandOverride.create(command, container == null ? Node.COMMAND : Node.COMMAND.append(container.getModId())));
 			}
 
-			LOGGER.info("Overridden " + manager.getCommands().size() + " commands");
-		}
+			List<CommandOverride> ocommands = new ArrayList<>(Ranks.INSTANCE.commands.values());
+			ocommands.sort(null);
+			Ranks.INSTANCE.commands.clear();
 
-		Ranks.INSTANCE.generateExampleFiles();
+			for (CommandOverride c : ocommands)
+			{
+				Ranks.INSTANCE.commands.put(c.node, c);
+			}
+
+			LOGGER.info("Overridden " + manager.getCommands().size() + " commands");
+			Ranks.INSTANCE.generateExampleFiles();
+		}
 	}
 }

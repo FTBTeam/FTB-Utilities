@@ -47,10 +47,10 @@ public class CommandOverride implements ICommand
 
 		String usageS = getUsage(Ranks.INSTANCE.universe.server);
 
-		if (usageS.isEmpty() || usageS.indexOf('/') != -1 || usageS.indexOf('%') != -1 || usageS.indexOf(' ') != -1)
+		if (usageS == null || usageS.isEmpty() || usageS.indexOf('/') != -1 || usageS.indexOf('%') != -1 || usageS.indexOf(' ') != -1)
 		{
 			FTBUtilities.LOGGER.warn("Command " + getClass().getName() + " with node " + node + " has invalid usage language key: " + usageS);
-			usage = new TextComponentString(usageS);
+			usage = new TextComponentString(String.valueOf(usageS));
 		}
 		else
 		{

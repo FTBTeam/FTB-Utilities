@@ -39,7 +39,7 @@ repositories {
 }
 
 dependencies {
-	deobfCompile "com.feed_the_beast.mods:FTBLib:${ftblib_version}"
+    compile project(':FTBLib')
 	deobfProvided "me.ichun.mods.ichunutil:iChunUtil:${ichunutil_version}:api"
 	provided "info.journeymap:journeymap-api:${journeymap_version}"
 	deobfProvided "mod.chiselsandbits:chiselsandbits:${chiselsandbits_version}:api"

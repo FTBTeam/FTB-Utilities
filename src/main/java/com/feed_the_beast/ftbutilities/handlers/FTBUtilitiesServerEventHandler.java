@@ -125,7 +125,7 @@ public class FTBUtilitiesServerEventHandler
 							}
 						}
 
-						FTBUtilities.LOGGER.info(player.getName() + (isAFK ? "is now AFK" : " is no longer AFK"));
+						FTBUtilities.LOGGER.info(player.getName() + (isAFK ? " is now AFK" : " is no longer AFK"));
 					}
 
 					if (playerToKickForAfk == null)

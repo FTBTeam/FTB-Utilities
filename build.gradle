@@ -33,13 +33,14 @@ minecraft {
 }
 
 repositories {
+	mavenLocal()
+	mavenCentral()
 	maven { url "https://maven.latmod.com/" }
-	maven { url "https://oss.sonatype.org/content/groups/public/" }
 	maven { url "http://dvs1.progwml6.com/files/maven" }
 }
 
 dependencies {
-    compile project(':FTBLib')
+	deobfCompile "com.feed_the_beast.mods:FTBLib:${ftblib_version}"
 	deobfProvided "me.ichun.mods.ichunutil:iChunUtil:${ichunutil_version}:api"
 	provided "info.journeymap:journeymap-api:${journeymap_version}"
 	deobfProvided "mod.chiselsandbits:chiselsandbits:${chiselsandbits_version}:api"

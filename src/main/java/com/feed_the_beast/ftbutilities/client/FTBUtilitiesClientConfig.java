@@ -24,7 +24,6 @@ public class FTBUtilitiesClientConfig
 		public boolean render_badges = true;
 
 		@Config.Comment("Enable JourneyMap overlay.")
-		@Config.Ignore
 		public boolean journeymap_overlay = true;
 
 		@Config.Comment("Will be called first. If item ID starts with any of these strings, it won't skip this item.")

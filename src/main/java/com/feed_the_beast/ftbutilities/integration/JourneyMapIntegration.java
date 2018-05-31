@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbutilities.gui.ClientClaimedChunks;
 import com.feed_the_beast.ftbutilities.gui.UpdateClientDataEvent;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksRequest;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;
+import journeymap.client.api.ClientPlugin;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.display.DisplayType;
@@ -16,7 +17,6 @@ import journeymap.client.api.display.PolygonOverlay;
 import journeymap.client.api.event.ClientEvent;
 import journeymap.client.api.model.MapPolygon;
 import journeymap.client.api.model.ShapeProperties;
-import journeymap.client.api.model.TextProperties;
 import journeymap.client.api.util.PolygonHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.ChunkPos;
@@ -33,20 +33,21 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-//Disabled integration for now
-//@ClientPlugin
+@ClientPlugin
 public class JourneyMapIntegration implements IClientPlugin
 {
-	private static IClientAPI clientAPI;
-	private static final Map<ChunkPos, PolygonOverlay> POLYGONS = new HashMap<>();
-	static ChunkPos lastPosition = null;
+	private IClientAPI clientAPI;
+	private Map<ChunkPos, PolygonOverlay> polygons;
+	private ChunkPos lastPosition;
 
 	@Override
 	public void initialize(IClientAPI api)
 	{
 		clientAPI = api;
+		polygons = new HashMap<>();
+		lastPosition = null;
 		api.subscribe(getModId(), EnumSet.of(ClientEvent.Type.DISPLAY_UPDATE, ClientEvent.Type.MAPPING_STOPPED));
-		MinecraftForge.EVENT_BUS.register(JourneyMapIntegration.class);
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@Override
@@ -72,20 +73,20 @@ public class JourneyMapIntegration implements IClientPlugin
 		}
 	}
 
-	private static void clearData()
+	private void clearData()
 	{
-		if (!POLYGONS.isEmpty())
+		if (!polygons.isEmpty())
 		{
-			POLYGONS.clear();
+			polygons.clear();
 			clientAPI.removeAll(FTBUtilities.MOD_ID);
 		}
 	}
 
-	private static void chunkChanged(ChunkPos pos, @Nullable ClientClaimedChunks.ChunkData chunk, int dim)
+	private void chunkChanged(ChunkPos pos, @Nullable ClientClaimedChunks.ChunkData chunk, int dim)
 	{
 		try
 		{
-			PolygonOverlay p = POLYGONS.get(pos);
+			PolygonOverlay p = polygons.get(pos);
 
 			if (p != null)
 			{
@@ -93,7 +94,7 @@ public class JourneyMapIntegration implements IClientPlugin
 
 				if (chunk == null)
 				{
-					POLYGONS.remove(pos);
+					polygons.remove(pos);
 				}
 			}
 
@@ -103,18 +104,7 @@ public class JourneyMapIntegration implements IClientPlugin
 				p = new PolygonOverlay(FTBUtilities.MOD_ID, "claimed_" + pos.x + '_' + pos.z, dim, (ShapeProperties) chunk.team.shapeProperties, poly);
 				p.setOverlayGroupName("claimed_chunks");
 				p.setTitle(chunk.team.formattedName + '\n' + TextFormatting.GREEN + I18n.format("ftbutilities.lang.chunks.claimed_area"));
-				/*
-				DEFAULT_SCALE = 1.0F;
-   				DEFAULT_COLOR = 16777215;
-   				DEFAULT_OPACITY = 1.0F;
-   				DEFAULT_BACKGROUND_COLOR = 0;
-   				DEFAULT_BACKGROUND_OPACITY = 0.7F;
-				*/
-				p.getTextProperties().setOffsetX(TextProperties.DEFAULT_OFFSET_X);
-				p.getTextProperties().setOffsetY(TextProperties.DEFAULT_OFFSET_Y);
-				p.getTextProperties().setMinZoom(TextProperties.DEFAULT_MIN_ZOOM);
-				p.getTextProperties().setMaxZoom(TextProperties.DEFAULT_MAX_ZOOM);
-				POLYGONS.put(pos, p);
+				polygons.put(pos, p);
 				clientAPI.show(p);
 			}
 		}
@@ -125,24 +115,24 @@ public class JourneyMapIntegration implements IClientPlugin
 	}
 
 	@SubscribeEvent
-	public static void onEnteringChunk(EntityEvent.EnteringChunk event)
+	public void onEnteringChunk(EntityEvent.EnteringChunk event)
 	{
 		if (!FTBUtilitiesClientConfig.general.journeymap_overlay || event.getEntity() != ClientUtils.MC.player)
 		{
 			return;
 		}
 
-		if (JourneyMapIntegration.lastPosition == null || MathUtils.dist(event.getNewChunkX(), event.getNewChunkZ(), JourneyMapIntegration.lastPosition.x, JourneyMapIntegration.lastPosition.z) >= 3D)
+		if (lastPosition == null || MathUtils.dist(event.getNewChunkX(), event.getNewChunkZ(), lastPosition.x, lastPosition.z) >= 3D)
 		{
-			JourneyMapIntegration.lastPosition = new ChunkPos(event.getNewChunkX(), event.getNewChunkZ());
+			lastPosition = new ChunkPos(event.getNewChunkX(), event.getNewChunkZ());
 			new MessageClaimedChunksRequest(ClientUtils.MC.player).sendToServer();
 		}
 	}
 
 	@SubscribeEvent
-	public static void onDataReceived(UpdateClientDataEvent event)
+	public void onDataReceived(UpdateClientDataEvent event)
 	{
-		if (!POLYGONS.isEmpty() && (!FTBUtilitiesClientConfig.general.journeymap_overlay || !clientAPI.playerAccepts(FTBUtilities.MOD_ID, DisplayType.Polygon)))
+		if (!polygons.isEmpty() && (!FTBUtilitiesClientConfig.general.journeymap_overlay || !clientAPI.playerAccepts(FTBUtilities.MOD_ID, DisplayType.Polygon)))
 		{
 			clearData();
 			return;

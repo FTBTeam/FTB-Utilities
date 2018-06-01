@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.function.Predicate;
 
 /**
@@ -49,6 +50,10 @@ public class CmdKillall extends CmdBase
 		if (args.length == 1)
 		{
 			return getListOfStringsMatchingLastWord(args, TAB);
+		}
+		else if (args.length == 2)
+		{
+			return getListOfStringsMatchingLastWord(args, getDimensionNames());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -107,13 +112,15 @@ public class CmdKillall extends CmdBase
 			}
 		}
 
+		OptionalInt dimension = parseDimension(sender, args, 1);
+
 		int killed = 0;
 
 		for (World world : server.worlds)
 		{
 			for (Entity entity : new ArrayList<>(world.loadedEntityList))
 			{
-				if (predicate.test(entity))
+				if (predicate.test(entity) && (!dimension.isPresent() || dimension.getAsInt() == entity.dimension))
 				{
 					entity.onKillCommand();
 					killed++;

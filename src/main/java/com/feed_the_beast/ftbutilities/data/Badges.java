@@ -118,15 +118,15 @@ public class Badges
 							continue;
 						}
 
-						String[] s1 = StringUtils.trimAllWhitespace(s).split(": ");
+						String[] s1 = s.trim().split(":");
 
 						if (s1.length == 2)
 						{
-							ForgePlayer player = universe.getPlayer(s1[0]);
+							ForgePlayer player = universe.getPlayer(s1[0].trim());
 
 							if (player != null)
 							{
-								LOCAL_BADGES.put(player.getId(), s1[1]);
+								LOCAL_BADGES.put(player.getId(), s1[1].trim());
 							}
 						}
 					}

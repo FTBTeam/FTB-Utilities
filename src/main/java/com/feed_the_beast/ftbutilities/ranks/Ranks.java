@@ -442,16 +442,16 @@ public class Ranks
 			}
 			else if (currentRank != null)
 			{
-				String[] s1 = line.split(": ", 2);
+				String[] s1 = line.split(":", 2);
 
 				if (s1.length == 2)
 				{
-					String[] s2 = s1[1].split(" // ");
-					JsonElement json = DataReader.get(StringUtils.trimAllWhitespace(s2[0])).safeJson();
+					String[] s2 = s1[1].split("//");
+					JsonElement json = DataReader.get(s2[0].trim()).safeJson();
 
 					if (!JsonUtils.isNull(json))
 					{
-						currentRank.setPermission(Node.get(StringUtils.removeAllWhitespace(s1[0])), json);
+						currentRank.setPermission(Node.get(s1[0].trim()), json);
 					}
 				}
 			}
@@ -525,11 +525,11 @@ public class Ranks
 
 			if (s1.length == 2)
 			{
-				ForgePlayer player = universe.getPlayer(StringUtils.trimAllWhitespace(s1[0]));
+				ForgePlayer player = universe.getPlayer(s1[0].trim());
 
 				if (player != null)
 				{
-					Rank rank = getRank(StringUtils.trimAllWhitespace(s1[1]));
+					Rank rank = getRank(s1[1].trim());
 
 					if (rank != null)
 					{
@@ -621,6 +621,10 @@ public class Ranks
 			if (player != null)
 			{
 				list.add(player + ": " + entry.getValue());
+			}
+			else
+			{
+				list.add(StringUtils.fromUUID(entry.getKey()) + ": " + entry.getValue());
 			}
 		}
 

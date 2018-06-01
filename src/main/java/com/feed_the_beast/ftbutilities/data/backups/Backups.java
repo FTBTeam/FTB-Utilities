@@ -96,19 +96,12 @@ public enum Backups
 		{
 			doingBackup = 0;
 
-			try
+			for (WorldServer world : universe.server.worlds)
 			{
-				for (WorldServer w : universe.server.worlds)
+				if (world != null)
 				{
-					if (w != null && w.disableLevelSaving)
-					{
-						w.disableLevelSaving = false;
-					}
+					world.disableLevelSaving = false;
 				}
-			}
-			catch (Exception ex)
-			{
-				ex.printStackTrace();
 			}
 
 			if (!FTBUtilitiesConfig.backups.silent)
@@ -160,33 +153,12 @@ public enum Backups
 		notifyAll(server, player -> FTBUtilities.lang(player, "ftbutilities.lang.backup.start", sender.getName()), false);
 		nextBackup = server.getWorld(0).getTotalWorldTime() + FTBUtilitiesConfig.backups.ticks();
 
-		try
+		for (WorldServer world : server.worlds)
 		{
-			if (server.getPlayerList() != null)
+			if (world != null)
 			{
-				server.getPlayerList().saveAllPlayerData();
+				world.disableLevelSaving = true;
 			}
-
-			try
-			{
-				for (int i = 0; i < server.worlds.length; ++i)
-				{
-					if (server.worlds[i] != null)
-					{
-						WorldServer worldserver = server.worlds[i];
-						worldserver.disableLevelSaving = true;
-						worldserver.saveAllChunks(true, null);
-					}
-				}
-			}
-			catch (Exception ex1)
-			{
-				notifyAll(server, player -> FTBUtilities.lang(player, "ftbutilities.lang.backup.saving_failed"), true);
-			}
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
 		}
 
 		File wd = server.getWorld(0).getSaveHandler().getWorldDirectory();
@@ -203,6 +175,29 @@ public enum Backups
 
 	private void doBackup(MinecraftServer server, File src, String customName)
 	{
+		try
+		{
+			if (server.getPlayerList() != null)
+			{
+				server.getPlayerList().saveAllPlayerData();
+			}
+
+			for (WorldServer world : server.worlds)
+			{
+				if (world != null)
+				{
+					world.saveAllChunks(true, null);
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			notifyAll(server, player -> FTBUtilities.lang(player, "ftbutilities.lang.backup.saving_failed"), true);
+			FTBUtilities.LOGGER.error("Saving world failed!");
+			ex.printStackTrace();
+			return;
+		}
+
 		Calendar time = Calendar.getInstance();
 		File dstFile = null;
 		boolean success = false;
@@ -268,6 +263,18 @@ public enum Backups
 			{
 				backups.sort(null);
 
+				int backupsToKeep = FTBUtilitiesConfig.backups.backups_to_keep - 1;
+
+				if (backupsToKeep > 0 && backups.size() > backupsToKeep)
+				{
+					while (backups.size() > backupsToKeep)
+					{
+						Backup backup = backups.remove(0);
+						FTBUtilities.LOGGER.info("Deleting old backup: " + backup.fileId);
+						FileUtils.delete(backup.getFile());
+					}
+				}
+
 				for (Backup backup : backups)
 				{
 					totalSize += backup.size;
@@ -279,33 +286,11 @@ public enum Backups
 
 					while (totalSize + fileSize > freeSpace && !backups.isEmpty())
 					{
-						Backup backup = backups.get(0);
+						Backup backup = backups.remove(0);
 						totalSize -= backup.size;
-						FTBUtilities.LOGGER.info("Deleting old backup: " + backup.fileId);
+						FTBUtilities.LOGGER.info("Deleting backup to free space: " + backup.fileId);
 						FileUtils.delete(backup.getFile());
 					}
-				}
-
-				int backupsToKeep = FTBUtilitiesConfig.backups.backups_to_keep;
-
-				if (backupsToKeep > 0)
-				{
-					if (backups.size() > backupsToKeep)
-					{
-						int toDelete = backups.size() - backupsToKeep;
-
-						if (toDelete > 0)
-						{
-							for (int i = toDelete - 1; i >= 0; i--)
-							{
-								Backup b = backups.get(i);
-
-								backups.remove(i);
-							}
-						}
-					}
-
-					backups.removeIf(backup -> !backup.getFile().exists());
 				}
 			}
 

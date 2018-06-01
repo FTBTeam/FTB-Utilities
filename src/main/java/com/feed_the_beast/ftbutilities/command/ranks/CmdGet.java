@@ -36,7 +36,7 @@ public class CmdGet extends CmdBase
 		}
 
 		checkArgs(sender, args, 1);
-		ForgePlayer p = getForgePlayer(sender, args[0]);
+		ForgePlayer p = getSelfOrOther(sender, args, 0);
 		Rank rank = Ranks.INSTANCE.getRank(p.team.universe.server, p.getProfile(), p.getContext());
 
 		if (rank == null)

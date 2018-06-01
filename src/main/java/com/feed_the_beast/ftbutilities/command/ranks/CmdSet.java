@@ -55,14 +55,14 @@ public class CmdSet extends CmdBase
 
 		checkArgs(sender, args, 2);
 
+		ForgePlayer p = getForgePlayer(sender, args[0]);
+
 		if (!Ranks.INSTANCE.getRankNames(true).contains(args[1]))
 		{
 			throw new CommandException("commands.ranks.not_found", args[1]);
 		}
 
 		Rank r = Ranks.INSTANCE.getRank(args[1]);
-
-		ForgePlayer p = getForgePlayer(sender, args[0]);
 		Ranks.INSTANCE.setRank(p.getId(), r);
 
 		ITextComponent rankText = r == null ? FTBUtilities.lang(sender, "commands.ranks.none") : new TextComponentString(r.getName());

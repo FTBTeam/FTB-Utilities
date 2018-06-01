@@ -192,9 +192,20 @@ public class FTBUtilitiesPlayerEventHandler
 			{
 				FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
 
-				if (!data.getNickname().isEmpty() && PermissionAPI.hasPermission(event.getEntityPlayer(), FTBUtilitiesPermissions.NICKNAME))
+				if (!data.getNickname().isEmpty() && PermissionAPI.hasPermission(event.getEntityPlayer(), FTBUtilitiesPermissions.NICKNAME_SET))
 				{
-					event.setDisplayname(data.getNickname());
+					String name = data.getNickname().replace('&', StringUtils.FORMATTING_CHAR);
+
+					if (!p.hasPermission(FTBUtilitiesPermissions.NICKNAME_COLORS))
+					{
+						name = TextFormatting.getTextWithoutFormattingCodes(name);
+					}
+					else if (name.indexOf(StringUtils.FORMATTING_CHAR) != -1)
+					{
+						name += TextFormatting.RESET;
+					}
+
+					event.setDisplayname(name);
 				}
 			}
 		}

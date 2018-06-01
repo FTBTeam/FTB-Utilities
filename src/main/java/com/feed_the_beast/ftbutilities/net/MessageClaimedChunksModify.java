@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.ChunkPos;
@@ -80,24 +81,31 @@ public class MessageClaimedChunksModify extends MessageToServer
 		{
 			ChunkDimPos pos = new ChunkDimPos(pos0, player.dimension);
 
-			if (!ClaimedChunks.instance.canPlayerModify(p, pos))
-			{
-				continue;
-			}
-
 			switch (action)
 			{
 				case CLAIM:
-					ClaimedChunks.instance.claimChunk(p, pos, true);
+					if (ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_CLAIM))
+					{
+						ClaimedChunks.instance.claimChunk(p, pos, true);
+					}
 					break;
 				case UNCLAIM:
-					ClaimedChunks.instance.unclaimChunk(pos);
+					if (ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_UNCLAIM))
+					{
+						ClaimedChunks.instance.unclaimChunk(pos);
+					}
 					break;
 				case LOAD:
-					ClaimedChunks.instance.loadChunk(p.team, pos);
+					if (ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_LOAD))
+					{
+						ClaimedChunks.instance.loadChunk(p.team, pos);
+					}
 					break;
 				case UNLOAD:
-					ClaimedChunks.instance.unloadChunk(pos);
+					if (ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_UNLOAD))
+					{
+						ClaimedChunks.instance.unloadChunk(pos);
+					}
 					break;
 			}
 		}

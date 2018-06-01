@@ -19,6 +19,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.Map;
+import java.util.OptionalInt;
 
 /**
  * @author LatvianModder
@@ -56,7 +57,7 @@ public class FTBUtilitiesTeamData implements INBTSerializable<NBTTagCompound>, I
 		{
 			Int2ObjectOpenHashMap<NBTTagList> claimedChunks = new Int2ObjectOpenHashMap<>();
 
-			for (ClaimedChunk chunk : ClaimedChunks.instance.getTeamChunks(team))
+			for (ClaimedChunk chunk : ClaimedChunks.instance.getTeamChunks(team, OptionalInt.empty()))
 			{
 				ChunkDimPos pos = chunk.getPos();
 

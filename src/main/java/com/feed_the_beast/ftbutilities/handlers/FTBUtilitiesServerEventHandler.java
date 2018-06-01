@@ -99,9 +99,9 @@ public class FTBUtilitiesServerEventHandler
 						}
 					}
 
-					boolean prevIsAfk = data.afkTicks >= Ticks.st(FTBUtilitiesConfig.afk.notification_seconds);
+					boolean prevIsAfk = data.afkTicks >= FTBUtilitiesConfig.afk.getNotificationTimer();
 					data.afkTicks = (int) ((System.currentTimeMillis() - player.getLastActiveTime()) * Ticks.SECOND / 1000L);
-					boolean isAFK = data.afkTicks >= Ticks.st(FTBUtilitiesConfig.afk.notification_seconds);
+					boolean isAFK = data.afkTicks >= FTBUtilitiesConfig.afk.getNotificationTimer();
 
 					if (prevIsAfk != isAFK)
 					{

@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.OptionalInt;
 
 /**
  * @author LatvianModder
@@ -46,7 +47,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient
 		ForgePlayer p = Universe.get().getPlayer(player);
 		FTBUtilitiesTeamData teamData = FTBUtilitiesTeamData.get(p.team);
 
-		Collection<ClaimedChunk> chunks = teamData.team.isValid() ? ClaimedChunks.instance.getTeamChunks(teamData.team) : Collections.emptyList();
+		Collection<ClaimedChunk> chunks = teamData.team.isValid() ? ClaimedChunks.instance.getTeamChunks(teamData.team, OptionalInt.empty()) : Collections.emptyList();
 
 		claimedChunks = chunks.size();
 		loadedChunks = 0;
@@ -63,7 +64,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient
 		maxLoadedChunks = teamData.getMaxChunkloaderChunks();
 		teams = new HashMap<>();
 
-		boolean canSeeChunkInfo = PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHER);
+		boolean canSeeChunkInfo = PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_OTHER_SEE_INFO);
 
 		for (int x1 = 0; x1 < ChunkSelectorMap.TILES_GUI; x1++)
 		{

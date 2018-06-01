@@ -40,7 +40,7 @@ public class CmdClaim extends CmdBase
 		{
 			ForgePlayer p1 = getForgePlayer(sender, args[0]);
 
-			if (p != p1 && !PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_CHUNKS_MODIFY_OTHER))
+			if (p != p1 && !PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_OTHER_CLAIM))
 			{
 				throw new CommandException("commands.generic.permission");
 			}
@@ -51,7 +51,7 @@ public class CmdClaim extends CmdBase
 
 		ChunkDimPos pos = new ChunkDimPos(player);
 
-		if (checkLimits && !ClaimedChunks.instance.canPlayerModify(p, pos))
+		if (checkLimits && !ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_CLAIM))
 		{
 			FTBUtilitiesNotifications.sendCantModifyChunk(server, player);
 			return;

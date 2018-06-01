@@ -8,12 +8,27 @@ import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class CmdSetWarp extends CmdBase
 {
 	public CmdSetWarp()
 	{
 		super("setwarp", Level.OP);
+	}
+
+	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+	{
+		if (args.length == 5)
+		{
+			return getListOfStringsMatchingLastWord(args, getDimensionNames());
+		}
+
+		return super.getTabCompletions(server, sender, args, pos);
 	}
 
 	@Override

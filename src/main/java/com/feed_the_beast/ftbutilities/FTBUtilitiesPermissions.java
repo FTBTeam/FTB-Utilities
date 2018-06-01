@@ -55,15 +55,19 @@ public class FTBUtilitiesPermissions
 	public static final Node HOMES_MAX = Node.get("ftbutilities.homes.max");
 	public static final Node HOMES_COOLDOWN = Node.get("ftbutilities.homes.cooldown");
 	public static final Node HOMES_WARMUP = Node.get("ftbutilities.homes.warmup");
-	public static final String HOMES_LIST_OTHER = "ftbutilities.homes.list_other";
-	public static final String HOMES_TELEPORT_OTHER = "ftbutilities.homes.teleport_other";
+	public static final String HOMES_LIST_OTHER = "ftbutilities.other_player.homes.list";
+	public static final String HOMES_TELEPORT_OTHER = "ftbutilities.other_player.homes.teleport";
 
 	// Warps //
 	public static final Node WARPS_COOLDOWN = Node.get("ftbutilities.warps.cooldown");
 	public static final Node WARPS_WARMUP = Node.get("ftbutilities.warps.warmup");
 
 	// Claims //
-	public static final String CLAIMS_CHUNKS_MODIFY_OTHER = "ftbutilities.claims.modify.other";
+	public static final String CLAIMS_OTHER_SEE_INFO = "ftbutilities.other_player.claims.see_info";
+	public static final String CLAIMS_OTHER_CLAIM = "ftbutilities.other_player.claims.claim";
+	public static final String CLAIMS_OTHER_UNCLAIM = "ftbutilities.other_player.claims.unclaim";
+	public static final String CLAIMS_OTHER_LOAD = "ftbutilities.other_player.claims.load";
+	public static final String CLAIMS_OTHER_UNLOAD = "ftbutilities.other_player.claims.unload";
 	public static final Node CLAIMS_MAX_CHUNKS = Node.get("ftbutilities.claims.max_chunks");
 	public static final String CLAIMS_BLOCK_CNB = "ftbutilities.claims.block.cnb";
 	private static final String CLAIMS_BLOCK_EDIT_PREFIX = "ftbutilities.claims.block.edit.";
@@ -190,8 +194,10 @@ public class FTBUtilitiesPermissions
 	public static final Node SPAWN_WARMUP = Node.get("ftbutilities.spawn.warmup");
 	public static final Node BACK_WARMUP = Node.get("ftbutilities.back.warmup");
 	public static final String TPA_CROSS_DIM = "ftbutilities.tpa.cross_dim";
-	public static final String NICKNAME = "ftbutilities.nickname";
+	public static final String NICKNAME_SET = "ftbutilities.nickname.set";
+	public static final String NICKNAME_COLORS = "ftbutilities.nickname.colors";
 	public static final Node AFK_TIMER = Node.get("ftbutilities.afk.timer");
+	public static final String HEAL_OTHER = "ftbutilities.other_player.heal";
 
 	@SubscribeEvent
 	public static void registerRankConfigHandler(RegisterRankConfigHandlerEvent event)
@@ -209,7 +215,11 @@ public class FTBUtilitiesPermissions
 		event.registerNode(HOMES_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /home to teleport to/from another dimension");
 		event.registerNode(HOMES_LIST_OTHER, DefaultPermissionLevel.OP, "Allow to list other people homes");
 		event.registerNode(HOMES_TELEPORT_OTHER, DefaultPermissionLevel.OP, "Allow to teleport to other people homes");
-		event.registerNode(CLAIMS_CHUNKS_MODIFY_OTHER, DefaultPermissionLevel.OP, "Allow player to modify other team chunks");
+		event.registerNode(CLAIMS_OTHER_SEE_INFO, DefaultPermissionLevel.OP, "Allow player to see info of other team chunks");
+		event.registerNode(CLAIMS_OTHER_CLAIM, DefaultPermissionLevel.OP, "Allow player to claim other team chunks");
+		event.registerNode(CLAIMS_OTHER_UNCLAIM, DefaultPermissionLevel.OP, "Allow player to unclaim other team chunks");
+		event.registerNode(CLAIMS_OTHER_LOAD, DefaultPermissionLevel.OP, "Allow player to load other team chunks");
+		event.registerNode(CLAIMS_OTHER_UNLOAD, DefaultPermissionLevel.OP, "Allow player to unload other team chunks");
 		event.registerNode(CLAIMS_BLOCK_CNB, DefaultPermissionLevel.OP, "Allow to edit C&B bits in claimed chunks");
 		event.registerNode(CHUNKLOADER_LOAD_OFFLINE, DefaultPermissionLevel.ALL, "Keep loaded chunks working when player goes offline");
 		event.registerNode(INFINITE_BACK_USAGE, DefaultPermissionLevel.NONE, "Allow to use 'back' command infinite times");
@@ -217,7 +227,8 @@ public class FTBUtilitiesPermissions
 		event.registerNode(DELETE_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to delete crash reports, requires " + VIEW_CRASH_REPORTS);
 		event.registerNode(EDIT_WORLD_GAMERULES, DefaultPermissionLevel.OP, "Allow to edit gamerules via Admin Panel");
 		event.registerNode(TPA_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /tpa to teleport to/from another dimension");
-		event.registerNode(NICKNAME, DefaultPermissionLevel.OP, "Allow to change nickname");
+		event.registerNode(NICKNAME_SET, DefaultPermissionLevel.OP, "Allow to change nickname");
+		event.registerNode(NICKNAME_COLORS, DefaultPermissionLevel.OP, "Allow to use formatting codes in nickname, requires " + NICKNAME_SET);
 
 		for (Block block : Block.REGISTRY)
 		{

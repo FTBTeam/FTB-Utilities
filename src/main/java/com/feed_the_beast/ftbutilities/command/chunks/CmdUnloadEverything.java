@@ -1,11 +1,8 @@
 package com.feed_the_beast.ftbutilities.command.chunks;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
-import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
-import com.feed_the_beast.ftbutilities.FTBUtilities;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
+import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
+import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import net.minecraft.command.CommandException;
@@ -20,11 +17,11 @@ import java.util.OptionalInt;
 /**
  * @author LatvianModder
  */
-public class CmdUnloadAll extends CmdBase
+public class CmdUnloadEverything extends CmdBase
 {
-	public CmdUnloadAll()
+	public CmdUnloadEverything()
 	{
-		super("unload_all", Level.ALL);
+		super("unload_everything", Level.OP);
 	}
 
 	@Override
@@ -39,12 +36,6 @@ public class CmdUnloadAll extends CmdBase
 	}
 
 	@Override
-	public boolean isUsernameIndex(String[] args, int index)
-	{
-		return index == 1;
-	}
-
-	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		if (!ClaimedChunks.isActive())
@@ -52,22 +43,14 @@ public class CmdUnloadAll extends CmdBase
 			throw new CommandException("feature_disabled_server");
 		}
 
-		ForgePlayer p = getSelfOrOther(sender, args, 1, FTBUtilitiesPermissions.CLAIMS_OTHER_UNLOAD);
+		OptionalInt dimension = parseDimension(sender, args, 0);
 
-		if (p.hasTeam())
+		for (ForgeTeam team : Universe.get().getTeams())
 		{
-			OptionalInt dimension = parseDimension(sender, args, 0);
-
-			for (ClaimedChunk chunk : ClaimedChunks.instance.getTeamChunks(p.team, dimension))
+			for (ClaimedChunk chunk : ClaimedChunks.instance.getTeamChunks(team, dimension))
 			{
 				chunk.setLoaded(false);
 			}
-
-			Notification.of(FTBUtilitiesNotifications.UNCLAIMED_ALL, FTBUtilities.lang(sender, "ftbutilities.lang.chunks.unloaded_all")).send(server, sender);
-		}
-		else
-		{
-			throw new CommandException("ftblib.lang.team.error.no_team");
 		}
 	}
 }

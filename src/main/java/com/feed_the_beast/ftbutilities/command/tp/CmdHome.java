@@ -12,7 +12,6 @@ import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -63,23 +62,7 @@ public class CmdHome extends CmdBase
 
 		if (args[0].equals("list"))
 		{
-			ForgePlayer senderp = getForgePlayer(sender);
-			ForgePlayer p;
-
-			if (args.length >= 2)
-			{
-				p = getForgePlayer(sender, args[1]);
-			}
-			else
-			{
-				p = senderp;
-			}
-
-			if (sender instanceof EntityPlayer && !p.equalsPlayer(senderp) && senderp.hasPermission(FTBUtilitiesPermissions.HOMES_TELEPORT_OTHER))
-			{
-				throw new CommandException("commands.generic.permission");
-			}
-
+			ForgePlayer p = getSelfOrOther(sender, args, 1, FTBUtilitiesPermissions.HOMES_LIST_OTHER);
 			FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
 
 			Collection<String> list = data.homes.list();
@@ -122,23 +105,7 @@ public class CmdHome extends CmdBase
 			return;
 		}
 
-		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-		ForgePlayer p;
-
-		if (args.length >= 2)
-		{
-			p = getForgePlayer(sender, args[1]);
-		}
-		else
-		{
-			p = getForgePlayer(sender);
-		}
-
-		if (sender instanceof EntityPlayer && !p.equalsPlayer(getForgePlayer(sender)) && !PermissionAPI.hasPermission((EntityPlayer) sender, FTBUtilitiesPermissions.HOMES_TELEPORT_OTHER))
-		{
-			throw new CommandException("commands.generic.permission");
-		}
-
+		ForgePlayer p = getSelfOrOther(sender, args, 1, FTBUtilitiesPermissions.HOMES_TELEPORT_OTHER);
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
 		BlockDimPos pos = data.homes.get(args[0]);
 
@@ -146,7 +113,10 @@ public class CmdHome extends CmdBase
 		{
 			throw new CommandException("ftbutilities.lang.homes.not_set", args[0]);
 		}
-		else if (player.dimension != pos.dim && !PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.HOMES_CROSS_DIM))
+
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+
+		if (player.dimension != pos.dim && !PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.HOMES_CROSS_DIM))
 		{
 			throw new CommandException("ftbutilities.lang.homes.cross_dim");
 		}

@@ -6,7 +6,6 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdTreeHelp;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBT;
-import com.feed_the_beast.ftbutilities.net.MessageEditNBTRequest;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -82,7 +81,7 @@ public class CmdEditNBT extends CmdTreeBase
 
 			if (!player.world.isBlockLoaded(pos))
 			{
-				throw new CommandException("commands.setblock.outOfWorld");
+				throw new CommandException("commands.clone.outOfWorld");
 			}
 
 			TileEntity tile = player.world.getTileEntity(pos);
@@ -148,8 +147,7 @@ public class CmdEditNBT extends CmdTreeBase
 		@Override
 		public NBTTagCompound editNBT(EntityPlayerMP player, NBTTagCompound info, String[] args) throws CommandException
 		{
-			checkArgs(player, args, 1);
-			ForgePlayer p = getForgePlayer(player, args[0]);
+			ForgePlayer p = getSelfOrOther(player, args, 0);
 			info.setBoolean("online", p.isOnline());
 			info.setString("type", "player");
 			info.setUniqueId("id", p.getId());
@@ -157,23 +155,5 @@ public class CmdEditNBT extends CmdTreeBase
 			nbt.removeTag("id");
 			return nbt;
 		}
-	}
-
-	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-	{
-		if (args.length == 0)
-		{
-			new MessageEditNBTRequest().sendTo(getCommandSenderAsPlayer(sender));
-			return;
-		}
-
-		if (args.length == 1 && args[0].equals("me"))
-		{
-			getCommandMap().get("player").execute(server, sender, new String[] {getCommandSenderAsPlayer(sender).getName()});
-			return;
-		}
-
-		super.execute(server, sender, args);
 	}
 }

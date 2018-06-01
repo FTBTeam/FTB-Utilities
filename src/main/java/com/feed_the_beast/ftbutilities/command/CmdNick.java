@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextFormatting;
 
 public class CmdNick extends CmdBase
 {
@@ -22,7 +23,7 @@ public class CmdNick extends CmdBase
 	{
 		ForgePlayer player = getForgePlayer(sender);
 
-		if (!player.hasPermission(FTBUtilitiesPermissions.NICKNAME))
+		if (!player.hasPermission(FTBUtilitiesPermissions.NICKNAME_SET))
 		{
 			throw new CommandException("commands.generic.permission");
 		}
@@ -36,7 +37,18 @@ public class CmdNick extends CmdBase
 		}
 		else
 		{
-			player.getPlayer().sendStatusMessage(FTBUtilities.lang(player.getPlayer(), "ftbutilities.lang.nickname_changed", data.getNickname()), true);
+			String name = data.getNickname().replace('&', StringUtils.FORMATTING_CHAR);
+
+			if (!player.hasPermission(FTBUtilitiesPermissions.NICKNAME_COLORS))
+			{
+				name = TextFormatting.getTextWithoutFormattingCodes(name);
+			}
+			else if (name.indexOf(StringUtils.FORMATTING_CHAR) != -1)
+			{
+				name += TextFormatting.RESET;
+			}
+
+			player.getPlayer().sendStatusMessage(FTBUtilities.lang(player.getPlayer(), "ftbutilities.lang.nickname_changed", name), true);
 		}
 	}
 }

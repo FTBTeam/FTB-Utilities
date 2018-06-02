@@ -11,6 +11,7 @@ import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamDataEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftblib.events.team.RegisterTeamGuiActionsEvent;
+import com.feed_the_beast.ftblib.events.universe.UniverseClearCacheEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
@@ -84,6 +85,15 @@ public class FTBLibIntegration
 		if (event.reload(RELOAD_BADGES) && !Badges.reloadServerBadges(event.getUniverse()))
 		{
 			event.failedToReload(RELOAD_BADGES);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onCacheCleared(UniverseClearCacheEvent event)
+	{
+		if (Ranks.INSTANCE != null)
+		{
+			Ranks.INSTANCE.clearCache();
 		}
 	}
 

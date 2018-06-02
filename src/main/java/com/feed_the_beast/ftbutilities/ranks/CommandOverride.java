@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbutilities.ranks;
 
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class CommandOverride implements ICommand
+public class CommandOverride extends CommandBase
 {
 	public static ICommand create(ICommand command, Node parent)
 	{
@@ -49,7 +50,7 @@ public class CommandOverride implements ICommand
 
 		if (usageS == null || usageS.isEmpty() || usageS.indexOf('/') != -1 || usageS.indexOf('%') != -1 || usageS.indexOf(' ') != -1)
 		{
-			FTBUtilities.LOGGER.warn("Command " + getClass().getName() + " with node " + node + " has invalid usage language key: " + usageS);
+			FTBUtilities.LOGGER.warn("Command " + node + " (class: " + mirrored.getClass().getName() + ") has invalid usage language key: " + usageS);
 			usage = new TextComponentString(String.valueOf(usageS));
 		}
 		else
@@ -80,6 +81,12 @@ public class CommandOverride implements ICommand
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		mirrored.execute(server, sender, args);
+	}
+
+	@Override
+	public int getRequiredPermissionLevel()
+	{
+		return mirrored instanceof CommandBase ? ((CommandBase) mirrored).getRequiredPermissionLevel() : 4;
 	}
 
 	@Override

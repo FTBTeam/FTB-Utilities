@@ -242,15 +242,6 @@ public class Ranks
 		updatePermissionNodes();
 	}
 
-	public void removeNodeFromCaches(Node node)
-	{
-		for (Rank rank : ranks.values())
-		{
-			rank.cachedPermissions.remove(node);
-			rank.cachedConfig.remove(node);
-		}
-	}
-
 	public boolean reload()
 	{
 		ranks.clear();
@@ -591,15 +582,23 @@ public class Ranks
 		FileUtils.saveSafe(new File(CommonUtils.folderLocal, "ftbutilities/ranks.txt"), list);
 	}
 
-	public void saveAndUpdate(MinecraftServer server, Node node)
+	public void saveAndUpdate(MinecraftServer server)
 	{
-		removeNodeFromCaches(node);
 		saveRanks();
 		universe.clearCache();
 
 		for (EntityPlayerMP player : server.getPlayerList().getPlayers())
 		{
 			server.getPlayerList().updatePermissionLevel(player);
+		}
+	}
+
+	public void clearCache()
+	{
+		for (Rank rank : ranks.values())
+		{
+			rank.cachedPermissions.clear();
+			rank.cachedConfig.clear();
 		}
 	}
 

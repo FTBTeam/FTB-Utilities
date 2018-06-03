@@ -62,13 +62,17 @@ public class CmdKillall extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		Predicate<Entity> predicate = ALL;
-		String type = "all";
+		Predicate<Entity> predicate = NON_PLAYER;
+		String type = "non_players";
 
 		if (args.length >= 1)
 		{
 			switch (args[0])
 			{
+				case "all":
+					predicate = ALL;
+					type = "all";
+					break;
 				case "item":
 				case "items":
 					predicate = ITEM;

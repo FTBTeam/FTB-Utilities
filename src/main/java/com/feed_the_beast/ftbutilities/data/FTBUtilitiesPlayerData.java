@@ -20,15 +20,14 @@ import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
-import com.mojang.authlib.GameProfile;
+import com.feed_the_beast.ftbutilities.ranks.Rank;
+import com.google.gson.JsonElement;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.server.permission.context.IContext;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -299,20 +298,69 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		}
 	}
 
-	public ITextComponent getNameForChat(MinecraftServer server, GameProfile profile, IContext context)
+	public ITextComponent getNameForChat(Rank rank)
 	{
-		if (cachedNameForChat == null)
+		if (cachedNameForChat != null)
 		{
-			cachedNameForChat = new TextComponentString("");
-			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_PREFIX_LEFT.getText(server, profile, context));
-			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_PREFIX_BASE.getText(server, profile, context));
-			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_PREFIX_RIGHT.getText(server, profile, context));
-			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_NAME.format(server, profile, context, player.getDisplayName()));
-			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_SUFFIX_LEFT.getText(server, profile, context));
-			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_SUFFIX_BASE.getText(server, profile, context));
-			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_SUFFIX_RIGHT.getText(server, profile, context));
+			return cachedNameForChat;
 		}
 
+		cachedNameForChat = new TextComponentString("");
+
+		JsonElement json0 = rank.getConfigRaw(FTBUtilitiesPermissions.PREFIX_PART_COUNT);
+		int partCount = json0.isJsonPrimitive() ? json0.getAsInt() : 0;
+
+		if (partCount <= 0)
+		{
+			cachedNameForChat.appendText("<");
+		}
+		else
+		{
+			for (int i = 0; i < partCount; i++)
+			{
+				FTBUtilitiesPermissions.ChatPart chatPart = new FTBUtilitiesPermissions.ChatPart("prefix." + (i + 1));
+				json0 = rank.getConfigRaw(chatPart.text);
+
+				if (json0.isJsonPrimitive())
+				{
+					cachedNameForChat.appendSibling(chatPart.format(rank, new TextComponentString(json0.getAsString())));
+				}
+			}
+		}
+
+		json0 = rank.getConfigRaw(FTBUtilitiesPermissions.CHAT_NAME.text);
+
+		if (json0.isJsonPrimitive() && !json0.getAsString().isEmpty())
+		{
+			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_NAME.format(rank, new TextComponentString(json0.getAsString())));
+		}
+		else
+		{
+			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_NAME.format(rank, player.getDisplayName()));
+		}
+
+		json0 = rank.getConfigRaw(FTBUtilitiesPermissions.SUFFIX_PART_COUNT);
+		partCount = json0.isJsonPrimitive() ? json0.getAsInt() : 0;
+
+		if (partCount <= 0)
+		{
+			cachedNameForChat.appendText(">");
+		}
+		else
+		{
+			for (int i = 0; i < partCount; i++)
+			{
+				FTBUtilitiesPermissions.ChatPart chatPart = new FTBUtilitiesPermissions.ChatPart("suffix." + (i + 1));
+				json0 = rank.getConfigRaw(chatPart.text);
+
+				if (json0.isJsonPrimitive())
+				{
+					cachedNameForChat.appendSibling(chatPart.format(rank, new TextComponentString(json0.getAsString())));
+				}
+			}
+		}
+
+		cachedNameForChat.appendText(" ");
 		return cachedNameForChat;
 	}
 }

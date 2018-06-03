@@ -35,7 +35,6 @@ public class CmdGet extends CmdBase
 			throw new CommandException("feature_disabled_server");
 		}
 
-		checkArgs(sender, args, 1);
 		ForgePlayer p = getSelfOrOther(sender, args, 0);
 		Rank rank = Ranks.INSTANCE.getRank(p.team.universe.server, p.getProfile(), p.getContext());
 

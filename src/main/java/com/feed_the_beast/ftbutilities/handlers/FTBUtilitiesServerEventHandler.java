@@ -13,10 +13,9 @@ import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
+import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -28,7 +27,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.server.permission.context.IContext;
 import net.minecraftforge.server.permission.context.PlayerContext;
 
 /**
@@ -43,19 +41,23 @@ public class FTBUtilitiesServerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onServerChatEvent(ServerChatEvent event)
 	{
-		if (!FTBUtilitiesConfig.ranks.override_chat || Ranks.INSTANCE == null)
+		if (!FTBUtilitiesConfig.ranks.override_chat || !Ranks.isActive())
 		{
 			return;
 		}
 
 		EntityPlayerMP player = event.getPlayer();
-		MinecraftServer server = player.mcServer;
-		IContext context = new PlayerContext(player);
-		GameProfile profile = player.getGameProfile();
+		Rank rank = Ranks.INSTANCE.getRank(player.mcServer, player.getGameProfile(), new PlayerContext(player));
+
+		if (rank == null)
+		{
+			return;
+		}
+
 		ITextComponent main = new TextComponentString("");
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(Universe.get().getPlayer(player));
-		main.appendSibling(data.getNameForChat(server, profile, context));
-		main.appendSibling(FTBUtilitiesPermissions.CHAT_TEXT.format(server, profile, context, ForgeHooks.newChatWithLinks(event.getMessage().trim())));
+		main.appendSibling(data.getNameForChat(rank));
+		main.appendSibling(FTBUtilitiesPermissions.CHAT_TEXT.format(rank, ForgeHooks.newChatWithLinks(event.getMessage().trim())));
 		event.setComponent(main);
 	}
 

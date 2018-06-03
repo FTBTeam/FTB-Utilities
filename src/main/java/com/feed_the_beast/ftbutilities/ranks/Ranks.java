@@ -61,7 +61,7 @@ public class Ranks
 		return FTBUtilitiesConfig.ranks.enabled && INSTANCE != null && PermissionAPI.getPermissionHandler() == FTBUtilitiesPermissionHandler.INSTANCE;
 	}
 
-	public static Event.Result getPermissionResult(GameProfile profile, Node node, @Nullable IContext context)
+	public static Event.Result getPermissionResult(@Nullable MinecraftServer server, GameProfile profile, Node node, @Nullable IContext context)
 	{
 		if (!isActive())
 		{
@@ -77,7 +77,6 @@ public class Ranks
 			return Event.Result.DEFAULT;
 		}
 
-		MinecraftServer server = context != null && context.getWorld() != null ? context.getWorld().getMinecraftServer() : null;
 		Rank rank = INSTANCE.getRank(server, profile, context);
 
 		if (rank == null)
@@ -94,6 +93,23 @@ public class Ranks
 		}
 
 		return result;
+	}
+
+	public static boolean getPermissionResult(MinecraftServer server, GameProfile profile, Node node, @Nullable IContext context, DefaultPermissionLevel def)
+	{
+		Event.Result result = getPermissionResult(server, profile, node, context);
+
+		if (result == Event.Result.DEFAULT)
+		{
+			if (def == DefaultPermissionLevel.OP)
+			{
+				return ServerUtils.isOP(server, profile);
+			}
+
+			return def == DefaultPermissionLevel.ALL;
+		}
+
+		return result == Event.Result.ALLOW;
 	}
 
 	public static boolean isValidName(@Nullable String id)
@@ -158,6 +174,7 @@ public class Ranks
 			playerMap.put(id, r);
 		}
 
+		universe.clearCache();
 		savePlayerRanks();
 	}
 

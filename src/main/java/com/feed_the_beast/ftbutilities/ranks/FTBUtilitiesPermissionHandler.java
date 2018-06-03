@@ -40,7 +40,7 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 	@Override
 	public boolean hasPermission(GameProfile profile, String nodeS, @Nullable IContext context)
 	{
-		switch (Ranks.getPermissionResult(profile, Node.get(nodeS), context))
+		switch (Ranks.getPermissionResult(null, profile, Node.get(nodeS), context))
 		{
 			case ALLOW:
 				return true;

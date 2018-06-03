@@ -4,11 +4,9 @@ import com.feed_the_beast.ftblib.events.RegisterPermissionsEvent;
 import com.feed_the_beast.ftblib.events.RegisterRankConfigEvent;
 import com.feed_the_beast.ftblib.events.RegisterRankConfigHandlerEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
-import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigTimer;
-import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -17,7 +15,8 @@ import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
-import com.mojang.authlib.GameProfile;
+import com.feed_the_beast.ftbutilities.ranks.Rank;
+import com.google.gson.JsonElement;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockDoor;
@@ -26,11 +25,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
@@ -81,65 +79,55 @@ public class FTBUtilitiesPermissions
 
 	public static class ChatPart
 	{
-		public final String id;
-		public final Node color;
-		public final String bold, italic, underlined, strikethrough, obfuscated;
+		public final Node color, text, bold, italic, underlined, strikethrough, obfuscated;
 
 		public ChatPart(String s)
 		{
-			id = s;
-			color = Node.get("ftbutilities.chat." + id + ".color");
-			bold = "ftbutilities.chat." + id + ".bold";
-			italic = "ftbutilities.chat." + id + ".italic";
-			underlined = "ftbutilities.chat." + id + ".underlined";
-			strikethrough = "ftbutilities.chat." + id + ".strikethrough";
-			obfuscated = "ftbutilities.chat." + id + ".obfuscated";
+			Node node = CHAT.append(s);
+			color = node.append("color");
+			text = node.append("text");
+			bold = node.append("bold");
+			italic = node.append("italic");
+			underlined = node.append("underlined");
+			strikethrough = node.append("strikethrough");
+			obfuscated = node.append("obfuscated");
 		}
 
-		public void registerPermissions(RegisterPermissionsEvent event)
+		public ITextComponent format(Rank rank, ITextComponent component)
 		{
-			event.registerNode(bold, DefaultPermissionLevel.NONE, "Make the " + id + " bold");
-			event.registerNode(italic, DefaultPermissionLevel.NONE, "Make the " + id + " italic");
-			event.registerNode(underlined, DefaultPermissionLevel.NONE, "Make the " + id + " underlined");
-			event.registerNode(strikethrough, DefaultPermissionLevel.NONE, "Make the " + id + " strikethrough");
-			event.registerNode(obfuscated, DefaultPermissionLevel.NONE, "Make the " + id + " obfuscated");
-		}
+			JsonElement json = rank.getConfigRaw(color);
 
-		public void registerConfigs(RegisterRankConfigEvent event, String defText)
-		{
-			event.register(color, new ConfigEnum<>(StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP));
-		}
-
-		public ITextComponent format(MinecraftServer server, GameProfile profile, IContext context, ITextComponent component)
-		{
-			TextFormatting colortf = (TextFormatting) RankConfigAPI.get(server, profile, color, context).getValue();
-
-			if (colortf != TextFormatting.WHITE)
+			if (json.isJsonPrimitive())
 			{
-				component.getStyle().setColor(colortf);
+				TextFormatting colortf = StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP.get(json.getAsString());
+
+				if (colortf != TextFormatting.WHITE)
+				{
+					component.getStyle().setColor(colortf);
+				}
 			}
 
-			if (PermissionAPI.hasPermission(profile, bold, context))
+			if (rank.getPermissionRaw(bold) == Event.Result.ALLOW)
 			{
 				component.getStyle().setBold(true);
 			}
 
-			if (PermissionAPI.hasPermission(profile, italic, context))
+			if (rank.getPermissionRaw(italic) == Event.Result.ALLOW)
 			{
 				component.getStyle().setItalic(true);
 			}
 
-			if (PermissionAPI.hasPermission(profile, underlined, context))
+			if (rank.getPermissionRaw(underlined) == Event.Result.ALLOW)
 			{
 				component.getStyle().setUnderlined(true);
 			}
 
-			if (PermissionAPI.hasPermission(profile, strikethrough, context))
+			if (rank.getPermissionRaw(strikethrough) == Event.Result.ALLOW)
 			{
 				component.getStyle().setStrikethrough(true);
 			}
 
-			if (PermissionAPI.hasPermission(profile, obfuscated, context))
+			if (rank.getPermissionRaw(obfuscated) == Event.Result.ALLOW)
 			{
 				component.getStyle().setObfuscated(true);
 			}
@@ -148,37 +136,11 @@ public class FTBUtilitiesPermissions
 		}
 	}
 
-	public static class ChatPartWithText extends ChatPart
-	{
-		public final Node text;
-
-		public ChatPartWithText(String s)
-		{
-			super(s);
-			text = Node.get("ftbutilities.chat." + id + ".text");
-		}
-
-		@Override
-		public void registerConfigs(RegisterRankConfigEvent event, String defText)
-		{
-			super.registerConfigs(event, defText);
-			event.register(text, new ConfigString(defText));
-		}
-
-		public ITextComponent getText(MinecraftServer server, GameProfile profile, IContext context)
-		{
-			return format(server, profile, context, new TextComponentString(RankConfigAPI.get(server, profile, text, context).getString()));
-		}
-	}
-
 	// Chat //
-	public static final ChatPartWithText CHAT_PREFIX_LEFT = new ChatPartWithText("prefix.left");
-	public static final ChatPartWithText CHAT_PREFIX_BASE = new ChatPartWithText("prefix.base");
-	public static final ChatPartWithText CHAT_PREFIX_RIGHT = new ChatPartWithText("prefix.right");
+	public static final Node CHAT = Node.get("ftbutilities.chat");
+	public static final Node PREFIX_PART_COUNT = CHAT.append("prefix.part_count");
 	public static final ChatPart CHAT_NAME = new ChatPart("name");
-	public static final ChatPartWithText CHAT_SUFFIX_LEFT = new ChatPartWithText("suffix.left");
-	public static final ChatPartWithText CHAT_SUFFIX_BASE = new ChatPartWithText("suffix.base");
-	public static final ChatPartWithText CHAT_SUFFIX_RIGHT = new ChatPartWithText("suffix.right");
+	public static final Node SUFFIX_PART_COUNT = CHAT.append("suffix.part_count");
 	public static final ChatPart CHAT_TEXT = new ChatPart("text");
 
 	// Other //
@@ -252,15 +214,6 @@ public class FTBUtilitiesPermissions
 		{
 			event.registerNode(getLeaderboardNode(leaderboard), DefaultPermissionLevel.ALL);
 		}
-
-		CHAT_PREFIX_LEFT.registerPermissions(event);
-		CHAT_PREFIX_BASE.registerPermissions(event);
-		CHAT_PREFIX_RIGHT.registerPermissions(event);
-		CHAT_NAME.registerPermissions(event);
-		CHAT_SUFFIX_LEFT.registerPermissions(event);
-		CHAT_SUFFIX_BASE.registerPermissions(event);
-		CHAT_SUFFIX_RIGHT.registerPermissions(event);
-		CHAT_TEXT.registerPermissions(event);
 	}
 
 	@SubscribeEvent
@@ -282,15 +235,6 @@ public class FTBUtilitiesPermissions
 		event.register(CHUNKLOADER_MAX_CHUNKS, new ConfigInt(50, 0, 30000), new ConfigInt(64));
 		//event.register(CHUNKLOADER_OFFLINE_TIMER, new ConfigDouble(-1D).setMin(-1D), new ConfigDouble(-1D));
 		event.register(AFK_TIMER, new ConfigTimer(0));
-
-		CHAT_PREFIX_LEFT.registerConfigs(event, "");
-		CHAT_PREFIX_BASE.registerConfigs(event, "<");
-		CHAT_PREFIX_RIGHT.registerConfigs(event, "");
-		CHAT_NAME.registerConfigs(event, "");
-		CHAT_SUFFIX_LEFT.registerConfigs(event, "");
-		CHAT_SUFFIX_BASE.registerConfigs(event, "> ");
-		CHAT_SUFFIX_RIGHT.registerConfigs(event, "");
-		CHAT_TEXT.registerConfigs(event, "");
 	}
 
 	@SubscribeEvent

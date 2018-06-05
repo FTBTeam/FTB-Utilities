@@ -18,7 +18,7 @@ public class CmdGet extends CmdBase
 {
 	public CmdGet()
 	{
-		super("get", Level.OP);
+		super("get", Level.ALL);
 	}
 
 	@Override

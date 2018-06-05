@@ -79,9 +79,12 @@ public class CmdTPA extends CmdBase
 				component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBUtilities.lang(sender, "ftbutilities.lang.tpa.from_to", selfName, otherName)));
 				sender.sendMessage(component);
 
-				component = FTBUtilities.lang(other.player.getPlayer(), "ftbutilities.lang.tpa.request_expired");
-				component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBUtilities.lang(other.player.getPlayer(), "ftbutilities.lang.tpa.from_to", selfName, otherName)));
-				other.player.getPlayer().sendMessage(component);
+				if (other.player.isOnline())
+				{
+					component = FTBUtilities.lang(other.player.getPlayer(), "ftbutilities.lang.tpa.request_expired");
+					component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBUtilities.lang(other.player.getPlayer(), "ftbutilities.lang.tpa.from_to", selfName, otherName)));
+					other.player.getPlayer().sendMessage(component);
+				}
 			}
 		});
 	}

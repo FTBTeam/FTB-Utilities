@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftbutilities.command;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
-import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
-import com.feed_the_beast.ftblib.lib.cmd.CmdTreeHelp;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdTreeBase;
+import com.feed_the_beast.ftblib.lib.command.CmdTreeHelp;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBT;
@@ -147,7 +148,7 @@ public class CmdEditNBT extends CmdTreeBase
 		@Override
 		public NBTTagCompound editNBT(EntityPlayerMP player, NBTTagCompound info, String[] args) throws CommandException
 		{
-			ForgePlayer p = getSelfOrOther(player, args, 0);
+			ForgePlayer p = CommandUtils.getSelfOrOther(player, args, 0);
 			info.setBoolean("online", p.isOnline());
 			info.setString("type", "player");
 			info.setUniqueId("id", p.getId());

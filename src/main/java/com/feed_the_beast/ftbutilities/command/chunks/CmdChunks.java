@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbutilities.command.chunks;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
-import com.feed_the_beast.ftblib.lib.cmd.CmdTreeHelp;
+import com.feed_the_beast.ftblib.lib.command.CmdTreeBase;
+import com.feed_the_beast.ftblib.lib.command.CmdTreeHelp;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbutilities.handlers.FTBUtilitiesPlayerEventHandler;
 import net.minecraft.entity.player.EntityPlayerMP;

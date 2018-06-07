@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.command.ranks;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
@@ -78,15 +79,15 @@ public class CmdSetPermission extends CmdBase
 	{
 		if (!Ranks.isActive())
 		{
-			throw new CommandException("feature_disabled_server");
+			throw FTBLib.error(sender, "feature_disabled_server");
 		}
 
 		checkArgs(sender, args, 3);
 		Rank rank = Ranks.INSTANCE.getRank(args[0]);
 
-		if (rank == null)
+		if (rank.isNone())
 		{
-			throw new CommandException("commands.ranks.not_found", args[0]);
+			throw FTBUtilities.error(sender, "commands.ranks.not_found", args[0]);
 		}
 
 		Node node = Node.get(args[1]);
@@ -95,21 +96,17 @@ public class CmdSetPermission extends CmdBase
 
 		if (element.isJsonObject())
 		{
-			throw new CommandException("wip");
+			throw FTBLib.error(sender, "wip");
 		}
 
 		if (!rank.setPermission(node, element))
 		{
-			sender.sendMessage(FTBUtilities.lang(sender, "commands.ranks.set_permission.nothing_changed"));
+			sender.sendMessage(FTBLib.lang(sender, "nothing_changed"));
 		}
 		else
 		{
-			Ranks.INSTANCE.saveAndUpdate(server);
 			ITextComponent nodeText = new TextComponentString(node.toString());
 			nodeText.getStyle().setColor(TextFormatting.GOLD);
-
-			ITextComponent rankText = new TextComponentString(rank.getName());
-			rankText.getStyle().setColor(TextFormatting.DARK_GREEN);
 
 			ITextComponent setText;
 
@@ -137,7 +134,7 @@ public class CmdSetPermission extends CmdBase
 				}
 			}
 
-			sender.sendMessage(FTBUtilities.lang(sender, "commands.ranks.set_permission.set", nodeText, rankText, setText));
+			sender.sendMessage(FTBUtilities.lang(sender, "commands.ranks.set_permission.set", nodeText, rank.getDisplayName(), setText));
 		}
 	}
 }

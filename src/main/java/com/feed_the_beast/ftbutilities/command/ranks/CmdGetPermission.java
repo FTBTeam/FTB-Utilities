@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.command.ranks;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
@@ -57,7 +58,7 @@ public class CmdGetPermission extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		checkArgs(sender, args, 2);
-		ForgePlayer player = getForgePlayer(sender, args[0]);
+		ForgePlayer player = CommandUtils.getForgePlayer(sender, args[0]);
 		Node node = Node.get(args[1]);
 
 		ITextComponent nodeText = new TextComponentString(node.toString());

@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbutilities.command.ranks;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
@@ -32,17 +34,11 @@ public class CmdGet extends CmdBase
 	{
 		if (!Ranks.isActive())
 		{
-			throw new CommandException("feature_disabled_server");
+			throw FTBLib.error(sender, "feature_disabled_server");
 		}
 
-		ForgePlayer p = getSelfOrOther(sender, args, 0);
+		ForgePlayer p = CommandUtils.getSelfOrOther(sender, args, 0);
 		Rank rank = Ranks.INSTANCE.getRank(p.team.universe.server, p.getProfile(), p.getContext());
-
-		if (rank == null)
-		{
-			throw new CommandException("commands.ranks.not_found", args[0]);
-		}
-
-		sender.sendMessage(new TextComponentString("").appendSibling(StringUtils.color(p.getDisplayName(), TextFormatting.BLUE)).appendText(" - ").appendSibling(StringUtils.color(new TextComponentString(rank.getName()), TextFormatting.DARK_GREEN)));
+		sender.sendMessage(new TextComponentString("").appendSibling(StringUtils.color(p.getDisplayName(), TextFormatting.BLUE)).appendText(" - ").appendSibling(rank.getDisplayName()));
 	}
 }

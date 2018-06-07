@@ -78,7 +78,7 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 		{
 			Rank rank = Ranks.INSTANCE.getRank(server, profile, context);
 
-			if (rank != null)
+			if (!rank.isNone())
 			{
 				value = rank.cachedConfig.get(node);
 

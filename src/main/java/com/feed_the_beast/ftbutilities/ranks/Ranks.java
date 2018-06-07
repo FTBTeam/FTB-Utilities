@@ -28,7 +28,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.ServerCommandManager;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -79,7 +78,7 @@ public class Ranks
 
 		Rank rank = INSTANCE.getRank(server, profile, context);
 
-		if (rank == null)
+		if (rank.isNone())
 		{
 			return Event.Result.DEFAULT;
 		}
@@ -88,7 +87,7 @@ public class Ranks
 
 		if (result == null)
 		{
-			result = rank.getPermissionRaw(node);
+			result = rank.getPermissionRaw(node, true);
 			rank.cachedPermissions.put(node, result);
 		}
 
@@ -114,14 +113,16 @@ public class Ranks
 
 	public static boolean isValidName(@Nullable String id)
 	{
-		if (id == null || id.isEmpty() || id.charAt(0) == '–' || id.equals("none") || id.equals("null"))
+		if (id == null || id.isEmpty() || id.equals("none"))
 		{
 			return false;
 		}
 
 		for (int i = 0; i < id.length(); i++)
 		{
-			if (!Character.isLowerCase(id.charAt(i)))
+			char c = id.charAt(i);
+
+			if (c != '_' && (c < '0' || c > '9') && (c < 'a' || c > 'z'))
 			{
 				return false;
 			}
@@ -131,6 +132,7 @@ public class Ranks
 	}
 
 	public final Universe universe;
+	public final Rank none;
 	private final Map<String, Rank> ranks = new LinkedHashMap<>();
 	private Collection<String> rankNames = null;
 	private Collection<String> permissionNodes = null;
@@ -141,41 +143,116 @@ public class Ranks
 	public Ranks(Universe u)
 	{
 		universe = u;
+		none = new RankNone(this, "none");
+		none.parent = none;
 	}
 
-	@Nullable
 	public Rank getRank(String id)
 	{
-		return isValidName(id) ? ranks.get(id) : null;
+		Rank rank = isValidName(id) ? ranks.get(id) : null;
+		return rank == null ? none : rank;
 	}
 
-	@Nullable
+	public Rank getDefaultPlayerRank()
+	{
+		if (defaultPlayerRank == null)
+		{
+			defaultPlayerRank = none;
+
+			for (Rank rank : ranks.values())
+			{
+				if (rank.tags.contains(Rank.TAG_DEFAULT_PLAYER))
+				{
+					defaultPlayerRank = rank;
+				}
+			}
+		}
+
+		return defaultPlayerRank;
+	}
+
+	public Rank getDefaultOPRank()
+	{
+		if (defaultOPRank == null)
+		{
+			for (Rank rank : ranks.values())
+			{
+				if (rank.tags.contains(Rank.TAG_DEFAULT_OP))
+				{
+					defaultOPRank = rank;
+				}
+			}
+
+			if (defaultOPRank == null)
+			{
+				defaultOPRank = getDefaultPlayerRank();
+			}
+		}
+
+		return defaultOPRank;
+	}
+
 	public Rank getRank(@Nullable MinecraftServer server, GameProfile profile, @Nullable IContext context)
 	{
 		Rank r = isActive() ? playerMap.get(profile.getId()) : null;
-		return (r == null) ? (ServerUtils.isOP(server, profile) ? defaultOPRank : defaultPlayerRank) : r;
+		return (r == null) ? (ServerUtils.isOP(server, profile) ? getDefaultOPRank() : getDefaultPlayerRank()) : r;
 	}
 
 	public void addRank(Rank rank)
 	{
-		ranks.put(rank.getName(), rank);
-		updateRankNames();
-		saveRanks();
+		if (!rank.isNone() && ranks.put(rank.getName(), rank) != rank)
+		{
+			universe.clearCache();
+			saveRanks();
+		}
 	}
 
-	public void setRank(UUID id, @Nullable Rank r)
+	public boolean removeRank(Rank rank)
 	{
-		if (r == null)
+		if (!rank.isNone() && ranks.remove(rank.getName()) != null)
 		{
-			playerMap.remove(id);
+			if (playerMap.values().removeIf(r -> r == rank))
+			{
+				savePlayerRanks();
+			}
+
+			for (Rank rank1 : ranks.values())
+			{
+				if (rank1.parent == rank)
+				{
+					rank1.parent = none;
+				}
+			}
+
+			universe.clearCache();
+			saveRanks();
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean setRank(UUID id, Rank rank)
+	{
+		boolean result;
+
+		if (rank.isNone())
+		{
+			result = playerMap.remove(id) != null;
 		}
 		else
 		{
-			playerMap.put(id, r);
+			result = playerMap.put(id, rank) != rank;
 		}
 
-		universe.clearCache();
-		savePlayerRanks();
+		if (result)
+		{
+			universe.clearCache();
+			savePlayerRanks();
+			return true;
+		}
+
+		return false;
 	}
 
 	public Collection<String> getPermissionNodes()
@@ -231,11 +308,6 @@ public class Ranks
 		return permissionNodes;
 	}
 
-	public void updatePermissionNodes()
-	{
-		permissionNodes = null;
-	}
-
 	public Collection<String> getRankNames(boolean includeNone)
 	{
 		if (!includeNone)
@@ -253,18 +325,11 @@ public class Ranks
 		return rankNames;
 	}
 
-	public void updateRankNames()
-	{
-		rankNames = null;
-		updatePermissionNodes();
-	}
-
 	public boolean reload()
 	{
 		ranks.clear();
 		playerMap.clear();
-		defaultPlayerRank = null;
-		defaultOPRank = null;
+		clearCache();
 
 		if (!isActive())
 		{
@@ -364,21 +429,21 @@ public class Ranks
 
 					if (dr.has("player"))
 					{
-						Rank r = getRank(dr.get("player").getAsString());
+						Rank rank = getRank(dr.get("player").getAsString());
 
-						if (r != null)
+						if (!rank.isNone())
 						{
-							r.tags.add("default_player_rank");
+							rank.tags.add(Rank.TAG_DEFAULT_PLAYER);
 						}
 					}
 
 					if (dr.has("op"))
 					{
-						Rank r = getRank(dr.get("op").getAsString());
+						Rank rank = getRank(dr.get("op").getAsString());
 
-						if (r != null)
+						if (!rank.isNone())
 						{
-							r.tags.add("default_op_rank");
+							rank.tags.add(Rank.TAG_DEFAULT_OP);
 						}
 					}
 				}
@@ -394,13 +459,13 @@ public class Ranks
 		{
 			Rank pRank = new Rank(this, "player");
 			ranks.put(pRank.getName(), pRank);
-			pRank.tags.add("default_player_rank");
+			pRank.tags.add(Rank.TAG_DEFAULT_PLAYER);
 			pRank.setPermission(Node.get("example.permission"), JsonUtils.JSON_TRUE);
 			pRank.setPermission(Node.get("example.other_permission"), JsonUtils.JSON_FALSE);
 
 			Rank oRank = new Rank(this, "admin");
 			ranks.put(oRank.getName(), oRank);
-			oRank.tags.add("default_op_rank");
+			oRank.tags.add(Rank.TAG_DEFAULT_OP);
 			oRank.parent = pRank;
 			oRank.setPermission(FTBUtilitiesPermissions.CHAT_NAME.color, new JsonPrimitive("dark_green"));
 		}
@@ -471,31 +536,15 @@ public class Ranks
 
 		for (Rank rank : ranks.values())
 		{
-			Rank r = getRank(rankParents.get(rank.getName()));
+			Rank rankp = getRank(rankParents.get(rank.getName()));
 
-			if (r != rank)
+			if (rankp != rank)
 			{
-				rank.parent = r;
+				rank.parent = rankp;
 			}
-
-			if (rank.tags.contains("default_player_rank"))
-			{
-				defaultPlayerRank = rank;
-			}
-
-			if (rank.tags.contains("default_op_rank"))
-			{
-				defaultOPRank = rank;
-			}
-		}
-
-		if (defaultOPRank == null)
-		{
-			defaultOPRank = defaultPlayerRank;
 		}
 
 		saveRanks();
-		updateRankNames();
 
 		File playerRanksFile = new File(CommonUtils.folderLocal, "ftbutilities/player_ranks.json");
 		ranksJson = DataReader.get(playerRanksFile).safeJson();
@@ -510,7 +559,7 @@ public class Ranks
 				{
 					Rank rank = getRank(entry.getValue().getAsString());
 
-					if (rank != null)
+					if (!rank.isNone())
 					{
 						playerMap.put(player.getId(), rank);
 					}
@@ -539,7 +588,7 @@ public class Ranks
 				{
 					Rank rank = getRank(s1[1].trim());
 
-					if (rank != null)
+					if (!rank.isNone())
 					{
 						playerMap.put(player.getId(), rank);
 					}
@@ -575,7 +624,7 @@ public class Ranks
 			line.append('[');
 			line.append(rank);
 
-			if (rank.parent != null)
+			if (!rank.parent.isNone())
 			{
 				line.append(" extends ");
 				line.append(rank.parent);
@@ -599,19 +648,13 @@ public class Ranks
 		FileUtils.saveSafe(new File(CommonUtils.folderLocal, "ftbutilities/ranks.txt"), list);
 	}
 
-	public void saveAndUpdate(MinecraftServer server)
-	{
-		saveRanks();
-		universe.clearCache();
-
-		for (EntityPlayerMP player : server.getPlayerList().getPlayers())
-		{
-			server.getPlayerList().updatePermissionLevel(player);
-		}
-	}
-
 	public void clearCache()
 	{
+		rankNames = null;
+		permissionNodes = null;
+		defaultPlayerRank = null;
+		defaultOPRank = null;
+
 		for (Rank rank : ranks.values())
 		{
 			rank.cachedPermissions.clear();
@@ -697,7 +740,7 @@ public class Ranks
 
 		for (RankConfigValueInfo info : RankConfigAPI.getHandler().getRegisteredConfigs())
 		{
-			String desc = new TextComponentTranslation("rank_config." + info.node).getUnformattedText();
+			String desc = new TextComponentTranslation("permission." + info.node).getUnformattedText();
 			allNodes.add(new NodeEntry(info.node, info.defaultValue, info.defaultOPValue, desc.equals(info.node.toString()) ? "" : desc, null));
 		}
 

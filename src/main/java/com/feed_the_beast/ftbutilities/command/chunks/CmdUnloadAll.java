@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbutilities.command.chunks;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
@@ -32,7 +34,7 @@ public class CmdUnloadAll extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, getDimensionNames());
+			return getListOfStringsMatchingLastWord(args, CommandUtils.getDimensionNames());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -49,14 +51,14 @@ public class CmdUnloadAll extends CmdBase
 	{
 		if (!ClaimedChunks.isActive())
 		{
-			throw new CommandException("feature_disabled_server");
+			throw FTBLib.error(sender, "feature_disabled_server");
 		}
 
-		ForgePlayer p = getSelfOrOther(sender, args, 1, FTBUtilitiesPermissions.CLAIMS_OTHER_UNLOAD);
+		ForgePlayer p = CommandUtils.getSelfOrOther(sender, args, 1, FTBUtilitiesPermissions.CLAIMS_OTHER_UNLOAD);
 
 		if (p.hasTeam())
 		{
-			OptionalInt dimension = parseDimension(sender, args, 0);
+			OptionalInt dimension = CommandUtils.parseDimension(sender, args, 0);
 
 			for (ClaimedChunk chunk : ClaimedChunks.instance.getTeamChunks(p.team, dimension))
 			{
@@ -67,7 +69,7 @@ public class CmdUnloadAll extends CmdBase
 		}
 		else
 		{
-			throw new CommandException("ftblib.lang.team.error.no_team");
+			throw FTBLib.error(sender, "ftblib.lang.team.error.no_team");
 		}
 	}
 }

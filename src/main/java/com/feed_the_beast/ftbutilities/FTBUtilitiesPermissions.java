@@ -93,54 +93,81 @@ public class FTBUtilitiesPermissions
 			obfuscated = node.append("obfuscated");
 		}
 
-		public ITextComponent format(Rank rank, ITextComponent component)
+		public ITextComponent format(Rank rank, ITextComponent component, @Nullable ChatPart alt)
 		{
-			JsonElement json = rank.getConfigRaw(color);
+			JsonElement json;
+			TextFormatting colortf = TextFormatting.WHITE;
 
-			if (json.isJsonPrimitive())
+			if (alt != null)
 			{
-				TextFormatting colortf = StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP.get(json.getAsString());
+				json = rank.getConfigRaw(alt.color);
 
-				if (colortf != TextFormatting.WHITE)
+				if (json.isJsonPrimitive())
 				{
-					component.getStyle().setColor(colortf);
+					colortf = StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP.get(json.getAsString());
 				}
 			}
 
-			if (rank.getPermissionRaw(bold) == Event.Result.ALLOW)
+			json = rank.getConfigRaw(color);
+
+			if (json.isJsonPrimitive())
+			{
+				colortf = StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP.get(json.getAsString());
+			}
+
+			if (colortf != TextFormatting.WHITE)
+			{
+				component.getStyle().setColor(colortf);
+			}
+
+			if (getStyleBoolean(rank, bold, alt == null ? null : alt.bold))
 			{
 				component.getStyle().setBold(true);
 			}
 
-			if (rank.getPermissionRaw(italic) == Event.Result.ALLOW)
+			if (getStyleBoolean(rank, italic, alt == null ? null : alt.italic))
 			{
 				component.getStyle().setItalic(true);
 			}
 
-			if (rank.getPermissionRaw(underlined) == Event.Result.ALLOW)
+			if (getStyleBoolean(rank, underlined, alt == null ? null : alt.underlined))
 			{
 				component.getStyle().setUnderlined(true);
 			}
 
-			if (rank.getPermissionRaw(strikethrough) == Event.Result.ALLOW)
+			if (getStyleBoolean(rank, strikethrough, alt == null ? null : alt.strikethrough))
 			{
 				component.getStyle().setStrikethrough(true);
 			}
 
-			if (rank.getPermissionRaw(obfuscated) == Event.Result.ALLOW)
+			if (getStyleBoolean(rank, obfuscated, alt == null ? null : alt.obfuscated))
 			{
 				component.getStyle().setObfuscated(true);
 			}
 
 			return component;
 		}
+
+		private boolean getStyleBoolean(Rank rank, Node main, @Nullable Node alt)
+		{
+			Event.Result result = rank.getPermissionRaw(main, false);
+
+			if (result == Event.Result.DEFAULT && alt != null)
+			{
+				result = rank.getPermissionRaw(alt, false);
+			}
+
+			return result == Event.Result.ALLOW;
+		}
 	}
 
 	// Chat //
 	public static final Node CHAT = Node.get("ftbutilities.chat");
-	public static final Node PREFIX_PART_COUNT = CHAT.append("prefix.part_count");
+	public static final Node CHAT_PREFIX_PART_COUNT = CHAT.append("prefix.part_count");
+	public static final ChatPart CHAT_PREFIX = new ChatPart("prefix");
 	public static final ChatPart CHAT_NAME = new ChatPart("name");
-	public static final Node SUFFIX_PART_COUNT = CHAT.append("suffix.part_count");
+	public static final Node CHAT_SUFFIX_PART_COUNT = CHAT.append("suffix.part_count");
+	public static final ChatPart CHAT_SUFFIX = new ChatPart("suffix");
 	public static final ChatPart CHAT_TEXT = new ChatPart("text");
 
 	// Other //

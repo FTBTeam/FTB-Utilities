@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbutilities.command;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
-import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
-import com.feed_the_beast.ftblib.lib.cmd.CmdTreeHelp;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdTreeBase;
+import com.feed_the_beast.ftblib.lib.command.CmdTreeHelp;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;

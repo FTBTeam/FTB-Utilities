@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbutilities.command.chunks;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
@@ -29,7 +31,7 @@ public class CmdUnloadEverything extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, getDimensionNames());
+			return getListOfStringsMatchingLastWord(args, CommandUtils.getDimensionNames());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -40,10 +42,10 @@ public class CmdUnloadEverything extends CmdBase
 	{
 		if (!ClaimedChunks.isActive())
 		{
-			throw new CommandException("feature_disabled_server");
+			throw FTBLib.error(sender, "feature_disabled_server");
 		}
 
-		OptionalInt dimension = parseDimension(sender, args, 0);
+		OptionalInt dimension = CommandUtils.parseDimension(sender, args, 0);
 
 		for (ForgeTeam team : Universe.get().getTeams())
 		{

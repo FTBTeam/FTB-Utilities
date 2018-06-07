@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.command.tp;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
@@ -46,19 +47,19 @@ public class CmdTplast extends CmdBase
 		if (args.length == 1)
 		{
 			who = getCommandSenderAsPlayer(sender);
-			to = getForgePlayer(sender, args[0]);
+			to = CommandUtils.getForgePlayer(sender, args[0]);
 		}
 		else
 		{
-			who = getPlayer(server, sender, args[0]);
-			to = getForgePlayer(sender, args[1]);
+			who = CommandUtils.getForgePlayer(sender, args[0]).getCommandPlayer(sender);
+			to = CommandUtils.getForgePlayer(sender, args[1]);
 		}
 
 		BlockDimPos p;
 
 		if (to.isOnline())
 		{
-			p = new BlockDimPos(to.getCommandPlayer());
+			p = new BlockDimPos(to.getCommandPlayer(sender));
 		}
 		else
 		{

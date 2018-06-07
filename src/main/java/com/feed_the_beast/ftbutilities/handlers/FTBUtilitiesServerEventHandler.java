@@ -49,7 +49,7 @@ public class FTBUtilitiesServerEventHandler
 		EntityPlayerMP player = event.getPlayer();
 		Rank rank = Ranks.INSTANCE.getRank(player.mcServer, player.getGameProfile(), new PlayerContext(player));
 
-		if (rank == null)
+		if (rank.isNone())
 		{
 			return;
 		}
@@ -57,7 +57,7 @@ public class FTBUtilitiesServerEventHandler
 		ITextComponent main = new TextComponentString("");
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(Universe.get().getPlayer(player));
 		main.appendSibling(data.getNameForChat(rank));
-		main.appendSibling(FTBUtilitiesPermissions.CHAT_TEXT.format(rank, ForgeHooks.newChatWithLinks(event.getMessage().trim())));
+		main.appendSibling(FTBUtilitiesPermissions.CHAT_TEXT.format(rank, ForgeHooks.newChatWithLinks(event.getMessage().trim()), null));
 		event.setComponent(main);
 	}
 
@@ -113,7 +113,7 @@ public class FTBUtilitiesServerEventHandler
 
 							if (location != EnumMessageLocation.OFF)
 							{
-								ITextComponent component = FTBUtilities.lang(player1, isAFK ? "rank_config.ftbutilities.afk.timer.is_afk" : "rank_config.ftbutilities.afk.timer.isnt_afk", player.getDisplayName());
+								ITextComponent component = FTBUtilities.lang(player1, isAFK ? "permission.ftbutilities.afk.timer.is_afk" : "permission.ftbutilities.afk.timer.isnt_afk", player.getDisplayName());
 								component.getStyle().setColor(TextFormatting.GRAY);
 
 								if (location == EnumMessageLocation.CHAT)

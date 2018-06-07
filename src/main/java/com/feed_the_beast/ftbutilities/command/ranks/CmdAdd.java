@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbutilities.command.ranks;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.CommandException;
@@ -22,31 +24,34 @@ public class CmdAdd extends CmdBase
 	{
 		if (!Ranks.isActive())
 		{
-			throw new CommandException("feature_disabled_server");
+			throw FTBLib.error(sender, "feature_disabled_server");
 		}
 
 		checkArgs(sender, args, 1);
 
-		String id = args[0].toLowerCase();
-
-		if (!Ranks.isValidName(id) || Ranks.INSTANCE.getRankNames(false).contains(id))
+		if (!Ranks.isValidName(args[0]))
 		{
-			throw new CommandException("commands.ranks.add.id_exists", id);
+			throw FTBUtilities.error(sender, "commands.ranks.add.id_invalid", args[0]);
+		}
+		else if (!Ranks.INSTANCE.getRank(args[0]).isNone())
+		{
+			throw FTBUtilities.error(sender, "commands.ranks.add.id_exists", args[0]);
 		}
 
-		Rank rank = new Rank(Ranks.INSTANCE, id);
+		Rank rank = new Rank(Ranks.INSTANCE, args[0]);
 
 		if (args.length == 2)
 		{
 			String pid = args[1].toLowerCase();
 			rank.parent = Ranks.INSTANCE.getRank(pid);
 
-			if (rank.parent == null)
+			if (rank.parent.isNone())
 			{
-				throw new CommandException("commands.ranks.not_found", pid);
+				throw FTBUtilities.error(sender, "commands.ranks.not_found", pid);
 			}
 		}
 
 		Ranks.INSTANCE.addRank(rank);
+		sender.sendMessage(FTBUtilities.lang(sender, "commands.ranks.add.added", rank.getDisplayName()));
 	}
 }

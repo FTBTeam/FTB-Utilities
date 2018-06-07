@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.command;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
@@ -21,7 +22,7 @@ public class CmdNick extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		ForgePlayer player = getForgePlayer(sender);
+		ForgePlayer player = CommandUtils.getForgePlayer(sender);
 
 		if (!player.hasPermission(FTBUtilitiesPermissions.NICKNAME_SET))
 		{

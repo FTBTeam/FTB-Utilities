@@ -1,7 +1,8 @@
 package com.feed_the_beast.ftbutilities.command.tp;
 
 import com.feed_the_beast.ftblib.FTBLib;
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -36,16 +37,11 @@ public class CmdTPA extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		checkArgs(sender, args, 1);
-		FTBUtilitiesPlayerData self = FTBUtilitiesPlayerData.get(getForgePlayer(sender));
+		FTBUtilitiesPlayerData self = FTBUtilitiesPlayerData.get(CommandUtils.getForgePlayer(sender));
 
-		long cooldown = self.getTeleportCooldown(FTBUtilitiesPlayerData.Timer.TPA);
+		self.checkTeleportCooldown(sender, FTBUtilitiesPlayerData.Timer.TPA);
 
-		if (cooldown > 0)
-		{
-			throw new CommandException("cant_use_now_cooldown", StringUtils.getTimeStringTicks(cooldown));
-		}
-
-		FTBUtilitiesPlayerData other = FTBUtilitiesPlayerData.get(getForgePlayer(sender, args[0]));
+		FTBUtilitiesPlayerData other = FTBUtilitiesPlayerData.get(CommandUtils.getForgePlayer(sender, args[0]));
 
 		ITextComponent selfName = StringUtils.color(self.player.getPlayer().getDisplayName(), TextFormatting.BLUE);
 		ITextComponent otherName = StringUtils.color(other.player.getPlayer().getDisplayName(), TextFormatting.BLUE);

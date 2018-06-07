@@ -22,6 +22,8 @@ import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.google.gson.JsonElement;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -144,7 +146,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 	public ForgeTeam lastChunkTeam;
 	public final Collection<ForgePlayer> tpaRequestsFrom;
 	public long afkTicks;
-	public ITextComponent cachedNameForChat;
+	private ITextComponent cachedNameForChat;
 
 	private BlockDimPos lastDeath, lastSafePos;
 	private long[] lastTeleport;
@@ -282,9 +284,14 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		return lastSafePos;
 	}
 
-	public long getTeleportCooldown(Timer timer)
+	public void checkTeleportCooldown(ICommandSender sender, Timer timer) throws CommandException
 	{
-		return lastTeleport[timer.ordinal()] + player.getRankConfig(timer.cooldown).getLong() - player.team.universe.world.getTotalWorldTime();
+		long cooldown = lastTeleport[timer.ordinal()] + player.getRankConfig(timer.cooldown).getLong() - player.team.universe.world.getTotalWorldTime();
+
+		if (cooldown > 0)
+		{
+			throw FTBLib.error(sender, "cant_use_now_cooldown", StringUtils.getTimeStringTicks(cooldown));
+		}
 	}
 
 	@Override
@@ -307,7 +314,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 
 		cachedNameForChat = new TextComponentString("");
 
-		JsonElement json0 = rank.getConfigRaw(FTBUtilitiesPermissions.PREFIX_PART_COUNT);
+		JsonElement json0 = rank.getConfigRaw(FTBUtilitiesPermissions.CHAT_PREFIX_PART_COUNT);
 		int partCount = json0.isJsonPrimitive() ? json0.getAsInt() : 0;
 
 		if (partCount <= 0)
@@ -323,7 +330,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 
 				if (json0.isJsonPrimitive())
 				{
-					cachedNameForChat.appendSibling(chatPart.format(rank, new TextComponentString(json0.getAsString())));
+					cachedNameForChat.appendSibling(chatPart.format(rank, new TextComponentString(json0.getAsString()), FTBUtilitiesPermissions.CHAT_PREFIX));
 				}
 			}
 		}
@@ -332,14 +339,14 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 
 		if (json0.isJsonPrimitive() && !json0.getAsString().isEmpty())
 		{
-			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_NAME.format(rank, new TextComponentString(json0.getAsString())));
+			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_NAME.format(rank, new TextComponentString(json0.getAsString()), null));
 		}
 		else
 		{
-			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_NAME.format(rank, player.getDisplayName()));
+			cachedNameForChat.appendSibling(FTBUtilitiesPermissions.CHAT_NAME.format(rank, player.getDisplayName(), null));
 		}
 
-		json0 = rank.getConfigRaw(FTBUtilitiesPermissions.SUFFIX_PART_COUNT);
+		json0 = rank.getConfigRaw(FTBUtilitiesPermissions.CHAT_SUFFIX_PART_COUNT);
 		partCount = json0.isJsonPrimitive() ? json0.getAsInt() : 0;
 
 		if (partCount <= 0)
@@ -355,7 +362,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 
 				if (json0.isJsonPrimitive())
 				{
-					cachedNameForChat.appendSibling(chatPart.format(rank, new TextComponentString(json0.getAsString())));
+					cachedNameForChat.appendSibling(chatPart.format(rank, new TextComponentString(json0.getAsString()), FTBUtilitiesPermissions.CHAT_SUFFIX));
 				}
 			}
 		}

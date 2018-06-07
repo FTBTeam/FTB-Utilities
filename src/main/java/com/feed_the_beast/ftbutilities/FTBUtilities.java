@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities;
 
 import com.feed_the_beast.ftblib.lib.ATHelper;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
@@ -8,6 +9,7 @@ import com.feed_the_beast.ftbutilities.command.FTBUtilitiesCommands;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import com.feed_the_beast.ftbutilities.ranks.CommandOverride;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.ServerCommandManager;
@@ -51,6 +53,11 @@ public class FTBUtilities
 	public static ITextComponent lang(@Nullable ICommandSender sender, String key, Object... args)
 	{
 		return SidedUtils.lang(sender, MOD_ID, key, args);
+	}
+
+	public static CommandException error(@Nullable ICommandSender sender, String key, Object... args)
+	{
+		return CommandUtils.error(lang(sender, key, args));
 	}
 
 	@Mod.EventHandler

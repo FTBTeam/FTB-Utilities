@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbutilities.command.chunks;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
@@ -29,16 +31,16 @@ public class CmdClaim extends CmdBase
 	{
 		if (!ClaimedChunks.isActive())
 		{
-			throw new CommandException("feature_disabled_server");
+			throw FTBLib.error(sender, "feature_disabled_server");
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-		ForgePlayer p = getForgePlayer(player);
+		ForgePlayer p = CommandUtils.getForgePlayer(player);
 		boolean checkLimits = true;
 
 		if (args.length >= 1)
 		{
-			ForgePlayer p1 = getForgePlayer(sender, args[0]);
+			ForgePlayer p1 = CommandUtils.getForgePlayer(sender, args[0]);
 
 			if (p != p1 && !PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_OTHER_CLAIM))
 			{

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbutilities.command;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.inventory.InventoryBasic;

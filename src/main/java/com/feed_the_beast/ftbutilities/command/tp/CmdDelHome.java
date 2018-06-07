@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.command.tp;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
@@ -33,7 +34,7 @@ public class CmdDelHome extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(getForgePlayer(sender));
+		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(CommandUtils.getForgePlayer(sender));
 
 		if (args.length == 0)
 		{
@@ -49,7 +50,7 @@ public class CmdDelHome extends CmdBase
 		}
 		else
 		{
-			throw new CommandException("ftbutilities.lang.homes.not_set", args[0]);
+			throw FTBUtilities.error(sender, "ftbutilities.lang.homes.not_set", args[0]);
 		}
 	}
 }

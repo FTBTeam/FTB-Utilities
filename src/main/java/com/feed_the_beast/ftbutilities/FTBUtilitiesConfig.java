@@ -32,6 +32,7 @@ public class FTBUtilitiesConfig
 
 	public static final AFK afk = new AFK();
 
+	@Config.Ignore
 	public static final Chat chat = new Chat();
 
 	public static final BackupsConfig backups = new BackupsConfig();
@@ -74,10 +75,10 @@ public class FTBUtilitiesConfig
 		public boolean enabled_singleplayer = false;
 
 		@Config.Comment({"After how much time it will display notification to all players."})
-		public String notification_timer = "1m";
+		public String notification_timer = "5m";
 
 		@Config.Comment("Will print in console when someone goes/comes back from AFK.")
-		public boolean log_afk = true;
+		public boolean log_afk = false;
 
 		private long notificationTimer = -1L;
 

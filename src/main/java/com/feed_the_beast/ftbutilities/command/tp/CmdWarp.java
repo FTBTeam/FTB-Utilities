@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbutilities.command.tp;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
@@ -65,17 +65,11 @@ public class CmdWarp extends CmdBase
 
 		if (p == null)
 		{
-			throw new CommandException("ftbutilities.lang.warps.not_set", args[0]);
+			throw FTBUtilities.error(sender, "ftbutilities.lang.warps.not_set", args[0]);
 		}
 
-		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(getForgePlayer(player));
-		long cooldown = data.getTeleportCooldown(FTBUtilitiesPlayerData.Timer.WARP);
-
-		if (cooldown > 0)
-		{
-			throw new CommandException("cant_use_now_cooldown", StringUtils.getTimeStringTicks(cooldown));
-		}
-
+		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(CommandUtils.getForgePlayer(player));
+		data.checkTeleportCooldown(sender, FTBUtilitiesPlayerData.Timer.WARP);
 		FTBUtilitiesPlayerData.Timer.WARP.teleport(player, p, universe -> Notification.of(FTBUtilitiesNotifications.TELEPORT, FTBUtilities.lang(sender, "ftbutilities.lang.warps.tp", args[0])).send(server, player));
 	}
 }

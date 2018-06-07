@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbutilities.command.ranks;
 
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
-import com.feed_the_beast.ftblib.lib.cmd.CmdTreeHelp;
+import com.feed_the_beast.ftblib.lib.command.CmdTreeBase;
+import com.feed_the_beast.ftblib.lib.command.CmdTreeHelp;
 
 /**
  * @author LatvianModder
@@ -17,6 +17,7 @@ public class CmdRanks extends CmdTreeBase
 		addSubcommand(new CmdSet());
 		addSubcommand(new CmdGetPermission());
 		addSubcommand(new CmdSetPermission());
+		addSubcommand(new CmdDelete());
 		addSubcommand(new CmdTreeHelp(this));
 	}
 }

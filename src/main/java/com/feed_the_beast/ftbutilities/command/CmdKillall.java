@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.command;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import net.minecraft.command.CommandException;
@@ -53,7 +54,7 @@ public class CmdKillall extends CmdBase
 		}
 		else if (args.length == 2)
 		{
-			return getListOfStringsMatchingLastWord(args, getDimensionNames());
+			return getListOfStringsMatchingLastWord(args, CommandUtils.getDimensionNames());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -116,7 +117,7 @@ public class CmdKillall extends CmdBase
 			}
 		}
 
-		OptionalInt dimension = parseDimension(sender, args, 1);
+		OptionalInt dimension = CommandUtils.parseDimension(sender, args, 1);
 
 		int killed = 0;
 

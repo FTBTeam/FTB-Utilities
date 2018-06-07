@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbutilities.command.tp;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
@@ -44,7 +44,7 @@ public class CmdDelWarp extends CmdBase
 		}
 		else
 		{
-			throw new CommandException("ftbutilities.lang.warps.not_set", args[0]);
+			throw FTBUtilities.error(sender, "ftbutilities.lang.warps.not_set", args[0]);
 		}
 	}
 }

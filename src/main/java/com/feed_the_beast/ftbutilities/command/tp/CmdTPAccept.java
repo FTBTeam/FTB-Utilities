@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.command.tp;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
@@ -35,21 +36,21 @@ public class CmdTPAccept extends CmdBase
 	{
 		checkArgs(sender, args, 1);
 		EntityPlayerMP selfPlayer = getCommandSenderAsPlayer(sender);
-		FTBUtilitiesPlayerData self = FTBUtilitiesPlayerData.get(getForgePlayer(selfPlayer));
-		FTBUtilitiesPlayerData other = FTBUtilitiesPlayerData.get(getForgePlayer(sender, args[0]));
+		FTBUtilitiesPlayerData self = FTBUtilitiesPlayerData.get(CommandUtils.getForgePlayer(selfPlayer));
+		FTBUtilitiesPlayerData other = FTBUtilitiesPlayerData.get(CommandUtils.getForgePlayer(sender, args[0]));
 
 		ITextComponent selfName = StringUtils.color(self.player.getPlayer().getDisplayName(), TextFormatting.BLUE);
 		ITextComponent otherName = StringUtils.color(other.player.getPlayer().getDisplayName(), TextFormatting.BLUE);
 
 		if (self.player.equalsPlayer(other.player) || !other.player.isOnline() || !self.tpaRequestsFrom.contains(other.player))
 		{
-			throw new CommandException("ftbutilities.lang.tpa.no_request", otherName);
+			throw FTBUtilities.error(sender, "ftbutilities.lang.tpa.no_request", otherName);
 		}
 
 		if (selfPlayer.dimension != other.player.getPlayer().dimension && !other.player.hasPermission(FTBUtilitiesPermissions.TPA_CROSS_DIM))
 		{
 			other.player.getPlayer().sendMessage(StringUtils.color(FTBUtilities.lang(other.player.getPlayer(), "ftbutilities.lang.homes.cross_dim"), TextFormatting.RED));
-			throw new CommandException("ftbutilities.lang.homes.cross_dim", otherName);
+			throw FTBUtilities.error(sender, "ftbutilities.lang.homes.cross_dim", otherName);
 		}
 
 		self.tpaRequestsFrom.remove(other.player);

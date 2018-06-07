@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftbutilities.command;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
-import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
-import com.feed_the_beast.ftblib.lib.cmd.CmdTreeHelp;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdTreeBase;
+import com.feed_the_beast.ftblib.lib.command.CmdTreeHelp;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -38,9 +40,9 @@ public class CmdInv extends CmdTreeBase
 		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 		{
 			checkArgs(sender, args, 1);
-			EntityPlayerMP ep0 = getCommandSenderAsPlayer(sender);
-			EntityPlayerMP ep = getPlayer(server, sender, args[0]);
-			ep0.displayGUIChest(new InvSeeInventory(ep));
+			EntityPlayerMP self = getCommandSenderAsPlayer(sender);
+			EntityPlayerMP other = CommandUtils.getForgePlayer(sender, args[0]).getCommandPlayer(sender);
+			self.displayGUIChest(new InvSeeInventory(other));
 		}
 	}
 
@@ -61,13 +63,13 @@ public class CmdInv extends CmdTreeBase
 		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 		{
 			checkArgs(sender, args, 2);
-			EntityPlayerMP ep = getPlayer(server, sender, args[0]);
-			File file = new File(CommonUtils.folderLocal, "ftbutilities/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+			EntityPlayerMP player = CommandUtils.getForgePlayer(sender, args[0]).getCommandPlayer(sender);
+			File file = new File(CommonUtils.folderLocal, "ftbutilities/playerinvs/" + StringUtils.fromUUID(player.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
 			try
 			{
 				NBTTagCompound tag = new NBTTagCompound();
-				writeItemsToNBT(ep.inventory, tag, "Inventory");
+				writeItemsToNBT(player.inventory, tag, "Inventory");
 				/*IInventory baubles = InvUtils.getBaubles(ep);
 
 				if (baubles != null)
@@ -84,7 +86,7 @@ public class CmdInv extends CmdTreeBase
 					ex.printStackTrace();
 				}
 
-				throw new CommandException("error", ex.toString());
+				throw FTBLib.error(sender, "error", ex.toString());
 			}
 		}
 
@@ -125,13 +127,13 @@ public class CmdInv extends CmdTreeBase
 		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 		{
 			checkArgs(sender, args, 2);
-			EntityPlayerMP ep = getPlayer(server, sender, args[0]);
-			File file = new File(CommonUtils.folderLocal, "ftbutilities/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+			EntityPlayerMP player = CommandUtils.getForgePlayer(sender, args[0]).getCommandPlayer(sender);
+			File file = new File(CommonUtils.folderLocal, "ftbutilities/playerinvs/" + StringUtils.fromUUID(player.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
 			try
 			{
 				NBTTagCompound tag = FileUtils.readNBT(file);
-				readItemsFromNBT(ep.inventory, tag, "Inventory");
+				readItemsFromNBT(player.inventory, tag, "Inventory");
 				/*IInventory baubles = InvUtils.getBaubles(ep);
 
 				if (baubles != null)
@@ -146,7 +148,7 @@ public class CmdInv extends CmdTreeBase
 					ex.printStackTrace();
 				}
 
-				throw new CommandException("error", ex.toString());
+				throw FTBLib.error(sender, "error", ex.toString());
 			}
 		}
 

@@ -57,6 +57,7 @@ public class FTBUtilitiesPlayerEventHandler
 		}
 
 		EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
+		player.markPlayerActive();
 		ForgePlayer p = Universe.get().getPlayer(player.getGameProfile());
 
 		if (p == null || p.isFake())

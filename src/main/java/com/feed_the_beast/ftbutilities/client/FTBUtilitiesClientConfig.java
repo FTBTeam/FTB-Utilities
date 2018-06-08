@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.client;
 
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -67,11 +68,30 @@ public class FTBUtilitiesClientConfig
 
 		@Config.Comment("Show backup completion percentage in corner.")
 		public boolean show_backup_progress = true;
+
+		@Config.Comment("Show when server will shut down in corner.")
+		public boolean show_shutdown_timer = true;
+
+		@Config.Comment("When will it start to show the shutdown timer.")
+		public String shutdown_timer_start = "1m";
+
+		private long show_shutdown_timer_ms = -1L;
+
+		public long getShowShutdownTimer()
+		{
+			if (show_shutdown_timer_ms == -1L)
+			{
+				show_shutdown_timer_ms = Ticks.tms(Ticks.fromString(shutdown_timer_start));
+			}
+
+			return show_shutdown_timer_ms;
+		}
 	}
 
 	public static void sync()
 	{
 		ConfigManager.sync("ftbutilities_client", Config.Type.INSTANCE);
+		general.show_shutdown_timer_ms = -1L;
 	}
 
 	@SubscribeEvent

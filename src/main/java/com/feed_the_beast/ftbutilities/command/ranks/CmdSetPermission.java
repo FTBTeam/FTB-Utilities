@@ -105,6 +105,8 @@ public class CmdSetPermission extends CmdBase
 		}
 		else
 		{
+			Ranks.INSTANCE.universe.clearCache();
+			Ranks.INSTANCE.saveRanks();
 			ITextComponent nodeText = new TextComponentString(node.toString());
 			nodeText.getStyle().setColor(TextFormatting.GOLD);
 

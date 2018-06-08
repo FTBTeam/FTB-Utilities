@@ -4,8 +4,8 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.Universe;
-import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.misc.TimeType;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
@@ -68,7 +68,7 @@ public class CmdTPA extends CmdBase
 
 		other.player.getPlayer().sendMessage(FTBUtilities.lang(other.player.getPlayer(), "ftbutilities.lang.tpa.request_received", otherName, accept));
 
-		Universe.get().scheduleTask(server.getWorld(0).getTotalWorldTime() + Ticks.st(30L), universe -> {
+		Universe.get().scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 30000L, universe -> {
 			if (other.tpaRequestsFrom.remove(self.player))
 			{
 				ITextComponent component = FTBUtilities.lang(sender, "ftbutilities.lang.tpa.request_expired");

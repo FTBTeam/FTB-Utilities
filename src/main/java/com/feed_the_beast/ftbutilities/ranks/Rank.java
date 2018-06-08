@@ -112,8 +112,6 @@ public class Rank extends FinalIDObject
 		Entry entry = new Entry(node);
 		entry.json = json;
 		permissions.add(entry);
-		ranks.universe.clearCache();
-		ranks.saveRanks();
 		return true;
 	}
 

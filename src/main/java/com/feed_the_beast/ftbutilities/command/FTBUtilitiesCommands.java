@@ -130,5 +130,10 @@ public class FTBUtilitiesCommands
 		{
 			event.registerServerCommand(new CmdNick());
 		}
+
+		if (FTBUtilitiesConfig.auto_shutdown.enabled)
+		{
+			event.registerServerCommand(new CmdShutdownTime());
+		}
 	}
 }

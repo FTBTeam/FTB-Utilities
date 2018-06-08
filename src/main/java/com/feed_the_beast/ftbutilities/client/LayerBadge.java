@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbutilities.client;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesItems;
+import com.feed_the_beast.ftbutilities.handlers.FTBUtilitiesClientEventHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -24,7 +25,7 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 		if (FTBUtilitiesClientConfig.general.render_badges && !player.isInvisible())
 		{
 			UUID id = player.getGameProfile().getId();
-			Icon tex = CachedClientData.getBadge(id);
+			Icon tex = FTBUtilitiesClientEventHandler.getBadge(id);
 
 			if (tex.isEmpty())
 			{

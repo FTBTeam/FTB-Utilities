@@ -17,6 +17,7 @@ import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.IScheduledTask;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
+import com.feed_the_beast.ftblib.lib.util.misc.TimeType;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
@@ -67,7 +68,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 			if (seconds > 0)
 			{
 				player.sendStatusMessage(StringUtils.color(FTBLib.lang(player, "stand_still", seconds).appendText(" [" + seconds + "]"), TextFormatting.GOLD), true);
-				universe.scheduleTask(universe.world.getTotalWorldTime() + 20L, new TeleportTask(player, this, seconds, seconds, pos, extraTask));
+				universe.scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 1000L, new TeleportTask(player, this, seconds, seconds, pos, extraTask));
 			}
 			else
 			{
@@ -128,7 +129,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 			}
 			else
 			{
-				universe.scheduleTask(universe.world.getTotalWorldTime() + 20L, new TeleportTask(player, timer, startSeconds, secondsLeft - 1, pos, extraTask));
+				universe.scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 1000L, new TeleportTask(player, timer, startSeconds, secondsLeft - 1, pos, extraTask));
 				player.sendStatusMessage(new TextComponentString(Integer.toString(secondsLeft - 1)), true);
 				player.sendStatusMessage(StringUtils.color(FTBLib.lang(player, "stand_still", startSeconds).appendText(" [" + (secondsLeft - 1) + "]"), TextFormatting.GOLD), true);
 			}

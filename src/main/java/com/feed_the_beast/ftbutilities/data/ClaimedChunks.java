@@ -6,7 +6,6 @@ import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.events.chunks.ChunkModifiedEvent;
@@ -68,7 +67,7 @@ public class ClaimedChunks
 	{
 		pendingChunks.clear();
 		map.clear();
-		nextChunkloaderUpdate = 0;
+		nextChunkloaderUpdate = 0L;
 		isDirty = true;
 	}
 
@@ -106,11 +105,11 @@ public class ClaimedChunks
 	}
 
 
-	public void update(MinecraftServer server, long now)
+	public void update(MinecraftServer server, long nowTime)
 	{
-		if (nextChunkloaderUpdate <= now)
+		if (nextChunkloaderUpdate <= nowTime)
 		{
-			nextChunkloaderUpdate = now + Ticks.MINUTE;
+			nextChunkloaderUpdate = nowTime + 60000L;
 			markDirty();
 		}
 

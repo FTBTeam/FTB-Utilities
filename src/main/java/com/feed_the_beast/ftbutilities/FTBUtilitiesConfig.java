@@ -32,7 +32,6 @@ public class FTBUtilitiesConfig
 
 	public static final AFK afk = new AFK();
 
-	@Config.Ignore
 	public static final Chat chat = new Chat();
 
 	public static final BackupsConfig backups = new BackupsConfig();
@@ -156,9 +155,9 @@ public class FTBUtilitiesConfig
 		@Config.Comment("Maximum total size that is allowed in backups folder. Older backups will be deleted to free space for newer ones.")
 		public String max_total_size = "50 GB";
 
-		public long ticks()
+		public long time()
 		{
-			return (long) (backup_timer * Ticks.HOUR);
+			return Ticks.tms((long) (backup_timer * Ticks.HOUR));
 		}
 
 		public long getMaxTotalSize()

@@ -194,7 +194,7 @@ public class Ranks
 
 	public Rank getRank(@Nullable MinecraftServer server, GameProfile profile, @Nullable IContext context)
 	{
-		Rank r = isActive() ? playerMap.get(profile.getId()) : null;
+		Rank r = isActive() && profile.getId() != null ? playerMap.get(profile.getId()) : null;
 		return (r == null) ? (ServerUtils.isOP(server, profile) ? getDefaultOPRank() : getDefaultPlayerRank()) : r;
 	}
 
@@ -524,7 +524,25 @@ public class Ranks
 
 					if (!JsonUtils.isNull(json))
 					{
-						currentRank.setPermission(Node.get(s1[0].trim()), json);
+						String n = s1[0].trim();
+
+						if (n.startsWith("ftbutilities.chat.prefix.left") || n.startsWith("ftbutilities.chat.prefix.base") || n.startsWith("ftbutilities.chat.prefix.right"))
+						{
+							currentRank.setPermission(Node.get("ftbutilities.chat.prefix.part_count"), new JsonPrimitive(3));
+							n = n.replace("ftbutilities.chat.prefix.left", "ftbutilities.chat.prefix.1");
+							n = n.replace("ftbutilities.chat.prefix.base", "ftbutilities.chat.prefix.2");
+							n = n.replace("ftbutilities.chat.prefix.right", "ftbutilities.chat.prefix.3");
+						}
+
+						if (n.startsWith("ftbutilities.chat.suffix.left") || n.startsWith("ftbutilities.chat.suffix.base") || n.startsWith("ftbutilities.chat.suffix.right"))
+						{
+							currentRank.setPermission(Node.get("ftbutilities.chat.suffix.part_count"), new JsonPrimitive(3));
+							n = n.replace("ftbutilities.chat.suffix.left", "ftbutilities.chat.suffix.1");
+							n = n.replace("ftbutilities.chat.suffix.base", "ftbutilities.chat.suffix.2");
+							n = n.replace("ftbutilities.chat.suffix.right", "ftbutilities.chat.suffix.3");
+						}
+
+						currentRank.setPermission(Node.get(n), json);
 					}
 				}
 			}

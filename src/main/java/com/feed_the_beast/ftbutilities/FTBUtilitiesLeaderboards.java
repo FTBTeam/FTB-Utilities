@@ -68,7 +68,7 @@ public class FTBUtilitiesLeaderboards
 			return 0;
 		}
 
-		return player.team.universe.world.getTotalWorldTime() - player.getLastTimeSeen();
+		return player.team.universe.ticks - player.getLastTimeSeen();
 	}
 
 	private static double getDPH(ForgePlayer player)

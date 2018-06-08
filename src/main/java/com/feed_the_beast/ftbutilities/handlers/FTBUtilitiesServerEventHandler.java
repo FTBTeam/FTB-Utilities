@@ -71,13 +71,14 @@ public class FTBUtilitiesServerEventHandler
 
 		Universe universe = Universe.get();
 
-		long now = universe.world.getTotalWorldTime();
+		long nowTicks = universe.world.getTotalWorldTime();
+		long nowTime = System.currentTimeMillis();
 
 		if (event.phase == TickEvent.Phase.START)
 		{
 			if (ClaimedChunks.isActive())
 			{
-				ClaimedChunks.instance.update(universe.server, now);
+				ClaimedChunks.instance.update(universe.server, nowTicks);
 			}
 		}
 		else
@@ -147,14 +148,18 @@ public class FTBUtilitiesServerEventHandler
 				}
 			}
 
+			Backups.INSTANCE.tick(universe, nowTicks, nowTime);
+
 			if (FTBUtilitiesUniverseData.shutdownTime > 0L)
 			{
-				long t = FTBUtilitiesUniverseData.shutdownTime - now;
+				long t = Ticks.mst(FTBUtilitiesUniverseData.shutdownTime - nowTime);
 
 				if (t <= 0)
 				{
-					CmdShutdown.shutdown(universe.server);
-					return;
+					if (Backups.INSTANCE.doingBackup == 0)
+					{
+						CmdShutdown.shutdown(universe.server);
+					}
 				}
 				else if ((t <= Ticks.st(10L) && t % Ticks.SECOND == Ticks.SECOND - 1L) || t == Ticks.mt(1L) || t == Ticks.mt(5L) || t == Ticks.mt(10L) || t == Ticks.mt(30L))
 				{
@@ -164,8 +169,6 @@ public class FTBUtilitiesServerEventHandler
 					}
 				}
 			}
-
-			Backups.INSTANCE.tick(universe, now);
 		}
 	}
 }

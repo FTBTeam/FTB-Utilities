@@ -61,6 +61,8 @@ ftbutilities_client.general.journeymap_overlay=Enable Journeymap Integration
 ftbutilities_client.general.scan_items_whitelist=/scan_items Whitelist
 ftbutilities_client.general.scan_items_blacklist=/scan_items Blacklist
 ftbutilities_client.general.show_backup_progress=Show Backup Progress
+ftbutilities_client.general.show_shutdown_timer=Show Shutdown Timer
+ftbutilities_client.general.shutdown_timer_start=Shutdown Timer Start
 
 # Rank Config
 permission.ftbutilities.badge=Badge
@@ -152,7 +154,6 @@ admin_panel.ftbutilities.ops=Edit OPs
 admin_panel.ftbutilities.edit_world=Edit World
 
 # Keys
-key.categories.ftbu=FTBMods
 key.ftbutilities.chunk_border=Toggle Chunk Border
 key.ftbutilities.light_values=Toggle Light Values
 key.ftbutilities.warp=Warp GUI
@@ -161,6 +162,7 @@ key.ftbutilities.warp=Warp GUI
 gamerules=Gamerules
 ftbutilities.lang.timer.shutdown=Server shuts down in %s
 ftbutilities.lang.timer.backup=Server backup in: %s
+ftbutilities.lang.timer.backup_progress=[%d / %d | %s%%]
 ftbutilities.lang.killed_entities=Killed %d entities with type '%s'
 ftbutilities.lang.kickme=You kicked yourself!
 ftbutilities.lang.upload_crash=Upload Crash Report

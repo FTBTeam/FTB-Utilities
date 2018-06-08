@@ -24,7 +24,7 @@ public class CmdAdd extends CmdBase
 	{
 		if (!Ranks.isActive())
 		{
-			throw FTBLib.error(sender, "feature_disabled_server");
+			throw FTBLib.errorFeatureDisabledServer(sender);
 		}
 
 		checkArgs(sender, args, 1);

@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
@@ -16,9 +17,13 @@ import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import com.google.common.base.Objects;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -209,6 +214,59 @@ public class FTBUtilitiesPlayerEventHandler
 					event.setDisplayname(name);
 				}
 			}
+		}
+	}
+
+	private static String getStateName(IBlockState state)
+	{
+		if (state == state.getBlock().getDefaultState())
+		{
+			return state.getBlock().getRegistryName().toString();
+		}
+
+		return state.toString();
+	}
+
+	private static String getDim(EntityPlayer player)
+	{
+		return ServerUtils.getDimensionName(player.dimension).getUnformattedText();
+	}
+
+	private static String getPos(BlockPos pos)
+	{
+		return String.format("[%d, %d, %d]", pos.getX(), pos.getY(), pos.getZ());
+	}
+
+	@SubscribeEvent
+	public static void onBlockBreakLog(BlockEvent.BreakEvent event)
+	{
+		EntityPlayer player = event.getPlayer();
+
+		if (FTBUtilitiesConfig.world.logging.block_broken && player instanceof EntityPlayerMP && FTBUtilitiesConfig.world.logging.log((EntityPlayerMP) player))
+		{
+			FTBUtilitiesUniverseData.worldLog(String.format("%s broke %s at %s in %s", player.getName(), getStateName(event.getState()), getPos(event.getPos()), getDim(player)));
+		}
+	}
+
+	@SubscribeEvent
+	public static void onBlockPlaceLog(BlockEvent.PlaceEvent event)
+	{
+		EntityPlayer player = event.getPlayer();
+
+		if (FTBUtilitiesConfig.world.logging.block_placed && player instanceof EntityPlayerMP && FTBUtilitiesConfig.world.logging.log((EntityPlayerMP) player))
+		{
+			FTBUtilitiesUniverseData.worldLog(String.format("%s placed %s at %s in %s", player.getName(), getStateName(event.getState()), getPos(event.getPos()), getDim(player)));
+		}
+	}
+
+	@SubscribeEvent
+	public static void onRightClickItemLog(PlayerInteractEvent.RightClickItem event)
+	{
+		EntityPlayer player = event.getEntityPlayer();
+
+		if (FTBUtilitiesConfig.world.logging.item_clicked_in_air && player instanceof EntityPlayerMP && FTBUtilitiesConfig.world.logging.log((EntityPlayerMP) player))
+		{
+			FTBUtilitiesUniverseData.worldLog(String.format("%s clicked %s in air at %s in %s", player.getName(), event.getItemStack().getItem().getRegistryName(), getPos(event.getPos()), getDim(player)));
 		}
 	}
 }

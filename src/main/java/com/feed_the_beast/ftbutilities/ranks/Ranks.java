@@ -28,6 +28,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -37,6 +38,7 @@ import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
 import net.minecraftforge.server.permission.context.IContext;
+import net.minecraftforge.server.permission.context.PlayerContext;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -94,21 +96,14 @@ public class Ranks
 		return result;
 	}
 
-	public static boolean getPermissionResult(MinecraftServer server, GameProfile profile, Node node, @Nullable IContext context, DefaultPermissionLevel def)
+	public static Event.Result getPermissionResult(EntityPlayerMP player, Node node)
 	{
-		Event.Result result = getPermissionResult(server, profile, node, context);
-
-		if (result == Event.Result.DEFAULT)
+		if (!isActive())
 		{
-			if (def == DefaultPermissionLevel.OP)
-			{
-				return ServerUtils.isOP(server, profile);
-			}
-
-			return def == DefaultPermissionLevel.ALL;
+			return Event.Result.DEFAULT;
 		}
 
-		return result == Event.Result.ALLOW;
+		return getPermissionResult(player.mcServer, player.getGameProfile(), node, new PlayerContext(player));
 	}
 
 	public static boolean isValidName(@Nullable String id)

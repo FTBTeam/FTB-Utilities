@@ -48,6 +48,13 @@ ftbutilities.world.spawn_radius=Spawn Radius
 ftbutilities.world.spawn_dimension=Spawn Dimension
 ftbutilities.world.unload_erroring_chunks=Unload Erroring Chunks
 
+ftbutilities.world.logging=Logging
+ftbutilities.world.logging.include_creative_players=Include Creative Players
+ftbutilities.world.logging.include_fake_players=Include Fake Players
+ftbutilities.world.logging.block_placed=Block Placed
+ftbutilities.world.logging.block_broken=Block Broken
+ftbutilities.world.logging.item_clicked_in_air=Item Clicked in Air
+
 ftbutilities.ranks=Ranks
 ftbutilities.ranks.enabled=Enabled
 ftbutilities.ranks.override_chat=Override Chat

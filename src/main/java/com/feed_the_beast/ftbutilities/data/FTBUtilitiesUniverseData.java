@@ -4,8 +4,11 @@ import com.feed_the_beast.ftblib.events.universe.UniverseClosedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseLoadedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseSavedEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
+import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
@@ -14,8 +17,14 @@ import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.storage.ThreadedFileIOBase;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -29,6 +38,7 @@ public class FTBUtilitiesUniverseData
 	public static long shutdownTime;
 	public static final BlockDimPosStorage WARPS = new BlockDimPosStorage();
 	//public static final ChatHistory GENERAL_CHAT = new ChatHistory(() -> FTBUtilitiesConfig.chat.general_history_limit);
+	private static final List<String> worldLog = new ArrayList<>();
 
 	public static boolean isInSpawn(MinecraftServer server, ChunkDimPos pos)
 	{
@@ -125,6 +135,36 @@ public class FTBUtilitiesUniverseData
 		Badges.LOCAL_BADGES.clear();
 	}
 
+	public static void worldLog(String s)
+	{
+		StringBuilder out = new StringBuilder();
+		Calendar time = Calendar.getInstance();
+		appendNum(out, time.get(Calendar.YEAR), '-');
+		appendNum(out, time.get(Calendar.MONTH) + 1, '-');
+		appendNum(out, time.get(Calendar.DAY_OF_MONTH), ' ');
+		appendNum(out, time.get(Calendar.HOUR_OF_DAY), ':');
+		appendNum(out, time.get(Calendar.MINUTE), ':');
+		appendNum(out, time.get(Calendar.SECOND), ' ');
+		out.append(':');
+		out.append(' ');
+		out.append(s);
+		worldLog.add(out.toString());
+		Universe.get().markDirty();
+	}
+
+	private static void appendNum(StringBuilder sb, int num, char c)
+	{
+		if (num < 10)
+		{
+			sb.append('0');
+		}
+		sb.append(num);
+		if (c != '\0')
+		{
+			sb.append(c);
+		}
+	}
+
 	@SubscribeEvent
 	public static void onUniverseSaved(UniverseSavedEvent event)
 	{
@@ -139,6 +179,29 @@ public class FTBUtilitiesUniverseData
 		//TODO: Save chat as json
 
 		event.setData(FTBUtilities.MOD_ID, nbt);
+
+		if (!worldLog.isEmpty())
+		{
+			List<String> worldLogCopy = new ArrayList<>(worldLog);
+			worldLog.clear();
+
+			ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
+			{
+				try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(FileUtils.newFile(new File(CommonUtils.folderMinecraft, "logs/world.log")), true))))
+				{
+					for (String s : worldLogCopy)
+					{
+						out.println(s);
+					}
+				}
+				catch (IOException ex)
+				{
+					ex.printStackTrace();
+				}
+
+				return false;
+			});
+		}
 	}
 
 	@SubscribeEvent

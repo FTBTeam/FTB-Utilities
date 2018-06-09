@@ -6,8 +6,10 @@ import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
+import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
@@ -301,6 +303,36 @@ public class FTBUtilitiesConfig
 
 	public static class WorldConfig
 	{
+		public static class WorldLogging
+		{
+			@Config.Comment("Enables world logging.")
+			@Config.LangKey("addServer.resourcePack.enabled")
+			public boolean enabled = false;
+
+			@Config.Comment("Includes creative players in world logging.")
+			public boolean include_creative_players = false;
+
+			@Config.Comment("Includes fake players in world logging.")
+			public boolean include_fake_players = false;
+
+			@Config.Comment("Logs block placement.")
+			public boolean block_placed = true;
+
+			@Config.Comment("Logs block breaking.")
+			public boolean block_broken = true;
+
+			@Config.Comment("Logs item clicking in air.")
+			public boolean item_clicked_in_air = true;
+
+			public boolean log(EntityPlayerMP player)
+			{
+				return enabled && (include_creative_players || !player.capabilities.isCreativeMode) && (include_fake_players || !ServerUtils.isFake(player));
+			}
+		}
+
+		@Config.Comment("Logs different events in local/ftbutilities/world.log file.")
+		public final WorldLogging logging = new WorldLogging();
+
 		@Config.Comment("Enables chunk claiming.")
 		@Config.RequiresWorldRestart
 		public boolean chunk_claiming = true;

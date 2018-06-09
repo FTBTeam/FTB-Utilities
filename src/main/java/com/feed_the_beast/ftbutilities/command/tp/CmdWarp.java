@@ -18,7 +18,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.server.permission.context.PlayerContext;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -58,7 +57,7 @@ public class CmdWarp extends CmdBase
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 
-		if (Ranks.isActive() && Ranks.getPermissionResult(server, player.getGameProfile(), Node.get("command.ftbutilities.warp.teleport." + args[0]), new PlayerContext(player)) == Event.Result.DENY)
+		if (Ranks.getPermissionResult(player, Node.COMMAND.append("ftbutilities.warp.teleport." + args[0])) == Event.Result.DENY)
 		{
 			throw new CommandException("commands.generic.permission");
 		}

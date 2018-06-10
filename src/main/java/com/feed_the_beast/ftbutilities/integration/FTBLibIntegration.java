@@ -29,10 +29,10 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
-import com.feed_the_beast.ftbutilities.data.Badges;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesTeamData;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import com.feed_the_beast.ftbutilities.handlers.FTBUtilitiesSyncData;
 import com.feed_the_beast.ftbutilities.net.MessageViewCrashList;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
@@ -82,7 +82,7 @@ public class FTBLibIntegration
 			event.failedToReload(RELOAD_RANKS);
 		}
 
-		if (event.reload(RELOAD_BADGES) && !Badges.reloadServerBadges(event.getUniverse()))
+		if (event.reload(RELOAD_BADGES) && !FTBUtilitiesUniverseData.reloadServerBadges(event.getUniverse()))
 		{
 			event.failedToReload(RELOAD_BADGES);
 		}
@@ -153,7 +153,7 @@ public class FTBLibIntegration
 			ClaimedChunks.instance.markDirty();
 		}
 
-		Badges.update(event.getPlayer().getId());
+		FTBUtilitiesUniverseData.updateBadge(event.getPlayer().getId());
 	}
 
 	@SubscribeEvent

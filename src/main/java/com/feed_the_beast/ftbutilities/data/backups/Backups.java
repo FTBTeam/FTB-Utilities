@@ -113,7 +113,7 @@ public enum Backups
 		}
 		else if (doingBackup > 0 && printFiles)
 		{
-			if (currentFile == 0 || nowTicks % Ticks.SECOND * 2L == 0 || currentFile == totalFiles - 1)
+			if (currentFile == 0 || nowTicks % Ticks.SECOND.ticks() * 2L == 0 || currentFile == totalFiles - 1)
 			{
 				FTBUtilities.LOGGER.info("[" + currentFile + " | " + StringUtils.formatDouble((currentFile / (double) totalFiles) * 100D) + "%]: " + currentFileName);
 			}

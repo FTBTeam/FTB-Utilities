@@ -1,22 +1,33 @@
 package com.feed_the_beast.ftbutilities.data;
 
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.universe.UniverseClosedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseLoadedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseSavedEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.misc.TimeType;
+import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
+import com.google.gson.JsonElement;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.storage.ThreadedFileIOBase;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -25,9 +36,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author LatvianModder
@@ -35,6 +50,12 @@ import java.util.List;
 @EventHandler
 public class FTBUtilitiesUniverseData
 {
+	private static final String BADGE_URL = "https://badges.latmod.com/get?id=";
+	private static final ResourceLocation RESTART_TIMER_ID = new ResourceLocation(FTBUtilities.MOD_ID, "restart_timer");
+
+	private static final Map<UUID, String> BADGE_CACHE = new HashMap<>();
+	private static final Map<UUID, String> LOCAL_BADGES = new HashMap<>();
+
 	public static long shutdownTime;
 	public static final BlockDimPosStorage WARPS = new BlockDimPosStorage();
 	//public static final ChatHistory GENERAL_CHAT = new ChatHistory(() -> FTBUtilitiesConfig.chat.general_history_limit);
@@ -86,7 +107,7 @@ public class FTBUtilitiesUniverseData
 		shutdownTime = 0L;
 		Backups.INSTANCE.nextBackup = now + FTBUtilitiesConfig.backups.time();
 
-		if (FTBUtilitiesConfig.auto_shutdown.enabled && FTBUtilitiesConfig.auto_shutdown.times.length > 0 && event.getUniverse().server.isDedicatedServer())
+		if (FTBUtilitiesConfig.auto_shutdown.enabled && FTBUtilitiesConfig.auto_shutdown.times.length > 0 && (FTBUtilitiesConfig.auto_shutdown.enabled_singleplayer || event.getUniverse().server.isDedicatedServer()))
 		{
 			Calendar calendar = Calendar.getInstance();
 			int currentTime = calendar.get(Calendar.HOUR_OF_DAY) * 3600 + calendar.get(Calendar.MINUTE) * 60 + calendar.get(Calendar.SECOND);
@@ -124,15 +145,45 @@ public class FTBUtilitiesUniverseData
 				}
 			}
 
-			FTBUtilities.LOGGER.info("Server will shut down in " + StringUtils.getTimeString(shutdownTime - now));
+			if (shutdownTime > 0L)
+			{
+				FTBUtilities.LOGGER.info("Server will shut down in " + StringUtils.getTimeString(shutdownTime - now));
+
+				Ticks[] ticks = {
+						Ticks.MINUTE.x(30),
+						Ticks.MINUTE.x(10),
+						Ticks.MINUTE.x(5),
+						Ticks.MINUTE.x(1),
+						Ticks.SECOND.x(10),
+						Ticks.SECOND.x(9),
+						Ticks.SECOND.x(8),
+						Ticks.SECOND.x(7),
+						Ticks.SECOND.x(6),
+						Ticks.SECOND.x(5),
+						Ticks.SECOND.x(4),
+						Ticks.SECOND.x(3),
+						Ticks.SECOND.x(2),
+						Ticks.SECOND.x(1)
+				};
+
+				for (Ticks t : ticks)
+				{
+					event.getUniverse().scheduleTask(TimeType.MILLIS, shutdownTime - t.millis(), universe -> {
+						String timeString = t.toTimeString();
+
+						for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
+						{
+							Notification.of(RESTART_TIMER_ID, StringUtils.color(FTBUtilities.lang(player, "ftbutilities.lang.timer.shutdown", timeString), TextFormatting.LIGHT_PURPLE)).send(universe.server, player);
+						}
+					});
+				}
+			}
 		}
 
 		if (ClaimedChunks.isActive())
 		{
 			ClaimedChunks.instance.nextChunkloaderUpdate = now + 1000L;
 		}
-
-		Badges.LOCAL_BADGES.clear();
 	}
 
 	public static void worldLog(String s)
@@ -215,7 +266,133 @@ public class FTBUtilitiesUniverseData
 
 		FTBUtilitiesLoadedChunkManager.INSTANCE.clear();
 
-		Badges.BADGE_CACHE.clear();
-		Badges.LOCAL_BADGES.clear();
+		BADGE_CACHE.clear();
+		LOCAL_BADGES.clear();
+	}
+
+	public static void updateBadge(UUID playerId)
+	{
+		BADGE_CACHE.remove(playerId);
+	}
+
+	public static String getBadge(Universe universe, UUID playerId)
+	{
+		String badge = BADGE_CACHE.get(playerId);
+
+		if (badge != null)
+		{
+			return badge;
+		}
+
+		badge = getRawBadge(universe, playerId);
+		BADGE_CACHE.put(playerId, badge);
+		return badge;
+	}
+
+	private static String getRawBadge(Universe universe, UUID playerId)
+	{
+		ForgePlayer player = universe.getPlayer(playerId);
+
+		if (player == null || player.isFake())
+		{
+			return "";
+		}
+
+		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(player);
+
+		if (!data.renderBadge())
+		{
+			return "";
+		}
+		else if (FTBUtilitiesConfig.login.enable_global_badges && !data.disableGlobalBadge())
+		{
+			try
+			{
+				String badge = DataReader.get(new URL(BADGE_URL + StringUtils.fromUUID(playerId)), DataReader.TEXT, universe.server.getServerProxy()).string(32);
+
+				if (!badge.isEmpty())// && (FTBUtilitiesConfig.login.enable_event_badges || !response.getHeaderField("Event-Badge").equals("true")))
+				{
+					return badge;
+				}
+			}
+			catch (Exception ex)
+			{
+				if (FTBLibConfig.debugging.print_more_errors)
+				{
+					FTBUtilities.LOGGER.warn("Badge API errored! " + ex);
+				}
+			}
+		}
+
+		String badge = LOCAL_BADGES.get(playerId);
+		return (badge == null || badge.isEmpty()) ? player.getRankConfig(FTBUtilitiesPermissions.BADGE).getString() : badge;
+	}
+
+	public static boolean reloadServerBadges(Universe universe)
+	{
+		BADGE_CACHE.clear();
+		LOCAL_BADGES.clear();
+
+		try
+		{
+			File file = new File(CommonUtils.folderLocal, "ftbutilities/server_badges.json");
+
+			if (!file.exists())
+			{
+				file = new File(CommonUtils.folderLocal, "ftbutilities/server_badges.txt");
+
+				if (!file.exists())
+				{
+					List<String> list = new ArrayList<>();
+					list.add("// username: url2_to.png");
+					list.add("// uuid: url_to.png");
+					list.add("// For more info see https://guides.latmod.com/ftbutilities/ranks/badges/");
+					FileUtils.saveSafe(file, list);
+				}
+				else
+				{
+					for (String s : DataReader.get(file).safeStringList())
+					{
+						if (s.isEmpty() || s.startsWith("//"))
+						{
+							continue;
+						}
+
+						String[] s1 = s.trim().split(":", 2);
+
+						if (s1.length == 2)
+						{
+							ForgePlayer player = universe.getPlayer(s1[0].trim());
+
+							if (player != null)
+							{
+								LOCAL_BADGES.put(player.getId(), s1[1].trim());
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				for (Map.Entry<String, JsonElement> entry : DataReader.get(file).json().getAsJsonObject().entrySet())
+				{
+					ForgePlayer player = universe.getPlayer(entry.getKey());
+
+					if (player != null)
+					{
+						LOCAL_BADGES.put(player.getId(), entry.getValue().getAsString());
+					}
+				}
+
+				FileUtils.delete(file);
+			}
+
+			return true;
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+			return false;
+		}
 	}
 }

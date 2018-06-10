@@ -69,6 +69,11 @@ public class FTBUtilitiesClientEventHandler
 	@SubscribeEvent
 	public static void onDebugInfoEvent(RenderGameOverlayEvent.Text event)
 	{
+		if (ClientUtils.MC.gameSettings.showDebugInfo)
+		{
+			return;
+		}
+
 		if (shutdownTime > 0L && FTBUtilitiesClientConfig.general.show_shutdown_timer)
 		{
 			long timeLeft = Math.max(0L, shutdownTime - System.currentTimeMillis());

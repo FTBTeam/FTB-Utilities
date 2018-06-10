@@ -81,7 +81,7 @@ public class FTBUtilitiesClientConfig
 		{
 			if (show_shutdown_timer_ms == -1L)
 			{
-				show_shutdown_timer_ms = Ticks.tms(Ticks.fromString(shutdown_timer_start));
+				show_shutdown_timer_ms = Ticks.get(shutdown_timer_start).millis();
 			}
 
 			return show_shutdown_timer_ms;

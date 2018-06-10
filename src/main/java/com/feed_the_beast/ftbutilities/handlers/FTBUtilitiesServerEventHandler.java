@@ -2,8 +2,6 @@ package com.feed_the_beast.ftbutilities.handlers;
 
 import com.feed_the_beast.ftblib.lib.EnumMessageLocation;
 import com.feed_the_beast.ftblib.lib.data.Universe;
-import com.feed_the_beast.ftblib.lib.math.Ticks;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
@@ -35,7 +33,6 @@ import net.minecraftforge.server.permission.context.PlayerContext;
 @Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
 public class FTBUtilitiesServerEventHandler
 {
-	private static final ResourceLocation RESTART_TIMER_ID = new ResourceLocation(FTBUtilities.MOD_ID, "restart_timer");
 	private static final ResourceLocation AFK_ID = new ResourceLocation(FTBUtilities.MOD_ID, "afk");
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -102,9 +99,9 @@ public class FTBUtilitiesServerEventHandler
 						}
 					}
 
-					boolean prevIsAfk = data.afkTicks >= FTBUtilitiesConfig.afk.getNotificationTimer();
-					data.afkTicks = (int) ((System.currentTimeMillis() - player.getLastActiveTime()) * Ticks.SECOND / 1000L);
-					boolean isAFK = data.afkTicks >= FTBUtilitiesConfig.afk.getNotificationTimer();
+					boolean prevIsAfk = data.afkTime >= FTBUtilitiesConfig.afk.getNotificationTimer();
+					data.afkTime = System.currentTimeMillis() - player.getLastActiveTime();
+					boolean isAFK = data.afkTime >= FTBUtilitiesConfig.afk.getNotificationTimer();
 
 					if (prevIsAfk != isAFK)
 					{
@@ -133,9 +130,9 @@ public class FTBUtilitiesServerEventHandler
 
 					if (playerToKickForAfk == null)
 					{
-						long maxTicks = data.player.getRankConfig(FTBUtilitiesPermissions.AFK_TIMER).getLong();
+						long maxTime = data.player.getRankConfig(FTBUtilitiesPermissions.AFK_TIMER).getTimer().millis();
 
-						if (maxTicks > 0L && data.afkTicks >= maxTicks)
+						if (maxTime > 0L && data.afkTime >= maxTime)
 						{
 							playerToKickForAfk = player;
 						}
@@ -150,24 +147,9 @@ public class FTBUtilitiesServerEventHandler
 
 			Backups.INSTANCE.tick(universe, nowTicks, nowTime);
 
-			if (FTBUtilitiesUniverseData.shutdownTime > 0L)
+			if (FTBUtilitiesUniverseData.shutdownTime > 0L && FTBUtilitiesUniverseData.shutdownTime - nowTime <= 0 && Backups.INSTANCE.doingBackup == 0)
 			{
-				long t = Ticks.mst(FTBUtilitiesUniverseData.shutdownTime - nowTime);
-
-				if (t <= 0)
-				{
-					if (Backups.INSTANCE.doingBackup == 0)
-					{
-						CmdShutdown.shutdown(universe.server);
-					}
-				}
-				else if ((t <= Ticks.st(10L) && t % Ticks.SECOND == Ticks.SECOND - 1L) || t == Ticks.mt(1L) || t == Ticks.mt(5L) || t == Ticks.mt(10L) || t == Ticks.mt(30L))
-				{
-					for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
-					{
-						Notification.of(RESTART_TIMER_ID, StringUtils.color(FTBUtilities.lang(player, "ftbutilities.lang.timer.shutdown", StringUtils.getTimeStringTicks(t)), TextFormatting.LIGHT_PURPLE)).send(universe.server, player);
-					}
-				}
+				CmdShutdown.shutdown(universe.server);
 			}
 		}
 	}

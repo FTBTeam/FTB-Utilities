@@ -68,7 +68,7 @@ public class FTBUtilitiesLeaderboards
 			return 0;
 		}
 
-		return player.team.universe.ticks - player.getLastTimeSeen();
+		return player.team.universe.ticks.ticks() - player.getLastTimeSeen();
 	}
 
 	private static double getDPH(ForgePlayer player)
@@ -77,7 +77,7 @@ public class FTBUtilitiesLeaderboards
 
 		if (playTime > 0)
 		{
-			double hours = (double) playTime / Ticks.HOUR;
+			double hours = Ticks.get(playTime).hoursd();
 
 			if (hours >= 1D)
 			{

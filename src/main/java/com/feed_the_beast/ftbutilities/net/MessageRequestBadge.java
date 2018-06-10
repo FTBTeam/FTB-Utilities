@@ -5,7 +5,7 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbutilities.data.Badges;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.UUID;
@@ -30,7 +30,7 @@ public class MessageRequestBadge extends MessageToServer
 		@Override
 		public void run()
 		{
-			new MessageSendBadge(playerId, Badges.get(Universe.get(), playerId)).sendTo(player);
+			new MessageSendBadge(playerId, FTBUtilitiesUniverseData.getBadge(Universe.get(), playerId)).sendTo(player);
 		}
 	}
 

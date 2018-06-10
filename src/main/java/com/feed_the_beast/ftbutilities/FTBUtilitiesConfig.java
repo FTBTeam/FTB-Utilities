@@ -58,6 +58,9 @@ public class FTBUtilitiesConfig
 		@Config.Comment("Enables auto-shutdown.")
 		public boolean enabled = false;
 
+		@Config.Comment("Enables auto-shutdown in singleplayer worlds.")
+		public boolean enabled_singleplayer = false;
+
 		@Config.Comment({
 				"Server will automatically shut down after X hours.",
 				"Time Format: HH:MM. If the system time matches a value, server will shut down.",
@@ -92,7 +95,7 @@ public class FTBUtilitiesConfig
 		{
 			if (notificationTimer < 0L)
 			{
-				notificationTimer = Ticks.fromString(notification_timer);
+				notificationTimer = Ticks.get(notification_timer).millis();
 			}
 
 			return notificationTimer;
@@ -159,7 +162,7 @@ public class FTBUtilitiesConfig
 
 		public long time()
 		{
-			return Ticks.tms((long) (backup_timer * Ticks.HOUR));
+			return (long) (backup_timer * Ticks.HOUR.millis());
 		}
 
 		public long getMaxTotalSize()

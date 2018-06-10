@@ -248,20 +248,20 @@ public class FTBUtilitiesPermissions
 	{
 		event.register(BADGE, new ConfigString(""));
 		event.register(HOMES_MAX, new ConfigInt(1, 0, 30000), new ConfigInt(100));
-		event.register(HOMES_COOLDOWN, new ConfigTimer(Ticks.mt(5)), new ConfigTimer(0L));
-		event.register(WARPS_COOLDOWN, new ConfigTimer(Ticks.mt(1)), new ConfigTimer(0L));
-		event.register(TPA_COOLDOWN, new ConfigTimer(Ticks.mt(3)), new ConfigTimer(0L));
-		event.register(SPAWN_COOLDOWN, new ConfigTimer(Ticks.mt(1)), new ConfigTimer(0L));
-		event.register(BACK_COOLDOWN, new ConfigTimer(Ticks.mt(3)), new ConfigTimer(0L));
-		event.register(HOMES_WARMUP, new ConfigTimer(Ticks.st(5), Ticks.mt(1)), new ConfigTimer(0L));
-		event.register(WARPS_WARMUP, new ConfigTimer(Ticks.st(5), Ticks.mt(1)), new ConfigTimer(0L));
-		event.register(TPA_WARMUP, new ConfigTimer(Ticks.st(5), Ticks.mt(1)), new ConfigTimer(0L));
-		event.register(SPAWN_WARMUP, new ConfigTimer(Ticks.st(5), Ticks.mt(1)), new ConfigTimer(0L));
-		event.register(BACK_WARMUP, new ConfigTimer(Ticks.st(5), Ticks.mt(1)), new ConfigTimer(0L));
+		event.register(HOMES_COOLDOWN, new ConfigTimer(Ticks.MINUTE.x(5)), new ConfigTimer(Ticks.NO_TICKS));
+		event.register(WARPS_COOLDOWN, new ConfigTimer(Ticks.MINUTE), new ConfigTimer(Ticks.NO_TICKS));
+		event.register(TPA_COOLDOWN, new ConfigTimer(Ticks.MINUTE.x(3)), new ConfigTimer(Ticks.NO_TICKS));
+		event.register(SPAWN_COOLDOWN, new ConfigTimer(Ticks.MINUTE), new ConfigTimer(Ticks.NO_TICKS));
+		event.register(BACK_COOLDOWN, new ConfigTimer(Ticks.MINUTE.x(3)), new ConfigTimer(Ticks.NO_TICKS));
+		event.register(HOMES_WARMUP, new ConfigTimer(Ticks.SECOND.x(5), Ticks.MINUTE), new ConfigTimer(Ticks.NO_TICKS));
+		event.register(WARPS_WARMUP, new ConfigTimer(Ticks.SECOND.x(5), Ticks.MINUTE), new ConfigTimer(Ticks.NO_TICKS));
+		event.register(TPA_WARMUP, new ConfigTimer(Ticks.SECOND.x(5), Ticks.MINUTE), new ConfigTimer(Ticks.NO_TICKS));
+		event.register(SPAWN_WARMUP, new ConfigTimer(Ticks.SECOND.x(5), Ticks.MINUTE), new ConfigTimer(Ticks.NO_TICKS));
+		event.register(BACK_WARMUP, new ConfigTimer(Ticks.SECOND.x(5), Ticks.MINUTE), new ConfigTimer(Ticks.NO_TICKS));
 		event.register(CLAIMS_MAX_CHUNKS, new ConfigInt(100, 0, 30000), new ConfigInt(1000));
 		event.register(CHUNKLOADER_MAX_CHUNKS, new ConfigInt(50, 0, 30000), new ConfigInt(64));
 		//event.register(CHUNKLOADER_OFFLINE_TIMER, new ConfigDouble(-1D).setMin(-1D), new ConfigDouble(-1D));
-		event.register(AFK_TIMER, new ConfigTimer(0));
+		event.register(AFK_TIMER, new ConfigTimer(Ticks.NO_TICKS));
 	}
 
 	@SubscribeEvent

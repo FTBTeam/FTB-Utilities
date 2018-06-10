@@ -13,7 +13,6 @@ import com.feed_the_beast.ftblib.lib.data.IHasCache;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
-import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.IScheduledTask;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
@@ -63,7 +62,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		public void teleport(EntityPlayerMP player, TeleporterDimPos pos, @Nullable IScheduledTask extraTask)
 		{
 			Universe universe = Universe.get();
-			int seconds = (int) (Ticks.ts(RankConfigAPI.get(player, warmup).getLong()));
+			int seconds = (int) RankConfigAPI.get(player, warmup).getTimer().seconds();
 
 			if (seconds > 0)
 			{
@@ -115,7 +114,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 			{
 				pos.teleport(player);
 				FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(universe.getPlayer(player));
-				data.lastTeleport[timer.ordinal()] = universe.world.getTotalWorldTime();
+				data.lastTeleport[timer.ordinal()] = System.currentTimeMillis();
 
 				if (secondsLeft != 0)
 				{
@@ -146,7 +145,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 
 	public ForgeTeam lastChunkTeam;
 	public final Collection<ForgePlayer> tpaRequestsFrom;
-	public long afkTicks;
+	public long afkTime;
 	private ITextComponent cachedNameForChat;
 
 	private BlockDimPos lastDeath, lastSafePos;
@@ -287,11 +286,11 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 
 	public void checkTeleportCooldown(ICommandSender sender, Timer timer) throws CommandException
 	{
-		long cooldown = lastTeleport[timer.ordinal()] + player.getRankConfig(timer.cooldown).getLong() - player.team.universe.world.getTotalWorldTime();
+		long cooldown = lastTeleport[timer.ordinal()] + player.getRankConfig(timer.cooldown).getTimer().millis() - System.currentTimeMillis();
 
 		if (cooldown > 0)
 		{
-			throw FTBLib.error(sender, "cant_use_now_cooldown", StringUtils.getTimeStringTicks(cooldown));
+			throw FTBLib.error(sender, "cant_use_now_cooldown", StringUtils.getTimeString(cooldown));
 		}
 	}
 

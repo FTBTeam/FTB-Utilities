@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import net.minecraft.stats.StatBase;
 import net.minecraft.util.ResourceLocation;
@@ -55,7 +56,7 @@ public class Leaderboard
 	public static class FromStat extends Leaderboard
 	{
 		public static final IntFunction<ITextComponent> DEFAULT = value -> new TextComponentString(value <= 0 ? "0" : Integer.toString(value));
-		public static final IntFunction<ITextComponent> TIME = value -> new TextComponentString("[" + (int) (value / 72000D + 0.5D) + "h] " + StringUtils.getTimeStringTicks(value));
+		public static final IntFunction<ITextComponent> TIME = value -> new TextComponentString("[" + (int) (value / 72000D + 0.5D) + "h] " + Ticks.get(value).toTimeString());
 
 		public FromStat(ResourceLocation id, ITextComponent t, StatBase statBase, boolean from0to1, IntFunction<ITextComponent> valueToString)
 		{

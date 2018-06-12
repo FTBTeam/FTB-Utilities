@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbutilities.gui;
 
 import com.feed_the_beast.ftblib.events.client.GuideEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
-import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.client.CachedVertexData;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.Button;
@@ -14,6 +13,7 @@ import com.feed_the_beast.ftblib.lib.gui.misc.GuiChunkSelectorBase;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksModify;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksRequest;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;
@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
@@ -34,7 +35,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-@EventHandler(Side.CLIENT)
+@Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID, value = Side.CLIENT)
 public class GuiClaimedChunks extends GuiChunkSelectorBase
 {
 	public static GuiClaimedChunks instance;

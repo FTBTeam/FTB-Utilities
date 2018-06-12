@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbutilities.command;
 
 import com.feed_the_beast.ftblib.FTBLibConfig;
-import com.feed_the_beast.ftblib.lib.EventHandler;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.command.chunks.CmdChunks;
 import com.feed_the_beast.ftbutilities.command.ranks.CmdRanks;
@@ -16,12 +16,13 @@ import com.feed_the_beast.ftbutilities.command.tp.CmdTPA;
 import com.feed_the_beast.ftbutilities.command.tp.CmdTPAccept;
 import com.feed_the_beast.ftbutilities.command.tp.CmdTplast;
 import com.feed_the_beast.ftbutilities.command.tp.CmdWarp;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 /**
  * @author LatvianModder
  */
-@EventHandler
+@Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
 public class FTBUtilitiesCommands
 {
 	public static void registerCommands(FMLServerStartingEvent event)

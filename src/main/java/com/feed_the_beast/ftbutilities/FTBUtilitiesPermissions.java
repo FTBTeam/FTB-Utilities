@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbutilities;
 import com.feed_the_beast.ftblib.events.RegisterPermissionsEvent;
 import com.feed_the_beast.ftblib.events.RegisterRankConfigEvent;
 import com.feed_the_beast.ftblib.events.RegisterRankConfigHandlerEvent;
-import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigTimer;
@@ -28,6 +27,7 @@ import net.minecraft.item.ItemBucket;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -41,7 +41,7 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-@EventHandler
+@Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
 public class FTBUtilitiesPermissions
 {
 	// Display //
@@ -218,6 +218,7 @@ public class FTBUtilitiesPermissions
 		event.registerNode(TPA_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /tpa to teleport to/from another dimension");
 		event.registerNode(NICKNAME_SET, DefaultPermissionLevel.OP, "Allow to change nickname");
 		event.registerNode(NICKNAME_COLORS, DefaultPermissionLevel.OP, "Allow to use formatting codes in nickname, requires " + NICKNAME_SET);
+		event.registerNode(HEAL_OTHER, DefaultPermissionLevel.OP, "Allow to heal other players");
 
 		for (Block block : Block.REGISTRY)
 		{

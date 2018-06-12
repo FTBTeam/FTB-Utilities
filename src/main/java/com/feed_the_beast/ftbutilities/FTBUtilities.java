@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbutilities;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.ATHelper;
+import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
@@ -35,7 +37,7 @@ import java.util.List;
 		version = FTBUtilities.VERSION,
 		acceptableRemoteVersions = "*",
 		acceptedMinecraftVersions = "[1.12,)",
-		dependencies = "required-after:ftblib"
+		dependencies = "required-after:" + FTBLib.MOD_ID + ";after:" + OtherMods.JOURNEYMAP + ";after:" + OtherMods.CHISELS_AND_BITS
 )
 public class FTBUtilities
 {

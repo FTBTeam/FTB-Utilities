@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.universe.UniverseClosedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseLoadedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseSavedEvent;
-import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
@@ -29,6 +28,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.storage.ThreadedFileIOBase;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.BufferedWriter;
@@ -47,7 +47,7 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-@EventHandler
+@Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
 public class FTBUtilitiesUniverseData
 {
 	private static final String BADGE_URL = "https://badges.latmod.com/get?id=";

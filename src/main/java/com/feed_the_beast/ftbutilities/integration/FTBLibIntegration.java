@@ -12,7 +12,6 @@ import com.feed_the_beast.ftblib.events.team.ForgeTeamDataEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftblib.events.team.RegisterTeamGuiActionsEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseClearCacheEvent;
-import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
@@ -45,6 +44,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.GameRules;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.File;
@@ -53,7 +53,7 @@ import java.util.OptionalInt;
 /**
  * @author LatvianModder
  */
-@EventHandler
+@Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
 public class FTBLibIntegration
 {
 	public static final ResourceLocation RELOAD_CONFIG = new ResourceLocation(FTBUtilities.MOD_ID, "config");

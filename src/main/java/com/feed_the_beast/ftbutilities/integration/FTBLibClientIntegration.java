@@ -1,18 +1,18 @@
 package com.feed_the_beast.ftbutilities.integration;
 
 import com.feed_the_beast.ftblib.events.client.CustomClickEvent;
-import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.gui.GuiClaimedChunks;
 import com.feed_the_beast.ftbutilities.net.MessageLeaderboardList;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author LatvianModder
  */
-@EventHandler(Side.CLIENT)
+@Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID, value = Side.CLIENT)
 public class FTBLibClientIntegration
 {
 	@SubscribeEvent

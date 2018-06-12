@@ -86,7 +86,7 @@ public class FTBUtilitiesClientEventHandler
 
 		if (totalBackupFiles > 0 && totalBackupFiles > currentBackupFile && FTBUtilitiesClientConfig.general.show_backup_progress)
 		{
-			event.getLeft().add(TextFormatting.LIGHT_PURPLE + I18n.format("ftbutilities.lang.timer.backup_progress", currentBackupFile, totalBackupFiles, StringUtils.formatDouble((currentBackupFile / (double) totalBackupFiles) * 100D)));
+			event.getLeft().add(TextFormatting.LIGHT_PURPLE + I18n.format("ftbutilities.lang.timer.backup_progress", currentBackupFile * 100 / totalBackupFiles, currentBackupFile, totalBackupFiles));
 		}
 	}
 

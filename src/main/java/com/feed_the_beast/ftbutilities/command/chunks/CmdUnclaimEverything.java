@@ -22,7 +22,7 @@ public class CmdUnclaimEverything extends CmdBase
 {
 	public CmdUnclaimEverything()
 	{
-		super("unclaim_everything", Level.OP);
+		super("unclaim_everything", Level.OP_OR_SP);
 	}
 
 	@Override

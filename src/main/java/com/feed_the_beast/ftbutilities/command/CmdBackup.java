@@ -22,7 +22,7 @@ public class CmdBackup extends CmdTreeBase
 	{
 		public CmdStart()
 		{
-			super("start", Level.OP);
+			super("start", Level.OP_OR_SP);
 		}
 
 		@Override
@@ -42,11 +42,11 @@ public class CmdBackup extends CmdTreeBase
 		}
 	}
 
-	public static class CmdGetSize extends CmdBase
+	public static class CmdSize extends CmdBase
 	{
-		public CmdGetSize()
+		public CmdSize()
 		{
-			super("size", Level.OP);
+			super("size", Level.OP_OR_SP);
 		}
 
 		@Override
@@ -90,7 +90,7 @@ public class CmdBackup extends CmdTreeBase
 	{
 		super("backup");
 		addSubcommand(new CmdStart());
-		addSubcommand(new CmdGetSize());
+		addSubcommand(new CmdSize());
 		addSubcommand(new CmdTime());
 		addSubcommand(new CmdTreeHelp(this));
 	}

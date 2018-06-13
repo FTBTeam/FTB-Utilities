@@ -1,30 +1,25 @@
 package com.feed_the_beast.ftbutilities.handlers;
 
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
-import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
-import com.google.common.base.Objects;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -70,42 +65,9 @@ public class FTBUtilitiesPlayerEventHandler
 			return;
 		}
 
-		FTBUtilitiesPlayerData.get(p).setLastSafePos(new BlockDimPos(player));
-		updateChunkMessage(player, new ChunkDimPos(event.getNewChunkX(), event.getNewChunkZ(), player.dimension));
-	}
-
-	public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)
-	{
-		if (!ClaimedChunks.isActive())
-		{
-			return;
-		}
-
-		ClaimedChunk chunk = ClaimedChunks.instance.getChunk(pos);
-		ForgeTeam team = chunk == null ? null : chunk.getTeam();
-
-		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(Universe.get().getPlayer(player));
-
-		if (!Objects.equal(data.lastChunkTeam, team))
-		{
-			data.lastChunkTeam = team;
-
-			if (team != null)
-			{
-				Notification notification = Notification.of(FTBUtilitiesNotifications.CHUNK_CHANGED, team.getTitle());
-
-				if (!team.getDesc().isEmpty())
-				{
-					notification.addLine(StringUtils.italic(new TextComponentString(team.getDesc()), true));
-				}
-
-				notification.send(player.mcServer, player);
-			}
-			else
-			{
-				Notification.of(FTBUtilitiesNotifications.CHUNK_CHANGED, StringUtils.color(FTBUtilities.lang(player, "ftbutilities.lang.chunks.wilderness"), TextFormatting.DARK_GREEN)).send(player.mcServer, player);
-			}
-		}
+		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
+		data.setLastSafePos(new BlockDimPos(player));
+		FTBUtilitiesNotifications.updateChunkMessage(data, player, new ChunkDimPos(event.getNewChunkX(), event.getNewChunkZ(), player.dimension));
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

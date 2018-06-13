@@ -68,14 +68,13 @@ public class FTBUtilitiesServerEventHandler
 
 		Universe universe = Universe.get();
 
-		long nowTicks = universe.world.getTotalWorldTime();
-		long nowTime = System.currentTimeMillis();
+		long now = System.currentTimeMillis();
 
 		if (event.phase == TickEvent.Phase.START)
 		{
 			if (ClaimedChunks.isActive())
 			{
-				ClaimedChunks.instance.update(universe.server, nowTicks);
+				ClaimedChunks.instance.update(universe, now);
 			}
 		}
 		else
@@ -145,9 +144,9 @@ public class FTBUtilitiesServerEventHandler
 				}
 			}
 
-			Backups.INSTANCE.tick(universe, nowTicks, nowTime);
+			Backups.INSTANCE.tick(universe, now);
 
-			if (FTBUtilitiesUniverseData.shutdownTime > 0L && FTBUtilitiesUniverseData.shutdownTime - nowTime <= 0 && Backups.INSTANCE.doingBackup == 0)
+			if (FTBUtilitiesUniverseData.shutdownTime > 0L && FTBUtilitiesUniverseData.shutdownTime - now <= 0 && Backups.INSTANCE.doingBackup == 0)
 			{
 				CmdShutdown.shutdown(universe.server);
 			}

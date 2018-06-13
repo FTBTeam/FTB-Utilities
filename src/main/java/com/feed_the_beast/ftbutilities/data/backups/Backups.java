@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbutilities.data.backups;
 
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
-import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
@@ -59,7 +58,14 @@ public enum Backups
 		doingBackup = 0;
 		backups.clear();
 
-		JsonElement element = DataReader.get(new File(backupsFolder, "backups.json")).safeJson();
+		File oldFile = new File(backupsFolder, "backups.json");
+
+		if (oldFile.exists())
+		{
+			oldFile.renameTo(new File(CommonUtils.folderLocal, "ftbutilities/backups.json"));
+		}
+
+		JsonElement element = DataReader.get(new File(CommonUtils.folderLocal, "ftbutilities/backups.json")).safeJson();
 
 		if (element.isJsonArray())
 		{
@@ -86,9 +92,9 @@ public enum Backups
 		FTBUtilities.LOGGER.info("Backups folder - " + backupsFolder.getAbsolutePath());
 	}
 
-	public void tick(Universe universe, long nowTicks, long nowTime)
+	public void tick(Universe universe, long now)
 	{
-		if (nextBackup > 0L && nextBackup <= nowTime)
+		if (nextBackup > 0L && nextBackup <= now)
 		{
 			run(universe.server, universe.server, "");
 		}
@@ -113,7 +119,7 @@ public enum Backups
 		}
 		else if (doingBackup > 0 && printFiles)
 		{
-			if (currentFile == 0 || nowTicks % Ticks.SECOND.ticks() * 2L == 0 || currentFile == totalFiles - 1)
+			if (currentFile == 0 || currentFile == totalFiles - 1)
 			{
 				FTBUtilities.LOGGER.info("[" + currentFile + " | " + StringUtils.formatDouble((currentFile / (double) totalFiles) * 100D) + "%]: " + currentFileName);
 			}
@@ -162,20 +168,30 @@ public enum Backups
 			}
 		}
 
-		File wd = server.getWorld(0).getSaveHandler().getWorldDirectory();
 		doingBackup = 1;
 
 		ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
 		{
-			doBackup(server, wd, customName);
+			try
+			{
+				doBackup(server, customName);
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+
+			doingBackup = 2;
 			return false;
 		});
 
 		return true;
 	}
 
-	private void doBackup(MinecraftServer server, File src, String customName)
+	private void doBackup(MinecraftServer server, String customName)
 	{
+		File src = server.getWorld(0).getSaveHandler().getWorldDirectory();
+
 		try
 		{
 			if (server.getPlayerList() != null)
@@ -194,7 +210,6 @@ public enum Backups
 		catch (Exception ex)
 		{
 			notifyAll(server, player -> FTBUtilities.lang(player, "ftbutilities.lang.backup.saving_failed"), true);
-			FTBUtilities.LOGGER.error("Saving world failed!");
 			ex.printStackTrace();
 			return;
 		}
@@ -346,7 +361,7 @@ public enum Backups
 			}
 			else
 			{
-				dstFile = new File(new File(backupsFolder, out.toString()), src.getName());
+				dstFile = new File(backupsFolder, out.toString());
 				dstFile.mkdirs();
 
 				currentFile = 0;
@@ -375,7 +390,8 @@ public enum Backups
 		{
 			if (!FTBUtilitiesConfig.backups.silent)
 			{
-				notifyAll(server, player -> FTBUtilities.lang(player, "ftbutilities.lang.backup.fail", ex.getClass().getName()), true);
+				String errorName = ex.getClass().getName();
+				notifyAll(server, player -> FTBUtilities.lang(player, "ftbutilities.lang.backup.fail", errorName), true);
 			}
 
 			ex.printStackTrace();
@@ -383,14 +399,6 @@ public enum Backups
 		}
 
 		printFiles = false;
-
-		if (error != null)
-		{
-			if (dstFile != null)
-			{
-				FileUtils.delete(dstFile);
-			}
-		}
 
 		Backup backup = new Backup(time.getTimeInMillis(), out.toString().replace('\\', '/'), getLastIndex() + 1, success, fileSize);
 		backups.add(backup);
@@ -403,7 +411,7 @@ public enum Backups
 			array.add(backup1.toJsonObject());
 		}
 
-		JsonUtils.toJson(new File(backupsFolder, "backups.json"), array);
+		JsonUtils.toJson(new File(CommonUtils.folderLocal, "ftbutilities/backups.json"), array);
 
 		if (error == null && FTBUtilitiesConfig.backups.silent)
 		{
@@ -420,15 +428,14 @@ public enum Backups
 
 				String sizeB = FileUtils.getSizeString(fileSize);
 				String sizeT = FileUtils.getSizeString(totalSize);
-				notifyAll(server, player -> FTBUtilities.lang(player, "ftbutilities.lang.backup.end_2", timeString, (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT))), false);
+				String sizeString = sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT);
+				notifyAll(server, player -> FTBUtilities.lang(player, "ftbutilities.lang.backup.end_2", timeString, sizeString), false);
 			}
 			else
 			{
 				notifyAll(server, player -> FTBUtilities.lang(player, "ftbutilities.lang.backup.end_1", timeString), false);
 			}
 		}
-
-		doingBackup = 2;
 	}
 
 	private void appendNum(StringBuilder sb, int num, char c)

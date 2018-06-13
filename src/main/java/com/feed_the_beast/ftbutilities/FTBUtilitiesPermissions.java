@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbutilities;
 
-import com.feed_the_beast.ftblib.events.RegisterPermissionsEvent;
 import com.feed_the_beast.ftblib.events.RegisterRankConfigEvent;
 import com.feed_the_beast.ftblib.events.RegisterRankConfigHandlerEvent;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
@@ -37,6 +36,7 @@ import net.minecraftforge.server.permission.context.BlockPosContext;
 import net.minecraftforge.server.permission.context.IContext;
 
 import javax.annotation.Nullable;
+import java.util.HashSet;
 
 /**
  * @author LatvianModder
@@ -68,9 +68,13 @@ public class FTBUtilitiesPermissions
 	public static final String CLAIMS_OTHER_UNLOAD = "ftbutilities.other_player.claims.unload";
 	public static final Node CLAIMS_MAX_CHUNKS = Node.get("ftbutilities.claims.max_chunks");
 	public static final String CLAIMS_BLOCK_CNB = "ftbutilities.claims.block.cnb";
-	private static final String CLAIMS_BLOCK_EDIT_PREFIX = "ftbutilities.claims.block.edit.";
-	private static final String CLAIMS_BLOCK_INTERACT_PREFIX = "ftbutilities.claims.block.interact.";
-	private static final String CLAIMS_ITEM_PREFIX = "ftbutilities.claims.item.";
+	private static final Node CLAIMS_BLOCK_EDIT_PREFIX = Node.get("ftbutilities.claims.block.edit");
+	private static final Node CLAIMS_BLOCK_INTERACT_PREFIX = Node.get("ftbutilities.claims.block.interact");
+	private static final Node CLAIMS_ITEM_PREFIX = Node.get("ftbutilities.claims.item");
+
+	public static final HashSet<Block> CLAIMS_BLOCK_EDIT_WHITELIST = new HashSet<>();
+	public static final HashSet<Block> CLAIMS_BLOCK_INTERACT_WHITELIST = new HashSet<>();
+	public static final HashSet<Item> CLAIMS_ITEM_BLACKLIST = new HashSet<>();
 
 	// Chunkloader //
 	public static final Node CHUNKLOADER_MAX_CHUNKS = Node.get("ftbutilities.chunkloader.max_chunks");
@@ -197,50 +201,68 @@ public class FTBUtilitiesPermissions
 		}
 	}
 
-	@SubscribeEvent
-	public static void registerPermissions(RegisterPermissionsEvent event)
+	public static void registerPermissions()
 	{
-		event.registerNode(DISPLAY_ADMIN_INFO, DefaultPermissionLevel.OP, "Display 'Admin' in Server Info");
-		event.registerNode(HOMES_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /home to teleport to/from another dimension");
-		event.registerNode(HOMES_LIST_OTHER, DefaultPermissionLevel.OP, "Allow to list other people homes");
-		event.registerNode(HOMES_TELEPORT_OTHER, DefaultPermissionLevel.OP, "Allow to teleport to other people homes");
-		event.registerNode(CLAIMS_OTHER_SEE_INFO, DefaultPermissionLevel.OP, "Allow player to see info of other team chunks");
-		event.registerNode(CLAIMS_OTHER_CLAIM, DefaultPermissionLevel.OP, "Allow player to claim other team chunks");
-		event.registerNode(CLAIMS_OTHER_UNCLAIM, DefaultPermissionLevel.OP, "Allow player to unclaim other team chunks");
-		event.registerNode(CLAIMS_OTHER_LOAD, DefaultPermissionLevel.OP, "Allow player to load other team chunks");
-		event.registerNode(CLAIMS_OTHER_UNLOAD, DefaultPermissionLevel.OP, "Allow player to unload other team chunks");
-		event.registerNode(CLAIMS_BLOCK_CNB, DefaultPermissionLevel.OP, "Allow to edit C&B bits in claimed chunks");
-		event.registerNode(CHUNKLOADER_LOAD_OFFLINE, DefaultPermissionLevel.ALL, "Keep loaded chunks working when player goes offline");
-		event.registerNode(INFINITE_BACK_USAGE, DefaultPermissionLevel.NONE, "Allow to use 'back' command infinite times");
-		event.registerNode(VIEW_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to view crash reports via Admin Panel");
-		event.registerNode(DELETE_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to delete crash reports, requires " + VIEW_CRASH_REPORTS);
-		event.registerNode(EDIT_WORLD_GAMERULES, DefaultPermissionLevel.OP, "Allow to edit gamerules via Admin Panel");
-		event.registerNode(TPA_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /tpa to teleport to/from another dimension");
-		event.registerNode(NICKNAME_SET, DefaultPermissionLevel.OP, "Allow to change nickname");
-		event.registerNode(NICKNAME_COLORS, DefaultPermissionLevel.OP, "Allow to use formatting codes in nickname, requires " + NICKNAME_SET);
-		event.registerNode(HEAL_OTHER, DefaultPermissionLevel.OP, "Allow to heal other players");
+		PermissionAPI.registerNode(DISPLAY_ADMIN_INFO, DefaultPermissionLevel.OP, "Display 'Admin' in Server Info");
+		PermissionAPI.registerNode(HOMES_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /home to teleport to/from another dimension");
+		PermissionAPI.registerNode(HOMES_LIST_OTHER, DefaultPermissionLevel.OP, "Allow to list other people homes");
+		PermissionAPI.registerNode(HOMES_TELEPORT_OTHER, DefaultPermissionLevel.OP, "Allow to teleport to other people homes");
+		PermissionAPI.registerNode(CLAIMS_OTHER_SEE_INFO, DefaultPermissionLevel.OP, "Allow player to see info of other team chunks");
+		PermissionAPI.registerNode(CLAIMS_OTHER_CLAIM, DefaultPermissionLevel.OP, "Allow player to claim other team chunks");
+		PermissionAPI.registerNode(CLAIMS_OTHER_UNCLAIM, DefaultPermissionLevel.OP, "Allow player to unclaim other team chunks");
+		PermissionAPI.registerNode(CLAIMS_OTHER_LOAD, DefaultPermissionLevel.OP, "Allow player to load other team chunks");
+		PermissionAPI.registerNode(CLAIMS_OTHER_UNLOAD, DefaultPermissionLevel.OP, "Allow player to unload other team chunks");
+		PermissionAPI.registerNode(CLAIMS_BLOCK_CNB, DefaultPermissionLevel.OP, "Allow to edit C&B bits in claimed chunks");
+		PermissionAPI.registerNode(CHUNKLOADER_LOAD_OFFLINE, DefaultPermissionLevel.ALL, "Keep loaded chunks working when player goes offline");
+		PermissionAPI.registerNode(INFINITE_BACK_USAGE, DefaultPermissionLevel.NONE, "Allow to use 'back' command infinite times");
+		PermissionAPI.registerNode(VIEW_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to view crash reports via Admin Panel");
+		PermissionAPI.registerNode(DELETE_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to delete crash reports, requires " + VIEW_CRASH_REPORTS);
+		PermissionAPI.registerNode(EDIT_WORLD_GAMERULES, DefaultPermissionLevel.OP, "Allow to edit gamerules via Admin Panel");
+		PermissionAPI.registerNode(TPA_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /tpa to teleport to/from another dimension");
+		PermissionAPI.registerNode(NICKNAME_SET, DefaultPermissionLevel.OP, "Allow to change nickname");
+		PermissionAPI.registerNode(NICKNAME_COLORS, DefaultPermissionLevel.OP, "Allow to use formatting codes in nickname, requires " + NICKNAME_SET);
+		PermissionAPI.registerNode(HEAL_OTHER, DefaultPermissionLevel.OP, "Allow to heal other players");
 
 		for (Block block : Block.REGISTRY)
 		{
 			String name = formatId(block);
-			event.registerNode(CLAIMS_BLOCK_EDIT_PREFIX + name, (name.startsWith("graves.") || name.startsWith("gravestone.")) ? DefaultPermissionLevel.ALL : DefaultPermissionLevel.OP);
-			event.registerNode(CLAIMS_BLOCK_INTERACT_PREFIX + name, (block instanceof BlockDoor || block instanceof BlockWorkbench || block instanceof BlockAnvil) ? DefaultPermissionLevel.ALL : DefaultPermissionLevel.OP);
+
+			if (name.endsWith(".grave") || name.endsWith(".gravestone"))
+			{
+				CLAIMS_BLOCK_EDIT_WHITELIST.add(block);
+			}
+
+			if (block instanceof BlockDoor || block instanceof BlockWorkbench || block instanceof BlockAnvil)
+			{
+				CLAIMS_BLOCK_INTERACT_WHITELIST.add(block);
+			}
 		}
 
 		for (Item item : Item.REGISTRY)
 		{
-			String name = formatId(item);
-			event.registerNode(CLAIMS_ITEM_PREFIX + name, (item instanceof ItemBucket) ? DefaultPermissionLevel.OP : DefaultPermissionLevel.ALL);
+			if (item instanceof ItemBucket)
+			{
+				CLAIMS_ITEM_BLACKLIST.add(item);
+			}
 		}
 
-		event.registerNode(CLAIMS_BLOCK_EDIT_PREFIX + "gravestone.gravestone", DefaultPermissionLevel.ALL);
-		event.registerNode(CLAIMS_BLOCK_EDIT_PREFIX + "openblocks.grave", DefaultPermissionLevel.ALL);
-		event.registerNode(CLAIMS_ITEM_PREFIX + formatId(Items.END_CRYSTAL), DefaultPermissionLevel.OP);
-		event.registerNode(CLAIMS_ITEM_PREFIX + "forge.bucketfilled", DefaultPermissionLevel.OP);
+		CLAIMS_ITEM_BLACKLIST.add(Items.END_CRYSTAL);
+
+		for (Block block : Block.REGISTRY)
+		{
+			String name = formatId(block);
+			PermissionAPI.registerNode(CLAIMS_BLOCK_EDIT_PREFIX.append(name).toString(), CLAIMS_BLOCK_EDIT_WHITELIST.contains(block) ? DefaultPermissionLevel.ALL : DefaultPermissionLevel.OP, "");
+			PermissionAPI.registerNode(CLAIMS_BLOCK_INTERACT_PREFIX.append(name).toString(), CLAIMS_BLOCK_INTERACT_WHITELIST.contains(block) ? DefaultPermissionLevel.ALL : DefaultPermissionLevel.OP, "");
+		}
+
+		for (Item item : Item.REGISTRY)
+		{
+			PermissionAPI.registerNode(CLAIMS_ITEM_PREFIX.append(formatId(item)).toString(), CLAIMS_ITEM_BLACKLIST.contains(item) ? DefaultPermissionLevel.OP : DefaultPermissionLevel.ALL, "");
+		}
 
 		for (Leaderboard leaderboard : FTBUtilitiesCommon.LEADERBOARDS.values())
 		{
-			event.registerNode(getLeaderboardNode(leaderboard), DefaultPermissionLevel.ALL);
+			PermissionAPI.registerNode(getLeaderboardNode(leaderboard), DefaultPermissionLevel.ALL, "");
 		}
 	}
 
@@ -269,9 +291,9 @@ public class FTBUtilitiesPermissions
 	public static void registerCustomPermissionPrefixes(CustomPermissionPrefixesRegistryEvent event)
 	{
 		event.register(Node.COMMAND, DefaultPermissionLevel.OP, "Permission for commands, if FTBUtilities command overriding is enabled. If not, this node will be inactive");
-		event.register(Node.get(CLAIMS_BLOCK_EDIT_PREFIX), DefaultPermissionLevel.OP, "Permission for blocks that players can break and place within claimed chunks");
-		event.register(Node.get(CLAIMS_BLOCK_INTERACT_PREFIX), DefaultPermissionLevel.OP, "Permission for blocks that players can right-click within claimed chunks");
-		event.register(Node.get(CLAIMS_ITEM_PREFIX), DefaultPermissionLevel.ALL, "Permission for items that players can right-click in air within claimed chunks");
+		event.register(CLAIMS_BLOCK_EDIT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can break and place within claimed chunks");
+		event.register(CLAIMS_BLOCK_INTERACT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can right-click within claimed chunks");
+		event.register(CLAIMS_ITEM_PREFIX, DefaultPermissionLevel.ALL, "Permission for items that players can right-click in air within claimed chunks");
 		event.register(Node.get(LEADERBOARD_PREFIX), DefaultPermissionLevel.ALL, "Permission for leaderboards that players can view");
 	}
 
@@ -287,14 +309,14 @@ public class FTBUtilitiesPermissions
 		switch (type)
 		{
 			case EDIT:
-				return PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_EDIT_PREFIX + formatId(block.getState().getBlock()), context);
+				return PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_EDIT_PREFIX.append(formatId(block.getState().getBlock())).toString(), context);
 			case INTERACT:
-				return PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_INTERACT_PREFIX + formatId(block.getState().getBlock()), context);
+				return PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_INTERACT_PREFIX.append(formatId(block.getState().getBlock())).toString(), context);
 			case CNB_BREAK:
 			case CNB_PLACE:
 				return PermissionAPI.hasPermission(player.getGameProfile(), FTBUtilitiesPermissions.CLAIMS_BLOCK_CNB, context);
 			case ITEM:
-				return !player.getHeldItem(hand).isEmpty() || PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_ITEM_PREFIX + formatId(player.getHeldItem(hand).getItem()), context);
+				return !player.getHeldItem(hand).isEmpty() || PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_ITEM_PREFIX.append(formatId(player.getHeldItem(hand).getItem())).toString(), context);
 			default:
 				return false;
 		}

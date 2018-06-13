@@ -46,6 +46,7 @@ public class FTBUtilitiesCommon
 
 	public void init()
 	{
+		FTBUtilitiesPermissions.registerPermissions();
 	}
 
 	public void postInit()

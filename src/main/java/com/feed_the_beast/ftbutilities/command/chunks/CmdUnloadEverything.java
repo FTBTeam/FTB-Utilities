@@ -23,7 +23,7 @@ public class CmdUnloadEverything extends CmdBase
 {
 	public CmdUnloadEverything()
 	{
-		super("unload_everything", Level.OP);
+		super("unload_everything", Level.OP_OR_SP);
 	}
 
 	@Override

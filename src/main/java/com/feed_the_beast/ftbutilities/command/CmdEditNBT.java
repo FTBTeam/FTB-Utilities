@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBT;
+import com.feed_the_beast.ftbutilities.net.MessageEditNBTRequest;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -16,7 +17,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -34,6 +37,19 @@ public class CmdEditNBT extends CmdTreeBase
 		addSubcommand(new CmdEntity());
 		addSubcommand(new CmdPlayer());
 		addSubcommand(new CmdTreeHelp(this));
+	}
+
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		if (args.length < 1)
+		{
+			new MessageEditNBTRequest().sendTo(getCommandSenderAsPlayer(sender));
+		}
+		else
+		{
+			super.execute(server, sender, args);
+		}
 	}
 
 	public static class CmdNBT extends CmdBase
@@ -75,10 +91,7 @@ public class CmdEditNBT extends CmdTreeBase
 		public NBTTagCompound editNBT(EntityPlayerMP player, NBTTagCompound info, String[] args) throws CommandException
 		{
 			checkArgs(player, args, 3);
-			int x = parseInt(args[0]);
-			int y = parseInt(args[1]);
-			int z = parseInt(args[2]);
-			BlockPos pos = new BlockPos(x, y, z);
+			BlockPos pos = parseBlockPos(player, args, 0, false);
 
 			if (!player.world.isBlockLoaded(pos))
 			{
@@ -91,9 +104,9 @@ public class CmdEditNBT extends CmdTreeBase
 			if (tile != null)
 			{
 				info.setString("type", "tile");
-				info.setInteger("x", x);
-				info.setInteger("y", y);
-				info.setInteger("z", z);
+				info.setInteger("x", pos.getX());
+				info.setInteger("y", pos.getY());
+				info.setInteger("z", pos.getZ());
 				tile.writeToNBT(nbt);
 				nbt.removeTag("x");
 				nbt.removeTag("y");
@@ -137,6 +150,11 @@ public class CmdEditNBT extends CmdTreeBase
 		private CmdPlayer()
 		{
 			super("player");
+		}
+
+		public List<String> getAliases()
+		{
+			return Collections.singletonList("me");
 		}
 
 		@Override

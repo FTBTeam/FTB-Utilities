@@ -7,15 +7,14 @@ import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.events.chunks.ChunkModifiedEvent;
-import com.feed_the_beast.ftbutilities.handlers.FTBUtilitiesPlayerEventHandler;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumHand;
 
 import javax.annotation.Nullable;
@@ -105,11 +104,11 @@ public class ClaimedChunks
 	}
 
 
-	public void update(MinecraftServer server, long nowTime)
+	public void update(Universe universe, long now)
 	{
-		if (nextChunkloaderUpdate <= nowTime)
+		if (nextChunkloaderUpdate <= now)
 		{
-			nextChunkloaderUpdate = nowTime + 60000L;
+			nextChunkloaderUpdate = now + 60000L;
 			markDirty();
 		}
 
@@ -132,7 +131,7 @@ public class ClaimedChunks
 					{
 						if (force)
 						{
-							FTBUtilitiesLoadedChunkManager.INSTANCE.forceChunk(server, chunk);
+							FTBUtilitiesLoadedChunkManager.INSTANCE.forceChunk(universe.server, chunk);
 						}
 						else
 						{
@@ -142,13 +141,13 @@ public class ClaimedChunks
 				}
 			}
 
-			for (EntityPlayerMP player : server.getPlayerList().getPlayers())
+			for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
 			{
 				ChunkDimPos playerPos = new ChunkDimPos(player);
 				int startX = playerPos.posX - ChunkSelectorMap.TILES_GUI2;
 				int startZ = playerPos.posZ - ChunkSelectorMap.TILES_GUI2;
 				new MessageClaimedChunksUpdate(startX, startZ, player).sendTo(player);
-				FTBUtilitiesPlayerEventHandler.updateChunkMessage(player, playerPos);
+				FTBUtilitiesNotifications.updateChunkMessage(FTBUtilitiesPlayerData.get(universe.getPlayer(player)), player, playerPos);
 			}
 
 			isDirty = false;

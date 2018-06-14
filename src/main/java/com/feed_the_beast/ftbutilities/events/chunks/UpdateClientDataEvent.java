@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbutilities.gui;
+package com.feed_the_beast.ftbutilities.events.chunks;
 
 import com.feed_the_beast.ftbutilities.events.FTBUtilitiesEvent;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;

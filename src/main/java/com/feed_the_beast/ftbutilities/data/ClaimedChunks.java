@@ -158,7 +158,7 @@ public class ClaimedChunks
 	public ClaimedChunk getChunk(ChunkDimPos pos)
 	{
 		ClaimedChunk chunk = map.get(pos);
-		return chunk == null || chunk.isInvalid() ? null : chunk;
+		return chunk == null || chunk.isInvalid() || !FTBUtilitiesConfig.world.allowDimension(pos.dim) ? null : chunk;
 	}
 
 	public void removeChunk(ChunkDimPos pos)

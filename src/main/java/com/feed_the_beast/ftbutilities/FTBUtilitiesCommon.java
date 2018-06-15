@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbutilities.net.FTBUtilitiesNetHandler;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.Collection;
@@ -50,6 +51,10 @@ public class FTBUtilitiesCommon
 	}
 
 	public void postInit()
+	{
+	}
+
+	public void imc(FMLInterModComms.IMCMessage message)
 	{
 	}
 }

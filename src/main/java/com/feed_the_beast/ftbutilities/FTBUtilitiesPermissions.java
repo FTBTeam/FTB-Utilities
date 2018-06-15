@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbutilities;
 
 import com.feed_the_beast.ftblib.events.RegisterRankConfigEvent;
 import com.feed_the_beast.ftblib.events.RegisterRankConfigHandlerEvent;
+import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigTimer;
@@ -13,8 +14,6 @@ import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
-import com.feed_the_beast.ftbutilities.ranks.Rank;
-import com.google.gson.JsonElement;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockDoor;
@@ -24,10 +23,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
@@ -81,98 +77,14 @@ public class FTBUtilitiesPermissions
 	//public static final String CHUNKLOADER_OFFLINE_TIMER = FTBUtilities.MOD_ID + ".chunkloader.offline_timer";
 	public static final String CHUNKLOADER_LOAD_OFFLINE = "ftbutilities.chunkloader.load_offline";
 
-	public static class ChatPart
-	{
-		public final Node color, text, bold, italic, underlined, strikethrough, obfuscated;
-
-		public ChatPart(String s)
-		{
-			Node node = CHAT.append(s);
-			color = node.append("color");
-			text = node.append("text");
-			bold = node.append("bold");
-			italic = node.append("italic");
-			underlined = node.append("underlined");
-			strikethrough = node.append("strikethrough");
-			obfuscated = node.append("obfuscated");
-		}
-
-		public ITextComponent format(Rank rank, ITextComponent component, @Nullable ChatPart alt)
-		{
-			JsonElement json;
-			TextFormatting colortf = TextFormatting.WHITE;
-
-			if (alt != null)
-			{
-				json = rank.getConfigRaw(alt.color);
-
-				if (json.isJsonPrimitive())
-				{
-					colortf = StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP.get(json.getAsString());
-				}
-			}
-
-			json = rank.getConfigRaw(color);
-
-			if (json.isJsonPrimitive())
-			{
-				colortf = StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP.get(json.getAsString());
-			}
-
-			if (colortf != TextFormatting.WHITE)
-			{
-				component.getStyle().setColor(colortf);
-			}
-
-			if (getStyleBoolean(rank, bold, alt == null ? null : alt.bold))
-			{
-				component.getStyle().setBold(true);
-			}
-
-			if (getStyleBoolean(rank, italic, alt == null ? null : alt.italic))
-			{
-				component.getStyle().setItalic(true);
-			}
-
-			if (getStyleBoolean(rank, underlined, alt == null ? null : alt.underlined))
-			{
-				component.getStyle().setUnderlined(true);
-			}
-
-			if (getStyleBoolean(rank, strikethrough, alt == null ? null : alt.strikethrough))
-			{
-				component.getStyle().setStrikethrough(true);
-			}
-
-			if (getStyleBoolean(rank, obfuscated, alt == null ? null : alt.obfuscated))
-			{
-				component.getStyle().setObfuscated(true);
-			}
-
-			return component;
-		}
-
-		private boolean getStyleBoolean(Rank rank, Node main, @Nullable Node alt)
-		{
-			Event.Result result = rank.getPermissionRaw(main, false);
-
-			if (result == Event.Result.DEFAULT && alt != null)
-			{
-				result = rank.getPermissionRaw(alt, false);
-			}
-
-			return result == Event.Result.ALLOW;
-		}
-	}
-
 	// Chat //
-	public static final Node CHAT = Node.get("ftbutilities.chat");
-	public static final Node CHAT_PREFIX_PART_COUNT = CHAT.append("prefix.part_count");
-	public static final ChatPart CHAT_PREFIX = new ChatPart("prefix");
-	public static final ChatPart CHAT_NAME = new ChatPart("name");
-	public static final Node CHAT_SUFFIX_PART_COUNT = CHAT.append("suffix.part_count");
-	public static final ChatPart CHAT_SUFFIX = new ChatPart("suffix");
-	public static final ChatPart CHAT_TEXT = new ChatPart("text");
+	public static final Node CHAT_NAME_FORMAT = Node.get("ftbutilities.chat.name_format");
+	public static final Node CHAT_TEXT_COLOR = Node.get("ftbutilities.chat.text.color");
+	public static final String CHAT_TEXT_BOLD = "ftbutilities.chat.text.bold";
+	public static final String CHAT_TEXT_ITALIC = "ftbutilities.chat.text.italic";
+	public static final String CHAT_TEXT_UNDERLINED = "ftbutilities.chat.text.underlined";
+	public static final String CHAT_TEXT_STRIKETHROUGH = "ftbutilities.chat.text.strikethrough";
+	public static final String CHAT_TEXT_OBFUSCATED = "ftbutilities.chat.text.obfuscated";
 
 	// Other //
 	public static final String INFINITE_BACK_USAGE = "ftbutilities.back.infinite";
@@ -203,6 +115,12 @@ public class FTBUtilitiesPermissions
 
 	public static void registerPermissions()
 	{
+		PermissionAPI.registerNode(CHAT_TEXT_BOLD, DefaultPermissionLevel.NONE, "Makes text in chat bold");
+		PermissionAPI.registerNode(CHAT_TEXT_ITALIC, DefaultPermissionLevel.NONE, "Makes text in chat italic");
+		PermissionAPI.registerNode(CHAT_TEXT_UNDERLINED, DefaultPermissionLevel.NONE, "Makes text in chat underlined");
+		PermissionAPI.registerNode(CHAT_TEXT_STRIKETHROUGH, DefaultPermissionLevel.NONE, "Makes text in chat strikethrough");
+		PermissionAPI.registerNode(CHAT_TEXT_OBFUSCATED, DefaultPermissionLevel.NONE, "Makes text in chat obfuscated");
+
 		PermissionAPI.registerNode(DISPLAY_ADMIN_INFO, DefaultPermissionLevel.OP, "Display 'Admin' in Server Info");
 		PermissionAPI.registerNode(HOMES_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /home to teleport to/from another dimension");
 		PermissionAPI.registerNode(HOMES_LIST_OTHER, DefaultPermissionLevel.OP, "Allow to list other people homes");
@@ -269,6 +187,8 @@ public class FTBUtilitiesPermissions
 	@SubscribeEvent
 	public static void registerConfigs(RegisterRankConfigEvent event)
 	{
+		event.register(CHAT_NAME_FORMAT, new ConfigString("<$name>"), new ConfigString("<&2$name&r>"));
+		event.register(CHAT_TEXT_COLOR, new ConfigEnum<>(StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP));
 		event.register(BADGE, new ConfigString(""));
 		event.register(HOMES_MAX, new ConfigInt(1, 0, 30000), new ConfigInt(100));
 		event.register(HOMES_COOLDOWN, new ConfigTimer(Ticks.MINUTE.x(5)), new ConfigTimer(Ticks.NO_TICKS));

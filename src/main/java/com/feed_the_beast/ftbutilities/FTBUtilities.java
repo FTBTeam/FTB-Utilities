@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
@@ -84,6 +85,15 @@ public class FTBUtilities
 	public void onServerStarting(FMLServerStartingEvent event)
 	{
 		FTBUtilitiesCommands.registerCommands(event);
+	}
+
+	@Mod.EventHandler
+	public void onIMC(FMLInterModComms.IMCEvent event)
+	{
+		for (FMLInterModComms.IMCMessage message : event.getMessages())
+		{
+			PROXY.imc(message);
+		}
 	}
 
 	@Mod.EventHandler

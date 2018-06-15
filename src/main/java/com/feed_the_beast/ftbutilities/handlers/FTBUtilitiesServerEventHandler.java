@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.handlers;
 
 import com.feed_the_beast.ftblib.lib.EnumMessageLocation;
+import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
@@ -11,8 +12,8 @@ import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
-import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -25,6 +26,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.server.permission.PermissionAPI;
+import net.minecraftforge.server.permission.context.IContext;
 import net.minecraftforge.server.permission.context.PlayerContext;
 
 /**
@@ -44,17 +47,46 @@ public class FTBUtilitiesServerEventHandler
 		}
 
 		EntityPlayerMP player = event.getPlayer();
-		Rank rank = Ranks.INSTANCE.getRank(player.mcServer, player.getGameProfile(), new PlayerContext(player));
-
-		if (rank.isNone())
-		{
-			return;
-		}
-
+		GameProfile profile = player.getGameProfile();
+		IContext context = new PlayerContext(player);
 		ITextComponent main = new TextComponentString("");
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(Universe.get().getPlayer(player));
-		main.appendSibling(data.getNameForChat(rank));
-		main.appendSibling(FTBUtilitiesPermissions.CHAT_TEXT.format(rank, ForgeHooks.newChatWithLinks(event.getMessage().trim()), null));
+		main.appendSibling(data.getNameForChat());
+		ITextComponent text = ForgeHooks.newChatWithLinks(event.getMessage().trim());
+
+		TextFormatting colortf = (TextFormatting) RankConfigAPI.get(player.mcServer, profile, FTBUtilitiesPermissions.CHAT_TEXT_COLOR, context).getValue();
+
+		if (colortf != TextFormatting.WHITE)
+		{
+			text.getStyle().setColor(colortf);
+		}
+
+		if (PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_TEXT_BOLD, context))
+		{
+			text.getStyle().setBold(true);
+		}
+
+		if (PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_TEXT_ITALIC, context))
+		{
+			text.getStyle().setItalic(true);
+		}
+
+		if (PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_TEXT_UNDERLINED, context))
+		{
+			text.getStyle().setUnderlined(true);
+		}
+
+		if (PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_TEXT_STRIKETHROUGH, context))
+		{
+			text.getStyle().setStrikethrough(true);
+		}
+
+		if (PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_TEXT_OBFUSCATED, context))
+		{
+			text.getStyle().setObfuscated(true);
+		}
+
+		main.appendSibling(text);
 		event.setComponent(main);
 	}
 

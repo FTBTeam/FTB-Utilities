@@ -20,12 +20,10 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -462,7 +460,7 @@ public class Ranks
 			ranks.put(oRank.getName(), oRank);
 			oRank.tags.add(Rank.TAG_DEFAULT_OP);
 			oRank.parent = pRank;
-			oRank.setPermission(FTBUtilitiesPermissions.CHAT_NAME.color, new JsonPrimitive("dark_green"));
+			oRank.setPermission(Node.get("example.other_permission"), JsonUtils.JSON_TRUE);
 		}
 
 		Rank currentRank = null;

@@ -74,7 +74,9 @@ public class FTBUtilitiesPermissions
 	public static final String CHUNKLOADER_LOAD_OFFLINE = "ftbutilities.chunkloader.load_offline";
 
 	// Chat //
-	public static final String CHAT_CAN_SPEAK = "ftbutilities.chat.can_speak";
+	public static final String CHAT_SPEAK = "ftbutilities.chat.speak";
+	public static final String CHAT_NICKNAME_SET = "ftbutilities.chat.nickname.set";
+	public static final String CHAT_NICKNAME_COLORS = "ftbutilities.chat.nickname.colors";
 	public static final Node CHAT_NAME_FORMAT = Node.get("ftbutilities.chat.name_format");
 	public static final Node CHAT_TEXT_COLOR = Node.get("ftbutilities.chat.text.color");
 	public static final String CHAT_TEXT_BOLD = "ftbutilities.chat.text.bold";
@@ -96,8 +98,6 @@ public class FTBUtilitiesPermissions
 	public static final Node SPAWN_WARMUP = Node.get("ftbutilities.spawn.warmup");
 	public static final Node BACK_WARMUP = Node.get("ftbutilities.back.warmup");
 	public static final String TPA_CROSS_DIM = "ftbutilities.tpa.cross_dim";
-	public static final String NICKNAME_SET = "ftbutilities.nickname.set";
-	public static final String NICKNAME_COLORS = "ftbutilities.nickname.colors";
 	public static final Node AFK_TIMER = Node.get("ftbutilities.afk.timer");
 	public static final String HEAL_OTHER = "ftbutilities.other_player.heal";
 
@@ -112,7 +112,9 @@ public class FTBUtilitiesPermissions
 
 	public static void registerPermissions()
 	{
-		PermissionAPI.registerNode(CHAT_CAN_SPEAK, DefaultPermissionLevel.ALL, "Controls if player is muted or not");
+		PermissionAPI.registerNode(CHAT_SPEAK, DefaultPermissionLevel.ALL, "Controls if player is muted or not");
+		PermissionAPI.registerNode(CHAT_NICKNAME_SET, DefaultPermissionLevel.OP, "Allow to change nickname");
+		PermissionAPI.registerNode(CHAT_NICKNAME_COLORS, DefaultPermissionLevel.OP, "Allow to use formatting codes in nickname, requires " + CHAT_NICKNAME_SET);
 		PermissionAPI.registerNode(CHAT_TEXT_BOLD, DefaultPermissionLevel.NONE, "Makes text in chat bold");
 		PermissionAPI.registerNode(CHAT_TEXT_ITALIC, DefaultPermissionLevel.NONE, "Makes text in chat italic");
 		PermissionAPI.registerNode(CHAT_TEXT_UNDERLINED, DefaultPermissionLevel.NONE, "Makes text in chat underlined");
@@ -136,8 +138,6 @@ public class FTBUtilitiesPermissions
 		PermissionAPI.registerNode(DELETE_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to delete crash reports, requires " + VIEW_CRASH_REPORTS);
 		PermissionAPI.registerNode(EDIT_WORLD_GAMERULES, DefaultPermissionLevel.OP, "Allow to edit gamerules via Admin Panel");
 		PermissionAPI.registerNode(TPA_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /tpa to teleport to/from another dimension");
-		PermissionAPI.registerNode(NICKNAME_SET, DefaultPermissionLevel.OP, "Allow to change nickname");
-		PermissionAPI.registerNode(NICKNAME_COLORS, DefaultPermissionLevel.OP, "Allow to use formatting codes in nickname, requires " + NICKNAME_SET);
 		PermissionAPI.registerNode(HEAL_OTHER, DefaultPermissionLevel.OP, "Allow to heal other players");
 
 		for (Block block : Block.REGISTRY)

@@ -144,11 +144,11 @@ public class FTBUtilitiesPlayerEventHandler
 			{
 				FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
 
-				if (!data.getNickname().isEmpty() && PermissionAPI.hasPermission(event.getEntityPlayer(), FTBUtilitiesPermissions.NICKNAME_SET))
+				if (!data.getNickname().isEmpty() && PermissionAPI.hasPermission(event.getEntityPlayer(), FTBUtilitiesPermissions.CHAT_NICKNAME_SET))
 				{
 					String name = data.getNickname().replace('&', StringUtils.FORMATTING_CHAR);
 
-					if (!p.hasPermission(FTBUtilitiesPermissions.NICKNAME_COLORS))
+					if (!p.hasPermission(FTBUtilitiesPermissions.CHAT_NICKNAME_COLORS))
 					{
 						name = TextFormatting.getTextWithoutFormattingCodes(name);
 					}

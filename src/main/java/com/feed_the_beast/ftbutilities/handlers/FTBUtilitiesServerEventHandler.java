@@ -51,7 +51,7 @@ public class FTBUtilitiesServerEventHandler
 		GameProfile profile = player.getGameProfile();
 		IContext context = new PlayerContext(player);
 
-		if (!PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_CAN_SPEAK, context))
+		if (!PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_SPEAK, context))
 		{
 			event.setCanceled(true);
 			return;

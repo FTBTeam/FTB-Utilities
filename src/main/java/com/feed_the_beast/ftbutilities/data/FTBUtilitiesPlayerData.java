@@ -207,7 +207,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		group.add(FTBUtilities.MOD_ID, "disable_global_badge", disableGlobalBadge);
 		group.add(FTBUtilities.MOD_ID, "enable_pvp", enablePVP);
 
-		if (FTBUtilitiesConfig.commands.nick && player.hasPermission(FTBUtilitiesPermissions.NICKNAME_SET))
+		if (FTBUtilitiesConfig.commands.nick && player.hasPermission(FTBUtilitiesPermissions.CHAT_NICKNAME_SET))
 		{
 			group.add(FTBUtilities.MOD_ID, "nickname", nickname);
 		}

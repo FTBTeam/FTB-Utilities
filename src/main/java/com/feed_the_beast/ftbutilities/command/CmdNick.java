@@ -24,7 +24,7 @@ public class CmdNick extends CmdBase
 	{
 		ForgePlayer player = CommandUtils.getForgePlayer(sender);
 
-		if (!player.hasPermission(FTBUtilitiesPermissions.NICKNAME_SET))
+		if (!player.hasPermission(FTBUtilitiesPermissions.CHAT_NICKNAME_SET))
 		{
 			throw new CommandException("commands.generic.permission");
 		}
@@ -40,7 +40,7 @@ public class CmdNick extends CmdBase
 		{
 			String name = data.getNickname().replace('&', StringUtils.FORMATTING_CHAR);
 
-			if (!player.hasPermission(FTBUtilitiesPermissions.NICKNAME_COLORS))
+			if (!player.hasPermission(FTBUtilitiesPermissions.CHAT_NICKNAME_COLORS))
 			{
 				name = TextFormatting.getTextWithoutFormattingCodes(name);
 			}

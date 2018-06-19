@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbutilities.handlers;
 import com.feed_the_beast.ftblib.lib.EnumMessageLocation;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
@@ -49,6 +50,13 @@ public class FTBUtilitiesServerEventHandler
 		EntityPlayerMP player = event.getPlayer();
 		GameProfile profile = player.getGameProfile();
 		IContext context = new PlayerContext(player);
+
+		if (!PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_CAN_SPEAK, context))
+		{
+			event.setCanceled(true);
+			return;
+		}
+
 		ITextComponent main = new TextComponentString("");
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(Universe.get().getPlayer(player));
 		main.appendSibling(data.getNameForChat());
@@ -117,6 +125,11 @@ public class FTBUtilitiesServerEventHandler
 
 				for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
 				{
+					if (ServerUtils.isFake(player))
+					{
+						continue;
+					}
+
 					FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(universe.getPlayer(player));
 
 					if (!player.capabilities.isCreativeMode && data.getFly())

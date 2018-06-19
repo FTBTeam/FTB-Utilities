@@ -4,18 +4,20 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
-import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.events.chunks.ChunkModifiedEvent;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -220,45 +222,85 @@ public class ClaimedChunks
 		return getTeamChunks(team, dimension, false);
 	}
 
-	public boolean canPlayerInteract(EntityPlayerMP player, EnumHand hand, BlockPosContainer block, BlockInteractionType type)
+	public static boolean canAttackEntity(EntityPlayer player, Entity target)
 	{
-		if (ClaimedChunks.instance == null)
+		if (!isActive() || player.world == null || !(player instanceof EntityPlayerMP))
 		{
 			return true;
 		}
-
-		if (FTBUtilitiesPermissions.canModifyBlock(player, hand, block, type))
+		else if (target instanceof EntityPlayer)
 		{
-			return true;
-		}
-
-		ClaimedChunk chunk = getChunk(new ChunkDimPos(block.getPos(), player.dimension));
-		return chunk == null || chunk.getTeam().hasStatus(universe.getPlayer(player), chunk.getData().getStatusFromType(type));
-	}
-
-	public boolean canPlayerAttackEntity(EntityPlayerMP player, Entity entity)
-	{
-		if (entity instanceof EntityPlayer)
-		{
-			if (FTBUtilitiesConfig.world.safe_spawn && player.dimension == 0 && FTBUtilitiesUniverseData.isInSpawn(player.mcServer, new ChunkDimPos(entity)))
+			if (FTBUtilitiesConfig.world.safe_spawn && player.world.provider.getDimension() == 0 && FTBUtilitiesUniverseData.isInSpawn(instance.universe.server, new ChunkDimPos(target)))
 			{
 				return false;
 			}
 			else if (FTBUtilitiesConfig.world.enable_pvp.isDefault())
 			{
-				return FTBUtilitiesPlayerData.get(universe.getPlayer(player)).enablePVP() && FTBUtilitiesPlayerData.get(universe.getPlayer(entity)).enablePVP();
+				return FTBUtilitiesPlayerData.get(instance.universe.getPlayer(player)).enablePVP() && FTBUtilitiesPlayerData.get(instance.universe.getPlayer(target)).enablePVP();
 			}
 
 			return FTBUtilitiesConfig.world.enable_pvp.isTrue();
 		}
-
-		if (!(entity instanceof IMob))
+		else if (!(target instanceof IMob))
 		{
-			ClaimedChunk chunk = getChunk(new ChunkDimPos(entity));
-			return chunk == null || chunk.getTeam().hasStatus(universe.getPlayer(player), chunk.getData().getAttackEntitiesStatus());
+			ClaimedChunk chunk = instance.getChunk(new ChunkDimPos(target));
+
+			return chunk == null
+					|| PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_ATTACK_ANIMALS)
+					|| chunk.getTeam().hasStatus(instance.universe.getPlayer(player), chunk.getData().getAttackEntitiesStatus());
 		}
 
 		return true;
+	}
+
+	public static boolean blockBlockEditing(EntityPlayer player, BlockPos pos, @Nullable IBlockState state)
+	{
+		if (!isActive() || player.world == null || !(player instanceof EntityPlayerMP))
+		{
+			return false;
+		}
+
+		if (state == null)
+		{
+			state = player.world.getBlockState(pos);
+		}
+
+		ClaimedChunk chunk = instance.getChunk(new ChunkDimPos(pos, player.dimension));
+
+		return chunk != null
+				&& !FTBUtilitiesPermissions.hasBlockEditingPermission(player, state.getBlock())
+				&& !chunk.getTeam().hasStatus(instance.universe.getPlayer(player), chunk.getData().getEditBlocksStatus());
+	}
+
+	public static boolean blockBlockInteractions(EntityPlayer player, BlockPos pos, @Nullable IBlockState state)
+	{
+		if (!isActive() || player.world == null || !(player instanceof EntityPlayerMP))
+		{
+			return false;
+		}
+
+		if (state == null)
+		{
+			state = player.world.getBlockState(pos);
+		}
+
+		ClaimedChunk chunk = instance.getChunk(new ChunkDimPos(pos, player.dimension));
+		return chunk != null
+				&& !FTBUtilitiesPermissions.hasBlockInteractionPermission(player, state.getBlock())
+				&& !chunk.getTeam().hasStatus(instance.universe.getPlayer(player), chunk.getData().getInteractWithBlocksStatus());
+	}
+
+	public static boolean blockItemUse(EntityPlayer player, EnumHand hand, BlockPos pos)
+	{
+		if (!isActive() || player.world == null || !(player instanceof EntityPlayerMP) || player.getHeldItem(hand).isEmpty())
+		{
+			return false;
+		}
+
+		ClaimedChunk chunk = instance.getChunk(new ChunkDimPos(pos, player.dimension));
+		return chunk != null
+				&& !FTBUtilitiesPermissions.hasItemUsePermission(player, player.getHeldItem(hand).getItem())
+				&& !chunk.getTeam().hasStatus(instance.universe.getPlayer(player), chunk.getData().getUseItemsStatus());
 	}
 
 	public boolean canPlayerModify(ForgePlayer player, ChunkDimPos pos, String perm)
@@ -274,10 +316,10 @@ public class ClaimedChunks
 			return false;
 		}
 
-		return player.hasTeam() && chunk.getTeam().equalsTeam(player.team) || player.hasPermission(perm);
+		return player.hasTeam() && chunk.getTeam().equalsTeam(player.team) || perm.isEmpty() || player.hasPermission(perm);
 	}
 
-	public ClaimResult claimChunk(ForgePlayer player, ChunkDimPos pos, boolean checkLimits)
+	public ClaimResult claimChunk(ForgePlayer player, ChunkDimPos pos)
 	{
 		if (!player.hasTeam())
 		{
@@ -290,7 +332,7 @@ public class ClaimedChunks
 
 		FTBUtilitiesTeamData data = FTBUtilitiesTeamData.get(player.team);
 
-		if (checkLimits)
+		if (!player.hasPermission(FTBUtilitiesPermissions.CLAIMS_BYPASS_LIMITS))
 		{
 			int max = data.getMaxClaimChunks();
 			if (max == 0 || getTeamChunks(data.team, OptionalInt.empty(), true).size() >= max)

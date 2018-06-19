@@ -29,6 +29,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -313,7 +314,20 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		}
 
 		String text = player.getRankConfig(FTBUtilitiesPermissions.CHAT_NAME_FORMAT).getString();
-		cachedNameForChat = TextComponentParser.parse(text, FTBLibCommon.chatFormattingSubstituteFunction(player));
+
+		try
+		{
+			cachedNameForChat = TextComponentParser.parse(text, FTBLibCommon.chatFormattingSubstituteFunction(player));
+		}
+		catch (Exception ex)
+		{
+			String s = "Error parsing " + text + ": " + ex.getLocalizedMessage();
+			FTBUtilities.LOGGER.error(s);
+			cachedNameForChat = new TextComponentString("BrokenFormatting");
+			cachedNameForChat.getStyle().setColor(TextFormatting.RED);
+			cachedNameForChat.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(s)));
+		}
+
 		cachedNameForChat.appendText(" ");
 		return cachedNameForChat;
 	}

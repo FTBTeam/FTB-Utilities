@@ -4,12 +4,14 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
@@ -38,7 +40,19 @@ public class CmdGet extends CmdBase
 		}
 
 		ForgePlayer p = CommandUtils.getSelfOrOther(sender, args, 0);
-		Rank rank = Ranks.INSTANCE.getRank(p.team.universe.server, p.getProfile(), p.getContext());
-		sender.sendMessage(new TextComponentString("").appendSibling(StringUtils.color(p.getDisplayName(), TextFormatting.BLUE)).appendText(" - ").appendSibling(rank.getDisplayName()));
+		Rank rank = Ranks.INSTANCE.getRawRank(p.team.universe.server, p.getProfile(), p.getContext());
+		ITextComponent component = new TextComponentString("").appendSibling(StringUtils.color(p.getDisplayName(), TextFormatting.BLUE)).appendText(" - ");
+
+		if (rank == null)
+		{
+			rank = ServerUtils.isOP(server, p.getProfile()) ? Ranks.INSTANCE.getDefaultOPRank() : Ranks.INSTANCE.getDefaultPlayerRank();
+			component = component.appendSibling(StringUtils.color(rank.getDisplayName(), TextFormatting.DARK_GRAY));
+		}
+		else
+		{
+			component = component.appendSibling(rank.getDisplayName());
+		}
+
+		sender.sendMessage(component);
 	}
 }

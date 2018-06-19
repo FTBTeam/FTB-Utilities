@@ -35,6 +35,7 @@ public class FTBUtilitiesTeamData implements INBTSerializable<NBTTagCompound>, I
 	private final ConfigEnum<EnumTeamStatus> editBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	private final ConfigEnum<EnumTeamStatus> interactWithBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	private final ConfigEnum<EnumTeamStatus> attackEntities = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
+	private final ConfigEnum<EnumTeamStatus> useItems = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	private final ConfigBoolean explosions = new ConfigBoolean(false);
 	public boolean canForceChunks = false;
 	private int cachedMaxClaimChunks, cachedMaxChunkloaderChunks;
@@ -52,6 +53,7 @@ public class FTBUtilitiesTeamData implements INBTSerializable<NBTTagCompound>, I
 		nbt.setString("EditBlocks", editBlocks.getString());
 		nbt.setString("InteractWithBlocks", interactWithBlocks.getString());
 		nbt.setString("AttackEntities", attackEntities.getString());
+		nbt.setString("UseItems", useItems.getString());
 
 		if (ClaimedChunks.isActive())
 		{
@@ -104,6 +106,7 @@ public class FTBUtilitiesTeamData implements INBTSerializable<NBTTagCompound>, I
 		editBlocks.setValue(nbt.getString("EditBlocks"));
 		interactWithBlocks.setValue(nbt.getString("InteractWithBlocks"));
 		attackEntities.setValue(nbt.getString("AttackEntities"));
+		useItems.setValue(nbt.getString("UseItems"));
 
 		if (ClaimedChunks.isActive())
 		{
@@ -134,19 +137,24 @@ public class FTBUtilitiesTeamData implements INBTSerializable<NBTTagCompound>, I
 		event.getConfig().add(FTBUtilities.MOD_ID, "attack_entities", attackEntities);
 	}
 
-	public EnumTeamStatus getStatusFromType(BlockInteractionType type)
+	public EnumTeamStatus getEditBlocksStatus()
 	{
-		if (type == BlockInteractionType.INTERACT)
-		{
-			return interactWithBlocks.getValue();
-		}
-
 		return editBlocks.getValue();
+	}
+
+	public EnumTeamStatus getInteractWithBlocksStatus()
+	{
+		return interactWithBlocks.getValue();
 	}
 
 	public EnumTeamStatus getAttackEntitiesStatus()
 	{
 		return attackEntities.getValue();
+	}
+
+	public EnumTeamStatus getUseItemsStatus()
+	{
+		return useItems.getValue();
 	}
 
 	public boolean hasExplosions()

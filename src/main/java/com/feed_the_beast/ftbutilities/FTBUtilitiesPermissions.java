@@ -6,11 +6,9 @@ import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigTimer;
-import com.feed_the_beast.ftblib.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
-import com.feed_the_beast.ftbutilities.data.BlockInteractionType;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
@@ -18,18 +16,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockWorkbench;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
-import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
-import net.minecraftforge.server.permission.context.BlockPosContext;
-import net.minecraftforge.server.permission.context.IContext;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -63,10 +58,11 @@ public class FTBUtilitiesPermissions
 	public static final String CLAIMS_OTHER_LOAD = "ftbutilities.other_player.claims.load";
 	public static final String CLAIMS_OTHER_UNLOAD = "ftbutilities.other_player.claims.unload";
 	public static final Node CLAIMS_MAX_CHUNKS = Node.get("ftbutilities.claims.max_chunks");
-	public static final String CLAIMS_BLOCK_CNB = "ftbutilities.claims.block.cnb";
-	private static final Node CLAIMS_BLOCK_EDIT_PREFIX = Node.get("ftbutilities.claims.block.edit");
-	private static final Node CLAIMS_BLOCK_INTERACT_PREFIX = Node.get("ftbutilities.claims.block.interact");
-	private static final Node CLAIMS_ITEM_PREFIX = Node.get("ftbutilities.claims.item");
+	public static final Node CLAIMS_BLOCK_EDIT_PREFIX = Node.get("ftbutilities.claims.block.edit");
+	public static final Node CLAIMS_BLOCK_INTERACT_PREFIX = Node.get("ftbutilities.claims.block.interact");
+	public static final Node CLAIMS_ITEM_PREFIX = Node.get("ftbutilities.claims.item");
+	public static final String CLAIMS_BYPASS_LIMITS = "ftbutilities.claims.bypass_limits";
+	public static final String CLAIMS_ATTACK_ANIMALS = "ftbutilities.claims.attack_animals";
 
 	public static final HashSet<Block> CLAIMS_BLOCK_EDIT_WHITELIST = new HashSet<>();
 	public static final HashSet<Block> CLAIMS_BLOCK_INTERACT_WHITELIST = new HashSet<>();
@@ -78,6 +74,7 @@ public class FTBUtilitiesPermissions
 	public static final String CHUNKLOADER_LOAD_OFFLINE = "ftbutilities.chunkloader.load_offline";
 
 	// Chat //
+	public static final String CHAT_CAN_SPEAK = "ftbutilities.chat.can_speak";
 	public static final Node CHAT_NAME_FORMAT = Node.get("ftbutilities.chat.name_format");
 	public static final Node CHAT_TEXT_COLOR = Node.get("ftbutilities.chat.text.color");
 	public static final String CHAT_TEXT_BOLD = "ftbutilities.chat.text.bold";
@@ -115,6 +112,7 @@ public class FTBUtilitiesPermissions
 
 	public static void registerPermissions()
 	{
+		PermissionAPI.registerNode(CHAT_CAN_SPEAK, DefaultPermissionLevel.ALL, "Controls if player is muted or not");
 		PermissionAPI.registerNode(CHAT_TEXT_BOLD, DefaultPermissionLevel.NONE, "Makes text in chat bold");
 		PermissionAPI.registerNode(CHAT_TEXT_ITALIC, DefaultPermissionLevel.NONE, "Makes text in chat italic");
 		PermissionAPI.registerNode(CHAT_TEXT_UNDERLINED, DefaultPermissionLevel.NONE, "Makes text in chat underlined");
@@ -130,7 +128,8 @@ public class FTBUtilitiesPermissions
 		PermissionAPI.registerNode(CLAIMS_OTHER_UNCLAIM, DefaultPermissionLevel.OP, "Allow player to unclaim other team chunks");
 		PermissionAPI.registerNode(CLAIMS_OTHER_LOAD, DefaultPermissionLevel.OP, "Allow player to load other team chunks");
 		PermissionAPI.registerNode(CLAIMS_OTHER_UNLOAD, DefaultPermissionLevel.OP, "Allow player to unload other team chunks");
-		PermissionAPI.registerNode(CLAIMS_BLOCK_CNB, DefaultPermissionLevel.OP, "Allow to edit C&B bits in claimed chunks");
+		PermissionAPI.registerNode(CLAIMS_BYPASS_LIMITS, DefaultPermissionLevel.NONE, "Allow to bypass claiming and loading limits");
+		PermissionAPI.registerNode(CLAIMS_ATTACK_ANIMALS, DefaultPermissionLevel.OP, "Allow to attack animals in claimed chunks");
 		PermissionAPI.registerNode(CHUNKLOADER_LOAD_OFFLINE, DefaultPermissionLevel.ALL, "Keep loaded chunks working when player goes offline");
 		PermissionAPI.registerNode(INFINITE_BACK_USAGE, DefaultPermissionLevel.NONE, "Allow to use 'back' command infinite times");
 		PermissionAPI.registerNode(VIEW_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to view crash reports via Admin Panel");
@@ -187,7 +186,7 @@ public class FTBUtilitiesPermissions
 	@SubscribeEvent
 	public static void registerConfigs(RegisterRankConfigEvent event)
 	{
-		event.register(CHAT_NAME_FORMAT, new ConfigString("<$name>"), new ConfigString("<&2$name&r>"));
+		event.register(CHAT_NAME_FORMAT, new ConfigString("<{name}>"), new ConfigString("<&2{name}&r>"));
 		event.register(CHAT_TEXT_COLOR, new ConfigEnum<>(StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP));
 		event.register(BADGE, new ConfigString(""));
 		event.register(HOMES_MAX, new ConfigInt(1, 0, 30000), new ConfigInt(100));
@@ -217,29 +216,24 @@ public class FTBUtilitiesPermissions
 		event.register(Node.get(LEADERBOARD_PREFIX), DefaultPermissionLevel.ALL, "Permission for leaderboards that players can view");
 	}
 
-	private static String formatId(@Nullable IForgeRegistryEntry item)
+	public static String formatId(@Nullable IForgeRegistryEntry item)
 	{
 		return (item == null || item.getRegistryName() == null) ? "minecraft.air" : item.getRegistryName().toString().toLowerCase().replace(':', '.');
 	}
 
-	public static boolean canModifyBlock(EntityPlayerMP player, EnumHand hand, BlockPosContainer block, BlockInteractionType type)
+	public static boolean hasBlockEditingPermission(EntityPlayer player, Block block)
 	{
-		IContext context = new BlockPosContext(player, block.getPos(), block.getState(), null);
+		return PermissionAPI.hasPermission(player, CLAIMS_BLOCK_EDIT_PREFIX.append(formatId(block)).toString());
+	}
 
-		switch (type)
-		{
-			case EDIT:
-				return PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_EDIT_PREFIX.append(formatId(block.getState().getBlock())).toString(), context);
-			case INTERACT:
-				return PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_INTERACT_PREFIX.append(formatId(block.getState().getBlock())).toString(), context);
-			case CNB_BREAK:
-			case CNB_PLACE:
-				return PermissionAPI.hasPermission(player.getGameProfile(), FTBUtilitiesPermissions.CLAIMS_BLOCK_CNB, context);
-			case ITEM:
-				return !player.getHeldItem(hand).isEmpty() || PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_ITEM_PREFIX.append(formatId(player.getHeldItem(hand).getItem())).toString(), context);
-			default:
-				return false;
-		}
+	public static boolean hasBlockInteractionPermission(EntityPlayer player, Block block)
+	{
+		return PermissionAPI.hasPermission(player, CLAIMS_BLOCK_INTERACT_PREFIX.append(formatId(block)).toString());
+	}
+
+	public static boolean hasItemUsePermission(EntityPlayer player, Item block)
+	{
+		return PermissionAPI.hasPermission(player, CLAIMS_ITEM_PREFIX.append(formatId(block)).toString());
 	}
 
 	public static String getLeaderboardNode(Leaderboard leaderboard)

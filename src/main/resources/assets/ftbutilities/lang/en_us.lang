@@ -28,6 +28,7 @@ ftbutilities.backups.display_file_size=Display File Size
 ftbutilities.backups.use_separate_thread=Use Separate Thread
 ftbutilities.backups.extra_files=Extra Files
 ftbutilities.backups.max_total_size=Maximum Total Size
+ftbutilities.backups.disable_level_saving=Disable Level Saving
 
 ftbutilities.commands=Commands
 

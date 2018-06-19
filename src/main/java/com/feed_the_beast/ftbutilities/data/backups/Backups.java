@@ -103,11 +103,14 @@ public enum Backups
 		{
 			doingBackup = 0;
 
-			for (WorldServer world : universe.server.worlds)
+			if (FTBUtilitiesConfig.backups.disable_level_saving)
 			{
-				if (world != null)
+				for (WorldServer world : universe.server.worlds)
 				{
-					world.disableLevelSaving = false;
+					if (world != null)
+					{
+						world.disableLevelSaving = false;
+					}
 				}
 			}
 
@@ -160,11 +163,14 @@ public enum Backups
 		notifyAll(server, player -> FTBUtilities.lang(player, "ftbutilities.lang.backup.start", sender.getName()), false);
 		nextBackup = System.currentTimeMillis() + FTBUtilitiesConfig.backups.time();
 
-		for (WorldServer world : server.worlds)
+		if (FTBUtilitiesConfig.backups.disable_level_saving)
 		{
-			if (world != null)
+			for (WorldServer world : server.worlds)
 			{
-				world.disableLevelSaving = true;
+				if (world != null)
+				{
+					world.disableLevelSaving = true;
+				}
 			}
 		}
 

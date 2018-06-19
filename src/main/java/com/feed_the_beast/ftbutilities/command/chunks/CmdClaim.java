@@ -15,7 +15,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.server.permission.PermissionAPI;
 
 /**
  * @author LatvianModder
@@ -36,31 +35,16 @@ public class CmdClaim extends CmdBase
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-		ForgePlayer p = CommandUtils.getForgePlayer(player);
-		boolean checkLimits = true;
-
-		if (args.length >= 1)
-		{
-			ForgePlayer p1 = CommandUtils.getForgePlayer(sender, args[0]);
-
-			if (p != p1 && !PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_OTHER_CLAIM))
-			{
-				throw new CommandException("commands.generic.permission");
-			}
-
-			p = p1;
-			checkLimits = false;
-		}
-
+		ForgePlayer p = CommandUtils.getSelfOrOther(player, args, 0, FTBUtilitiesPermissions.CLAIMS_OTHER_CLAIM);
 		ChunkDimPos pos = new ChunkDimPos(player);
 
-		if (checkLimits && !ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_CLAIM))
+		if (!player.getUniqueID().equals(p.getId()) && !ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_CLAIM))
 		{
 			FTBUtilitiesNotifications.sendCantModifyChunk(server, player);
 			return;
 		}
 
-		switch (ClaimedChunks.instance.claimChunk(p, pos, checkLimits))
+		switch (ClaimedChunks.instance.claimChunk(p, pos))
 		{
 			case SUCCESS:
 				Notification.of(FTBUtilitiesNotifications.CHUNK_MODIFIED, FTBUtilities.lang(player, "ftbutilities.lang.chunks.chunk_claimed")).send(server, player);

@@ -160,6 +160,9 @@ public class FTBUtilitiesConfig
 		@Config.Comment("Maximum total size that is allowed in backups folder. Older backups will be deleted to free space for newer ones.")
 		public String max_total_size = "50 GB";
 
+		@Config.Comment("Disables level saving while performing backup.")
+		public boolean disable_level_saving = true;
+
 		public long time()
 		{
 			return (long) (backup_timer * Ticks.HOUR.millis());

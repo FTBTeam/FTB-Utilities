@@ -86,7 +86,7 @@ public class MessageClaimedChunksModify extends MessageToServer
 				case CLAIM:
 					if (ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_CLAIM))
 					{
-						ClaimedChunks.instance.claimChunk(p, pos, true);
+						ClaimedChunks.instance.claimChunk(p, pos);
 					}
 					break;
 				case UNCLAIM:

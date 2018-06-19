@@ -2,7 +2,7 @@
 	{
 		"modid": "ftbutilities",
 		"name": "FTB Utilities",
-		"description": "FTBUtilities",
+		"description": "",
 		"version": "${version}",
 		"mcversion": "${mcversion}",
 		"url": "http://minecraft.curseforge.com/projects/ftb-utilities",

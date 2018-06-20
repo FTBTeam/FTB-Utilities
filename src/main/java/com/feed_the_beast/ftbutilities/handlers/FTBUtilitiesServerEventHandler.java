@@ -119,30 +119,31 @@ public class FTBUtilitiesServerEventHandler
 		}
 		else
 		{
-			if (FTBUtilitiesConfig.afk.isEnabled(universe.server))
+			EntityPlayerMP playerToKickForAfk = null; //Do one at time, easier
+			boolean afkEnabled = FTBUtilitiesConfig.afk.isEnabled(universe.server);
+
+			for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
 			{
-				EntityPlayerMP playerToKickForAfk = null; //Do one at time, easier
-
-				for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
+				if (ServerUtils.isFake(player))
 				{
-					if (ServerUtils.isFake(player))
-					{
-						continue;
-					}
+					continue;
+				}
 
-					FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(universe.getPlayer(player));
+				FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(universe.getPlayer(player));
+				boolean fly = player.capabilities.allowFlying;
 
-					if (!player.capabilities.isCreativeMode && data.getFly())
-					{
-						boolean fly = player.capabilities.allowFlying;
-						player.capabilities.allowFlying = true;
+				if (!player.capabilities.isCreativeMode && data.getFly())
+				{
+					player.capabilities.allowFlying = true;
+				}
 
-						if (!fly)
-						{
-							player.sendPlayerAbilities();
-						}
-					}
+				if (fly != player.capabilities.allowFlying)
+				{
+					player.sendPlayerAbilities();
+				}
 
+				if (afkEnabled)
+				{
 					boolean prevIsAfk = data.afkTime >= FTBUtilitiesConfig.afk.getNotificationTimer();
 					data.afkTime = System.currentTimeMillis() - player.getLastActiveTime();
 					boolean isAFK = data.afkTime >= FTBUtilitiesConfig.afk.getNotificationTimer();
@@ -182,11 +183,11 @@ public class FTBUtilitiesServerEventHandler
 						}
 					}
 				}
+			}
 
-				if (playerToKickForAfk != null && playerToKickForAfk.connection != null)
-				{
-					playerToKickForAfk.connection.disconnect(new TextComponentTranslation("multiplayer.disconnect.idling"));
-				}
+			if (playerToKickForAfk != null && playerToKickForAfk.connection != null)
+			{
+				playerToKickForAfk.connection.disconnect(new TextComponentTranslation("multiplayer.disconnect.idling"));
 			}
 
 			Backups.INSTANCE.tick(universe, now);

@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
@@ -40,12 +39,11 @@ public class CmdGet extends CmdBase
 		}
 
 		ForgePlayer p = CommandUtils.getSelfOrOther(sender, args, 0);
-		Rank rank = Ranks.INSTANCE.getRawRank(p.team.universe.server, p.getProfile(), p.getContext());
+		Rank rank = Ranks.INSTANCE.getRank(p.team.universe.server, p.getProfile(), p.getContext());
 		ITextComponent component = new TextComponentString("").appendSibling(StringUtils.color(p.getDisplayName(), TextFormatting.BLUE)).appendText(" - ");
 
-		if (rank == null)
+		if (rank != Ranks.INSTANCE.getSetRank(p.getProfile()))
 		{
-			rank = ServerUtils.isOP(server, p.getProfile()) ? Ranks.INSTANCE.getDefaultOPRank() : Ranks.INSTANCE.getDefaultPlayerRank();
 			component = component.appendSibling(StringUtils.color(rank.getDisplayName(), TextFormatting.DARK_GRAY));
 		}
 		else

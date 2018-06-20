@@ -30,7 +30,7 @@ public class CmdScanItems extends CmdBase
 {
 	public CmdScanItems()
 	{
-		super("scan_items", Level.OP_OR_SP);
+		super("scan_items", Level.ALL);
 	}
 
 	public static boolean filter(ItemEntry entry)

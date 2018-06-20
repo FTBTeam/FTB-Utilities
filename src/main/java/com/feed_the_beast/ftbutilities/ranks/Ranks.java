@@ -186,14 +186,14 @@ public class Ranks
 	}
 
 	@Nullable
-	public Rank getRawRank(@Nullable MinecraftServer server, GameProfile profile, @Nullable IContext context)
+	public Rank getSetRank(GameProfile profile)
 	{
 		return isActive() && profile.getId() != null ? playerMap.get(profile.getId()) : null;
 	}
 
 	public Rank getRank(@Nullable MinecraftServer server, GameProfile profile, @Nullable IContext context)
 	{
-		Rank r = getRawRank(server, profile, context);
+		Rank r = getSetRank(profile);
 		return r == null ? (ServerUtils.isOP(server, profile) ? getDefaultOPRank() : getDefaultPlayerRank()) : r;
 	}
 

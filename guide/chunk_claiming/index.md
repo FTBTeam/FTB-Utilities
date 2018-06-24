@@ -1,5 +1,6 @@
 FTBUtilities allows you to protect your base with Claimed Chunks. Claimed chunks will be by default accessible to your team and team allies. You can also disable explosions and fake player interactions.
 To open the GUI, you must click on the Claimed Chunks sidebar button.
+
 ![](gui_button.png)
 
 ---
@@ -12,4 +13,5 @@ To open the GUI, you must click on the Claimed Chunks sidebar button.
 * Shift-right-click to unload a claimed chunk
 
 You can drag mouse to claim/unclaim/load/unload larger area at once.
+
 ![](claimed_area.png)

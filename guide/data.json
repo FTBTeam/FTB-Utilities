@@ -1,0 +1,84 @@
+{
+	"title": "FTB Utilities",
+	"type": "mod",
+	"modid": "ftbutilities",
+	"authors": ["LatvianModder", "FTB"],
+	"buttons": [
+		{
+			"title": "CurseForge Page",
+			"icon": "https://i.imgur.com/Kii5WVB.png",
+			"click": "https://minecraft.curseforge.com/projects/ftb-utilities"
+		},
+		{
+			"title": "LatvianModder's Patreon",
+			"icon": "https://i.imgur.com/RTyvASj.png",
+			"click": "https://www.patreon.com/LatvianModder"
+		},
+		{
+			"title": "Bugs & Suggestions",
+			"icon": "ftblib:icons/bug",
+			"click": "https://github.com/LatvianModder/FTBUtilities/issues"
+		},
+		{
+			"title": "Alpha Builds",
+			"icon": "ftblib:icons/settings",
+			"click": "http://maven.latmod.com/com/feed_the_beast/ftbutilities/FTBUtilities/"
+		}
+	],
+	"pages": [
+		{
+			"id": "faq",
+			"title": "Frequently Asked Questions",
+			"icon": "ftblib:icons/info"
+		},
+		{
+			"id": "chunk_claiming",
+			"title": "Chunk Claiming",
+			"icon": "ftblib:icons/map"
+		},
+		{
+			"id": "ranks",
+			"title": "Ranks",
+			"icon": "item:minecraft:diamond_sword",
+			"pages": [
+				{
+					"id": "file_structure",
+					"title": "Folder Structure and File Descriptions",
+					"icon": "item:minecraft:paper"
+				},
+				{
+					"id": "config",
+					"title": "Configuration",
+					"icon": "ftblib:icons/settings"
+				},
+				{
+					"id": "commands",
+					"title": "Commands",
+					"icon": "item:minecraft:command_block"
+				},
+				{
+					"id": "badges",
+					"title": "Server Badges",
+					"icon": "item:minecraft:diamond_chestplate",
+					"buttons": [
+						{
+							"title": "More Info About Badges",
+							"icon": "ftblib:icons/info",
+							"click": "http://badges.latmod.com"
+						}
+					]
+				},
+				{
+					"id": "example_config",
+					"title": "Example ranks.txt",
+					"icon": "item:minecraft:nether_star"
+				}
+			]
+		},
+		{
+			"id": "tp_commands",
+			"title": "Teleportation Commands",
+			"icon": "item:minecraft:ender_pearl"
+		}
+	]
+}

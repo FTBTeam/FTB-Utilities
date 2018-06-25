@@ -104,6 +104,9 @@ public class FTBUtilitiesConfig
 
 	public static class Chat
 	{
+		@Config.Comment("Adds ~ to player names that have changed nickname to prevent trolling.")
+		public boolean add_nickname_tilde = false;
+
 		@Config.RangeInt(min = 0, max = 10000000)
 		public int general_history_limit = 10000;
 

@@ -95,7 +95,7 @@ public class CommandOverride extends CommandBase
 		if (sender instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP player = (EntityPlayerMP) sender;
-			Event.Result result = Ranks.getPermissionResult(server, player.getGameProfile(), node, new PlayerContext(player));
+			Event.Result result = Ranks.getPermissionResult(server, player.getGameProfile(), node, new PlayerContext(player), true);
 
 			if (result != Event.Result.DEFAULT)
 			{

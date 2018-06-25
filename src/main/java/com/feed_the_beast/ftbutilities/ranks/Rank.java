@@ -15,6 +15,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -24,6 +25,13 @@ public class Rank extends FinalIDObject
 {
 	public static final String TAG_DEFAULT_PLAYER = "default_player_rank";
 	public static final String TAG_DEFAULT_OP = "default_op_rank";
+	public static final HashSet<String> TAGS = new HashSet<>();
+
+	static
+	{
+		TAGS.add(TAG_DEFAULT_PLAYER);
+		TAGS.add(TAG_DEFAULT_OP);
+	}
 
 	public static class Entry implements Comparable<Entry>
 	{

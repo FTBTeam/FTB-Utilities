@@ -79,18 +79,20 @@ public class FTBUtilitiesPermissions
 	public static final String CHAT_NICKNAME_COLORS = "ftbutilities.chat.nickname.colors";
 	public static final Node CHAT_NAME_FORMAT = Node.get("ftbutilities.chat.name_format");
 	public static final Node CHAT_TEXT_COLOR = Node.get("ftbutilities.chat.text.color");
-	public static final String CHAT_TEXT_BOLD = "ftbutilities.chat.text.bold";
-	public static final String CHAT_TEXT_ITALIC = "ftbutilities.chat.text.italic";
-	public static final String CHAT_TEXT_UNDERLINED = "ftbutilities.chat.text.underlined";
-	public static final String CHAT_TEXT_STRIKETHROUGH = "ftbutilities.chat.text.strikethrough";
-	public static final String CHAT_TEXT_OBFUSCATED = "ftbutilities.chat.text.obfuscated";
+	public static final Node CHAT_TEXT_BOLD = Node.get("ftbutilities.chat.text.bold");
+	public static final Node CHAT_TEXT_ITALIC = Node.get("ftbutilities.chat.text.italic");
+	public static final Node CHAT_TEXT_UNDERLINED = Node.get("ftbutilities.chat.text.underlined");
+	public static final Node CHAT_TEXT_STRIKETHROUGH = Node.get("ftbutilities.chat.text.strikethrough");
+	public static final Node CHAT_TEXT_OBFUSCATED = Node.get("ftbutilities.chat.text.obfuscated");
 
 	// Other //
 	public static final String INFINITE_BACK_USAGE = "ftbutilities.back.infinite";
-	public static final String VIEW_CRASH_REPORTS = "admin_panel.ftbutilities.crash_reports.view";
-	public static final String DELETE_CRASH_REPORTS = "admin_panel.ftbutilities.crash_reports.delete";
+	public static final String CRASH_REPORTS_VIEW = "admin_panel.ftbutilities.crash_reports.view";
+	public static final String CRASH_REPORTS_DELETE = "admin_panel.ftbutilities.crash_reports.delete";
 	private static final String LEADERBOARD_PREFIX = "ftbutilities.leaderboard.";
 	public static final String EDIT_WORLD_GAMERULES = "admin_panel.ftbutilities.edit_world.gamerules";
+	public static final String RANKS_VIEW = "admin_panel.ftbutilities.ranks.view";
+
 	public static final Node TPA_COOLDOWN = Node.get("ftbutilities.tpa.cooldown");
 	public static final Node SPAWN_COOLDOWN = Node.get("ftbutilities.spawn.cooldown");
 	public static final Node BACK_COOLDOWN = Node.get("ftbutilities.back.cooldown");
@@ -115,12 +117,6 @@ public class FTBUtilitiesPermissions
 		PermissionAPI.registerNode(CHAT_SPEAK, DefaultPermissionLevel.ALL, "Controls if player is muted or not");
 		PermissionAPI.registerNode(CHAT_NICKNAME_SET, DefaultPermissionLevel.OP, "Allow to change nickname");
 		PermissionAPI.registerNode(CHAT_NICKNAME_COLORS, DefaultPermissionLevel.OP, "Allow to use formatting codes in nickname, requires " + CHAT_NICKNAME_SET);
-		PermissionAPI.registerNode(CHAT_TEXT_BOLD, DefaultPermissionLevel.NONE, "Makes text in chat bold");
-		PermissionAPI.registerNode(CHAT_TEXT_ITALIC, DefaultPermissionLevel.NONE, "Makes text in chat italic");
-		PermissionAPI.registerNode(CHAT_TEXT_UNDERLINED, DefaultPermissionLevel.NONE, "Makes text in chat underlined");
-		PermissionAPI.registerNode(CHAT_TEXT_STRIKETHROUGH, DefaultPermissionLevel.NONE, "Makes text in chat strikethrough");
-		PermissionAPI.registerNode(CHAT_TEXT_OBFUSCATED, DefaultPermissionLevel.NONE, "Makes text in chat obfuscated");
-
 		PermissionAPI.registerNode(DISPLAY_ADMIN_INFO, DefaultPermissionLevel.OP, "Display 'Admin' in Server Info");
 		PermissionAPI.registerNode(HOMES_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /home to teleport to/from another dimension");
 		PermissionAPI.registerNode(HOMES_LIST_OTHER, DefaultPermissionLevel.OP, "Allow to list other people homes");
@@ -134,8 +130,8 @@ public class FTBUtilitiesPermissions
 		PermissionAPI.registerNode(CLAIMS_ATTACK_ANIMALS, DefaultPermissionLevel.OP, "Allow to attack animals in claimed chunks");
 		PermissionAPI.registerNode(CHUNKLOADER_LOAD_OFFLINE, DefaultPermissionLevel.ALL, "Keep loaded chunks working when player goes offline");
 		PermissionAPI.registerNode(INFINITE_BACK_USAGE, DefaultPermissionLevel.NONE, "Allow to use 'back' command infinite times");
-		PermissionAPI.registerNode(VIEW_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to view crash reports via Admin Panel");
-		PermissionAPI.registerNode(DELETE_CRASH_REPORTS, DefaultPermissionLevel.OP, "Allow to delete crash reports, requires " + VIEW_CRASH_REPORTS);
+		PermissionAPI.registerNode(CRASH_REPORTS_VIEW, DefaultPermissionLevel.OP, "Allow to view crash reports via Admin Panel");
+		PermissionAPI.registerNode(CRASH_REPORTS_DELETE, DefaultPermissionLevel.OP, "Allow to delete crash reports, requires " + CRASH_REPORTS_VIEW);
 		PermissionAPI.registerNode(EDIT_WORLD_GAMERULES, DefaultPermissionLevel.OP, "Allow to edit gamerules via Admin Panel");
 		PermissionAPI.registerNode(TPA_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /tpa to teleport to/from another dimension");
 		PermissionAPI.registerNode(HEAL_OTHER, DefaultPermissionLevel.OP, "Allow to heal other players");

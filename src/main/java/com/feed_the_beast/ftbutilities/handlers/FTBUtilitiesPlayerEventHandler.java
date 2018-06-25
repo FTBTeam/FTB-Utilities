@@ -157,6 +157,11 @@ public class FTBUtilitiesPlayerEventHandler
 						name += TextFormatting.RESET;
 					}
 
+					if (FTBUtilitiesConfig.chat.add_nickname_tilde)
+					{
+						name = "~" + name;
+					}
+
 					event.setDisplayname(name);
 				}
 			}

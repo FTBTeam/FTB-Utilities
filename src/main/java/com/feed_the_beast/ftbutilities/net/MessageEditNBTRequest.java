@@ -33,6 +33,12 @@ public class MessageEditNBTRequest extends MessageToClient
 	@SideOnly(Side.CLIENT)
 	public void onMessage()
 	{
+		editNBT();
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void editNBT()
+	{
 		RayTraceResult ray = ClientUtils.MC.objectMouseOver;
 
 		if (ray != null)

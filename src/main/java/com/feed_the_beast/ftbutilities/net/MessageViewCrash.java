@@ -50,7 +50,7 @@ public class MessageViewCrash extends MessageToServer
 	@Override
 	public void onMessage(EntityPlayerMP player)
 	{
-		if (PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.VIEW_CRASH_REPORTS))
+		if (PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CRASH_REPORTS_VIEW))
 		{
 			try
 			{

@@ -60,7 +60,7 @@ public class Ranks
 		return FTBUtilitiesConfig.ranks.enabled && INSTANCE != null && PermissionAPI.getPermissionHandler() == FTBUtilitiesPermissionHandler.INSTANCE;
 	}
 
-	public static Event.Result getPermissionResult(@Nullable MinecraftServer server, GameProfile profile, Node node, @Nullable IContext context)
+	public static Event.Result getPermissionResult(@Nullable MinecraftServer server, GameProfile profile, Node node, @Nullable IContext context, boolean matching)
 	{
 		if (!isActive())
 		{
@@ -87,21 +87,21 @@ public class Ranks
 
 		if (result == null)
 		{
-			result = rank.getPermissionRaw(node, true);
+			result = rank.getPermissionRaw(node, matching);
 			rank.cachedPermissions.put(node, result);
 		}
 
 		return result;
 	}
 
-	public static Event.Result getPermissionResult(EntityPlayerMP player, Node node)
+	public static Event.Result getPermissionResult(EntityPlayerMP player, Node node, boolean matching)
 	{
 		if (!isActive())
 		{
 			return Event.Result.DEFAULT;
 		}
 
-		return getPermissionResult(player.mcServer, player.getGameProfile(), node, new PlayerContext(player));
+		return getPermissionResult(player.mcServer, player.getGameProfile(), node, new PlayerContext(player), matching);
 	}
 
 	public static boolean isValidName(@Nullable String id)
@@ -126,10 +126,10 @@ public class Ranks
 
 	public final Universe universe;
 	public final Rank none;
-	private final Map<String, Rank> ranks = new LinkedHashMap<>();
+	public final Map<String, Rank> ranks = new LinkedHashMap<>();
 	private Collection<String> rankNames = null;
 	private Collection<String> permissionNodes = null;
-	private final Map<UUID, Rank> playerMap = new HashMap<>();
+	public final Map<UUID, Rank> playerMap = new HashMap<>();
 	private Rank defaultPlayerRank, defaultOPRank;
 	public final Map<Node, CommandOverride> commands = new LinkedHashMap<>();
 

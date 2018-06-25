@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.client.FTBUtilitiesClient;
 import com.feed_the_beast.ftbutilities.client.FTBUtilitiesClientConfig;
+import com.feed_the_beast.ftbutilities.net.MessageEditNBTRequest;
 import com.feed_the_beast.ftbutilities.net.MessageRequestBadge;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
@@ -99,6 +100,11 @@ public class FTBUtilitiesClientEventHandler
 			//GuiWarps.INSTANCE = new GuiWarps();
 			//GuiWarps.INSTANCE.openGui();
 			//ClientUtils.execClientCommand("/ftb warp gui");
+		}
+
+		if (FTBUtilitiesClient.KEY_NBT.isPressed())
+		{
+			MessageEditNBTRequest.editNBT();
 		}
 	}
 }

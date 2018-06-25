@@ -30,10 +30,12 @@ import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesTeamData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import com.feed_the_beast.ftbutilities.handlers.FTBUtilitiesSyncData;
+import com.feed_the_beast.ftbutilities.net.MessageRanks;
 import com.feed_the_beast.ftbutilities.net.MessageViewCrashList;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -84,7 +86,7 @@ public class FTBLibIntegration
 			@Override
 			public Type getType(ForgePlayer player, NBTTagCompound data)
 			{
-				return Type.fromBoolean(player.hasPermission(FTBUtilitiesPermissions.VIEW_CRASH_REPORTS));
+				return Type.fromBoolean(player.hasPermission(FTBUtilitiesPermissions.CRASH_REPORTS_VIEW));
 			}
 
 			@Override
@@ -185,6 +187,21 @@ public class FTBLibIntegration
 				}
 
 				return GameRules.ValueType.ANY_VALUE;
+			}
+		});
+
+		registry.registerAdminPanelAction(new AdminPanelAction(FTBUtilities.MOD_ID, "ranks", ItemIcon.getItemIcon(new ItemStack(Items.DIAMOND_SWORD)), 0)
+		{
+			@Override
+			public Type getType(ForgePlayer player, NBTTagCompound data)
+			{
+				return Ranks.isActive() ? Type.fromBoolean(player.hasPermission(FTBUtilitiesPermissions.RANKS_VIEW)) : Type.INVISIBLE;
+			}
+
+			@Override
+			public void onAction(ForgePlayer player, NBTTagCompound data)
+			{
+				new MessageRanks(Ranks.INSTANCE).sendTo(player.getPlayer());
 			}
 		});
 	}

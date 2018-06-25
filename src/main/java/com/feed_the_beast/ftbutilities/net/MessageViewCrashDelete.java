@@ -49,11 +49,11 @@ public class MessageViewCrashDelete extends MessageToServer
 	@Override
 	public void onMessage(EntityPlayerMP player)
 	{
-		if (PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.VIEW_CRASH_REPORTS))
+		if (PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CRASH_REPORTS_VIEW))
 		{
 			File folder = new File(CommonUtils.folderMinecraft, "crash-reports");
 
-			if (PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.DELETE_CRASH_REPORTS))
+			if (PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CRASH_REPORTS_DELETE))
 			{
 				try
 				{

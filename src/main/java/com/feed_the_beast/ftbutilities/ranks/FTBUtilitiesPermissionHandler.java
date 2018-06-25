@@ -51,7 +51,7 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 			profile = new GameProfile(EntityPlayer.getOfflineUUID(profile.getName()), profile.getName());
 		}
 
-		switch (Ranks.getPermissionResult(null, profile, Node.get(nodeS), context))
+		switch (Ranks.getPermissionResult(null, profile, Node.get(nodeS), context, true))
 		{
 			case ALLOW:
 				return true;

@@ -18,11 +18,6 @@
 			"title": "Bugs & Suggestions",
 			"icon": "ftblib:icons/bug",
 			"click": "https://github.com/LatvianModder/FTBUtilities/issues"
-		},
-		{
-			"title": "Alpha Builds",
-			"icon": "ftblib:icons/settings",
-			"click": "http://maven.latmod.com/com/feed_the_beast/ftbutilities/FTBUtilities/"
 		}
 	],
 	"pages": [

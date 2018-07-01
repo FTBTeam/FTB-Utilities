@@ -107,7 +107,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		@Override
 		public void execute(Universe universe)
 		{
-			if (!startPos.equalsPos(new BlockDimPos(player)) || startHP != player.getHealth())
+			if (!startPos.equalsPos(new BlockDimPos(player)) || startHP > player.getHealth())
 			{
 				player.sendStatusMessage(StringUtils.color(FTBLib.lang(player, "stand_still_failed"), TextFormatting.RED), true);
 			}

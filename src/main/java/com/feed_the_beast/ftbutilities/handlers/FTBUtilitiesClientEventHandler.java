@@ -1,12 +1,15 @@
 package com.feed_the_beast.ftbutilities.handlers;
 
+import com.feed_the_beast.ftblib.events.client.CustomClickEvent;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.client.FTBUtilitiesClient;
 import com.feed_the_beast.ftbutilities.client.FTBUtilitiesClientConfig;
+import com.feed_the_beast.ftbutilities.gui.GuiClaimedChunks;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBTRequest;
+import com.feed_the_beast.ftbutilities.net.MessageLeaderboardList;
 import com.feed_the_beast.ftbutilities.net.MessageRequestBadge;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
@@ -105,6 +108,35 @@ public class FTBUtilitiesClientEventHandler
 		if (FTBUtilitiesClient.KEY_NBT.isPressed())
 		{
 			MessageEditNBTRequest.editNBT();
+		}
+	}
+
+	@SubscribeEvent
+	public static void onCustomClick(CustomClickEvent event)
+	{
+		if (event.getID().getResourceDomain().equals(FTBUtilities.MOD_ID))
+		{
+			switch (event.getID().getResourcePath())
+			{
+				case "toggle_gamemode":
+					ClientUtils.execClientCommand("/gamemode " + (ClientUtils.MC.player.capabilities.isCreativeMode ? "survival" : "creative"));
+					break;
+				case "daytime":
+					ClientUtils.execClientCommand("/time add " + (24000L - (ClientUtils.MC.world.getWorldTime() % 24000L) + 6000));
+					break;
+				case "nighttime":
+					ClientUtils.execClientCommand("/time add " + (24000L - (ClientUtils.MC.world.getWorldTime() % 24000L) + 18000));
+					break;
+				case "claims_gui":
+					GuiClaimedChunks.instance = new GuiClaimedChunks();
+					GuiClaimedChunks.instance.openGui();
+					break;
+				case "leaderboards_gui":
+					new MessageLeaderboardList().sendToServer();
+					break;
+			}
+
+			event.setCanceled(true);
 		}
 	}
 }

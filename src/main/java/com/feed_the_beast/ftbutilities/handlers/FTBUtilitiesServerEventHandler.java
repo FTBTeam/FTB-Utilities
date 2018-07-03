@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.handlers;
 
+import com.feed_the_beast.ftblib.events.universe.UniverseClearCacheEvent;
 import com.feed_the_beast.ftblib.lib.EnumMessageLocation;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.Universe;
@@ -40,6 +41,15 @@ import net.minecraftforge.server.permission.context.PlayerContext;
 public class FTBUtilitiesServerEventHandler
 {
 	private static final ResourceLocation AFK_ID = new ResourceLocation(FTBUtilities.MOD_ID, "afk");
+
+	@SubscribeEvent
+	public static void onCacheCleared(UniverseClearCacheEvent event)
+	{
+		if (Ranks.INSTANCE != null)
+		{
+			Ranks.INSTANCE.clearCache();
+		}
+	}
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onServerChatEvent(ServerChatEvent event)

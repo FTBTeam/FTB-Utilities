@@ -1,12 +1,14 @@
 package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamDataEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
-import com.feed_the_beast.ftblib.lib.data.IHasCache;
+import com.feed_the_beast.ftblib.lib.data.TeamData;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
@@ -16,7 +18,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Map;
 import java.util.OptionalInt;
@@ -24,14 +27,71 @@ import java.util.OptionalInt;
 /**
  * @author LatvianModder
  */
-public class FTBUtilitiesTeamData implements INBTSerializable<NBTTagCompound>, IHasCache
+@Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
+public class FTBUtilitiesTeamData extends TeamData
 {
 	public static FTBUtilitiesTeamData get(ForgeTeam team)
 	{
-		return team.getData(FTBUtilities.MOD_ID);
+		return team.getData().get(FTBUtilities.MOD_ID);
 	}
 
-	public final ForgeTeam team;
+	@SubscribeEvent
+	public static void registerTeamData(ForgeTeamDataEvent event)
+	{
+		event.register(new FTBUtilitiesTeamData(event.getTeam()));
+	}
+
+	/*
+	public void printMessage(@Nullable IForgePlayer from, ITextComponent message)
+	{
+		ITextComponent name = StringUtils.color(new TextComponentString(Universe.INSTANCE.getPlayer(message.getSender()).getProfile().getName()), color.getValue().getTextFormatting());
+		ITextComponent msg = FTBLibLang.TEAM_CHAT_MESSAGE.textComponent(name, message);
+		msg.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.CLICK_HERE.textComponent()));
+		msg.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/team msg "));
+
+		for (EntityPlayerMP ep : getOnlineTeamPlayers(EnumTeamStatus.MEMBER))
+		{
+			ep.sendMessage(msg);
+		}
+	}*/
+
+	@SubscribeEvent
+	public static void getTeamSettings(ForgeTeamConfigEvent event)
+	{
+		get(event.getTeam()).addConfig(event);
+	}
+
+	@SubscribeEvent
+	public static void onTeamDeleted(ForgeTeamDeletedEvent event)
+	{
+		//printMessage(FTBLibLang.TEAM_DELETED.textComponent(getTitle()));
+
+		if (ClaimedChunks.isActive())
+		{
+			ClaimedChunks.instance.unclaimAllChunks(event.getTeam(), OptionalInt.empty());
+		}
+	}
+
+	/*
+	@SubscribeEvent
+	public static void onTeamPlayerJoined(ForgeTeamPlayerJoinedEvent event)
+	{
+		//printMessage(FTBLibLang.TEAM_MEMBER_JOINED.textComponent(player.getName()));
+	}
+
+	@SubscribeEvent
+	public static void onTeamPlayerLeft(ForgeTeamPlayerLeftEvent event)
+	{
+		//printMessage(FTBLibLang.TEAM_MEMBER_LEFT.textComponent(player.getName()));
+	}
+
+	@SubscribeEvent
+	public static void onTeamOwnerChanged(ForgeTeamOwnerChangedEvent event)
+	{
+		//printMessage(FTBLibLang.TEAM_TRANSFERRED_OWNERSHIP.textComponent(p1.getName()));
+	}
+	*/
+
 	private final ConfigEnum<EnumTeamStatus> editBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	private final ConfigEnum<EnumTeamStatus> interactWithBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	private final ConfigEnum<EnumTeamStatus> attackEntities = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
@@ -40,9 +100,15 @@ public class FTBUtilitiesTeamData implements INBTSerializable<NBTTagCompound>, I
 	public boolean canForceChunks = false;
 	private int cachedMaxClaimChunks, cachedMaxChunkloaderChunks;
 
-	public FTBUtilitiesTeamData(ForgeTeam t)
+	private FTBUtilitiesTeamData(ForgeTeam t)
 	{
-		team = t;
+		super(t);
+	}
+
+	@Override
+	public String getName()
+	{
+		return FTBUtilities.MOD_ID;
 	}
 
 	@Override
@@ -128,7 +194,7 @@ public class FTBUtilitiesTeamData implements INBTSerializable<NBTTagCompound>, I
 		}
 	}
 
-	public void addConfig(ForgeTeamConfigEvent event)
+	private void addConfig(ForgeTeamConfigEvent event)
 	{
 		event.getConfig().setGroupName(FTBUtilities.MOD_ID, new TextComponentString(FTBUtilities.MOD_NAME));
 		event.getConfig().add(FTBUtilities.MOD_ID, "explosions", explosions);

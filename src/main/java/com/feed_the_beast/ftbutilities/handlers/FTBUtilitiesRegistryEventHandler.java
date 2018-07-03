@@ -1,14 +1,6 @@
-package com.feed_the_beast.ftbutilities.integration;
+package com.feed_the_beast.ftbutilities.handlers;
 
 import com.feed_the_beast.ftblib.events.FTBLibPreInitRegistryEvent;
-import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
-import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
-import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
-import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
-import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigEvent;
-import com.feed_the_beast.ftblib.events.team.ForgeTeamDataEvent;
-import com.feed_the_beast.ftblib.events.team.ForgeTeamDeletedEvent;
-import com.feed_the_beast.ftblib.events.universe.UniverseClearCacheEvent;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
@@ -20,26 +12,19 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
-import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
-import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
-import com.feed_the_beast.ftbutilities.data.FTBUtilitiesTeamData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
-import com.feed_the_beast.ftbutilities.handlers.FTBUtilitiesSyncData;
 import com.feed_the_beast.ftbutilities.net.MessageRanks;
 import com.feed_the_beast.ftbutilities.net.MessageViewCrashList;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.GameRules;
@@ -47,16 +32,13 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.File;
-import java.util.OptionalInt;
 
 /**
  * @author LatvianModder
  */
 @Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
-public class FTBLibIntegration
+public class FTBUtilitiesRegistryEventHandler
 {
-	public static final ResourceLocation LOGIN_STARTING_ITEMS = new ResourceLocation(FTBUtilities.MOD_ID, "starting_items");
-
 	@SubscribeEvent
 	public static void onFTBLibPreInitRegistry(FTBLibPreInitRegistryEvent event)
 	{
@@ -66,7 +48,7 @@ public class FTBLibIntegration
 		registry.registerServerReloadHandler(new ResourceLocation(FTBUtilities.MOD_ID, "badges"), reloadEvent -> FTBUtilitiesUniverseData.reloadServerBadges(reloadEvent.getUniverse()));
 
 		registry.registerSyncData(FTBUtilities.MOD_ID, new FTBUtilitiesSyncData());
-		
+
 		/*registry.registerTeamAction(new Action(new ResourceLocation(FTBUtilities.MOD_ID+":chat"), new TextComponentTranslation("sidebar_button." + FTBUtilities.MOD_ID + ".chats.team"), GuiIcons.CHAT, -10)
 		{
 			@Override
@@ -205,123 +187,4 @@ public class FTBLibIntegration
 			}
 		});
 	}
-
-	@SubscribeEvent
-	public static void onCacheCleared(UniverseClearCacheEvent event)
-	{
-		if (Ranks.INSTANCE != null)
-		{
-			Ranks.INSTANCE.clearCache();
-		}
-	}
-
-	@SubscribeEvent
-	public static void registerPlayerData(ForgePlayerDataEvent event)
-	{
-		event.register(FTBUtilities.MOD_ID, new FTBUtilitiesPlayerData(event.getPlayer()));
-	}
-
-	@SubscribeEvent
-	public static void registerTeamData(ForgeTeamDataEvent event)
-	{
-		event.register(FTBUtilities.MOD_ID, new FTBUtilitiesTeamData(event.getTeam()));
-	}
-
-	@SubscribeEvent
-	public static void onPlayerLoggedIn(ForgePlayerLoggedInEvent event)
-	{
-		EntityPlayerMP player = event.getPlayer().getPlayer();
-
-		if (event.isFirstLogin(LOGIN_STARTING_ITEMS))
-		{
-			if (FTBUtilitiesConfig.login.enable_starting_items)
-			{
-				for (ItemStack stack : FTBUtilitiesConfig.login.getStartingItems())
-				{
-					InvUtils.giveItem(player, stack.copy());
-				}
-			}
-		}
-
-		if (FTBUtilitiesConfig.login.enable_motd)
-		{
-			for (ITextComponent t : FTBUtilitiesConfig.login.getMOTD())
-			{
-				player.sendMessage(t);
-			}
-		}
-
-		if (ClaimedChunks.isActive())
-		{
-			ClaimedChunks.instance.markDirty();
-		}
-	}
-
-	@SubscribeEvent
-	public static void onPlayerLoggedOut(ForgePlayerLoggedOutEvent event)
-	{
-		if (ClaimedChunks.isActive())
-		{
-			ClaimedChunks.instance.markDirty();
-		}
-
-		FTBUtilitiesUniverseData.updateBadge(event.getPlayer().getId());
-	}
-
-	@SubscribeEvent
-	public static void getPlayerSettings(ForgePlayerConfigEvent event)
-	{
-		FTBUtilitiesPlayerData.get(event.getPlayer()).addConfig(event.getConfig());
-	}
-	
-	/*
-	public void printMessage(@Nullable IForgePlayer from, ITextComponent message)
-	{
-		ITextComponent name = StringUtils.color(new TextComponentString(Universe.INSTANCE.getPlayer(message.getSender()).getProfile().getName()), color.getValue().getTextFormatting());
-		ITextComponent msg = FTBLibLang.TEAM_CHAT_MESSAGE.textComponent(name, message);
-		msg.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.CLICK_HERE.textComponent()));
-		msg.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/team msg "));
-
-		for (EntityPlayerMP ep : getOnlineTeamPlayers(EnumTeamStatus.MEMBER))
-		{
-			ep.sendMessage(msg);
-		}
-	}*/
-
-	@SubscribeEvent
-	public static void getTeamSettings(ForgeTeamConfigEvent event)
-	{
-		FTBUtilitiesTeamData.get(event.getTeam()).addConfig(event);
-	}
-
-	@SubscribeEvent
-	public static void onTeamDeleted(ForgeTeamDeletedEvent event)
-	{
-		//printMessage(FTBLibLang.TEAM_DELETED.textComponent(getTitle()));\
-
-		if (ClaimedChunks.isActive())
-		{
-			ClaimedChunks.instance.unclaimAllChunks(event.getTeam(), OptionalInt.empty());
-		}
-	}
-
-	/*
-	@SubscribeEvent
-	public static void onTeamPlayerJoined(ForgeTeamPlayerJoinedEvent event)
-	{
-		//printMessage(FTBLibLang.TEAM_MEMBER_JOINED.textComponent(player.getName()));
-	}
-
-	@SubscribeEvent
-	public static void onTeamPlayerLeft(ForgeTeamPlayerLeftEvent event)
-	{
-		//printMessage(FTBLibLang.TEAM_MEMBER_LEFT.textComponent(player.getName()));
-	}
-
-	@SubscribeEvent
-	public static void onTeamOwnerChanged(ForgeTeamOwnerChangedEvent event)
-	{
-		//printMessage(FTBLibLang.TEAM_TRANSFERRED_OWNERSHIP.textComponent(p1.getName()));
-	}
-	*/
 }

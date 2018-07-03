@@ -2,6 +2,10 @@ package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibCommon;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftblib.lib.EnumMessageLocation;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
@@ -10,10 +14,11 @@ import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
-import com.feed_the_beast.ftblib.lib.data.IHasCache;
+import com.feed_the_beast.ftblib.lib.data.PlayerData;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
+import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.IScheduledTask;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
@@ -25,12 +30,15 @@ import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -39,7 +47,8 @@ import java.util.HashSet;
 /**
  * @author LatvianModder
  */
-public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>, IHasCache
+@Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
+public class FTBUtilitiesPlayerData extends PlayerData
 {
 	public enum Timer
 	{
@@ -114,7 +123,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 			else if (secondsLeft <= 1)
 			{
 				pos.teleport(player);
-				FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(universe.getPlayer(player));
+				FTBUtilitiesPlayerData data = get(universe.getPlayer(player));
 				data.lastTeleport[timer.ordinal()] = System.currentTimeMillis();
 
 				if (secondsLeft != 0)
@@ -136,7 +145,65 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		}
 	}
 
-	public final ForgePlayer player;
+	public static final ResourceLocation LOGIN_STARTING_ITEMS = new ResourceLocation(FTBUtilities.MOD_ID, "starting_items");
+
+	public static FTBUtilitiesPlayerData get(ForgePlayer player)
+	{
+		return player.getData().get(FTBUtilities.MOD_ID);
+	}
+
+	@SubscribeEvent
+	public static void registerPlayerData(ForgePlayerDataEvent event)
+	{
+		event.register(new FTBUtilitiesPlayerData(event.getPlayer()));
+	}
+
+	@SubscribeEvent
+	public static void onPlayerLoggedIn(ForgePlayerLoggedInEvent event)
+	{
+		EntityPlayerMP player = event.getPlayer().getPlayer();
+
+		if (event.isFirstLogin(LOGIN_STARTING_ITEMS))
+		{
+			if (FTBUtilitiesConfig.login.enable_starting_items)
+			{
+				for (ItemStack stack : FTBUtilitiesConfig.login.getStartingItems())
+				{
+					InvUtils.giveItem(player, stack.copy());
+				}
+			}
+		}
+
+		if (FTBUtilitiesConfig.login.enable_motd)
+		{
+			for (ITextComponent t : FTBUtilitiesConfig.login.getMOTD())
+			{
+				player.sendMessage(t);
+			}
+		}
+
+		if (ClaimedChunks.isActive())
+		{
+			ClaimedChunks.instance.markDirty();
+		}
+	}
+
+	@SubscribeEvent
+	public static void onPlayerLoggedOut(ForgePlayerLoggedOutEvent event)
+	{
+		if (ClaimedChunks.isActive())
+		{
+			ClaimedChunks.instance.markDirty();
+		}
+
+		FTBUtilitiesUniverseData.updateBadge(event.getPlayer().getId());
+	}
+
+	@SubscribeEvent
+	public static void getPlayerSettings(ForgePlayerConfigEvent event)
+	{
+		get(event.getPlayer()).addConfig(event.getConfig());
+	}
 
 	private final ConfigBoolean renderBadge = new ConfigBoolean(true);
 	private final ConfigBoolean disableGlobalBadge = new ConfigBoolean(false);
@@ -154,17 +221,18 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 	public final BlockDimPosStorage homes;
 	private boolean fly;
 
-	public FTBUtilitiesPlayerData(ForgePlayer p)
+	private FTBUtilitiesPlayerData(ForgePlayer player)
 	{
-		player = p;
+		super(player);
 		homes = new BlockDimPosStorage();
 		tpaRequestsFrom = new HashSet<>();
 		lastTeleport = new long[Timer.VALUES.length];
 	}
 
-	public static FTBUtilitiesPlayerData get(ForgePlayer player)
+	@Override
+	public String getName()
 	{
-		return player.getData().get(FTBUtilities.MOD_ID);
+		return FTBUtilities.MOD_ID;
 	}
 
 	@Override
@@ -200,7 +268,7 @@ public class FTBUtilitiesPlayerData implements INBTSerializable<NBTTagCompound>,
 		afkMesageLocation.setValue(nbt.getString("AFK"));
 	}
 
-	public void addConfig(ConfigGroup group)
+	private void addConfig(ConfigGroup group)
 	{
 		group.setGroupName(FTBUtilities.MOD_ID, new TextComponentString(FTBUtilities.MOD_NAME));
 		group.add(FTBUtilities.MOD_ID, "render_badge", renderBadge);

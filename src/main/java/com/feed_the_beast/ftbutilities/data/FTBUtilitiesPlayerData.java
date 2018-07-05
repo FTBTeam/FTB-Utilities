@@ -123,6 +123,12 @@ public class FTBUtilitiesPlayerData extends PlayerData
 			else if (secondsLeft <= 1)
 			{
 				pos.teleport(player);
+
+				if (player.getRidingEntity() != null)
+				{
+					pos.teleport(player.getRidingEntity());
+				}
+
 				FTBUtilitiesPlayerData data = get(universe.getPlayer(player));
 				data.lastTeleport[timer.ordinal()] = System.currentTimeMillis();
 

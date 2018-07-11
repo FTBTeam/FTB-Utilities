@@ -88,7 +88,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient
 					{
 						team = new ClientClaimedChunks.Team(chunkTeam.getName());
 						team.color = chunkTeam.getColor();
-						team.formattedName = chunkTeam.getTitle().getFormattedText();
+						team.nameComponent = chunkTeam.getTitle();
 						team.isAlly = chunkTeam.isAlly(p);
 						teams.put(chunkTeam.getName(), team);
 					}

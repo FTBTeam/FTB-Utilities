@@ -328,7 +328,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 
 		if (data != null)
 		{
-			list.add(data.team.formattedName);
+			list.add(data.team.nameComponent.getFormattedText());
 			list.add(TextFormatting.GREEN + I18n.format("ftbutilities.lang.chunks.claimed_area"));
 
 			if (data.isLoaded())

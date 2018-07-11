@@ -103,7 +103,7 @@ public class JourneyMapIntegration implements IClientPlugin
 				MapPolygon poly = PolygonHelper.createChunkPolygon(pos.x, 0, pos.z);
 				p = new PolygonOverlay(FTBUtilities.MOD_ID, "claimed_" + pos.x + '_' + pos.z, dim, (ShapeProperties) chunk.team.shapeProperties, poly);
 				p.setOverlayGroupName("claimed_chunks");
-				p.setTitle(chunk.team.formattedName + '\n' + TextFormatting.GREEN + I18n.format("ftbutilities.lang.chunks.claimed_area"));
+				p.setTitle(chunk.team.nameComponent.getFormattedText() + '\n' + TextFormatting.GREEN + I18n.format("ftbutilities.lang.chunks.claimed_area"));
 				polygons.put(pos, p);
 				clientAPI.show(p);
 			}

@@ -7,7 +7,7 @@ import com.feed_the_beast.ftblib.lib.command.CmdTreeBase;
 import com.feed_the_beast.ftblib.lib.command.CmdTreeHelp;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.feed_the_beast.ftblib.lib.util.FileUtils;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -77,7 +77,7 @@ public class CmdInv extends CmdTreeBase
 					writeItemsToNBT(baubles, tag, "Baubles");
 				}*/
 
-				FileUtils.writeNBT(file, tag);
+				NBTUtils.writeNBT(file, tag);
 			}
 			catch (Exception ex)
 			{
@@ -132,7 +132,7 @@ public class CmdInv extends CmdTreeBase
 
 			try
 			{
-				NBTTagCompound tag = FileUtils.readNBT(file);
+				NBTTagCompound tag = NBTUtils.readNBT(file);
 				readItemsFromNBT(player.inventory, tag, "Inventory");
 				/*IInventory baubles = InvUtils.getBaubles(ep);
 

@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.Map;
 import java.util.Objects;
@@ -21,7 +22,7 @@ public class ClientClaimedChunks
 		public static final DataOut.Serializer<Team> SERIALIZER = (data, team) ->
 		{
 			data.writeString(team.name);
-			data.writeString(team.formattedName);
+			data.writeTextComponent(team.nameComponent);
 			data.write(team.color, EnumTeamColor.NAME_MAP);
 			data.writeBoolean(team.isAlly);
 			data.writeMap(team.chunks, DataOut.INT, ChunkData.SERIALIZER);
@@ -30,7 +31,7 @@ public class ClientClaimedChunks
 		public static final DataIn.Deserializer<Team> DESERIALIZER = data ->
 		{
 			Team team = new Team(data.readString());
-			team.formattedName = data.readString();
+			team.nameComponent = data.readTextComponent();
 			team.color = data.read(EnumTeamColor.NAME_MAP);
 			team.isAlly = data.readBoolean();
 			currentTeam = team;
@@ -40,7 +41,7 @@ public class ClientClaimedChunks
 
 		public final String name;
 		public EnumTeamColor color;
-		public String formattedName;
+		public ITextComponent nameComponent;
 		public boolean isAlly;
 		public final Map<Integer, ChunkData> chunks = new Int2ObjectOpenHashMap<>();
 		public Object shapeProperties;

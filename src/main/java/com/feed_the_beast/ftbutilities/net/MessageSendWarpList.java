@@ -77,8 +77,8 @@ public class MessageSendWarpList extends MessageToClient
 
 	private static String command(EntityPlayerMP player, String name, String backup)
 	{
-		ICommand command = player.mcServer.getCommandManager().getCommands().get(name);
-		return "/" + ((command != null && command.checkPermission(player.mcServer, player)) ? name : backup);
+		ICommand command = player.server.getCommandManager().getCommands().get(name);
+		return "/" + ((command != null && command.checkPermission(player.server, player)) ? name : backup);
 	}
 
 	public MessageSendWarpList(EntityPlayerMP player)

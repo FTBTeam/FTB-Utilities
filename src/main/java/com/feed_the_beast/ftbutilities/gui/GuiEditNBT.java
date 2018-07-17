@@ -484,7 +484,7 @@ public class GuiEditNBT extends GuiBase
 		@Override
 		public boolean canCreateNew(int id)
 		{
-			return list.hasNoTags() || list.getTagType() == id;
+			return list.isEmpty() || list.getTagType() == id;
 		}
 	}
 
@@ -690,7 +690,7 @@ public class GuiEditNBT extends GuiBase
 
 				boolean canRename = selected.parent instanceof ButtonNBTMap;
 
-				add(new SimpleButton(this, I18n.format("gui.rename"), canRename ? GuiIcons.INFO : GuiIcons.INFO_GRAY, (gui, button) -> //LANG
+				add(new SimpleButton(this, I18n.format("gui.rename"), canRename ? GuiIcons.INFO : GuiIcons.INFO_GRAY, (gui, button) ->
 				{
 					if (canRename)
 					{

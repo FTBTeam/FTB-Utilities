@@ -17,7 +17,6 @@ import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -60,7 +59,6 @@ public class FTBUtilitiesServerEventHandler
 		}
 
 		EntityPlayerMP player = event.getPlayer();
-		MinecraftServer server = player.mcServer;
 		GameProfile profile = player.getGameProfile();
 		IContext context = new PlayerContext(player);
 
@@ -75,34 +73,34 @@ public class FTBUtilitiesServerEventHandler
 		main.appendSibling(data.getNameForChat());
 		ITextComponent text = ForgeHooks.newChatWithLinks(event.getMessage().trim());
 
-		TextFormatting colortf = (TextFormatting) RankConfigAPI.get(player.mcServer, profile, FTBUtilitiesPermissions.CHAT_TEXT_COLOR, context).getValue();
+		TextFormatting colortf = (TextFormatting) RankConfigAPI.get(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_COLOR, context).getValue();
 
 		if (colortf != TextFormatting.WHITE)
 		{
 			text.getStyle().setColor(colortf);
 		}
 
-		if (Ranks.getPermissionResult(server, profile, FTBUtilitiesPermissions.CHAT_TEXT_BOLD, context, false) == Event.Result.ALLOW)
+		if (Ranks.getPermissionResult(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_BOLD, context, false) == Event.Result.ALLOW)
 		{
 			text.getStyle().setBold(true);
 		}
 
-		if (Ranks.getPermissionResult(server, profile, FTBUtilitiesPermissions.CHAT_TEXT_ITALIC, context, false) == Event.Result.ALLOW)
+		if (Ranks.getPermissionResult(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_ITALIC, context, false) == Event.Result.ALLOW)
 		{
 			text.getStyle().setItalic(true);
 		}
 
-		if (Ranks.getPermissionResult(server, profile, FTBUtilitiesPermissions.CHAT_TEXT_UNDERLINED, context, false) == Event.Result.ALLOW)
+		if (Ranks.getPermissionResult(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_UNDERLINED, context, false) == Event.Result.ALLOW)
 		{
 			text.getStyle().setUnderlined(true);
 		}
 
-		if (Ranks.getPermissionResult(server, profile, FTBUtilitiesPermissions.CHAT_TEXT_STRIKETHROUGH, context, false) == Event.Result.ALLOW)
+		if (Ranks.getPermissionResult(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_STRIKETHROUGH, context, false) == Event.Result.ALLOW)
 		{
 			text.getStyle().setStrikethrough(true);
 		}
 
-		if (Ranks.getPermissionResult(server, profile, FTBUtilitiesPermissions.CHAT_TEXT_OBFUSCATED, context, false) == Event.Result.ALLOW)
+		if (Ranks.getPermissionResult(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_OBFUSCATED, context, false) == Event.Result.ALLOW)
 		{
 			text.getStyle().setObfuscated(true);
 		}

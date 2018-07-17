@@ -156,7 +156,7 @@ public class FTBUtilitiesTeamData extends TeamData
 				claimedChunksTag.setTag(entry.getKey().toString(), entry.getValue());
 			}
 
-			if (!claimedChunksTag.hasNoTags())
+			if (!claimedChunksTag.isEmpty())
 			{
 				nbt.setTag("ClaimedChunks", claimedChunksTag);
 			}

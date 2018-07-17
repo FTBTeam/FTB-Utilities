@@ -53,11 +53,11 @@ public class FTBUtilitiesNotifications
 					notification.addLine(StringUtils.italic(new TextComponentString(team.getDesc()), true));
 				}
 
-				notification.send(player.mcServer, player);
+				notification.send(player.server, player);
 			}
 			else
 			{
-				Notification.of(CHUNK_CHANGED, StringUtils.color(FTBUtilities.lang(player, "ftbutilities.lang.chunks.wilderness"), TextFormatting.DARK_GREEN)).send(player.mcServer, player);
+				Notification.of(CHUNK_CHANGED, StringUtils.color(FTBUtilities.lang(player, "ftbutilities.lang.chunks.wilderness"), TextFormatting.DARK_GREEN)).send(player.server, player);
 			}
 		}
 	}

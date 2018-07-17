@@ -73,7 +73,7 @@ public class MessageClaimedChunksModify extends MessageToServer
 
 		if (!p.hasTeam())
 		{
-			FTBLibNotifications.NO_TEAM.send(player.mcServer, player);
+			FTBLibNotifications.NO_TEAM.send(player.server, player);
 			return;
 		}
 

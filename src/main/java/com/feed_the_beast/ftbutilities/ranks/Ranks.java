@@ -101,7 +101,7 @@ public class Ranks
 			return Event.Result.DEFAULT;
 		}
 
-		return getPermissionResult(player.mcServer, player.getGameProfile(), node, new PlayerContext(player), matching);
+		return getPermissionResult(player.server, player.getGameProfile(), node, new PlayerContext(player), matching);
 	}
 
 	public static boolean isValidName(@Nullable String id)

@@ -114,9 +114,9 @@ public class FTBUtilitiesClientEventHandler
 	@SubscribeEvent
 	public static void onCustomClick(CustomClickEvent event)
 	{
-		if (event.getID().getResourceDomain().equals(FTBUtilities.MOD_ID))
+		if (event.getID().getNamespace().equals(FTBUtilities.MOD_ID))
 		{
-			switch (event.getID().getResourcePath())
+			switch (event.getID().getPath())
 			{
 				case "toggle_gamemode":
 					ClientUtils.execClientCommand("/gamemode " + (ClientUtils.MC.player.capabilities.isCreativeMode ? "survival" : "creative"));

@@ -18,7 +18,6 @@ import com.feed_the_beast.ftblib.lib.data.PlayerData;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
-import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.IScheduledTask;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
@@ -39,6 +38,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -175,7 +175,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 			{
 				for (ItemStack stack : FTBUtilitiesConfig.login.getStartingItems())
 				{
-					InvUtils.giveItem(player, stack.copy());
+					ItemHandlerHelper.giveItemToPlayer(player, stack.copy());
 				}
 			}
 		}

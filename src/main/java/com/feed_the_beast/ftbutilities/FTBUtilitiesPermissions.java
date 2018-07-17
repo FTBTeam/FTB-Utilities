@@ -234,6 +234,6 @@ public class FTBUtilitiesPermissions
 
 	public static String getLeaderboardNode(Leaderboard leaderboard)
 	{
-		return LEADERBOARD_PREFIX + leaderboard.id.getResourceDomain() + "." + leaderboard.id.getResourcePath();
+		return LEADERBOARD_PREFIX + leaderboard.id.getNamespace() + "." + leaderboard.id.getPath();
 	}
 }

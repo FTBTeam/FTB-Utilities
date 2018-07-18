@@ -1,6 +1,8 @@
 # Enabling Ranks
 They are enabled by default, but if they aren't, set `Enabled` & `Override Chat` to `true` under `FTBUtilities > Ranks` or `config/ftbutilities.cfg`.
+
 You can find all permissions and configurations assigned to them in the `all_permissions.html` file.
+
 While //Comments are used in examples, they won't work in actual files, and will be removed by mod.
 
 # Permissions
@@ -25,7 +27,9 @@ You can include all permissions from parent rank by adding ` extends parent_rank
 
 # Default Rank Assignment
 Default ranks aren't required, but it's still recommended to use them. Add ` is default_player_rank` or ` is default_op_rank` inside `[rank]`.
+
 They basically tell what rank to use when player doesn't have any rank assigned.
+
 You can have multiple tags, but those two are the only functioning ones, currently.
 
 ## Example
@@ -39,7 +43,8 @@ command: true // Allows to use all commands
 
 
 # Chat Formatting
-To change player name formatting from default `<Player>` to something more interesting, use `ftbutilities.chat.name_format` permission
+To change player name formatting from default `<Player>` to something more interesting, use `ftbutilities.chat.name_format` permission.
+
 All permissions that you can use to modify chat message text:
 
 * `ftbutilities.chat.text.color`
@@ -57,7 +62,8 @@ ftbutilities.chat.name_format: "<&2Admin &l{name}&r>"
 ftbutilities.chat.text.italic: true
 ```
 
-Text Admin be added before player name with a space and both that text and name will be dark green, but the player name will be bold
+Text Admin be added before player name with a space and both that text and name will be dark green, but the player name will be bold.
+
 The result will be `<Admin LatvianModder> Hello!`, where:
 
 * `Admin` and `LatvianModder` will be dark green;

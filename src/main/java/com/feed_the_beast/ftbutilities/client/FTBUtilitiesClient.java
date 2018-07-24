@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
+import com.feed_the_beast.ftbutilities.command.client.CmdPrintItem;
 import com.feed_the_beast.ftbutilities.command.client.CmdScanItems;
 import com.feed_the_beast.ftbutilities.command.client.CmdShrug;
 import net.minecraft.client.settings.KeyBinding;
@@ -38,6 +39,7 @@ public class FTBUtilitiesClient extends FTBUtilitiesCommon // FTBLibClient
 		if (FTBLibConfig.debugging.special_commands)
 		{
 			ClientCommandHandler.instance.registerCommand(new CmdScanItems());
+			ClientCommandHandler.instance.registerCommand(new CmdPrintItem());
 		}
 
 		ClientUtils.MC.getRenderManager().getSkinMap().get("default").addLayer(LayerBadge.INSTANCE);

@@ -314,3 +314,5 @@ commands.leaderboards.usage=/leaderboards [id]
 
 # Client Commands
 commands.shrug.usage=/shrug
+commands.scan_items.usage=/scan_items
+commands.print_item.usage=/print_item

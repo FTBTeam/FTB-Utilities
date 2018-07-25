@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbutilities.gui.ranks;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
@@ -8,7 +7,6 @@ import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.resources.I18n;
 
 /**
@@ -35,22 +33,18 @@ public class GuiEditRank extends GuiButtonListBase
 			public void onClicked(MouseButton button)
 			{
 				GuiHelper.playClickSound();
-				ClientUtils.MC.displayGuiScreen(new GuiYesNo((result, id) -> {
-					if (result)
-					{
-						guiRanks.ranks.remove(rank.getName());
+				guiRanks.openYesNo("", "", () ->
+				{
+					guiRanks.ranks.remove(rank.getName());
 
-						for (GuiRanks.RankGuiInst r : guiRanks.ranks.values())
+					for (GuiRanks.RankGuiInst r : guiRanks.ranks.values())
+					{
+						if (r.parent == rank)
 						{
-							if (r.parent == rank)
-							{
-								r.parent = null;
-							}
+							r.parent = null;
 						}
 					}
-
-					guiRanks.openGui();
-				}, "", "", 0));
+				});
 			}
 		});
 	}

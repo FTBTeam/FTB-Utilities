@@ -18,7 +18,6 @@ import com.feed_the_beast.ftbutilities.events.chunks.UpdateClientDataEvent;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksModify;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksRequest;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;
-import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -247,16 +246,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 				{
 					GuiHelper.playClickSound();
 					String s = I18n.format("ftbutilities.lang.chunks.unclaim_all_dim_q", currentDimName);
-					ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
-					{
-						if (set)
-						{
-							ClientUtils.execClientCommand("/chunks unclaim_all false");
-						}
-
-						getGui().openGui();
-						getGui().refreshWidgets();
-					}, s, "", 0));
+					openYesNo(s, "", () -> ClientUtils.execClientCommand("/chunks unclaim_all false"));
 				}
 			});
 
@@ -267,16 +257,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 				{
 					GuiHelper.playClickSound();
 					String s = I18n.format("ftbutilities.lang.chunks.unclaim_all_q");
-					ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
-					{
-						if (set)
-						{
-							ClientUtils.execClientCommand("/chunks unclaim_all true");
-						}
-
-						getGui().openGui();
-						getGui().refreshWidgets();
-					}, s, "", 1));
+					openYesNo(s, "", () -> ClientUtils.execClientCommand("/chunks unclaim_all true"));
 				}
 			});
 		}

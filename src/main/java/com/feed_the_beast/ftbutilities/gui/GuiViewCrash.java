@@ -19,7 +19,6 @@ import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.net.MessageViewCrashDelete;
 import com.google.gson.JsonElement;
-import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -157,14 +156,7 @@ public class GuiViewCrash extends GuiBase
 			}
 		};
 
-		delete = new SimpleButton(this, I18n.format("selectServer.delete"), GuiIcons.REMOVE, (widget, button) -> ClientUtils.MC.displayGuiScreen(new GuiYesNo((result, id) -> {
-			GuiViewCrash.this.openGui();
-
-			if (result)
-			{
-				new MessageViewCrashDelete(name.text[0]).sendToServer();
-			}
-		}, I18n.format("delete_item", name.text[0]), "", 0)))
+		delete = new SimpleButton(this, I18n.format("selectServer.delete"), GuiIcons.REMOVE, (widget, button) -> openYesNo(I18n.format("delete_item", name.text[0]), "", () -> new MessageViewCrashDelete(name.text[0]).sendToServer()))
 		{
 			@Override
 			public Icon getIcon()

@@ -117,7 +117,7 @@ public class FTBUtilitiesRegistryEventHandler
 									{
 										rules.setOrCreateGameRule(key, Boolean.toString(value));
 									}
-								}).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
+								}, null).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
 								break;
 							case NUMERICAL_VALUE:
 								gamerules.add(key, new ConfigInt(rules.getInt(key))
@@ -133,7 +133,7 @@ public class FTBUtilitiesRegistryEventHandler
 									{
 										rules.setOrCreateGameRule(key, Integer.toString(value));
 									}
-								}).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
+								}, null).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
 								break;
 							default:
 								gamerules.add(key, new ConfigString(rules.getString(key))
@@ -149,7 +149,7 @@ public class FTBUtilitiesRegistryEventHandler
 									{
 										rules.setOrCreateGameRule(key, value);
 									}
-								}).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
+								}, null).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
 						}
 					}
 				}

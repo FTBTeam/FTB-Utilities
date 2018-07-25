@@ -200,10 +200,11 @@ public class FTBUtilitiesTeamData extends TeamData
 		ConfigGroup group = main.getGroup(FTBUtilities.MOD_ID);
 		group.setDisplayName(new TextComponentString(FTBUtilities.MOD_NAME));
 
-		group.add("explosions", explosions);
-		group.add("blocks_edit", editBlocks);
-		group.add("blocks_interact", interactWithBlocks);
-		group.add("attack_entities", attackEntities);
+		group.add("explosions", explosions, new ConfigBoolean(false));
+		group.add("blocks_edit", editBlocks, new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS));
+		group.add("blocks_interact", interactWithBlocks, new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS));
+		group.add("attack_entities", attackEntities, new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS));
+		group.add("use_items", useItems, new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS));
 	}
 
 	public EnumTeamStatus getEditBlocksStatus()

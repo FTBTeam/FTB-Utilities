@@ -766,8 +766,8 @@ public class Ranks
 			list.add("<tr>");
 			list.add("<td><code>" + entry.getNode() + "</code></td>");
 			list.add("<td><code>" + entry.player.getName() + "</code></td>");
-			String playerText = fixHTML(entry.player.getSerializableElement().toString());
-			String opText = fixHTML(entry.op.getSerializableElement().toString());
+			String playerText = fixHTML(entry.player.getStringForGUI().getUnformattedText());
+			String opText = fixHTML(entry.op.getStringForGUI().getUnformattedText());
 
 			if (playerText.equals(opText))
 			{

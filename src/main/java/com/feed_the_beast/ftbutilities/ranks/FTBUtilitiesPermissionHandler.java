@@ -6,10 +6,12 @@ import com.feed_the_beast.ftblib.lib.config.DefaultRankConfigHandler;
 import com.feed_the_beast.ftblib.lib.config.IRankConfigHandler;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
+import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
@@ -105,7 +107,9 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 						if (info != null)
 						{
 							value = info.defaultValue.copy();
-							value.fromJson(json);
+							NBTTagCompound nbt = new NBTTagCompound();
+							nbt.setTag("v", JsonUtils.toNBT(json));
+							value.readFromNBT(nbt, "v");
 						}
 					}
 

@@ -89,68 +89,72 @@ public class FTBUtilitiesRegistryEventHandler
 			@Override
 			public void onAction(ForgePlayer player, NBTTagCompound data)
 			{
-				ConfigGroup group = new ConfigGroup(new TextComponentTranslation("admin_panel.ftbutilities.edit_world"));
+				ConfigGroup main = new ConfigGroup("gamerules");
+				main.setDisplayName(new TextComponentTranslation("admin_panel.ftbutilities.edit_world"));
 
 				if (player.hasPermission(FTBUtilitiesPermissions.EDIT_WORLD_GAMERULES))
 				{
-					GameRules gameRules = player.team.universe.world.getGameRules();
+					ConfigGroup gamerules = main.getGroup("gamerules");
+					gamerules.setDisplayName(new TextComponentTranslation("gamerules"));
 
-					for (String key : gameRules.getRules())
+					GameRules rules = player.team.universe.world.getGameRules();
+
+					for (String key : rules.getRules())
 					{
-						switch (getType(gameRules, key))
+						switch (getType(rules, key))
 						{
 							case BOOLEAN_VALUE:
-								group.add("gamerules", key, new ConfigBoolean(gameRules.getBoolean(key))
+								gamerules.add(key, new ConfigBoolean(rules.getBoolean(key))
 								{
 									@Override
 									public boolean getBoolean()
 									{
-										return gameRules.getBoolean(key);
+										return rules.getBoolean(key);
 									}
 
 									@Override
 									public void setBoolean(boolean value)
 									{
-										gameRules.setOrCreateGameRule(key, Boolean.toString(value));
+										rules.setOrCreateGameRule(key, Boolean.toString(value));
 									}
 								}).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
 								break;
 							case NUMERICAL_VALUE:
-								group.add("gamerules", key, new ConfigInt(gameRules.getInt(key))
+								gamerules.add(key, new ConfigInt(rules.getInt(key))
 								{
 									@Override
 									public int getInt()
 									{
-										return gameRules.getInt(key);
+										return rules.getInt(key);
 									}
 
 									@Override
 									public void setInt(int value)
 									{
-										gameRules.setOrCreateGameRule(key, Integer.toString(value));
+										rules.setOrCreateGameRule(key, Integer.toString(value));
 									}
 								}).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
 								break;
 							default:
-								group.add("gamerules", key, new ConfigString(gameRules.getString(key))
+								gamerules.add(key, new ConfigString(rules.getString(key))
 								{
 									@Override
 									public String getString()
 									{
-										return gameRules.getString(key);
+										return rules.getString(key);
 									}
 
 									@Override
 									public void setString(String value)
 									{
-										gameRules.setOrCreateGameRule(key, value);
+										rules.setOrCreateGameRule(key, value);
 									}
 								}).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
 						}
 					}
 				}
 
-				FTBLibAPI.editServerConfig(player.getPlayer(), group, IConfigCallback.DEFAULT);
+				FTBLibAPI.editServerConfig(player.getPlayer(), main, IConfigCallback.DEFAULT);
 			}
 
 			private GameRules.ValueType getType(GameRules gameRules, String key)

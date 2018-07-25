@@ -274,21 +274,23 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		afkMesageLocation.setValue(nbt.getString("AFK"));
 	}
 
-	private void addConfig(ConfigGroup group)
+	private void addConfig(ConfigGroup main)
 	{
-		group.setGroupName(FTBUtilities.MOD_ID, new TextComponentString(FTBUtilities.MOD_NAME));
-		group.add(FTBUtilities.MOD_ID, "render_badge", renderBadge);
-		group.add(FTBUtilities.MOD_ID, "disable_global_badge", disableGlobalBadge);
-		group.add(FTBUtilities.MOD_ID, "enable_pvp", enablePVP);
+		ConfigGroup group = main.getGroup(FTBUtilities.MOD_ID);
+		group.setDisplayName(new TextComponentString(FTBUtilities.MOD_NAME));
+
+		group.add("render_badge", renderBadge);
+		group.add("disable_global_badge", disableGlobalBadge);
+		group.add("enable_pvp", enablePVP);
 
 		if (FTBUtilitiesConfig.commands.nick && player.hasPermission(FTBUtilitiesPermissions.CHAT_NICKNAME_SET))
 		{
-			group.add(FTBUtilities.MOD_ID, "nickname", nickname);
+			group.add("nickname", nickname);
 		}
 
 		if (FTBUtilitiesConfig.afk.isEnabled(player.team.universe.server))
 		{
-			group.add(FTBUtilities.MOD_ID, "afk", afkMesageLocation);
+			group.add("afk", afkMesageLocation);
 		}
 	}
 

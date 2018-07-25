@@ -72,7 +72,7 @@ public class CmdGetPermission extends CmdBase
 
 		if (info != null)
 		{
-			valueText = new TextComponentString(player.getRankConfig(node).toString());
+			valueText = player.getRankConfig(node).getStringForGUI();
 			valueText.getStyle().setColor(TextFormatting.BLUE);
 		}
 		else

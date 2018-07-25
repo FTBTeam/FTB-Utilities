@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbutilities.handlers;
 
 import com.feed_the_beast.ftblib.events.universe.UniverseClearCacheEvent;
 import com.feed_the_beast.ftblib.lib.EnumMessageLocation;
+import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
@@ -73,7 +74,7 @@ public class FTBUtilitiesServerEventHandler
 		main.appendSibling(data.getNameForChat());
 		ITextComponent text = ForgeHooks.newChatWithLinks(event.getMessage().trim());
 
-		TextFormatting colortf = (TextFormatting) RankConfigAPI.get(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_COLOR, context).getValue();
+		TextFormatting colortf = (TextFormatting) ((ConfigEnum) RankConfigAPI.get(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_COLOR, context)).getValue();
 
 		if (colortf != TextFormatting.WHITE)
 		{

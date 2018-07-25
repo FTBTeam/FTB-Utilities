@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
+import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.TeamData;
@@ -58,7 +59,7 @@ public class FTBUtilitiesTeamData extends TeamData
 	@SubscribeEvent
 	public static void getTeamSettings(ForgeTeamConfigEvent event)
 	{
-		get(event.getTeam()).addConfig(event);
+		get(event.getTeam()).addConfig(event.getConfig());
 	}
 
 	@SubscribeEvent
@@ -194,13 +195,15 @@ public class FTBUtilitiesTeamData extends TeamData
 		}
 	}
 
-	private void addConfig(ForgeTeamConfigEvent event)
+	private void addConfig(ConfigGroup main)
 	{
-		event.getConfig().setGroupName(FTBUtilities.MOD_ID, new TextComponentString(FTBUtilities.MOD_NAME));
-		event.getConfig().add(FTBUtilities.MOD_ID, "explosions", explosions);
-		event.getConfig().add(FTBUtilities.MOD_ID, "blocks_edit", editBlocks);
-		event.getConfig().add(FTBUtilities.MOD_ID, "blocks_interact", interactWithBlocks);
-		event.getConfig().add(FTBUtilities.MOD_ID, "attack_entities", attackEntities);
+		ConfigGroup group = main.getGroup(FTBUtilities.MOD_ID);
+		group.setDisplayName(new TextComponentString(FTBUtilities.MOD_NAME));
+
+		group.add("explosions", explosions);
+		group.add("blocks_edit", editBlocks);
+		group.add("blocks_interact", interactWithBlocks);
+		group.add("attack_entities", attackEntities);
 	}
 
 	public EnumTeamStatus getEditBlocksStatus()

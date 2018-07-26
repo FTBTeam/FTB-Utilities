@@ -14,8 +14,8 @@ import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiEditConfig;
-import com.feed_the_beast.ftblib.lib.gui.misc.GuiSelectors;
-import com.feed_the_beast.ftblib.lib.gui.misc.IGuiFieldCallback;
+import com.feed_the_beast.ftblib.lib.gui.misc.GuiEditConfigValue;
+import com.feed_the_beast.ftblib.lib.gui.misc.IConfigValueEditCallback;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.IconWithOutline;
@@ -127,7 +127,7 @@ public class GuiEditNBT extends GuiBase
 		}
 	}
 
-	public class ButtonNBTPrimitive extends ButtonNBT implements IGuiFieldCallback
+	public class ButtonNBTPrimitive extends ButtonNBT implements IConfigValueEditCallback
 	{
 		private NBTBase nbt;
 
@@ -213,18 +213,18 @@ public class GuiEditNBT extends GuiBase
 				case Constants.NBT.TAG_BYTE:
 				case Constants.NBT.TAG_SHORT:
 				case Constants.NBT.TAG_INT:
-					GuiSelectors.selectJson(new ConfigInt(((NBTPrimitive) nbt).getInt()), this);
+					new GuiEditConfigValue(key, new ConfigInt(((NBTPrimitive) nbt).getInt()), this);
 					break;
 				case Constants.NBT.TAG_LONG:
-					GuiSelectors.selectJson(new ConfigString(Long.toString(((NBTPrimitive) nbt).getLong())), this);
+					new GuiEditConfigValue(key, new ConfigString(Long.toString(((NBTPrimitive) nbt).getLong())), this);
 					break;
 				case Constants.NBT.TAG_FLOAT:
 				case Constants.NBT.TAG_DOUBLE:
 				case Constants.NBT.TAG_ANY_NUMERIC:
-					GuiSelectors.selectJson(new ConfigDouble(((NBTPrimitive) nbt).getDouble()), this);
+					new GuiEditConfigValue(key, new ConfigDouble(((NBTPrimitive) nbt).getDouble()), this);
 					break;
 				case Constants.NBT.TAG_STRING:
-					GuiSelectors.selectJson(new ConfigString(((NBTTagString) nbt).getString()), this);
+					new GuiEditConfigValue(key, new ConfigString(((NBTTagString) nbt).getString()), this);
 					break;
 			}
 		}
@@ -639,7 +639,7 @@ public class GuiEditNBT extends GuiBase
 		{
 			if (selected instanceof ButtonNBTMap)
 			{
-				GuiSelectors.selectJson(new ConfigString("_unnamed"), (value, set) ->
+				new GuiEditConfigValue("value", new ConfigString("_unnamed"), (value, set) ->
 				{
 					if (set && !value.getString().isEmpty())
 					{
@@ -694,7 +694,7 @@ public class GuiEditNBT extends GuiBase
 				{
 					if (canRename)
 					{
-						GuiSelectors.selectJson(new ConfigString(selected.key), (value, set) ->
+						new GuiEditConfigValue(selected.key, new ConfigString(selected.key), (value, set) ->
 						{
 							if (set)
 							{

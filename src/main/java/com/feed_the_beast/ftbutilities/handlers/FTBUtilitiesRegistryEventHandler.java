@@ -89,7 +89,7 @@ public class FTBUtilitiesRegistryEventHandler
 			@Override
 			public void onAction(ForgePlayer player, NBTTagCompound data)
 			{
-				ConfigGroup main = new ConfigGroup("gamerules");
+				ConfigGroup main = ConfigGroup.newGroup("edit_world");
 				main.setDisplayName(new TextComponentTranslation("admin_panel.ftbutilities.edit_world"));
 
 				if (player.hasPermission(FTBUtilitiesPermissions.EDIT_WORLD_GAMERULES))

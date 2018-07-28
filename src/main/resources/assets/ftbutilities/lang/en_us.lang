@@ -313,6 +313,9 @@ commands.nick.usage=/nick <name...>
 commands.fly.usage=/fly
 commands.cycle_block_state.usage=/cycle_block_state
 commands.leaderboards.usage=/leaderboards [id]
+commands.mute.usage=/mute <player>
+commands.mute.muted=You are muted!
+commands.unmute.usage=/unmute <player>
 
 # Client Commands
 commands.shrug.usage=/shrug

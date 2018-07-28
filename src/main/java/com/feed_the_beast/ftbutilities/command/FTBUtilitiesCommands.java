@@ -136,5 +136,11 @@ public class FTBUtilitiesCommands
 		{
 			event.registerServerCommand(new CmdNick());
 		}
+
+		if (FTBUtilitiesConfig.commands.mute)
+		{
+			event.registerServerCommand(new CmdMute());
+			event.registerServerCommand(new CmdUnmute());
+		}
 	}
 }

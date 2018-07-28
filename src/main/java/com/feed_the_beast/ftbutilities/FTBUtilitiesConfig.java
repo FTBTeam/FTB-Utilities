@@ -211,6 +211,7 @@ public class FTBUtilitiesConfig
 		public boolean leaderboard = true;
 		public boolean tpa = true;
 		public boolean nick = true;
+		public boolean mute = true;
 	}
 
 	public static class Login

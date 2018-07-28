@@ -56,7 +56,7 @@ public class GuiEditNBT extends GuiBase
 {
 	private static Icon getIcon(String name)
 	{
-		return IconWithOutline.BUTTON_ROUND_GRAY.combineWith(Icon.getIcon("ftbutilities:textures/gui/nbt/" + name + ".png"));
+		return Icon.getIcon("ftbutilities:textures/gui/nbt/" + name + ".png");
 	}
 
 	public static final Icon NBT_BYTE = getIcon("byte");
@@ -109,6 +109,12 @@ public class GuiEditNBT extends GuiBase
 		@Override
 		public void addMouseOverText(List<String> list)
 		{
+		}
+
+		@Override
+		public Icon getButtonBackground()
+		{
+			return IconWithOutline.BUTTON_ROUND_GRAY;
 		}
 
 		@Override
@@ -892,6 +898,8 @@ public class GuiEditNBT extends GuiBase
 	@Override
 	public void onClosed()
 	{
+		super.onClosed();
+
 		if (shouldClose == 1)
 		{
 			new MessageEditNBTResponse(info, buttonNBTRoot.map).sendToServer();

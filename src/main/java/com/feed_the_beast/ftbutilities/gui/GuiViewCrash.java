@@ -137,9 +137,9 @@ public class GuiViewCrash extends GuiBase
 		close = new SimpleButton(this, I18n.format("gui.close"), GuiIcons.CLOSE, (widget, button) -> widget.getGui().closeGui())
 		{
 			@Override
-			public Icon getIcon()
+			public Icon getButtonBackground()
 			{
-				return getButtonBackground().withBorder(-2).combineWith(super.getIcon());
+				return super.getButtonBackground().withBorder(-2);
 			}
 		};
 
@@ -150,18 +150,18 @@ public class GuiViewCrash extends GuiBase
 		})
 		{
 			@Override
-			public Icon getIcon()
+			public Icon getButtonBackground()
 			{
-				return getButtonBackground().withBorder(-2).combineWith(super.getIcon());
+				return super.getButtonBackground().withBorder(-2);
 			}
 		};
 
 		delete = new SimpleButton(this, I18n.format("selectServer.delete"), GuiIcons.REMOVE, (widget, button) -> openYesNo(I18n.format("delete_item", name.text[0]), "", () -> new MessageViewCrashDelete(name.text[0]).sendToServer()))
 		{
 			@Override
-			public Icon getIcon()
+			public Icon getButtonBackground()
 			{
-				return getButtonBackground().withBorder(-2).combineWith(super.getIcon());
+				return super.getButtonBackground().withBorder(-2);
 			}
 		};
 

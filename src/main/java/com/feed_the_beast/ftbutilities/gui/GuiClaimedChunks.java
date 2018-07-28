@@ -163,12 +163,6 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			super(panel, text, icon);
 			setSize(20, 20);
 		}
-
-		@Override
-		public Icon getIcon()
-		{
-			return getButtonBackground().combineWith(icon.withBorder(2));
-		}
 	}
 
 	private final String currentDimName;

@@ -6,6 +6,8 @@ import com.feed_the_beast.ftblib.lib.command.CmdTreeHelp;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBT;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBTRequest;
 import net.minecraft.command.CommandException;
@@ -66,7 +68,13 @@ public class CmdEditNBT extends CmdTreeBase
 			NBTTagCompound info = new NBTTagCompound();
 			NBTTagCompound nbt = editNBT(player, info, args);
 
-			if (info.hasKey("type"))
+			long size = NBTUtils.getSizeInBytes(nbt, false);
+
+			if (size >= 30000L)
+			{
+				throw FTBUtilities.error(sender, "commands.nbtedit.too_large");
+			}
+			else if (info.hasKey("type"))
 			{
 				info.setLong("random", MathUtils.RAND.nextLong());
 				EDITING.put(player.getGameProfile().getId(), info);
@@ -152,6 +160,7 @@ public class CmdEditNBT extends CmdTreeBase
 			super("player");
 		}
 
+		@Override
 		public List<String> getAliases()
 		{
 			return Collections.singletonList("me");

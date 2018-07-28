@@ -49,6 +49,8 @@ ftbutilities.world.spawn_area_in_sp=Spawn Area In Singleplayer
 ftbutilities.world.spawn_radius=Spawn Radius
 ftbutilities.world.spawn_dimension=Spawn Dimension
 ftbutilities.world.unload_erroring_chunks=Unload Erroring Chunks
+ftbutilities.world.rtp_min_distance=Min /rtp Distance
+ftbutilities.world.rtp_max_distance=Max /rtp Distance
 
 ftbutilities.world.logging=Logging
 ftbutilities.world.logging.include_creative_players=Include Creative Players

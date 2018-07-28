@@ -34,7 +34,7 @@ public class CmdBack extends CmdBase
 
 		data.checkTeleportCooldown(sender, FTBUtilitiesPlayerData.Timer.BACK);
 
-		FTBUtilitiesPlayerData.Timer.BACK.teleport(player, data.getLastDeath(), universe ->
+		FTBUtilitiesPlayerData.Timer.BACK.teleport(player, playerMP -> data.getLastDeath().teleporter(), universe ->
 		{
 			if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.INFINITE_BACK_USAGE))
 			{

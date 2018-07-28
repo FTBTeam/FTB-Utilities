@@ -5,18 +5,20 @@ import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
+import net.minecraft.block.material.Material;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
-public class CmdSpawn extends CmdBase
+public class CmdRTP extends CmdBase
 {
-	public CmdSpawn()
+	public CmdRTP()
 	{
-		super("spawn", Level.ALL);
+		super("rtp", Level.ALL);
 	}
 
 	@Override
@@ -24,15 +26,28 @@ public class CmdSpawn extends CmdBase
 	{
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(CommandUtils.getForgePlayer(player));
-		data.checkTeleportCooldown(sender, FTBUtilitiesPlayerData.Timer.SPAWN);
-		FTBUtilitiesPlayerData.Timer.SPAWN.teleport(player, playerMP ->
+		data.checkTeleportCooldown(sender, FTBUtilitiesPlayerData.Timer.RTP);
+
+		FTBUtilitiesPlayerData.Timer.RTP.teleport(player, playerMP ->
 		{
 			World w = playerMP.server.getWorld(FTBUtilitiesConfig.world.spawn_dimension);
-			BlockPos spawnpoint = w.getSpawnPoint();
 
-			while (w.getBlockState(spawnpoint).isFullCube())
+			double dist = FTBUtilitiesConfig.world.rtp_min_distance + w.rand.nextDouble() * (FTBUtilitiesConfig.world.rtp_max_distance - FTBUtilitiesConfig.world.rtp_min_distance);
+			double angle = w.rand.nextDouble() * Math.PI * 2D;
+
+			BlockPos spawnpoint = new BlockPos(Math.cos(angle) * dist, 256, Math.sin(angle) * dist);
+
+			Chunk chunk = w.getChunk(spawnpoint);
+
+			while (spawnpoint.getY() > 0)
 			{
-				spawnpoint = spawnpoint.up(2);
+				spawnpoint = spawnpoint.down();
+
+				if (chunk.getBlockState(spawnpoint).getMaterial() != Material.AIR)
+				{
+					spawnpoint.up();
+					break;
+				}
 			}
 
 			return new BlockDimPos(spawnpoint, FTBUtilitiesConfig.world.spawn_dimension).teleporter();

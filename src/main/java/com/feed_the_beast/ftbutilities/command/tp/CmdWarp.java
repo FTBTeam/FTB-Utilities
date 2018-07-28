@@ -71,6 +71,6 @@ public class CmdWarp extends CmdBase
 
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(CommandUtils.getForgePlayer(player));
 		data.checkTeleportCooldown(sender, FTBUtilitiesPlayerData.Timer.WARP);
-		FTBUtilitiesPlayerData.Timer.WARP.teleport(player, p, universe -> Notification.of(FTBUtilitiesNotifications.TELEPORT, FTBUtilities.lang(sender, "ftbutilities.lang.warps.tp", args[0])).send(server, player));
+		FTBUtilitiesPlayerData.Timer.WARP.teleport(player, playerMP -> p.teleporter(), universe -> Notification.of(FTBUtilitiesNotifications.TELEPORT, FTBUtilities.lang(sender, "ftbutilities.lang.warps.tp", args[0])).send(server, player));
 	}
 }

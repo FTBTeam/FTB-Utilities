@@ -43,6 +43,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.function.Function;
 
 /**
  * @author LatvianModder
@@ -56,7 +57,8 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		WARP(FTBUtilitiesPermissions.WARPS_COOLDOWN, FTBUtilitiesPermissions.WARPS_WARMUP),
 		BACK(FTBUtilitiesPermissions.BACK_COOLDOWN, FTBUtilitiesPermissions.BACK_WARMUP),
 		SPAWN(FTBUtilitiesPermissions.SPAWN_COOLDOWN, FTBUtilitiesPermissions.SPAWN_WARMUP),
-		TPA(FTBUtilitiesPermissions.TPA_COOLDOWN, FTBUtilitiesPermissions.TPA_WARMUP);
+		TPA(FTBUtilitiesPermissions.TPA_COOLDOWN, FTBUtilitiesPermissions.TPA_WARMUP),
+		RTP(FTBUtilitiesPermissions.RTP_COOLDOWN, FTBUtilitiesPermissions.RTP_WARMUP);
 
 		public static final Timer[] VALUES = values();
 
@@ -69,7 +71,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 			warmup = w;
 		}
 
-		public void teleport(EntityPlayerMP player, TeleporterDimPos pos, @Nullable IScheduledTask extraTask)
+		public void teleport(EntityPlayerMP player, Function<EntityPlayerMP, TeleporterDimPos> pos, @Nullable IScheduledTask extraTask)
 		{
 			Universe universe = Universe.get();
 			int seconds = (int) RankConfigAPI.get(player, warmup).getTimer().seconds();
@@ -84,11 +86,6 @@ public class FTBUtilitiesPlayerData extends PlayerData
 				new TeleportTask(player, this, 0, 0, pos, extraTask).execute(universe);
 			}
 		}
-
-		public void teleport(EntityPlayerMP player, BlockDimPos pos, @Nullable IScheduledTask extraTask)
-		{
-			teleport(player, pos.teleporter(), extraTask);
-		}
 	}
 
 	private static class TeleportTask implements IScheduledTask
@@ -96,12 +93,12 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		private final EntityPlayerMP player;
 		private final Timer timer;
 		private final BlockDimPos startPos;
-		private final TeleporterDimPos pos;
+		private final Function<EntityPlayerMP, TeleporterDimPos> pos;
 		private final float startHP;
 		private final int startSeconds, secondsLeft;
 		private final IScheduledTask extraTask;
 
-		private TeleportTask(EntityPlayerMP p, Timer t, int ss, int s, TeleporterDimPos to, @Nullable IScheduledTask e)
+		private TeleportTask(EntityPlayerMP p, Timer t, int ss, int s, Function<EntityPlayerMP, TeleporterDimPos> to, @Nullable IScheduledTask e)
 		{
 			player = p;
 			timer = t;
@@ -122,24 +119,29 @@ public class FTBUtilitiesPlayerData extends PlayerData
 			}
 			else if (secondsLeft <= 1)
 			{
-				pos.teleport(player);
+				TeleporterDimPos teleporter = pos.apply(player);
 
-				if (player.getRidingEntity() != null)
+				if (teleporter != null)
 				{
-					pos.teleport(player.getRidingEntity());
-				}
+					teleporter.teleport(player);
 
-				FTBUtilitiesPlayerData data = get(universe.getPlayer(player));
-				data.lastTeleport[timer.ordinal()] = System.currentTimeMillis();
+					if (player.getRidingEntity() != null)
+					{
+						teleporter.teleport(player.getRidingEntity());
+					}
 
-				if (secondsLeft != 0)
-				{
-					player.sendStatusMessage(FTBLib.lang(player, "teleporting"), true);
-				}
+					FTBUtilitiesPlayerData data = get(universe.getPlayer(player));
+					data.lastTeleport[timer.ordinal()] = System.currentTimeMillis();
 
-				if (extraTask != null)
-				{
-					extraTask.execute(universe);
+					if (secondsLeft != 0)
+					{
+						player.sendStatusMessage(FTBLib.lang(player, "teleporting"), true);
+					}
+
+					if (extraTask != null)
+					{
+						extraTask.execute(universe);
+					}
 				}
 			}
 			else

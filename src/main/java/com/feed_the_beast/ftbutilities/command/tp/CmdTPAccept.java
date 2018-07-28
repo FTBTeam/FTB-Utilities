@@ -63,6 +63,6 @@ public class CmdTPAccept extends CmdBase
 		component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBUtilities.lang(other.player.getPlayer(), "ftbutilities.lang.tpa.from_to", otherName, selfName)));
 		other.player.getPlayer().sendMessage(component);
 
-		FTBUtilitiesPlayerData.Timer.TPA.teleport(other.player.getPlayer(), TeleporterDimPos.of(selfPlayer), null);
+		FTBUtilitiesPlayerData.Timer.TPA.teleport(other.player.getPlayer(), TeleporterDimPos::of, null);
 	}
 }

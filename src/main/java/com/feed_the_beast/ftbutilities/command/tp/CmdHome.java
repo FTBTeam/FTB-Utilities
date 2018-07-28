@@ -122,6 +122,6 @@ public class CmdHome extends CmdBase
 		}
 
 		data.checkTeleportCooldown(sender, FTBUtilitiesPlayerData.Timer.HOME);
-		FTBUtilitiesPlayerData.Timer.HOME.teleport(player, pos, universe -> Notification.of(FTBUtilitiesNotifications.TELEPORT, FTBUtilities.lang(sender, "ftbutilities.lang.warps.tp", args[0])).send(server, player));
+		FTBUtilitiesPlayerData.Timer.HOME.teleport(player, playerMP -> pos.teleporter(), universe -> Notification.of(FTBUtilitiesNotifications.TELEPORT, FTBUtilities.lang(sender, "ftbutilities.lang.warps.tp", args[0])).send(server, player));
 	}
 }

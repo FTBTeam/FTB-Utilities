@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbutilities.command.tp.CmdBack;
 import com.feed_the_beast.ftbutilities.command.tp.CmdDelHome;
 import com.feed_the_beast.ftbutilities.command.tp.CmdDelWarp;
 import com.feed_the_beast.ftbutilities.command.tp.CmdHome;
+import com.feed_the_beast.ftbutilities.command.tp.CmdRTP;
 import com.feed_the_beast.ftbutilities.command.tp.CmdSetHome;
 import com.feed_the_beast.ftbutilities.command.tp.CmdSetWarp;
 import com.feed_the_beast.ftbutilities.command.tp.CmdSpawn;
@@ -141,6 +142,11 @@ public class FTBUtilitiesCommands
 		{
 			event.registerServerCommand(new CmdMute());
 			event.registerServerCommand(new CmdUnmute());
+		}
+
+		if (FTBUtilitiesConfig.commands.rtp)
+		{
+			event.registerServerCommand(new CmdRTP());
 		}
 	}
 }

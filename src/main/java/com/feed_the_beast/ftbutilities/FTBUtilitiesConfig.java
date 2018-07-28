@@ -212,6 +212,7 @@ public class FTBUtilitiesConfig
 		public boolean tpa = true;
 		public boolean nick = true;
 		public boolean mute = true;
+		public boolean rtp = true;
 	}
 
 	public static class Login
@@ -376,6 +377,12 @@ public class FTBUtilitiesConfig
 
 		@Config.Comment("Unloads erroring chunks if dimension isn't loaded or some other problem occurs.")
 		public boolean unload_erroring_chunks = false;
+
+		@Config.Comment("Min /rtp distance")
+		public double rtp_min_distance = 1000D;
+
+		@Config.Comment("Max /rtp distance")
+		public double rtp_max_distance = 100000D;
 
 		public boolean allowDimension(int dimension)
 		{

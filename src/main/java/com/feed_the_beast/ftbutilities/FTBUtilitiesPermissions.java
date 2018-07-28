@@ -96,9 +96,13 @@ public class FTBUtilitiesPermissions
 	public static final Node TPA_COOLDOWN = Node.get("ftbutilities.tpa.cooldown");
 	public static final Node SPAWN_COOLDOWN = Node.get("ftbutilities.spawn.cooldown");
 	public static final Node BACK_COOLDOWN = Node.get("ftbutilities.back.cooldown");
+	public static final Node RTP_COOLDOWN = Node.get("ftbutilities.rtp.cooldown");
+
 	public static final Node TPA_WARMUP = Node.get("ftbutilities.tpa.warmup");
 	public static final Node SPAWN_WARMUP = Node.get("ftbutilities.spawn.warmup");
 	public static final Node BACK_WARMUP = Node.get("ftbutilities.back.warmup");
+	public static final Node RTP_WARMUP = Node.get("ftbutilities.rtp.warmup");
+
 	public static final String TPA_CROSS_DIM = "ftbutilities.tpa.cross_dim";
 	public static final Node AFK_TIMER = Node.get("ftbutilities.afk.timer");
 	public static final String HEAL_OTHER = "ftbutilities.other_player.heal";
@@ -191,11 +195,13 @@ public class FTBUtilitiesPermissions
 		event.register(TPA_COOLDOWN, new ConfigTimer(Ticks.MINUTE.x(3)), new ConfigTimer(Ticks.NO_TICKS));
 		event.register(SPAWN_COOLDOWN, new ConfigTimer(Ticks.MINUTE), new ConfigTimer(Ticks.NO_TICKS));
 		event.register(BACK_COOLDOWN, new ConfigTimer(Ticks.MINUTE.x(3)), new ConfigTimer(Ticks.NO_TICKS));
+		event.register(RTP_COOLDOWN, new ConfigTimer(Ticks.MINUTE.x(10)), new ConfigTimer(Ticks.NO_TICKS));
 		event.register(HOMES_WARMUP, new ConfigTimer(Ticks.SECOND.x(5), Ticks.MINUTE), new ConfigTimer(Ticks.NO_TICKS));
 		event.register(WARPS_WARMUP, new ConfigTimer(Ticks.SECOND.x(5), Ticks.MINUTE), new ConfigTimer(Ticks.NO_TICKS));
 		event.register(TPA_WARMUP, new ConfigTimer(Ticks.SECOND.x(5), Ticks.MINUTE), new ConfigTimer(Ticks.NO_TICKS));
 		event.register(SPAWN_WARMUP, new ConfigTimer(Ticks.SECOND.x(5), Ticks.MINUTE), new ConfigTimer(Ticks.NO_TICKS));
 		event.register(BACK_WARMUP, new ConfigTimer(Ticks.SECOND.x(5), Ticks.MINUTE), new ConfigTimer(Ticks.NO_TICKS));
+		event.register(RTP_WARMUP, new ConfigTimer(Ticks.SECOND.x(5), Ticks.MINUTE), new ConfigTimer(Ticks.NO_TICKS));
 		event.register(CLAIMS_MAX_CHUNKS, new ConfigInt(100, 0, 30000), new ConfigInt(1000));
 		event.register(CHUNKLOADER_MAX_CHUNKS, new ConfigInt(50, 0, 30000), new ConfigInt(64));
 		//event.register(CHUNKLOADER_OFFLINE_TIMER, new ConfigDouble(-1D).setMin(-1D), new ConfigDouble(-1D));

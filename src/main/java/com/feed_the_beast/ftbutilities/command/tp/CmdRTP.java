@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbutilities.command.tp;
 
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
-import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
+import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.block.material.Material;
@@ -11,7 +11,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 
 public class CmdRTP extends CmdBase
@@ -27,30 +29,37 @@ public class CmdRTP extends CmdBase
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(CommandUtils.getForgePlayer(player));
 		data.checkTeleportCooldown(sender, FTBUtilitiesPlayerData.Timer.RTP);
+		FTBUtilitiesPlayerData.Timer.RTP.teleport(player, playerMP -> findBlockPos(playerMP.server.getWorld(FTBUtilitiesConfig.world.spawn_dimension)), null);
+	}
 
-		FTBUtilitiesPlayerData.Timer.RTP.teleport(player, playerMP ->
+	private TeleporterDimPos findBlockPos(World world)
+	{
+		double dist = FTBUtilitiesConfig.world.rtp_min_distance + world.rand.nextDouble() * (FTBUtilitiesConfig.world.rtp_max_distance - FTBUtilitiesConfig.world.rtp_min_distance);
+		double angle = world.rand.nextDouble() * Math.PI * 2D;
+
+		int x = MathHelper.floor(Math.cos(angle) * dist);
+		int y = 256;
+		int z = MathHelper.floor(Math.sin(angle) * dist);
+
+		//TODO: Find a better way to check for biome without loading the chunk
+		Biome biome = world.getBiome(new BlockPos(x, y, z));
+		if (biome.getRegistryName().getPath().contains("ocean"))
 		{
-			World w = playerMP.server.getWorld(FTBUtilitiesConfig.world.spawn_dimension);
+			return findBlockPos(world);
+		}
 
-			double dist = FTBUtilitiesConfig.world.rtp_min_distance + w.rand.nextDouble() * (FTBUtilitiesConfig.world.rtp_max_distance - FTBUtilitiesConfig.world.rtp_min_distance);
-			double angle = w.rand.nextDouble() * Math.PI * 2D;
+		Chunk chunk = world.getChunk(x >> 4, z >> 4);
 
-			BlockPos spawnpoint = new BlockPos(Math.cos(angle) * dist, 256, Math.sin(angle) * dist);
+		while (y > 0)
+		{
+			y--;
 
-			Chunk chunk = w.getChunk(spawnpoint);
-
-			while (spawnpoint.getY() > 0)
+			if (chunk.getBlockState(x, y, z).getMaterial() != Material.AIR)
 			{
-				spawnpoint = spawnpoint.down();
-
-				if (chunk.getBlockState(spawnpoint).getMaterial() != Material.AIR)
-				{
-					spawnpoint.up();
-					break;
-				}
+				return TeleporterDimPos.of(x + 0.5D, y + 2.5D, z + 0.5D, world.provider.getDimension());
 			}
+		}
 
-			return new BlockDimPos(spawnpoint, FTBUtilitiesConfig.world.spawn_dimension).teleporter();
-		}, null);
+		return findBlockPos(world);
 	}
 }

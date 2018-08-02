@@ -66,7 +66,7 @@ public class CmdTPA extends CmdBase
 		accept.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept " + self.player.getName()));
 		accept.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("/tpaccept " + self.player.getName())));
 
-		other.player.getPlayer().sendMessage(FTBUtilities.lang(other.player.getPlayer(), "ftbutilities.lang.tpa.request_received", otherName, accept));
+		other.player.getPlayer().sendMessage(FTBUtilities.lang(other.player.getPlayer(), "ftbutilities.lang.tpa.request_received", selfName, accept));
 
 		Universe.get().scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 30000L, universe -> {
 			if (other.tpaRequestsFrom.remove(self.player))

@@ -219,18 +219,18 @@ public class GuiEditNBT extends GuiBase
 				case Constants.NBT.TAG_BYTE:
 				case Constants.NBT.TAG_SHORT:
 				case Constants.NBT.TAG_INT:
-					new GuiEditConfigValue(key, new ConfigInt(((NBTPrimitive) nbt).getInt()), this);
+					new GuiEditConfigValue(key, new ConfigInt(((NBTPrimitive) nbt).getInt()), this).openGui();
 					break;
 				case Constants.NBT.TAG_LONG:
-					new GuiEditConfigValue(key, new ConfigString(Long.toString(((NBTPrimitive) nbt).getLong())), this);
+					new GuiEditConfigValue(key, new ConfigString(Long.toString(((NBTPrimitive) nbt).getLong())), this).openGui();
 					break;
 				case Constants.NBT.TAG_FLOAT:
 				case Constants.NBT.TAG_DOUBLE:
 				case Constants.NBT.TAG_ANY_NUMERIC:
-					new GuiEditConfigValue(key, new ConfigDouble(((NBTPrimitive) nbt).getDouble()), this);
+					new GuiEditConfigValue(key, new ConfigDouble(((NBTPrimitive) nbt).getDouble()), this).openGui();
 					break;
 				case Constants.NBT.TAG_STRING:
-					new GuiEditConfigValue(key, new ConfigString(((NBTTagString) nbt).getString()), this);
+					new GuiEditConfigValue(key, new ConfigString(((NBTTagString) nbt).getString()), this).openGui();
 					break;
 			}
 		}

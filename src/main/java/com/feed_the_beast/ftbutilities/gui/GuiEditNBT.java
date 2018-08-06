@@ -318,6 +318,19 @@ public class GuiEditNBT extends GuiBase
 			setIcon(collapsed ? iconClosed : iconOpen);
 		}
 
+		public void setCollapsedTree(boolean c)
+		{
+			setCollapsed(c);
+
+			for (ButtonNBT button : children.values())
+			{
+				if (button instanceof ButtonNBTCollection)
+				{
+					((ButtonNBTCollection) button).setCollapsedTree(c);
+				}
+			}
+		}
+
 		public abstract NBTBase getTag(String k);
 
 		public abstract void setTag(String k, @Nullable NBTBase base);
@@ -865,6 +878,8 @@ public class GuiEditNBT extends GuiBase
 
 		buttonNBTRoot = new ButtonNBTMap(panelNbt, null, "ROOT", nbt);
 		buttonNBTRoot.updateChildren(true);
+		buttonNBTRoot.setCollapsedTree(true);
+		buttonNBTRoot.setCollapsed(false);
 		selected = buttonNBTRoot;
 
 		scroll = new PanelScrollBar(this, panelNbt);

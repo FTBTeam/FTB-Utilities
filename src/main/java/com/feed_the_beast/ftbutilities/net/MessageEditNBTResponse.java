@@ -10,8 +10,10 @@ import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftbutilities.command.CmdEditNBT;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 
 public class MessageEditNBTResponse extends MessageToServer
@@ -105,6 +107,11 @@ public class MessageEditNBTResponse extends MessageToServer
 					}
 
 					break;
+				}
+				case "item":
+				{
+					ItemStack stack = new ItemStack(mainNbt);
+					player.setHeldItem(EnumHand.MAIN_HAND, stack.isEmpty() ? ItemStack.EMPTY : stack);
 				}
 			}
 		}

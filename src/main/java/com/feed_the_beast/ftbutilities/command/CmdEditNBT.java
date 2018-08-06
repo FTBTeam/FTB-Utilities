@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Collections;
@@ -38,6 +39,7 @@ public class CmdEditNBT extends CmdTreeBase
 		addSubcommand(new CmdTile());
 		addSubcommand(new CmdEntity());
 		addSubcommand(new CmdPlayer());
+		addSubcommand(new CmdItem());
 		addSubcommand(new CmdTreeHelp(this));
 	}
 
@@ -182,6 +184,21 @@ public class CmdEditNBT extends CmdTreeBase
 			NBTTagCompound nbt = p.getPlayerNBT();
 			nbt.removeTag("id");
 			return nbt;
+		}
+	}
+
+	private static class CmdItem extends CmdNBT
+	{
+		private CmdItem()
+		{
+			super("item");
+		}
+
+		@Override
+		public NBTTagCompound editNBT(EntityPlayerMP player, NBTTagCompound info, String[] args)
+		{
+			info.setString("type", "item");
+			return player.getHeldItem(EnumHand.MAIN_HAND).serializeNBT();
 		}
 	}
 }

@@ -6,93 +6,81 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
-import javax.annotation.Nullable;
-
 public class InvSeeInventory implements IInventory
 {
-	private static final int slotMapping[] = {39, 38, 37, 36, -1, 40, 41, 42, 43, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 0, 1, 2, 3, 4, 5, 6, 7, 8,};
-
 	private final EntityPlayerMP player;
 	private final IInventory invPlayer;
-	//private final IInventory baubles;
 
 	public InvSeeInventory(EntityPlayerMP ep)
 	{
 		player = ep;
 		invPlayer = ep.inventory;
-		//baubles = InvUtils.getBaubles(ep);
 	}
 
 	@Override
 	public int getSizeInventory()
 	{
-		return 9 * 5;
+		return 45;
 	}
 
 	@Override
 	public boolean isEmpty()
 	{
-		return invPlayer.isEmpty();// && (baubles == null || baubles.isEmpty());
-	}
-
-	@Nullable
-	private IInventory getInv(int slot)
-	{
-		/*
-		if (slot < 0)
-		{
-			return null;
-		}
-		else if (slot >= 40)
-		{
-			return baubles;
-		}*/
-		if (slot < 0 || slot >= 40)
-		{
-			return null;
-		}
-		return invPlayer;
+		return invPlayer.isEmpty();
 	}
 
 	public int getSlot(int slot)
 	{
-		return (slot == -1) ? -1 : (slot % 40);
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int i)
-	{
-		int j = slotMapping[i];
-		IInventory inv = getInv(j);
-		return (inv == null) ? ItemStack.EMPTY : inv.getStackInSlot(getSlot(j));
-	}
-
-	@Override
-	public ItemStack decrStackSize(int i, int k)
-	{
-		int j = slotMapping[i];
-		IInventory inv = getInv(j);
-		return (inv == null) ? ItemStack.EMPTY : inv.decrStackSize(getSlot(j), k);
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int i)
-	{
-		int j = slotMapping[i];
-		IInventory inv = getInv(j);
-		return (inv == null) ? ItemStack.EMPTY : inv.removeStackFromSlot(getSlot(j));
-	}
-
-	@Override
-	public void setInventorySlotContents(int i, ItemStack is)
-	{
-		int j = slotMapping[i];
-		IInventory inv = getInv(j);
-
-		if (inv != null)
+		if (slot == 8)
 		{
-			inv.setInventorySlotContents(getSlot(j), is);
-			inv.markDirty();
+			return 40;
+		}
+		else if (slot >= 0 && slot <= 3)
+		{
+			return 39 - slot;
+		}
+		else if (slot >= 9 && slot <= 35)
+		{
+			return slot;
+		}
+		else if (slot >= 36 && slot <= 44)
+		{
+			return slot - 36;
+		}
+
+		return -1;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int index)
+	{
+		int slot = getSlot(index);
+		return slot == -1 ? ItemStack.EMPTY : invPlayer.getStackInSlot(slot);
+	}
+
+	@Override
+	public ItemStack decrStackSize(int index, int count)
+	{
+		int slot = getSlot(index);
+		return slot == -1 ? ItemStack.EMPTY : invPlayer.decrStackSize(slot, count);
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index)
+	{
+		int slot = getSlot(index);
+		return slot == -1 ? ItemStack.EMPTY : invPlayer.removeStackFromSlot(slot);
+	}
+
+	@Override
+	public void setInventorySlotContents(int index, ItemStack is)
+	{
+		int slot = getSlot(index);
+
+		if (slot != -1)
+		{
+			invPlayer.setInventorySlotContents(slot, is);
+			markDirty();
 		}
 	}
 
@@ -105,7 +93,7 @@ public class InvSeeInventory implements IInventory
 	@Override
 	public boolean hasCustomName()
 	{
-		return player.hasCustomName();
+		return true;
 	}
 
 	@Override
@@ -117,7 +105,7 @@ public class InvSeeInventory implements IInventory
 	@Override
 	public int getInventoryStackLimit()
 	{
-		return 64;
+		return invPlayer.getInventoryStackLimit();
 	}
 
 	@Override
@@ -125,10 +113,6 @@ public class InvSeeInventory implements IInventory
 	{
 		invPlayer.markDirty();
 		player.openContainer.detectAndSendChanges();
-		/*if (baubles != null)
-		{
-			baubles.markDirty();
-		}*/
 	}
 
 	@Override
@@ -138,21 +122,20 @@ public class InvSeeInventory implements IInventory
 	}
 
 	@Override
-	public void openInventory(EntityPlayer ep)
+	public void openInventory(EntityPlayer player)
 	{
 	}
 
 	@Override
-	public void closeInventory(EntityPlayer ep)
+	public void closeInventory(EntityPlayer player)
 	{
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int i, ItemStack is)
+	public boolean isItemValidForSlot(int index, ItemStack stack)
 	{
-		int j = slotMapping[i];
-		IInventory inv = getInv(j);
-		return inv != null && inv.isItemValidForSlot(getSlot(j), is);
+		int slot = getSlot(index);
+		return slot != -1 && invPlayer.isItemValidForSlot(slot, stack);
 	}
 
 	@Override
@@ -176,10 +159,5 @@ public class InvSeeInventory implements IInventory
 	public void clear()
 	{
 		invPlayer.clear();
-
-		/*if (baubles != null)
-		{
-			baubles.clear();
-		}*/
 	}
 }

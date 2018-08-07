@@ -48,6 +48,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 /**
  * @author LatvianModder
@@ -658,7 +659,7 @@ public class GuiEditNBT extends GuiBase
 		{
 			if (selected instanceof ButtonNBTMap)
 			{
-				new GuiEditConfigValue("value", new ConfigString("_unnamed"), (value, set) ->
+				new GuiEditConfigValue("value", new ConfigString("", Pattern.compile("^..*$")), (value, set) ->
 				{
 					if (set && !value.getString().isEmpty())
 					{
@@ -668,7 +669,7 @@ public class GuiEditNBT extends GuiBase
 					}
 
 					GuiEditNBT.this.openGui();
-				});
+				}).openGui();
 			}
 			else if (selected instanceof ButtonNBTCollection)
 			{
@@ -676,7 +677,14 @@ public class GuiEditNBT extends GuiBase
 				selected.updateChildren(false);
 				panelNbt.refreshWidgets();
 			}
-		});
+		})
+		{
+			@Override
+			public Icon getButtonBackground()
+			{
+				return IconWithOutline.BUTTON_ROUND_GRAY;
+			}
+		};
 	}
 
 	private final NBTTagCompound info;

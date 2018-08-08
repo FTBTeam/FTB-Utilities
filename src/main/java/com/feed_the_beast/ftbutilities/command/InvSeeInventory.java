@@ -6,15 +6,17 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
+import javax.annotation.Nullable;
+
 public class InvSeeInventory implements IInventory
 {
+	private final IInventory inventory;
 	private final EntityPlayerMP player;
-	private final IInventory invPlayer;
 
-	public InvSeeInventory(EntityPlayerMP ep)
+	public InvSeeInventory(IInventory inv, @Nullable EntityPlayerMP ep)
 	{
+		inventory = inv;
 		player = ep;
-		invPlayer = ep.inventory;
 	}
 
 	@Override
@@ -26,7 +28,7 @@ public class InvSeeInventory implements IInventory
 	@Override
 	public boolean isEmpty()
 	{
-		return invPlayer.isEmpty();
+		return inventory.isEmpty();
 	}
 
 	public int getSlot(int slot)
@@ -55,21 +57,21 @@ public class InvSeeInventory implements IInventory
 	public ItemStack getStackInSlot(int index)
 	{
 		int slot = getSlot(index);
-		return slot == -1 ? ItemStack.EMPTY : invPlayer.getStackInSlot(slot);
+		return slot == -1 ? ItemStack.EMPTY : inventory.getStackInSlot(slot);
 	}
 
 	@Override
 	public ItemStack decrStackSize(int index, int count)
 	{
 		int slot = getSlot(index);
-		return slot == -1 ? ItemStack.EMPTY : invPlayer.decrStackSize(slot, count);
+		return slot == -1 ? ItemStack.EMPTY : inventory.decrStackSize(slot, count);
 	}
 
 	@Override
 	public ItemStack removeStackFromSlot(int index)
 	{
 		int slot = getSlot(index);
-		return slot == -1 ? ItemStack.EMPTY : invPlayer.removeStackFromSlot(slot);
+		return slot == -1 ? ItemStack.EMPTY : inventory.removeStackFromSlot(slot);
 	}
 
 	@Override
@@ -79,7 +81,7 @@ public class InvSeeInventory implements IInventory
 
 		if (slot != -1)
 		{
-			invPlayer.setInventorySlotContents(slot, is);
+			inventory.setInventorySlotContents(slot, is);
 			markDirty();
 		}
 	}
@@ -87,7 +89,7 @@ public class InvSeeInventory implements IInventory
 	@Override
 	public String getName()
 	{
-		return player.getName();
+		return inventory.getName();
 	}
 
 	@Override
@@ -99,20 +101,29 @@ public class InvSeeInventory implements IInventory
 	@Override
 	public ITextComponent getDisplayName()
 	{
-		return player.getDisplayName();
+		if (player != null)
+		{
+			return player.getDisplayName();
+		}
+
+		return inventory.getDisplayName();
 	}
 
 	@Override
 	public int getInventoryStackLimit()
 	{
-		return invPlayer.getInventoryStackLimit();
+		return inventory.getInventoryStackLimit();
 	}
 
 	@Override
 	public void markDirty()
 	{
-		invPlayer.markDirty();
-		player.openContainer.detectAndSendChanges();
+		inventory.markDirty();
+
+		if (player != null)
+		{
+			player.openContainer.detectAndSendChanges();
+		}
 	}
 
 	@Override
@@ -135,7 +146,7 @@ public class InvSeeInventory implements IInventory
 	public boolean isItemValidForSlot(int index, ItemStack stack)
 	{
 		int slot = getSlot(index);
-		return slot != -1 && invPlayer.isItemValidForSlot(slot, stack);
+		return slot != -1 && inventory.isItemValidForSlot(slot, stack);
 	}
 
 	@Override
@@ -158,6 +169,6 @@ public class InvSeeInventory implements IInventory
 	@Override
 	public void clear()
 	{
-		invPlayer.clear();
+		inventory.clear();
 	}
 }

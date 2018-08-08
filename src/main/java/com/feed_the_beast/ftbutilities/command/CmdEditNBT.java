@@ -7,18 +7,27 @@ import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBT;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBTRequest;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.Loader;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,6 +50,11 @@ public class CmdEditNBT extends CmdTreeBase
 		addSubcommand(new CmdPlayer());
 		addSubcommand(new CmdItem());
 		addSubcommand(new CmdTreeHelp(this));
+	}
+
+	private static void addInfo(NBTTagList list, ITextComponent key, ITextComponent value)
+	{
+		list.appendTag(new NBTTagString(ITextComponent.Serializer.componentToJson(StringUtils.color(key, TextFormatting.BLUE).appendText(": ").appendSibling(StringUtils.color(value, TextFormatting.GOLD)))));
 	}
 
 	@Override
@@ -123,6 +137,25 @@ public class CmdEditNBT extends CmdTreeBase
 				nbt.removeTag("z");
 				info.setString("id", nbt.getString("id"));
 				nbt.removeTag("id");
+
+				NBTTagList list = new NBTTagList();
+				addInfo(list, new TextComponentString("Class"), new TextComponentString(tile.getClass().getName()));
+				ResourceLocation key = TileEntity.getKey(tile.getClass());
+				addInfo(list, new TextComponentString("ID"), new TextComponentString(key == null ? "null" : key.toString()));
+				addInfo(list, new TextComponentString("Block"), new TextComponentString(tile.getBlockType().getRegistryName().toString()));
+				addInfo(list, new TextComponentString("Block Class"), new TextComponentString(tile.getBlockType().getClass().getName()));
+				addInfo(list, new TextComponentString("Position"), new TextComponentString("[" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "]"));
+				addInfo(list, new TextComponentString("Mod"), new TextComponentString(key == null ? "null" : Loader.instance().getIndexedModList().get(key.getNamespace()).getName()));
+				info.setTag("text", list);
+
+				ITextComponent title = tile.getDisplayName();
+
+				if (title == null)
+				{
+					title = new TextComponentString(tile.getClass().getSimpleName());
+				}
+
+				info.setString("title", ITextComponent.Serializer.componentToJson(title));
 			}
 
 			return nbt;
@@ -149,6 +182,14 @@ public class CmdEditNBT extends CmdTreeBase
 				info.setString("type", "entity");
 				info.setInteger("id", id);
 				entity.writeToNBT(nbt);
+
+				NBTTagList list = new NBTTagList();
+				addInfo(list, new TextComponentString("Class"), new TextComponentString(entity.getClass().getName()));
+				ResourceLocation key = EntityList.getKey(entity.getClass());
+				addInfo(list, new TextComponentString("ID"), new TextComponentString(key == null ? "null" : key.toString()));
+				addInfo(list, new TextComponentString("Mod"), new TextComponentString(key == null ? "null" : Loader.instance().getIndexedModList().get(key.getNamespace()).getName()));
+				info.setTag("text", list);
+				info.setString("title", ITextComponent.Serializer.componentToJson(entity.getDisplayName()));
 			}
 
 			return nbt;
@@ -183,6 +224,14 @@ public class CmdEditNBT extends CmdTreeBase
 			info.setUniqueId("id", p.getId());
 			NBTTagCompound nbt = p.getPlayerNBT();
 			nbt.removeTag("id");
+
+			NBTTagList list = new NBTTagList();
+			addInfo(list, new TextComponentString("Name"), new TextComponentString(player.getName()));
+			addInfo(list, new TextComponentString("Display Name"), player.getDisplayName());
+			addInfo(list, new TextComponentString("UUID"), new TextComponentString(player.getUniqueID().toString()));
+			addInfo(list, new TextComponentString("FTBLib Team"), new TextComponentString(p.team.getName()));
+			info.setTag("text", list);
+			info.setString("title", ITextComponent.Serializer.componentToJson(player.getDisplayName()));
 			return nbt;
 		}
 	}

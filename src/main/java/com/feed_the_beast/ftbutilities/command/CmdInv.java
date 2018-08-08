@@ -20,6 +20,8 @@ import net.minecraft.server.MinecraftServer;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.Collections;
+import java.util.List;
 
 public class CmdInv extends CmdTreeBase
 {
@@ -28,6 +30,12 @@ public class CmdInv extends CmdTreeBase
 		public CmdView()
 		{
 			super("view", Level.OP);
+		}
+
+		@Override
+		public List<String> getAliases()
+		{
+			return Collections.singletonList("edit");
 		}
 
 		@Override
@@ -42,7 +50,7 @@ public class CmdInv extends CmdTreeBase
 			checkArgs(sender, args, 1);
 			EntityPlayerMP self = getCommandSenderAsPlayer(sender);
 			EntityPlayerMP other = CommandUtils.getForgePlayer(sender, args[0]).getCommandPlayer(sender);
-			self.displayGUIChest(new InvSeeInventory(other));
+			self.displayGUIChest(new InvSeeInventory(other.inventory, other));
 		}
 	}
 

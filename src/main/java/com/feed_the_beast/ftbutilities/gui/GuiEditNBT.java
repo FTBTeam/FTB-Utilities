@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbutilities.gui;
 
+import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.config.ConfigDouble;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
@@ -27,6 +28,7 @@ import com.feed_the_beast.ftbutilities.net.MessageEditNBTResponse;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagByte;
@@ -40,6 +42,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -113,12 +117,6 @@ public class GuiEditNBT extends GuiBase
 		}
 
 		@Override
-		public Icon getButtonBackground()
-		{
-			return IconWithOutline.BUTTON_ROUND_GRAY;
-		}
-
-		@Override
 		public void draw()
 		{
 			int ax = getAX();
@@ -129,6 +127,7 @@ public class GuiEditNBT extends GuiBase
 				Color4I.WHITE.withAlpha(33).draw(ax, ay, width, height);
 			}
 
+			IconWithOutline.BUTTON_ROUND_GRAY.draw(ax + 1, ay + 1, 8, 8);
 			getIcon().draw(ax + 1, ay + 1, 8, 8);
 			drawString(getTitle(), ax + 11, ay + 1);
 		}
@@ -390,11 +389,48 @@ public class GuiEditNBT extends GuiBase
 		@Override
 		public void addMouseOverText(List<String> list)
 		{
+			boolean space = false;
+
+			if (this == buttonNBTRoot)
+			{
+				NBTTagList infoList = info.getTagList("text", Constants.NBT.TAG_STRING);
+
+				if (infoList.tagCount() > 0)
+				{
+					space = true;
+					list.add(I18n.format("gui.info") + ":");
+
+					for (int i = 0; i < infoList.tagCount(); i++)
+					{
+						ITextComponent component = ITextComponent.Serializer.jsonToComponent(infoList.getStringTagAt(i));
+
+						if (component != null)
+						{
+							list.add(component.getFormattedText());
+						}
+					}
+				}
+			}
+
 			if (!hoverIcon.isEmpty())
 			{
 				if (hoverIcon instanceof ItemIcon)
 				{
-					list.add(((ItemIcon) hoverIcon).getStack().getDisplayName());
+					if (space)
+					{
+						list.add("");
+					}
+
+					List<String> tooltip = ((ItemIcon) hoverIcon).getStack().getTooltip(ClientUtils.MC.player, ITooltipFlag.TooltipFlags.NORMAL);
+					list.add(tooltip.get(0));
+
+					if (tooltip.size() > 1)
+					{
+						for (int i = 1; i < tooltip.size(); i++)
+						{
+							list.add(TextFormatting.GRAY + tooltip.get(i));
+						}
+					}
 				}
 			}
 		}
@@ -884,7 +920,7 @@ public class GuiEditNBT extends GuiBase
 			}
 		};
 
-		buttonNBTRoot = new ButtonNBTMap(panelNbt, null, "ROOT", nbt);
+		buttonNBTRoot = new ButtonNBTMap(panelNbt, null, info.hasKey("title") ? ITextComponent.Serializer.jsonToComponent(info.getString("title")).getFormattedText() : "ROOT", nbt);
 		buttonNBTRoot.updateChildren(true);
 		buttonNBTRoot.setCollapsedTree(true);
 		buttonNBTRoot.setCollapsed(false);

@@ -22,12 +22,6 @@ public class MessageLeaderboardList extends MessageToServer
 	}
 
 	@Override
-	public boolean hasData()
-	{
-		return false;
-	}
-
-	@Override
 	public void onMessage(EntityPlayerMP player)
 	{
 		Map<ResourceLocation, ITextComponent> map = new LinkedHashMap<>();

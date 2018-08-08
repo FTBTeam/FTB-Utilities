@@ -24,12 +24,6 @@ public class MessageEditNBTRequest extends MessageToClient
 	}
 
 	@Override
-	public boolean hasData()
-	{
-		return false;
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public void onMessage()
 	{

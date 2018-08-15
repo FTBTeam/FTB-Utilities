@@ -6,7 +6,7 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.feed_the_beast.ftbutilities.command.CmdEditNBT;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -86,7 +86,7 @@ public class MessageEditNBTResponse extends MessageToServer
 							mainNbt.setString("id", info.getString("id"));
 							tile.readFromNBT(mainNbt);
 							tile.markDirty();
-							CommonUtils.notifyBlockUpdate(tile.getWorld(), pos, null);
+							BlockUtils.notifyBlockUpdate(tile.getWorld(), pos, null);
 						}
 					}
 

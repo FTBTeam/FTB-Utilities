@@ -6,7 +6,7 @@ import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.command.CmdTreeBase;
 import com.feed_the_beast.ftblib.lib.command.CmdTreeHelp;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.Folders;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
@@ -72,7 +72,7 @@ public class CmdInv extends CmdTreeBase
 		{
 			checkArgs(sender, args, 2);
 			EntityPlayerMP player = CommandUtils.getForgePlayer(sender, args[0]).getCommandPlayer(sender);
-			File file = new File(CommonUtils.folderLocal, "ftbutilities/playerinvs/" + StringUtils.fromUUID(player.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+			File file = new File(Folders.getLocal(), "ftbutilities/playerinvs/" + StringUtils.fromUUID(player.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
 			try
 			{
@@ -136,7 +136,7 @@ public class CmdInv extends CmdTreeBase
 		{
 			checkArgs(sender, args, 2);
 			EntityPlayerMP player = CommandUtils.getForgePlayer(sender, args[0]).getCommandPlayer(sender);
-			File file = new File(CommonUtils.folderLocal, "ftbutilities/playerinvs/" + StringUtils.fromUUID(player.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+			File file = new File(Folders.getLocal(), "ftbutilities/playerinvs/" + StringUtils.fromUUID(player.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
 			try
 			{

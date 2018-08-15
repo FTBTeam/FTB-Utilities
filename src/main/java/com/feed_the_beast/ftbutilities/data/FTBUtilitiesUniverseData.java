@@ -10,8 +10,8 @@ import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
+import com.feed_the_beast.ftblib.lib.util.Folders;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.TimeType;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
@@ -238,7 +238,7 @@ public class FTBUtilitiesUniverseData
 
 			ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
 			{
-				try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(FileUtils.newFile(new File(CommonUtils.folderMinecraft, "logs/world.log")), true))))
+				try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(FileUtils.newFile(new File(Folders.getMinecraft(), "logs/world.log")), true))))
 				{
 					for (String s : worldLogCopy)
 					{
@@ -335,11 +335,11 @@ public class FTBUtilitiesUniverseData
 
 		try
 		{
-			File file = new File(CommonUtils.folderLocal, "ftbutilities/server_badges.json");
+			File file = new File(Folders.getLocal(), "ftbutilities/server_badges.json");
 
 			if (!file.exists())
 			{
-				file = new File(CommonUtils.folderLocal, "ftbutilities/server_badges.txt");
+				file = new File(Folders.getLocal(), "ftbutilities/server_badges.txt");
 
 				if (!file.exists())
 				{

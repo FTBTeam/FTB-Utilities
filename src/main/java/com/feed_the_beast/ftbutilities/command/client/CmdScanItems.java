@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbutilities.command.client;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.item.ItemEntry;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
+import com.feed_the_beast.ftblib.lib.util.Folders;
 import com.feed_the_beast.ftbutilities.client.FTBUtilitiesClientConfig;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -208,7 +208,7 @@ public class CmdScanItems extends CmdBase
 					}
 				}
 
-				FileUtils.saveSafe(new File(CommonUtils.folderLocal, "client/scanneditems." + (md ? "md" : "txt")), list);
+				FileUtils.saveSafe(new File(Folders.getLocal(), "client/scanneditems." + (md ? "md" : "txt")), list);
 				ClientUtils.MC.player.sendStatusMessage(new TextComponentString("Duplicate items have been exported in ./local/client/scanneditems." + (md ? "md" : "txt") + "!"), false);
 			}
 		}.start();

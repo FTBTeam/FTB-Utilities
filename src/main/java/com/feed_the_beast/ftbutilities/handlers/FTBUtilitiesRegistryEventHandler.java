@@ -11,7 +11,7 @@ import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.Folders;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
@@ -74,7 +74,7 @@ public class FTBUtilitiesRegistryEventHandler
 			@Override
 			public void onAction(ForgePlayer player, NBTTagCompound data)
 			{
-				new MessageViewCrashList(new File(CommonUtils.folderMinecraft, "crash-reports")).sendTo(player.getPlayer());
+				new MessageViewCrashList(new File(Folders.getMinecraft(), "crash-reports")).sendTo(player.getPlayer());
 			}
 		});
 

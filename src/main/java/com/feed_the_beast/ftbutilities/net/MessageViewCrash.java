@@ -6,7 +6,7 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.Folders;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -54,7 +54,7 @@ public class MessageViewCrash extends MessageToServer
 		{
 			try
 			{
-				File file = new File(CommonUtils.folderMinecraft, "crash-reports/crash-" + id + ".txt");
+				File file = new File(Folders.getMinecraft(), "crash-reports/crash-" + id + ".txt");
 
 				if (file.exists())
 				{

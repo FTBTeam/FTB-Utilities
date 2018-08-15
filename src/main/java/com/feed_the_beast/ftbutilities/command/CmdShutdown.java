@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbutilities.command;
 
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
+import com.feed_the_beast.ftblib.lib.util.Folders;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -18,7 +18,7 @@ public class CmdShutdown extends CmdBase
 
 	public static void shutdown(MinecraftServer server)
 	{
-		FileUtils.newFile(new File(CommonUtils.folderMinecraft, "autostart.stamp"));
+		FileUtils.newFile(new File(Folders.getMinecraft(), "autostart.stamp"));
 		server.initiateShutdown();
 	}
 

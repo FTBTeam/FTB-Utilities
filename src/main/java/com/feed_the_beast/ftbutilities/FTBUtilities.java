@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbutilities;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.ATHelper;
-import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
@@ -37,14 +36,13 @@ import java.util.List;
 		name = FTBUtilities.MOD_NAME,
 		version = FTBUtilities.VERSION,
 		acceptableRemoteVersions = "*",
-		acceptedMinecraftVersions = "[1.12,)",
-		dependencies = "required-after:" + FTBLib.MOD_ID + ";after:" + OtherMods.JOURNEYMAP + ";after:" + OtherMods.CHISELS_AND_BITS
+		dependencies = FTBLib.THIS_DEP
 )
 public class FTBUtilities
 {
 	public static final String MOD_ID = "ftbutilities";
 	public static final String MOD_NAME = "FTB Utilities";
-	public static final String VERSION = "@VERSION@";
+	public static final String VERSION = "0.0.0.ftbutilities";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
 	@Mod.Instance(MOD_ID)

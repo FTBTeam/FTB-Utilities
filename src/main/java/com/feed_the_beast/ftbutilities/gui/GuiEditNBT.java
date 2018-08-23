@@ -777,7 +777,7 @@ public class GuiEditNBT extends GuiBase
 							}
 
 							getGui().openGui();
-						});
+						}).openGui();
 					}
 				}));
 

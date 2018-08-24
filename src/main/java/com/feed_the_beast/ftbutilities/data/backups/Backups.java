@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbutilities.data.backups;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
-import com.feed_the_beast.ftblib.lib.util.Folders;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
@@ -54,7 +53,7 @@ public enum Backups
 
 	public void init()
 	{
-		backupsFolder = FTBUtilitiesConfig.backups.folder.isEmpty() ? new File(Folders.getMinecraft(), "/backups/") : new File(FTBUtilitiesConfig.backups.folder);
+		backupsFolder = FTBUtilitiesConfig.backups.folder.isEmpty() ? new File(Universe.get().server.getDataDirectory(), "backups") : new File(FTBUtilitiesConfig.backups.folder);
 		doingBackup = 0;
 		backups.clear();
 
@@ -62,10 +61,10 @@ public enum Backups
 
 		if (oldFile.exists())
 		{
-			oldFile.renameTo(new File(Folders.getLocal(), "ftbutilities/backups.json"));
+			oldFile.renameTo(new File(Universe.get().server.getDataDirectory(), "local/ftbutilities/backups.json"));
 		}
 
-		JsonElement element = DataReader.get(new File(Folders.getLocal(), "ftbutilities/backups.json")).safeJson();
+		JsonElement element = DataReader.get(new File(Universe.get().server.getDataDirectory(), "local/ftbutilities/backups.json")).safeJson();
 
 		if (element.isJsonArray())
 		{
@@ -221,7 +220,7 @@ public enum Backups
 		}
 
 		Calendar time = Calendar.getInstance();
-		File dstFile = null;
+		File dstFile;
 		boolean success = false;
 		StringBuilder out = new StringBuilder();
 
@@ -271,7 +270,7 @@ public enum Backups
 			for (File file : FileUtils.listTree(src))
 			{
 				String filePath = file.getAbsolutePath();
-				fileMap.put(file, src.getName() + File.separator + filePath.substring(src.getAbsolutePath().length() + 1, filePath.length()));
+				fileMap.put(file, src.getName() + File.separator + filePath.substring(src.getAbsolutePath().length() + 1));
 			}
 
 			for (Map.Entry<File, String> entry : fileMap.entrySet())
@@ -417,7 +416,7 @@ public enum Backups
 			array.add(backup1.toJsonObject());
 		}
 
-		JsonUtils.toJson(new File(Folders.getLocal(), "ftbutilities/backups.json"), array);
+		JsonUtils.toJson(new File(server.getDataDirectory(), "local/ftbutilities/backups.json"), array);
 
 		if (error == null && FTBUtilitiesConfig.backups.silent)
 		{

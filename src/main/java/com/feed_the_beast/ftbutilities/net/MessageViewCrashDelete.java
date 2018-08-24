@@ -5,7 +5,6 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftblib.lib.util.Folders;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -51,7 +50,7 @@ public class MessageViewCrashDelete extends MessageToServer
 	{
 		if (PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CRASH_REPORTS_VIEW))
 		{
-			File folder = new File(Folders.getMinecraft(), "crash-reports");
+			File folder = new File(player.server.getDataDirectory(), "crash-reports");
 
 			if (PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CRASH_REPORTS_DELETE))
 			{

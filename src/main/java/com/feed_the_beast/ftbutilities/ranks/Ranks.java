@@ -12,7 +12,6 @@ import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
-import com.feed_the_beast.ftblib.lib.util.Folders;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
@@ -31,6 +30,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
@@ -338,7 +338,7 @@ public class Ranks
 		boolean result = true;
 		boolean loadedOldFile = false;
 
-		File ranksFile = new File(Folders.getLocal(), "ftbutilities/ranks.json");
+		File ranksFile = new File(universe.server.getDataDirectory(), "local/ftbutilities/ranks.json");
 		JsonElement ranksJson = DataReader.get(ranksFile).safeJson();
 		Map<String, String> rankParents = new HashMap<>();
 
@@ -452,7 +452,7 @@ public class Ranks
 			FileUtils.delete(ranksFile);
 		}
 
-		ranksFile = FTBUtilitiesConfig.ranks.load_from_config_folder ? new File(Folders.getConfig(), "ftbutilities_ranks.txt") : new File(Folders.getLocal(), "ftbutilities/ranks.txt");
+		ranksFile = FTBUtilitiesConfig.ranks.load_from_config_folder ? new File(Loader.instance().getConfigDir(), "ftbutilities_ranks.txt") : new File(universe.server.getDataDirectory(), "local/ftbutilities/ranks.txt");
 
 		if (!loadedOldFile && !ranksFile.exists())
 		{
@@ -545,7 +545,7 @@ public class Ranks
 
 		saveRanks();
 
-		File playerRanksFile = new File(Folders.getLocal(), "ftbutilities/player_ranks.json");
+		File playerRanksFile = new File(universe.server.getDataDirectory(), "local/ftbutilities/player_ranks.json");
 		ranksJson = DataReader.get(playerRanksFile).safeJson();
 
 		if (ranksJson.isJsonObject())
@@ -568,7 +568,7 @@ public class Ranks
 			FileUtils.delete(playerRanksFile);
 		}
 
-		playerRanksFile = new File(Folders.getLocal(), "ftbutilities/player_ranks.txt");
+		playerRanksFile = new File(universe.server.getDataDirectory(), "local/ftbutilities/player_ranks.txt");
 
 		for (String s : DataReader.get(playerRanksFile).safeStringList())
 		{
@@ -644,7 +644,7 @@ public class Ranks
 			}
 		}
 
-		FileUtils.saveSafe(new File(Folders.getLocal(), "ftbutilities/ranks.txt"), list);
+		FileUtils.saveSafe(new File(universe.server.getDataDirectory(), "local/ftbutilities/ranks.txt"), list);
 	}
 
 	public void clearCache()
@@ -686,7 +686,7 @@ public class Ranks
 			}
 		}
 
-		FileUtils.saveSafe(new File(Folders.getLocal(), "ftbutilities/player_ranks.txt"), list);
+		FileUtils.saveSafe(new File(universe.server.getDataDirectory(), "local/ftbutilities/player_ranks.txt"), list);
 	}
 
 	private String classOf(ConfigValue value)
@@ -850,8 +850,8 @@ public class Ranks
 		list.add("</table>");
 
 		list.add("</body></html>");
-		FileUtils.saveSafe(new File(Folders.getLocal(), "ftbutilities/all_permissions.html"), list);
-		FileUtils.delete(new File(Folders.getLocal(), "ftbutilities/all_configs.html"));
+		FileUtils.saveSafe(new File(universe.server.getDataDirectory(), "local/ftbutilities/all_permissions.html"), list);
+		FileUtils.delete(new File(universe.server.getDataDirectory(), "local/ftbutilities/all_configs.html"));
 
 		list = new ArrayList<>();
 
@@ -873,6 +873,6 @@ public class Ranks
 			list.add(c.node.toString());
 		}
 
-		FileUtils.saveSafe(new File(Folders.getLocal(), "ftbutilities/all_permissions_full_list.txt"), list);
+		FileUtils.saveSafe(new File(universe.server.getDataDirectory(), "local/ftbutilities/all_permissions_full_list.txt"), list);
 	}
 }

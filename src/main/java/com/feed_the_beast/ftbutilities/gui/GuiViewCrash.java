@@ -16,7 +16,6 @@ import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.io.HttpDataReader;
 import com.feed_the_beast.ftblib.lib.io.RequestMethod;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
-import com.feed_the_beast.ftblib.lib.util.Folders;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.net.MessageViewCrashDelete;
 import com.google.gson.JsonElement;
@@ -46,7 +45,7 @@ public class GuiViewCrash extends GuiBase
 		{
 			try
 			{
-				File urlFile = new File(Folders.getLocal(), "ftbutilities/uploaded_crash_reports/crash-" + name.text[0] + ".txt");
+				File urlFile = new File(ClientUtils.MC.gameDir, "local/ftbutilities/uploaded_crash_reports/crash-" + name.text[0] + ".txt");
 				String url = DataReader.get(urlFile).safeString();
 
 				if (url.isEmpty())

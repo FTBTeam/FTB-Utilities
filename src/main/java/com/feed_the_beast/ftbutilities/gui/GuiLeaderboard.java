@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbutilities.gui;
 
 import com.feed_the_beast.ftblib.lib.gui.Panel;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.data.LeaderboardValue;
 import net.minecraft.client.resources.I18n;
@@ -32,9 +32,10 @@ public class GuiLeaderboard extends GuiButtonListBase
 			value = v;
 			rank = value.color + "#" + StringUtils.add0s(v.rank, leaderboard.size());
 
-			rankSize = Math.max(rankSize, getStringWidth(rank) + 4);
-			usernameSize = Math.max(usernameSize, getStringWidth(v.username) + 8);
-			valueSize = Math.max(valueSize, getStringWidth(value.value.getFormattedText()) + 8);
+			Theme theme = getGui().getTheme();
+			rankSize = Math.max(rankSize, theme.getStringWidth(rank) + 4);
+			usernameSize = Math.max(usernameSize, theme.getStringWidth(v.username) + 8);
+			valueSize = Math.max(valueSize, theme.getStringWidth(value.value.getFormattedText()) + 8);
 
 			setSize(rankSize + usernameSize + valueSize, 14);
 		}
@@ -45,22 +46,19 @@ public class GuiLeaderboard extends GuiButtonListBase
 		}
 
 		@Override
-		public void draw()
+		public void draw(Theme theme, int x, int y, int w, int h)
 		{
-			int ax = getAX();
-			int ay = getAY();
+			WidgetType type = value.color == TextFormatting.DARK_GRAY ? WidgetType.DISABLED : WidgetType.mouseOver(isMouseOver());
+			int textY = y + (h - theme.getFontHeight() + 1) / 2;
+			theme.drawButton(x, y, rankSize, h, type);
+			theme.drawString(rank, x + 2, textY, Theme.SHADOW);
 
-			Icon widget = value.color == TextFormatting.DARK_GRAY ? getTheme().getButton(WidgetType.DISABLED) : getTheme().getButton(WidgetType.mouseOver(isMouseOver()));
-			int textY = ay + (height - getFontHeight() + 1) / 2;
-			widget.draw(ax, ay, rankSize, height);
-			drawString(rank, ax + 2, textY, SHADOW);
+			theme.drawButton(x + rankSize, y, usernameSize, h, type);
+			theme.drawString(value.color + value.username, x + 4 + rankSize, textY, Theme.SHADOW);
 
-			widget.draw(ax + rankSize, ay, usernameSize, height);
-			drawString(value.color + value.username, ax + 4 + rankSize, textY, SHADOW);
-
-			widget.draw(ax + rankSize + usernameSize, ay, valueSize, height);
+			theme.drawButton(x + rankSize + usernameSize, y, valueSize, h, type);
 			String formattedText = value.value.getFormattedText();
-			drawString(value.color + formattedText, ax + rankSize + usernameSize + valueSize - getStringWidth(formattedText) - 4, textY, SHADOW);
+			theme.drawString(value.color + formattedText, x + rankSize + usernameSize + valueSize - theme.getStringWidth(formattedText) - 4, textY, Theme.SHADOW);
 		}
 	}
 

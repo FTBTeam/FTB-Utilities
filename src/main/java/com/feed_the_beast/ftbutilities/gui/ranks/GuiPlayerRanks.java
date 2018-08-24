@@ -4,10 +4,10 @@ import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.resources.I18n;
@@ -34,8 +34,9 @@ public class GuiPlayerRanks extends GuiButtonListBase
 			username = u;
 			rank = StringUtils.firstUppercase(r.isEmpty() ? "none" : r);
 
-			usernameSize = Math.max(usernameSize, getStringWidth(username) + 8);
-			valueSize = Math.max(valueSize, getStringWidth(rank) + 8);
+			Theme theme = getTheme();
+			usernameSize = Math.max(usernameSize, theme.getStringWidth(username) + 8);
+			valueSize = Math.max(valueSize, theme.getStringWidth(rank) + 8);
 
 			setSize(usernameSize + valueSize, 14);
 		}
@@ -63,19 +64,16 @@ public class GuiPlayerRanks extends GuiButtonListBase
 		}
 
 		@Override
-		public void draw()
+		public void draw(Theme theme, int x, int y, int w, int h)
 		{
-			int ax = getAX();
-			int ay = getAY();
+			WidgetType type = WidgetType.mouseOver(isMouseOver());
+			int textY = y + (h - theme.getFontHeight() + 1) / 2;
 
-			Icon widget = getTheme().getButton(WidgetType.mouseOver(isMouseOver()));
-			int textY = ay + (height - getFontHeight() + 1) / 2;
+			theme.drawButton(x, y, usernameSize, h, type);
+			theme.drawString(username, x + 4, textY, Theme.SHADOW);
 
-			widget.draw(ax, ay, usernameSize, height);
-			drawString(username, ax + 4, textY, SHADOW);
-
-			widget.draw(ax + usernameSize, ay, valueSize, height);
-			drawString(rank, ax + usernameSize + 4, textY, SHADOW);
+			theme.drawButton(x + usernameSize, y, valueSize, h, type);
+			theme.drawString(rank, x + usernameSize + 4, textY, Theme.SHADOW);
 		}
 
 		@Override

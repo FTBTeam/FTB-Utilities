@@ -8,6 +8,7 @@ import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.SimpleButton;
 import com.feed_the_beast.ftblib.lib.gui.TextField;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
@@ -95,7 +96,7 @@ public class GuiViewCrash extends GuiBase
 			{
 				for (String s : text)
 				{
-					add(new TextField(this, StringUtils.fixTabs(s, 2), Widget.UNICODE));
+					add(new TextField(this, StringUtils.fixTabs(s, 2), Theme.UNICODE));
 				}
 			}
 
@@ -115,9 +116,9 @@ public class GuiViewCrash extends GuiBase
 			}
 
 			@Override
-			public Icon getIcon()
+			public void drawBackground(Theme theme, int x, int y, int w, int h)
 			{
-				return getTheme().getContainerSlot();
+				theme.drawContainerSlot(x, y, w, h);
 			}
 		};
 
@@ -134,36 +135,15 @@ public class GuiViewCrash extends GuiBase
 		scrollV.setCanAlwaysScrollPlane(false);
 		scrollV.setScrollStep(30);
 
-		close = new SimpleButton(this, I18n.format("gui.close"), GuiIcons.CLOSE, (widget, button) -> widget.getGui().closeGui())
-		{
-			@Override
-			public Icon getButtonBackground()
-			{
-				return super.getButtonBackground().withBorder(-2);
-			}
-		};
+		close = new SimpleButton(this, I18n.format("gui.close"), GuiIcons.CLOSE, (widget, button) -> widget.getGui().closeGui());
 
 		upload = new SimpleButton(this, I18n.format("ftbutilities.lang.upload_crash"), GuiIcons.UP, (widget, button) ->
 		{
 			new ThreadUploadCrash().start();
 			widget.getGui().closeGui(false);
-		})
-		{
-			@Override
-			public Icon getButtonBackground()
-			{
-				return super.getButtonBackground().withBorder(-2);
-			}
-		};
+		});
 
-		delete = new SimpleButton(this, I18n.format("selectServer.delete"), GuiIcons.REMOVE, (widget, button) -> openYesNo(I18n.format("delete_item", name.text[0]), "", () -> new MessageViewCrashDelete(name.text[0]).sendToServer()))
-		{
-			@Override
-			public Icon getButtonBackground()
-			{
-				return super.getButtonBackground().withBorder(-2);
-			}
-		};
+		delete = new SimpleButton(this, I18n.format("selectServer.delete"), GuiIcons.REMOVE, (widget, button) -> openYesNo(I18n.format("delete_item", name.text[0]), "", () -> new MessageViewCrashDelete(name.text[0]).sendToServer()));
 
 		reset = new SimpleButton(this, "", Icon.EMPTY, (widget, button) ->
 		{
@@ -194,9 +174,9 @@ public class GuiViewCrash extends GuiBase
 	@Override
 	public void alignWidgets()
 	{
-		close.setPos(width - 24, 8);
-		upload.setPos(width - 48, 8);
-		delete.setPos(width - 72, 8);
+		close.setPosAndSize(width - 24, 8, 20, 20);
+		upload.setPosAndSize(width - 48, 8, 20, 20);
+		delete.setPosAndSize(width - 72, 8, 20, 20);
 		reset.setPos(width - 24, height - 24);
 		scrollH.setPosAndSize(8, height - 24, width - 32, 16);
 		scrollV.setPosAndSize(width - 24, 32, 16, height - 56);

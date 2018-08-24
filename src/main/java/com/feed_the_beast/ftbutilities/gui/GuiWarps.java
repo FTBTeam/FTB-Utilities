@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.lib.client.CachedVertexData;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbutilities.net.MessageSendWarpList;
@@ -85,7 +86,7 @@ public class GuiWarps extends GuiBase
 		}
 
 		@Override
-		public void draw()
+		public void draw(Theme theme, int x, int y, int w, int h)
 		{
 			if (index == -1)
 			{
@@ -102,7 +103,7 @@ public class GuiWarps extends GuiBase
 				textY = (int) (Math.sin(Math.toRadians(i)) * d) - 2;
 			}
 
-			drawString(warpItem.name, getGui().posX + getGui().width / 2 + textX, getGui().posY + getGui().height / 2 + textY, DARK | CENTERED);
+			theme.drawString(warpItem.name, getGui().posX + getGui().width / 2 + textX, getGui().posY + getGui().height / 2 + textY, Theme.DARK | Theme.CENTERED);
 		}
 
 		@Override
@@ -135,10 +136,10 @@ public class GuiWarps extends GuiBase
 	}
 
 	@Override
-	public void drawBackground()
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
 	{
-		int ax = getAX() + SIZE_2;
-		int ay = getAY() + SIZE_2;
+		x += SIZE_2;
+		y += SIZE_2;
 
         /*if(FTBUtilitiesClient.KEY_WARP.isKeyDown())
 		{
@@ -161,7 +162,7 @@ public class GuiWarps extends GuiBase
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 
-		buffer.setTranslation(ax, ay, 0D);
+		buffer.setTranslation(x, y, 0D);
 		BACKGROUND.draw(tessellator, buffer);
 		CIRCLE_IN.draw(tessellator, buffer);
 		CIRCLE_OUT.draw(tessellator, buffer);
@@ -173,8 +174,8 @@ public class GuiWarps extends GuiBase
 		}
 
 		buttonOver = buttonCancel;
-		double dist = MathUtils.dist(ax, ay, getMouseX(), getMouseY());
-		double rotation = Math.toDegrees(Math.atan2(getMouseY() - ay, getMouseX() - ax));
+		double dist = MathUtils.dist(x, y, getMouseX(), getMouseY());
+		double rotation = Math.toDegrees(Math.atan2(getMouseY() - y, getMouseX() - x));
 
 		if (rotation < 0D)
 		{
@@ -202,12 +203,12 @@ public class GuiWarps extends GuiBase
 
 			if (buttonOver.warpItem.isSpecial())
 			{
-				drawString(TextFormatting.BOLD + buttonOver.warpItem.name, ax, ay - 4, DARK | CENTERED);
+				theme.drawString(TextFormatting.BOLD + buttonOver.warpItem.name, x, y - 4, Theme.DARK | Theme.CENTERED);
 			}
 			else
 			{
-				drawString(TextFormatting.BOLD + (buttonOver.warpItem.innerCircle() ? "Home" : "Warp"), ax, ay - 9, DARK | CENTERED);
-				drawString(buttonOver.warpItem.name, ax, ay + 1, DARK | CENTERED);
+				theme.drawString(TextFormatting.BOLD + (buttonOver.warpItem.innerCircle() ? "Home" : "Warp"), x, y - 9, Theme.DARK | Theme.CENTERED);
+				theme.drawString(buttonOver.warpItem.name, x, y + 1, Theme.DARK | Theme.CENTERED);
 			}
 		}
 	}

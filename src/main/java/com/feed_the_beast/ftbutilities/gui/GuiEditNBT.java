@@ -117,19 +117,16 @@ public class GuiEditNBT extends GuiBase
 		}
 
 		@Override
-		public void draw()
+		public void draw(Theme theme, int x, int y, int w, int h)
 		{
-			int ax = getAX();
-			int ay = getAY();
-
 			if (selected == this)
 			{
-				Color4I.WHITE.withAlpha(33).draw(ax, ay, width, height);
+				Color4I.WHITE.withAlpha(33).draw(x, y, w, h);
 			}
 
-			IconWithOutline.BUTTON_ROUND_GRAY.draw(ax + 1, ay + 1, 8, 8);
-			getIcon().draw(ax + 1, ay + 1, 8, 8);
-			drawString(getTitle(), ax + 11, ay + 1);
+			IconWithOutline.BUTTON_ROUND_GRAY.draw(x + 1, y + 1, 8, 8);
+			drawIcon(theme, x + 1, y + 1, 8, 8);
+			theme.drawString(getTitle(), x + 11, y + 1);
 		}
 	}
 
@@ -197,7 +194,7 @@ public class GuiEditNBT extends GuiBase
 			}
 
 			setTitle(key + ": " + title);
-			setWidth(12 + getStringWidth(key + ": " + title));
+			setWidth(12 + getTheme().getStringWidth(key + ": " + title));
 		}
 
 		@Override
@@ -280,7 +277,7 @@ public class GuiEditNBT extends GuiBase
 			iconOpen = open;
 			iconClosed = closed;
 			setCollapsed(false);
-			setWidth(width + 2 + getStringWidth(key));
+			setWidth(width + 2 + getTheme().getStringWidth(key));
 			children = new LinkedHashMap<>();
 		}
 
@@ -300,7 +297,7 @@ public class GuiEditNBT extends GuiBase
 		@Override
 		public void onClicked(MouseButton button)
 		{
-			if (getMouseX() <= getAX() + height)
+			if (getMouseX() <= getX() + height)
 			{
 				setCollapsed(!collapsed);
 				panelNbt.refreshWidgets();
@@ -383,7 +380,7 @@ public class GuiEditNBT extends GuiBase
 				}
 			}
 
-			setWidth(12 + getStringWidth(getTitle()) + (hoverIcon.isEmpty() ? 0 : 10));
+			setWidth(12 + getTheme().getStringWidth(getTitle()) + (hoverIcon.isEmpty() ? 0 : 10));
 		}
 
 		@Override
@@ -436,15 +433,13 @@ public class GuiEditNBT extends GuiBase
 		}
 
 		@Override
-		public void draw()
+		public void draw(Theme theme, int x, int y, int w, int h)
 		{
-			super.draw();
+			super.draw(theme, x, y, w, h);
 
 			if (!hoverIcon.isEmpty())
 			{
-				int ax = getAX();
-				int ay = getAY();
-				hoverIcon.draw(ax + 12 + getStringWidth(getTitle()), ay + 1, 8, 8);
+				hoverIcon.draw(x + 12 + theme.getStringWidth(getTitle()), y + 1, 8, 8);
 			}
 		}
 
@@ -716,9 +711,9 @@ public class GuiEditNBT extends GuiBase
 		})
 		{
 			@Override
-			public Icon getButtonBackground()
+			public void drawBackground(Theme theme, int x, int y, int w, int h)
 			{
-				return IconWithOutline.BUTTON_ROUND_GRAY;
+				IconWithOutline.BUTTON_ROUND_GRAY.draw(x, y, w, h);
 			}
 		};
 	}
@@ -966,13 +961,13 @@ public class GuiEditNBT extends GuiBase
 	}
 
 	@Override
-	public void drawBackground()
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
 	{
-		GuiEditConfig.COLOR_BACKGROUND.draw(0, 0, width, 20);
+		GuiEditConfig.COLOR_BACKGROUND.draw(0, 0, w, 20);
 	}
 
 	@Override
-	public Theme createTheme()
+	public Theme getTheme()
 	{
 		return GuiEditConfig.THEME;
 	}

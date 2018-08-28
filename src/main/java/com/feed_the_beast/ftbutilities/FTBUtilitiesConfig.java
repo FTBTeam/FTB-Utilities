@@ -341,7 +341,7 @@ public class FTBUtilitiesConfig
 			}
 		}
 
-		@Config.Comment("Logs different events in local/ftbutilities/world.log file.")
+		@Config.Comment("Logs different events in logs/world.log file.")
 		public final WorldLogging logging = new WorldLogging();
 
 		@Config.Comment("Enables chunk claiming.")

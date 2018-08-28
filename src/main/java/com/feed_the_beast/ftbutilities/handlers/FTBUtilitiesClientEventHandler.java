@@ -122,10 +122,10 @@ public class FTBUtilitiesClientEventHandler
 					ClientUtils.execClientCommand("/gamemode " + (ClientUtils.MC.player.capabilities.isCreativeMode ? "survival" : "creative"));
 					break;
 				case "daytime":
-					ClientUtils.execClientCommand("/time add " + (24000L - (ClientUtils.MC.world.getWorldTime() % 24000L) + 6000));
+					ClientUtils.execClientCommand("/time add " + (24000L - (ClientUtils.MC.world.getWorldTime() % 24000L) + 6000) % 24000L);
 					break;
 				case "nighttime":
-					ClientUtils.execClientCommand("/time add " + (24000L - (ClientUtils.MC.world.getWorldTime() % 24000L) + 18000));
+					ClientUtils.execClientCommand("/time add " + (24000L - (ClientUtils.MC.world.getWorldTime() % 24000L) + 18000) % 24000L);
 					break;
 				case "claims_gui":
 					GuiClaimedChunks.instance = new GuiClaimedChunks();

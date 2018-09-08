@@ -18,6 +18,7 @@ import com.feed_the_beast.ftblib.lib.data.PlayerData;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
+import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.IScheduledTask;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
@@ -31,7 +32,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -153,8 +153,6 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		}
 	}
 
-	public static final ResourceLocation LOGIN_STARTING_ITEMS = new ResourceLocation(FTBUtilities.MOD_ID, "starting_items");
-
 	public static FTBUtilitiesPlayerData get(ForgePlayer player)
 	{
 		return player.getData().get(FTBUtilities.MOD_ID);
@@ -171,7 +169,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	{
 		EntityPlayerMP player = event.getPlayer().getPlayer();
 
-		if (event.isFirstLogin(LOGIN_STARTING_ITEMS))
+		if (ServerUtils.isFirstLogin(player, "ftbutilities_starting_items"))
 		{
 			if (FTBUtilitiesConfig.login.enable_starting_items)
 			{

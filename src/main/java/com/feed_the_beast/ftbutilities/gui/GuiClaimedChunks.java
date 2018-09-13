@@ -240,7 +240,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 				{
 					GuiHelper.playClickSound();
 					String s = I18n.format("ftbutilities.lang.chunks.unclaim_all_dim_q", currentDimName);
-					openYesNo(s, "", () -> ClientUtils.execClientCommand("/chunks unclaim_all false"));
+					openYesNo(s, "", () -> ClientUtils.execClientCommand("/chunks unclaim_all " + ClientUtils.MC.world.provider.getDimension()));
 				}
 			});
 
@@ -251,7 +251,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 				{
 					GuiHelper.playClickSound();
 					String s = I18n.format("ftbutilities.lang.chunks.unclaim_all_q");
-					openYesNo(s, "", () -> ClientUtils.execClientCommand("/chunks unclaim_all true"));
+					openYesNo(s, "", () -> ClientUtils.execClientCommand("/chunks unclaim_all"));
 				}
 			});
 		}

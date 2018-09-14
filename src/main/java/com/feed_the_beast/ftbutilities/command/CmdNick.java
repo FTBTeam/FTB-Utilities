@@ -42,7 +42,7 @@ public class CmdNick extends CmdBase
 
 			if (!player.hasPermission(FTBUtilitiesPermissions.CHAT_NICKNAME_COLORS))
 			{
-				name = TextFormatting.getTextWithoutFormattingCodes(name);
+				name = StringUtils.unformatted(name);
 			}
 			else if (name.indexOf(StringUtils.FORMATTING_CHAR) != -1)
 			{

@@ -24,12 +24,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.command.ServerCommandManager;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
@@ -814,7 +812,7 @@ public class Ranks
 
 			for (String s : variants)
 			{
-				list.add(TextFormatting.getTextWithoutFormattingCodes(s) + " ");
+				list.add(StringUtils.unformatted(s) + " ");
 			}
 
 			list.add("'>");
@@ -831,7 +829,7 @@ public class Ranks
 		}
 
 		list.add("</table><br><table><tr><th>Available command nodes</th><th>Usage</th></tr>");
-		ServerCommandManager manager = (ServerCommandManager) universe.server.getCommandManager();
+		//ServerCommandManager manager = (ServerCommandManager) universe.server.getCommandManager();
 
 		for (CommandOverride c : commands.values())
 		{

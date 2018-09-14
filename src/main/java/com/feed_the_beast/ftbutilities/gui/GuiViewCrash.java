@@ -9,13 +9,12 @@ import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.SimpleButton;
 import com.feed_the_beast.ftblib.lib.gui.TextField;
 import com.feed_the_beast.ftblib.lib.gui.Theme;
-import com.feed_the_beast.ftblib.lib.gui.Widget;
-import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.io.HttpDataReader;
 import com.feed_the_beast.ftblib.lib.io.RequestMethod;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
+import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.net.MessageViewCrashDelete;
 import com.google.gson.JsonElement;
@@ -29,9 +28,7 @@ import net.minecraft.util.text.event.HoverEvent;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @author LatvianModder
@@ -51,7 +48,8 @@ public class GuiViewCrash extends GuiBase
 				if (url.isEmpty())
 				{
 					URL hastebinURL = new URL("https://hastebin.com/documents");
-					JsonElement json = DataReader.get(hastebinURL, RequestMethod.POST, DataReader.TEXT, new HttpDataReader.HttpDataOutput.StringOutput(text), ClientUtils.MC.getProxy()).json();
+					String outText = StringUtils.unformatted(StringJoiner.with('\n').joinStrings(text.text));
+					JsonElement json = DataReader.get(hastebinURL, RequestMethod.POST, DataReader.TEXT, new HttpDataReader.HttpDataOutput.StringOutput(outText), ClientUtils.MC.getProxy()).json();
 
 					if (json.isJsonObject() && json.getAsJsonObject().has("key"))
 					{
@@ -76,42 +74,30 @@ public class GuiViewCrash extends GuiBase
 		}
 	}
 
-	private final List<String> text;
 	private final TextField name;
+	private final TextField text;
 	private final Panel textPanel;
 	private final PanelScrollBar scrollH, scrollV;
 	private final Button close, upload, delete, reset;
 
 	public GuiViewCrash(String n, Collection<String> l)
 	{
-		name = new TextField(this, n);
-		name.setPosAndSize(8, 12, 0, 20);
-		text = new ArrayList<>(l);
+		name = new TextField(this).setText(n);
+		name.setPos(8, 12);
 
 		textPanel = new Panel(this)
 		{
 			@Override
 			public void addWidgets()
 			{
-				for (String s : text)
-				{
-					add(new TextField(this, StringUtils.fixTabs(s, 2), Theme.UNICODE));
-				}
+				add(text);
 			}
 
 			@Override
 			public void alignWidgets()
 			{
-				int wi = 0;
-
-				for (Widget w : widgets)
-				{
-					w.setX(2);
-					wi = Math.max(w.width, wi);
-				}
-
-				scrollH.setMaxValue(wi + 4);
-				scrollV.setMaxValue(align(WidgetLayout.VERTICAL));
+				scrollH.setMaxValue(text.width + 4);
+				scrollV.setMaxValue(text.height);
 			}
 
 			@Override
@@ -120,6 +106,11 @@ public class GuiViewCrash extends GuiBase
 				theme.drawContainerSlot(x, y, w, h);
 			}
 		};
+
+		text = new TextField(textPanel);
+		text.setX(2);
+		text.addFlags(Theme.UNICODE);
+		text.setText(StringUtils.fixTabs(String.join("\n", l), 2));
 
 		textPanel.setPos(9, 33);
 		textPanel.setUnicode(true);

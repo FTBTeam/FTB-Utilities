@@ -103,36 +103,10 @@ public class FTBUtilitiesRegistryEventHandler
 						switch (getType(rules, key))
 						{
 							case BOOLEAN_VALUE:
-								gamerules.add(key, new ConfigBoolean(rules.getBoolean(key))
-								{
-									@Override
-									public boolean getBoolean()
-									{
-										return rules.getBoolean(key);
-									}
-
-									@Override
-									public void setBoolean(boolean value)
-									{
-										rules.setOrCreateGameRule(key, Boolean.toString(value));
-									}
-								}, null).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
+								gamerules.add(key, new ConfigBoolean.SimpleBoolean(() -> rules.getBoolean(key), v -> rules.setOrCreateGameRule(key, Boolean.toString(v))), null).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
 								break;
 							case NUMERICAL_VALUE:
-								gamerules.add(key, new ConfigInt(rules.getInt(key))
-								{
-									@Override
-									public int getInt()
-									{
-										return rules.getInt(key);
-									}
-
-									@Override
-									public void setInt(int value)
-									{
-										rules.setOrCreateGameRule(key, Integer.toString(value));
-									}
-								}, null).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
+								gamerules.add(key, new ConfigInt.SimpleInt(1, Integer.MAX_VALUE, () -> rules.getInt(key), v -> rules.setOrCreateGameRule(key, Integer.toString(v))), null).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
 								break;
 							default:
 								gamerules.add(key, new ConfigString(rules.getString(key))

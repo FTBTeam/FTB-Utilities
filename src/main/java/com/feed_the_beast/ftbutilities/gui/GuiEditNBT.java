@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbutilities.gui;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.config.ConfigDouble;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
+import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
@@ -28,7 +28,6 @@ import com.feed_the_beast.ftbutilities.net.MessageEditNBTResponse;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagByte;
@@ -43,7 +42,6 @@ import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -418,16 +416,7 @@ public class GuiEditNBT extends GuiBase
 						list.add("");
 					}
 
-					List<String> tooltip = ((ItemIcon) hoverIcon).getStack().getTooltip(ClientUtils.MC.player, ITooltipFlag.TooltipFlags.NORMAL);
-					list.add(tooltip.get(0));
-
-					if (tooltip.size() > 1)
-					{
-						for (int i = 1; i < tooltip.size(); i++)
-						{
-							list.add(TextFormatting.GRAY + tooltip.get(i));
-						}
-					}
+					GuiHelper.addStackTooltip(((ItemIcon) hoverIcon).getStack(), list, "");
 				}
 			}
 		}

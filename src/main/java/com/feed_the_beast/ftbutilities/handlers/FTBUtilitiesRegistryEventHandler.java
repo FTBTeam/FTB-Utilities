@@ -1,10 +1,7 @@
 package com.feed_the_beast.ftbutilities.handlers;
 
 import com.feed_the_beast.ftblib.events.FTBLibPreInitRegistryEvent;
-import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
-import com.feed_the_beast.ftblib.lib.config.ConfigInt;
-import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.data.AdminPanelAction;
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
@@ -103,26 +100,13 @@ public class FTBUtilitiesRegistryEventHandler
 						switch (getType(rules, key))
 						{
 							case BOOLEAN_VALUE:
-								gamerules.add(key, new ConfigBoolean.SimpleBoolean(() -> rules.getBoolean(key), v -> rules.setOrCreateGameRule(key, Boolean.toString(v))), null).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
+								gamerules.addBool(key, () -> rules.getBoolean(key), v -> rules.setOrCreateGameRule(key, Boolean.toString(v)), false).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
 								break;
 							case NUMERICAL_VALUE:
-								gamerules.add(key, new ConfigInt.SimpleInt(1, Integer.MAX_VALUE, () -> rules.getInt(key), v -> rules.setOrCreateGameRule(key, Integer.toString(v))), null).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
+								gamerules.addInt(key, () -> rules.getInt(key), v -> rules.setOrCreateGameRule(key, Integer.toString(v)), 1, 1, Integer.MAX_VALUE).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
 								break;
 							default:
-								gamerules.add(key, new ConfigString(rules.getString(key))
-								{
-									@Override
-									public String getString()
-									{
-										return rules.getString(key);
-									}
-
-									@Override
-									public void setString(String value)
-									{
-										rules.setOrCreateGameRule(key, value);
-									}
-								}, null).setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
+								gamerules.addString(key, () -> rules.getString(key), v -> rules.setOrCreateGameRule(key, v), "").setDisplayName(new TextComponentString(StringUtils.camelCaseToWords(key)));
 						}
 					}
 				}

@@ -7,10 +7,7 @@ import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftblib.lib.EnumMessageLocation;
-import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
-import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
-import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
@@ -211,11 +208,11 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		get(event.getPlayer()).addConfig(event.getConfig());
 	}
 
-	private final ConfigBoolean renderBadge = new ConfigBoolean(true);
-	private final ConfigBoolean disableGlobalBadge = new ConfigBoolean(false);
-	private final ConfigBoolean enablePVP = new ConfigBoolean(true);
-	private final ConfigString nickname = new ConfigString("");
-	private final ConfigEnum<EnumMessageLocation> afkMesageLocation = new ConfigEnum<>(EnumMessageLocation.NAME_MAP);
+	private boolean renderBadge = true;
+	private boolean disableGlobalBadge = false;
+	private boolean enablePVP = true;
+	private String nickname = "";
+	private EnumMessageLocation afkMesageLocation = EnumMessageLocation.CHAT;
 
 	public ForgeTeam lastChunkTeam;
 	public final Collection<ForgePlayer> tpaRequestsFrom;
@@ -245,9 +242,9 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setBoolean("RenderBadge", renderBadge.getBoolean());
-		nbt.setBoolean("DisableGlobalBadges", disableGlobalBadge.getBoolean());
-		nbt.setBoolean("EnablePVP", enablePVP.getBoolean());
+		nbt.setBoolean("RenderBadge", renderBadge);
+		nbt.setBoolean("DisableGlobalBadges", disableGlobalBadge);
+		nbt.setBoolean("EnablePVP", enablePVP);
 		nbt.setTag("Homes", homes.serializeNBT());
 		nbt.setBoolean("AllowFlying", fly);
 
@@ -256,74 +253,74 @@ public class FTBUtilitiesPlayerData extends PlayerData
 			nbt.setIntArray("LastDeath", lastDeath.toIntArray());
 		}
 
-		nbt.setString("Nickname", nickname.getString());
-		nbt.setString("AFK", afkMesageLocation.getString());
+		nbt.setString("Nickname", nickname);
+		nbt.setString("AFK", EnumMessageLocation.NAME_MAP.getName(afkMesageLocation));
 		return nbt;
 	}
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		renderBadge.setBoolean(!nbt.hasKey("RenderBadge") || nbt.getBoolean("RenderBadge"));
-		disableGlobalBadge.setBoolean(nbt.getBoolean("DisableGlobalBadges"));
-		enablePVP.setBoolean(!nbt.hasKey("EnablePVP") || nbt.getBoolean("EnablePVP"));
+		renderBadge = !nbt.hasKey("RenderBadge") || nbt.getBoolean("RenderBadge");
+		disableGlobalBadge = nbt.getBoolean("DisableGlobalBadges");
+		enablePVP = !nbt.hasKey("EnablePVP") || nbt.getBoolean("EnablePVP");
 		homes.deserializeNBT(nbt.getCompoundTag("Homes"));
 		fly = nbt.getBoolean("AllowFlying");
 		lastDeath = BlockDimPos.fromIntArray(nbt.getIntArray("LastDeath"));
-		nickname.setString(nbt.getString("Nickname"));
-		afkMesageLocation.setValue(nbt.getString("AFK"));
+		nickname = nbt.getString("Nickname");
+		afkMesageLocation = EnumMessageLocation.NAME_MAP.get(nbt.getString("AFK"));
 	}
 
 	private void addConfig(ConfigGroup main)
 	{
-		ConfigGroup group = main.getGroup(FTBUtilities.MOD_ID);
-		group.setDisplayName(new TextComponentString(FTBUtilities.MOD_NAME));
+		ConfigGroup config = main.getGroup(FTBUtilities.MOD_ID);
+		config.setDisplayName(new TextComponentString(FTBUtilities.MOD_NAME));
 
-		group.add("render_badge", renderBadge, new ConfigBoolean(true));
-		group.add("disable_global_badge", disableGlobalBadge, new ConfigBoolean(false));
-		group.add("enable_pvp", enablePVP, new ConfigBoolean(true));
+		config.addBool("render_badge", () -> renderBadge, v -> renderBadge = v, true);
+		config.addBool("disable_global_badge", () -> disableGlobalBadge, v -> disableGlobalBadge = v, false);
+		config.addBool("enable_pvp", () -> enablePVP, v -> enablePVP = v, true);
 
 		if (FTBUtilitiesConfig.commands.nick && player.hasPermission(FTBUtilitiesPermissions.CHAT_NICKNAME_SET))
 		{
-			group.add("nickname", nickname, new ConfigString(""));
+			config.addString("nickname", () -> nickname, v -> nickname = v, "");
 		}
 
 		if (FTBUtilitiesConfig.afk.isEnabled(player.team.universe.server))
 		{
-			group.add("afk", afkMesageLocation, new ConfigEnum<>(EnumMessageLocation.NAME_MAP));
+			config.addEnum("afk", () -> afkMesageLocation, v -> afkMesageLocation = v, EnumMessageLocation.NAME_MAP);
 		}
 	}
 
 	public boolean renderBadge()
 	{
-		return renderBadge.getBoolean();
+		return renderBadge;
 	}
 
 	public boolean disableGlobalBadge()
 	{
-		return disableGlobalBadge.getBoolean();
+		return disableGlobalBadge;
 	}
 
 	public boolean enablePVP()
 	{
-		return enablePVP.getBoolean();
+		return enablePVP;
 	}
 
 	public String getNickname()
 	{
-		return nickname.getString();
+		return nickname;
 	}
 
 	public void setNickname(String name)
 	{
-		nickname.setString(name.equals(player.getName()) ? "" : name);
+		nickname = name.equals(player.getName()) ? "" : name;
 		player.markDirty();
 		clearCache();
 	}
 
 	public EnumMessageLocation getAFKMessageLocation()
 	{
-		return afkMesageLocation.getValue();
+		return afkMesageLocation;
 	}
 
 	public void setFly(boolean v)

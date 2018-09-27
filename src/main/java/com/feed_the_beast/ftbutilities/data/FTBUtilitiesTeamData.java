@@ -4,8 +4,6 @@ import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamDataEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
-import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
-import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
@@ -93,11 +91,11 @@ public class FTBUtilitiesTeamData extends TeamData
 	}
 	*/
 
-	private final ConfigEnum<EnumTeamStatus> editBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
-	private final ConfigEnum<EnumTeamStatus> interactWithBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
-	private final ConfigEnum<EnumTeamStatus> attackEntities = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
-	private final ConfigEnum<EnumTeamStatus> useItems = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
-	private final ConfigBoolean explosions = new ConfigBoolean(false);
+	private EnumTeamStatus editBlocks = EnumTeamStatus.ALLY;
+	private EnumTeamStatus interactWithBlocks = EnumTeamStatus.ALLY;
+	private EnumTeamStatus attackEntities = EnumTeamStatus.ALLY;
+	private EnumTeamStatus useItems = EnumTeamStatus.ALLY;
+	private boolean explosions = false;
 	public boolean canForceChunks = false;
 	private int cachedMaxClaimChunks, cachedMaxChunkloaderChunks;
 
@@ -116,11 +114,11 @@ public class FTBUtilitiesTeamData extends TeamData
 	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setBoolean("Explosions", explosions.getBoolean());
-		nbt.setString("EditBlocks", editBlocks.getString());
-		nbt.setString("InteractWithBlocks", interactWithBlocks.getString());
-		nbt.setString("AttackEntities", attackEntities.getString());
-		nbt.setString("UseItems", useItems.getString());
+		nbt.setBoolean("Explosions", explosions);
+		nbt.setString("EditBlocks", editBlocks.getName());
+		nbt.setString("InteractWithBlocks", interactWithBlocks.getName());
+		nbt.setString("AttackEntities", attackEntities.getName());
+		nbt.setString("UseItems", useItems.getName());
 
 		if (ClaimedChunks.isActive())
 		{
@@ -169,11 +167,11 @@ public class FTBUtilitiesTeamData extends TeamData
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		explosions.setBoolean(nbt.getBoolean("Explosions"));
-		editBlocks.setValue(nbt.getString("EditBlocks"));
-		interactWithBlocks.setValue(nbt.getString("InteractWithBlocks"));
-		attackEntities.setValue(nbt.getString("AttackEntities"));
-		useItems.setValue(nbt.getString("UseItems"));
+		explosions = nbt.getBoolean("Explosions");
+		editBlocks = EnumTeamStatus.NAME_MAP_PERMS.get(nbt.getString("EditBlocks"));
+		interactWithBlocks = EnumTeamStatus.NAME_MAP_PERMS.get(nbt.getString("InteractWithBlocks"));
+		attackEntities = EnumTeamStatus.NAME_MAP_PERMS.get(nbt.getString("AttackEntities"));
+		useItems = EnumTeamStatus.NAME_MAP_PERMS.get(nbt.getString("UseItems"));
 
 		if (ClaimedChunks.isActive())
 		{
@@ -200,36 +198,36 @@ public class FTBUtilitiesTeamData extends TeamData
 		ConfigGroup group = main.getGroup(FTBUtilities.MOD_ID);
 		group.setDisplayName(new TextComponentString(FTBUtilities.MOD_NAME));
 
-		group.add("explosions", explosions, new ConfigBoolean(false));
-		group.add("blocks_edit", editBlocks, new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS));
-		group.add("blocks_interact", interactWithBlocks, new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS));
-		group.add("attack_entities", attackEntities, new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS));
-		group.add("use_items", useItems, new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS));
+		group.addBool("explosions", () -> explosions, v -> explosions = v, false);
+		group.addEnum("blocks_edit", () -> editBlocks, v -> editBlocks = v, EnumTeamStatus.NAME_MAP_PERMS);
+		group.addEnum("blocks_interact", () -> interactWithBlocks, v -> interactWithBlocks = v, EnumTeamStatus.NAME_MAP_PERMS);
+		group.addEnum("attack_entities", () -> attackEntities, v -> attackEntities = v, EnumTeamStatus.NAME_MAP_PERMS);
+		group.addEnum("use_items", () -> useItems, v -> useItems = v, EnumTeamStatus.NAME_MAP_PERMS);
 	}
 
 	public EnumTeamStatus getEditBlocksStatus()
 	{
-		return editBlocks.getValue();
+		return editBlocks;
 	}
 
 	public EnumTeamStatus getInteractWithBlocksStatus()
 	{
-		return interactWithBlocks.getValue();
+		return interactWithBlocks;
 	}
 
 	public EnumTeamStatus getAttackEntitiesStatus()
 	{
-		return attackEntities.getValue();
+		return attackEntities;
 	}
 
 	public EnumTeamStatus getUseItemsStatus()
 	{
-		return useItems.getValue();
+		return useItems;
 	}
 
 	public boolean hasExplosions()
 	{
-		return explosions.getBoolean();
+		return explosions;
 	}
 
 	public int getMaxClaimChunks()

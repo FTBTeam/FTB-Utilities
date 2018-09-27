@@ -679,7 +679,7 @@ public class GuiEditNBT extends GuiBase
 		{
 			if (selected instanceof ButtonNBTMap)
 			{
-				new GuiEditConfigValue("value", new ConfigString("", Pattern.compile("^..*$")), (value, set) ->
+				new GuiEditConfigValue("value", new ConfigString("", Pattern.compile("^.+$")), (value, set) ->
 				{
 					if (set && !value.getString().isEmpty())
 					{

@@ -22,8 +22,10 @@ import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.IconWithOutline;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
 import com.feed_the_beast.ftblib.lib.item.ItemEntryWithCount;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBTResponse;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -945,7 +947,14 @@ public class GuiEditNBT extends GuiBase
 
 		if (shouldClose == 1)
 		{
-			new MessageEditNBTResponse(info, buttonNBTRoot.map).sendToServer();
+			if (NBTUtils.getSizeInBytes(buttonNBTRoot.map, false) >= 30000L)
+			{
+				FTBUtilities.LOGGER.error("NBT too large to send!");
+			}
+			else
+			{
+				new MessageEditNBTResponse(info, buttonNBTRoot.map).sendToServer();
+			}
 		}
 	}
 

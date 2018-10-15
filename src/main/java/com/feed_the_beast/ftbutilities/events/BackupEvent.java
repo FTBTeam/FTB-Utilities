@@ -11,10 +11,6 @@ import java.util.function.Consumer;
  */
 public class BackupEvent extends FTBUtilitiesEvent
 {
-	private BackupEvent()
-	{
-	}
-
 	public static class Pre extends BackupEvent
 	{
 		private final Consumer<File> callback;

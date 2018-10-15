@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbutilities.ranks;
 
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -50,7 +51,11 @@ public class CommandOverride extends CommandBase
 
 		if (usageS == null || usageS.isEmpty() || usageS.indexOf('/') != -1 || usageS.indexOf('%') != -1 || usageS.indexOf(' ') != -1)
 		{
-			FTBUtilities.LOGGER.warn("Command " + node + " (class: " + mirrored.getClass().getName() + ") has invalid usage language key: " + usageS);
+			if (FTBUtilitiesConfig.ranks.print_command_errors)
+			{
+				FTBUtilities.LOGGER.warn("Command " + node + " (class: " + mirrored.getClass().getName() + ") has invalid usage language key: " + usageS);
+			}
+
 			usage = new TextComponentString(String.valueOf(usageS));
 		}
 		else

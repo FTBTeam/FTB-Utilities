@@ -16,6 +16,7 @@ import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesTeamData;
 import com.feed_the_beast.ftbutilities.events.chunks.UpdateClientDataEvent;
 import com.feed_the_beast.ftbutilities.gui.ClientClaimedChunks;
+import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -23,8 +24,6 @@ import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.OptionalInt;
 
 /**
@@ -33,7 +32,7 @@ import java.util.OptionalInt;
 public class MessageClaimedChunksUpdate extends MessageToClient
 {
 	public int startX, startZ, claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
-	public Map<String, ClientClaimedChunks.Team> teams;
+	public Short2ObjectOpenHashMap<ClientClaimedChunks.Team> teams;
 
 	public MessageClaimedChunksUpdate()
 	{
@@ -62,7 +61,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient
 
 		maxClaimedChunks = teamData.getMaxClaimChunks();
 		maxLoadedChunks = teamData.getMaxChunkloaderChunks();
-		teams = new HashMap<>();
+		teams = new Short2ObjectOpenHashMap<>();
 
 		boolean canSeeChunkInfo = PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_OTHER_SEE_INFO);
 
@@ -82,15 +81,15 @@ public class MessageClaimedChunksUpdate extends MessageToClient
 						continue;
 					}
 
-					ClientClaimedChunks.Team team = teams.get(chunkTeam.getID());
+					ClientClaimedChunks.Team team = teams.get(chunkTeam.getUID());
 
 					if (team == null)
 					{
-						team = new ClientClaimedChunks.Team(chunkTeam.getID());
+						team = new ClientClaimedChunks.Team(chunkTeam.getUID());
 						team.color = chunkTeam.getColor();
 						team.nameComponent = chunkTeam.getTitle();
 						team.isAlly = chunkTeam.isAlly(p);
-						teams.put(chunkTeam.getID(), team);
+						teams.put(chunkTeam.getUID(), team);
 					}
 
 					boolean member = chunkTeam.isMember(p);
@@ -138,11 +137,11 @@ public class MessageClaimedChunksUpdate extends MessageToClient
 		maxClaimedChunks = data.readInt();
 		maxLoadedChunks = data.readInt();
 
-		teams = new HashMap<>();
+		teams = new Short2ObjectOpenHashMap<>();
 
 		for (ClientClaimedChunks.Team team : data.readCollection(ClientClaimedChunks.Team.DESERIALIZER))
 		{
-			teams.put(team.name, team);
+			teams.put(team.uid, team);
 		}
 	}
 

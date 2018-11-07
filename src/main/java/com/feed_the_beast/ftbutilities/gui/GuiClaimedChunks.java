@@ -41,7 +41,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	public static GuiClaimedChunks instance;
 	private static final ClientClaimedChunks.ChunkData[] chunkData = new ClientClaimedChunks.ChunkData[ChunkSelectorMap.TILES_GUI * ChunkSelectorMap.TILES_GUI];
 	private static int claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
-	private static final ClientClaimedChunks.ChunkData NULL_CHUNK_DATA = new ClientClaimedChunks.ChunkData(new ClientClaimedChunks.Team(""), 0);
+	private static final ClientClaimedChunks.ChunkData NULL_CHUNK_DATA = new ClientClaimedChunks.ChunkData(new ClientClaimedChunks.Team((short) 0), 0);
 
 	private static final CachedVertexData AREA = new CachedVertexData(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 

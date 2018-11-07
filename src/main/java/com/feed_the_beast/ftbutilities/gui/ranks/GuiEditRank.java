@@ -19,7 +19,7 @@ public class GuiEditRank extends GuiButtonListBase
 
 	public GuiEditRank(GuiRanks g, GuiRanks.RankGuiInst r)
 	{
-		setTitle(StringUtils.firstUppercase(r.getName()));
+		setTitle(StringUtils.firstUppercase(r.getID()));
 		guiRanks = g;
 		rank = r;
 	}
@@ -35,7 +35,7 @@ public class GuiEditRank extends GuiButtonListBase
 				GuiHelper.playClickSound();
 				guiRanks.openYesNo("", "", () ->
 				{
-					guiRanks.ranks.remove(rank.getName());
+					guiRanks.ranks.remove(rank.getID());
 
 					for (GuiRanks.RankGuiInst r : guiRanks.ranks.values())
 					{

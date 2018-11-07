@@ -82,15 +82,15 @@ public class MessageClaimedChunksUpdate extends MessageToClient
 						continue;
 					}
 
-					ClientClaimedChunks.Team team = teams.get(chunkTeam.getName());
+					ClientClaimedChunks.Team team = teams.get(chunkTeam.getID());
 
 					if (team == null)
 					{
-						team = new ClientClaimedChunks.Team(chunkTeam.getName());
+						team = new ClientClaimedChunks.Team(chunkTeam.getID());
 						team.color = chunkTeam.getColor();
 						team.nameComponent = chunkTeam.getTitle();
 						team.isAlly = chunkTeam.isAlly(p);
-						teams.put(chunkTeam.getName(), team);
+						teams.put(chunkTeam.getID(), team);
 					}
 
 					boolean member = chunkTeam.isMember(p);

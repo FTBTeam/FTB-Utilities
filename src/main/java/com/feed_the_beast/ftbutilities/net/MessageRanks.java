@@ -37,8 +37,8 @@ public class MessageRanks extends MessageToClient
 
 		for (Rank rank : r.ranks.values())
 		{
-			RankInst inst = new RankInst(rank.getName());
-			inst.parent = rank.parent.isNone() ? "" : rank.parent.getName();
+			RankInst inst = new RankInst(rank.getID());
+			inst.parent = rank.parent.isNone() ? "" : rank.parent.getID();
 			inst.tags = rank.tags;
 			inst.permissions = rank.permissions;
 			ranks.add(inst);
@@ -50,7 +50,7 @@ public class MessageRanks extends MessageToClient
 		for (ForgePlayer player : r.universe.getPlayers())
 		{
 			Rank set = r.getSetRank(player.getProfile());
-			playerRanks.put(player.getName(), set == null || set.isNone() ? "" : set.getName());
+			playerRanks.put(player.getName(), set == null || set.isNone() ? "" : set.getID());
 		}
 	}
 

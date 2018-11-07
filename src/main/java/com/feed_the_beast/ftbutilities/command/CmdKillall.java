@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbutilities.command;
 
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -29,7 +28,7 @@ import java.util.function.Predicate;
  */
 public class CmdKillall extends CmdBase
 {
-	private static final Predicate<Entity> ALL = CommonUtils.alwaysTruePredicate();
+	private static final Predicate<Entity> ALL = entity -> true;
 	private static final Predicate<Entity> ITEM = entity -> entity instanceof EntityItem;
 	private static final Predicate<Entity> XP = entity -> entity instanceof EntityXPOrb;
 	private static final Predicate<Entity> MOB = entity -> entity instanceof IMob;

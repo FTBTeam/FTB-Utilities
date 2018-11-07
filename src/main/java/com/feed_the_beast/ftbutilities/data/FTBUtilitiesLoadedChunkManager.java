@@ -108,7 +108,7 @@ public class FTBUtilitiesLoadedChunkManager implements ForgeChunkManager.Loading
 		}
 
 		ChunkDimPos pos = chunk.getPos();
-		ForgeChunkManager.Ticket ticket = requestTicket(server, new TicketKey(pos.dim, chunk.getTeam().getName()));
+		ForgeChunkManager.Ticket ticket = requestTicket(server, new TicketKey(pos.dim, chunk.getTeam().getID()));
 
 		try
 		{
@@ -167,7 +167,7 @@ public class FTBUtilitiesLoadedChunkManager implements ForgeChunkManager.Loading
 
 		if (ticket.getChunkList().isEmpty())
 		{
-			ticketMap.remove(new TicketKey(pos.dim, chunk.getTeam().getName()));
+			ticketMap.remove(new TicketKey(pos.dim, chunk.getTeam().getID()));
 			ForgeChunkManager.releaseTicket(ticket);
 		}
 

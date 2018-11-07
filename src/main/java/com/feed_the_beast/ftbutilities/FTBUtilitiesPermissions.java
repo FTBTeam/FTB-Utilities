@@ -7,8 +7,8 @@ import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigTimer;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
+import com.feed_the_beast.ftblib.lib.util.text_components.TextComponentParser;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
@@ -187,7 +187,7 @@ public class FTBUtilitiesPermissions
 	public static void registerConfigs(RegisterRankConfigEvent event)
 	{
 		event.register(CHAT_NAME_FORMAT, new ConfigString("<{name}>"), new ConfigString("<&2{name}&r>"));
-		event.register(CHAT_TEXT_COLOR, new ConfigEnum<>(StringUtils.TEXT_FORMATTING_COLORS_NAME_MAP));
+		event.register(CHAT_TEXT_COLOR, new ConfigEnum<>(TextComponentParser.TEXT_FORMATTING_COLORS_NAME_MAP));
 		event.register(BADGE, new ConfigString(""));
 		event.register(HOMES_MAX, new ConfigInt(1, 0, 30000), new ConfigInt(100));
 		event.register(HOMES_COOLDOWN, new ConfigTimer(Ticks.MINUTE.x(5)), new ConfigTimer(Ticks.NO_TICKS));

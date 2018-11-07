@@ -105,7 +105,7 @@ public class FTBUtilitiesTeamData extends TeamData
 	}
 
 	@Override
-	public String getName()
+	public String getID()
 	{
 		return FTBUtilities.MOD_ID;
 	}

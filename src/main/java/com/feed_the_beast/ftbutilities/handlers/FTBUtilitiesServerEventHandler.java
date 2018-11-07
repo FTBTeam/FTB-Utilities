@@ -143,10 +143,9 @@ public class FTBUtilitiesServerEventHandler
 					continue;
 				}
 
-				FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(universe.getPlayer(player));
 				boolean fly = player.capabilities.allowFlying;
 
-				if (!player.capabilities.isCreativeMode && data.getFly())
+				if (!player.capabilities.isCreativeMode && player.getEntityData().getBoolean("fly"))
 				{
 					player.capabilities.allowFlying = true;
 				}
@@ -158,6 +157,7 @@ public class FTBUtilitiesServerEventHandler
 
 				if (afkEnabled)
 				{
+					FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(universe.getPlayer(player));
 					boolean prevIsAfk = data.afkTime >= FTBUtilitiesConfig.afk.getNotificationTimer();
 					data.afkTime = System.currentTimeMillis() - player.getLastActiveTime();
 					boolean isAFK = data.afkTime >= FTBUtilitiesConfig.afk.getNotificationTimer();

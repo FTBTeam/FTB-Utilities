@@ -21,6 +21,6 @@ public class CmdUnmute extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		getPlayer(server, sender, args[0]).getEntityData().setBoolean("muted", false);
+		getPlayer(server, sender, args[0]).getEntityData().removeTag("muted");
 	}
 }

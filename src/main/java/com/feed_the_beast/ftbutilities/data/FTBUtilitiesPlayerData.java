@@ -222,7 +222,6 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	private BlockDimPos lastDeath, lastSafePos;
 	private long[] lastTeleport;
 	public final BlockDimPosStorage homes;
-	private boolean fly;
 
 	private FTBUtilitiesPlayerData(ForgePlayer player)
 	{
@@ -233,7 +232,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	}
 
 	@Override
-	public String getName()
+	public String getID()
 	{
 		return FTBUtilities.MOD_ID;
 	}
@@ -246,7 +245,6 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		nbt.setBoolean("DisableGlobalBadges", disableGlobalBadge);
 		nbt.setBoolean("EnablePVP", enablePVP);
 		nbt.setTag("Homes", homes.serializeNBT());
-		nbt.setBoolean("AllowFlying", fly);
 
 		if (lastDeath != null)
 		{
@@ -265,7 +263,6 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		disableGlobalBadge = nbt.getBoolean("DisableGlobalBadges");
 		enablePVP = !nbt.hasKey("EnablePVP") || nbt.getBoolean("EnablePVP");
 		homes.deserializeNBT(nbt.getCompoundTag("Homes"));
-		fly = nbt.getBoolean("AllowFlying");
 		lastDeath = BlockDimPos.fromIntArray(nbt.getIntArray("LastDeath"));
 		nickname = nbt.getString("Nickname");
 		afkMesageLocation = EnumMessageLocation.NAME_MAP.get(nbt.getString("AFK"));
@@ -321,17 +318,6 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	public EnumMessageLocation getAFKMessageLocation()
 	{
 		return afkMesageLocation;
-	}
-
-	public void setFly(boolean v)
-	{
-		fly = v;
-		player.markDirty();
-	}
-
-	public boolean getFly()
-	{
-		return fly;
 	}
 
 	public void setLastDeath(@Nullable BlockDimPos pos)

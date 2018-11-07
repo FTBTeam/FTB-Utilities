@@ -31,7 +31,7 @@ public class GuiRanks extends GuiButtonListBase
 		private Tag(String tag)
 		{
 			super(tag);
-			displayName = I18n.hasKey("ftbutilities.ranks.tags." + getName()) ? I18n.format("ftbutilities.ranks.tags." + getName()) : getName();
+			displayName = I18n.hasKey("ftbutilities.ranks.tags." + getID()) ? I18n.format("ftbutilities.ranks.tags." + getID()) : getID();
 		}
 
 		@Override
@@ -76,12 +76,12 @@ public class GuiRanks extends GuiButtonListBase
 
 		for (Tag tag : tagsList)
 		{
-			tags.put(tag.getName(), tag);
+			tags.put(tag.getID(), tag);
 		}
 
 		for (RankInst inst : r)
 		{
-			RankGuiInst inst1 = new RankGuiInst(inst.getName());
+			RankGuiInst inst1 = new RankGuiInst(inst.getID());
 
 			for (String tag : inst.tags)
 			{
@@ -95,12 +95,12 @@ public class GuiRanks extends GuiButtonListBase
 
 			inst1.permissions.addAll(inst.permissions);
 
-			ranks.put(inst1.getName(), inst1);
+			ranks.put(inst1.getID(), inst1);
 		}
 
 		for (RankInst inst : r)
 		{
-			ranks.get(inst.getName()).parent = ranks.get(inst.parent);
+			ranks.get(inst.getID()).parent = ranks.get(inst.parent);
 		}
 
 		playerRanks = p;
@@ -130,7 +130,7 @@ public class GuiRanks extends GuiButtonListBase
 
 		for (RankGuiInst inst : ranks.values())
 		{
-			panel.add(new SimpleTextButton(panel, StringUtils.firstUppercase(inst.getName()), GuiIcons.SETTINGS)
+			panel.add(new SimpleTextButton(panel, StringUtils.firstUppercase(inst.getID()), GuiIcons.SETTINGS)
 			{
 				@Override
 				public void onClicked(MouseButton button)

@@ -47,11 +47,11 @@ public class GuiPlayerRanks extends GuiButtonListBase
 			GuiHelper.playClickSound();
 			new GuiSelectRank(guiRanks, rank -> true, rank -> {
 
-				String s = rank == null ? "" : rank.getName();
+				String s = rank == null ? "" : rank.getID();
 
 				if (!s.equals(guiRanks.playerRanks.put(username, s)))
 				{
-					ClientUtils.execClientCommand("/ranks set " + username + " " + (rank == null ? "none" : rank.getName()));
+					ClientUtils.execClientCommand("/ranks set " + username + " " + (rank == null ? "none" : rank.getID()));
 					getGui().refreshWidgets();
 				}
 

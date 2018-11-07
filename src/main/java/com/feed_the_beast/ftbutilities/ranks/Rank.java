@@ -61,7 +61,7 @@ public class Rank extends FinalIDObject
 	public Rank(Ranks r, String id)
 	{
 		super(id);
-		displayName = new TextComponentString(getName());
+		displayName = new TextComponentString(getID());
 		displayName.getStyle().setColor(TextFormatting.DARK_GREEN);
 		ranks = r;
 		parent = ranks.none;

@@ -138,7 +138,8 @@ public class FTBUtilitiesRegistryEventHandler
 			@Override
 			public Type getType(ForgePlayer player, NBTTagCompound data)
 			{
-				return Ranks.isActive() ? Type.fromBoolean(player.hasPermission(FTBUtilitiesPermissions.RANKS_VIEW)) : Type.INVISIBLE;
+				//return Ranks.isActive() ? Type.fromBoolean(player.hasPermission(FTBUtilitiesPermissions.RANKS_VIEW)) : Type.INVISIBLE;
+				return Type.INVISIBLE;
 			}
 
 			@Override

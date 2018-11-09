@@ -38,15 +38,15 @@ public class MessageClaimedChunksRequest extends MessageToServer
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeInt(startX);
-		data.writeInt(startZ);
+		data.writeVarInt(startX);
+		data.writeVarInt(startZ);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		startX = data.readInt();
-		startZ = data.readInt();
+		startX = data.readVarInt();
+		startZ = data.readVarInt();
 	}
 
 	@Override

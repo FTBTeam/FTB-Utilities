@@ -34,15 +34,15 @@ public class MessageBackupProgress extends MessageToClient
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeInt(current);
-		data.writeInt(total);
+		data.writeVarInt(current);
+		data.writeVarInt(total);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		current = data.readInt();
-		total = data.readInt();
+		current = data.readVarInt();
+		total = data.readVarInt();
 	}
 
 	@Override

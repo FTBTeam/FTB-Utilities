@@ -118,24 +118,24 @@ public class MessageClaimedChunksUpdate extends MessageToClient
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeInt(startX);
-		data.writeInt(startZ);
-		data.writeInt(claimedChunks);
-		data.writeInt(loadedChunks);
-		data.writeInt(maxClaimedChunks);
-		data.writeInt(maxLoadedChunks);
+		data.writeVarInt(startX);
+		data.writeVarInt(startZ);
+		data.writeVarInt(claimedChunks);
+		data.writeVarInt(loadedChunks);
+		data.writeVarInt(maxClaimedChunks);
+		data.writeVarInt(maxLoadedChunks);
 		data.writeCollection(teams.values(), ClientClaimedChunks.Team.SERIALIZER);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		startX = data.readInt();
-		startZ = data.readInt();
-		claimedChunks = data.readInt();
-		loadedChunks = data.readInt();
-		maxClaimedChunks = data.readInt();
-		maxLoadedChunks = data.readInt();
+		startX = data.readVarInt();
+		startZ = data.readVarInt();
+		claimedChunks = data.readVarInt();
+		loadedChunks = data.readVarInt();
+		maxClaimedChunks = data.readVarInt();
+		maxLoadedChunks = data.readVarInt();
 
 		teams = new Short2ObjectOpenHashMap<>();
 

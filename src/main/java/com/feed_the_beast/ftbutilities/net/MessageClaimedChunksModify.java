@@ -46,18 +46,18 @@ public class MessageClaimedChunksModify extends MessageToServer
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeInt(startX);
-		data.writeInt(startZ);
-		data.writeByte(action);
+		data.writeVarInt(startX);
+		data.writeVarInt(startZ);
+		data.writeVarInt(action);
 		data.writeCollection(chunks, DataOut.CHUNK_POS);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		startX = data.readInt();
-		startZ = data.readInt();
-		action = data.readUnsignedByte();
+		startX = data.readVarInt();
+		startZ = data.readVarInt();
+		action = data.readVarInt();
 		chunks = data.readCollection(null, DataIn.CHUNK_POS);
 	}
 

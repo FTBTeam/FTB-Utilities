@@ -23,15 +23,6 @@
 		"required_server_mods": ["ftbutilities"],
 		"loading_screen": true
 	},
-	"shop": {
-		"group": "ftblib:util",
-		"icon": "ftblib:icons/money_bag",
-		"x": 100,
-		"click": "custom:ftbutilities:shop_gui",
-		"required_server_mods": ["ftbutilities"],
-		"dev_only": true,
-		"loading_screen": true
-	},
 	"heal": {
 		"group": "ftblib:cheat",
 		"icon": "ftblib:icons/heart",

@@ -21,6 +21,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.ThreadedFileIOBase;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,7 +54,8 @@ public enum Backups
 
 	public void init()
 	{
-		backupsFolder = FTBUtilitiesConfig.backups.folder.isEmpty() ? new File(Universe.get().server.getDataDirectory(), "backups") : new File(FTBUtilitiesConfig.backups.folder);
+		File dataDir = FMLCommonHandler.instance().getMinecraftServerInstance().getDataDirectory();
+		backupsFolder = FTBUtilitiesConfig.backups.folder.isEmpty() ? new File(dataDir, "backups") : new File(FTBUtilitiesConfig.backups.folder);
 		doingBackup = 0;
 		backups.clear();
 
@@ -61,10 +63,10 @@ public enum Backups
 
 		if (oldFile.exists())
 		{
-			oldFile.renameTo(new File(Universe.get().server.getDataDirectory(), "local/ftbutilities/backups.json"));
+			oldFile.renameTo(new File(dataDir, "local/ftbutilities/backups.json"));
 		}
 
-		JsonElement element = DataReader.get(new File(Universe.get().server.getDataDirectory(), "local/ftbutilities/backups.json")).safeJson();
+		JsonElement element = DataReader.get(new File(dataDir, "local/ftbutilities/backups.json")).safeJson();
 
 		if (element.isJsonArray())
 		{

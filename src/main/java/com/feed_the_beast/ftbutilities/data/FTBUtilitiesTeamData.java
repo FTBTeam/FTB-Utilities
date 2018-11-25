@@ -3,12 +3,16 @@ package com.feed_the_beast.ftbutilities.data;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamDataEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamDeletedEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamLoadedEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamSavedEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.TeamData;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftblib.lib.util.FileUtils;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -20,6 +24,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.io.File;
 import java.util.Map;
 import java.util.OptionalInt;
 
@@ -40,19 +45,99 @@ public class FTBUtilitiesTeamData extends TeamData
 		event.register(new FTBUtilitiesTeamData(event.getTeam()));
 	}
 
-	/*
-	public void printMessage(@Nullable IForgePlayer from, ITextComponent message)
+	@SubscribeEvent
+	public static void onTeamSaved(ForgeTeamSavedEvent event)
 	{
-		ITextComponent name = StringUtils.color(new TextComponentString(Universe.INSTANCE.getPlayer(message.getSender()).getProfile().getName()), color.getValue().getTextFormatting());
-		ITextComponent msg = FTBLibLang.TEAM_CHAT_MESSAGE.textComponent(name, message);
-		msg.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.CLICK_HERE.textComponent()));
-		msg.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/team msg "));
-
-		for (EntityPlayerMP ep : getOnlineTeamPlayers(EnumTeamStatus.MEMBER))
+		if (!ClaimedChunks.isActive())
 		{
-			ep.sendMessage(msg);
+			return;
 		}
-	}*/
+
+		NBTTagCompound nbt = new NBTTagCompound();
+
+		Int2ObjectOpenHashMap<NBTTagList> claimedChunks = new Int2ObjectOpenHashMap<>();
+
+		for (ClaimedChunk chunk : ClaimedChunks.instance.getTeamChunks(event.getTeam(), OptionalInt.empty()))
+		{
+			ChunkDimPos pos = chunk.getPos();
+
+			NBTTagList list = claimedChunks.get(pos.dim);
+
+			if (list == null)
+			{
+				list = new NBTTagList();
+				claimedChunks.put(pos.dim, list);
+			}
+
+			NBTTagCompound chunkNBT = new NBTTagCompound();
+			chunkNBT.setInteger("x", pos.posX);
+			chunkNBT.setInteger("z", pos.posZ);
+
+			if (chunk.isLoaded())
+			{
+				chunkNBT.setBoolean("loaded", true);
+			}
+
+			list.appendTag(chunkNBT);
+		}
+
+		NBTTagCompound claimedChunksTag = new NBTTagCompound();
+
+		for (Map.Entry<Integer, NBTTagList> entry : claimedChunks.entrySet())
+		{
+			claimedChunksTag.setTag(entry.getKey().toString(), entry.getValue());
+		}
+
+		if (!claimedChunksTag.isEmpty())
+		{
+			nbt.setTag("ClaimedChunks", claimedChunksTag);
+		}
+
+		File file = event.getTeam().getDataFile("claimedchunks");
+
+		if (nbt.isEmpty())
+		{
+			FileUtils.delete(file);
+		}
+		else
+		{
+			NBTUtils.writeNBTSafe(file, nbt);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onTeamLoaded(ForgeTeamLoadedEvent event)
+	{
+		if (!ClaimedChunks.isActive())
+		{
+			return;
+		}
+
+		NBTTagCompound nbt = NBTUtils.readNBT(event.getTeam().getDataFile("claimedchunks"));
+
+		if (nbt == null)
+		{
+			return;
+		}
+
+		FTBUtilitiesTeamData data = get(event.getTeam());
+
+		NBTTagCompound claimedChunksTag = nbt.getCompoundTag("ClaimedChunks");
+
+		for (String dim : claimedChunksTag.getKeySet())
+		{
+			NBTTagList list = claimedChunksTag.getTagList(dim, Constants.NBT.TAG_COMPOUND);
+			int dimInt = Integer.parseInt(dim);
+
+			for (int i = 0; i < list.tagCount(); i++)
+			{
+				NBTTagCompound chunkNBT = list.getCompoundTagAt(i);
+				ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(new ChunkPos(chunkNBT.getInteger("x"), chunkNBT.getInteger("z")), dimInt), data);
+				chunk.setLoaded(chunkNBT.getBoolean("loaded"));
+				ClaimedChunks.instance.addChunk(chunk);
+			}
+		}
+	}
 
 	@SubscribeEvent
 	public static void getTeamSettings(ForgeTeamConfigEvent event)
@@ -63,8 +148,6 @@ public class FTBUtilitiesTeamData extends TeamData
 	@SubscribeEvent
 	public static void onTeamDeleted(ForgeTeamDeletedEvent event)
 	{
-		//printMessage(FTBLibLang.TEAM_DELETED.textComponent(getTitle()));
-
 		if (ClaimedChunks.isActive())
 		{
 			ClaimedChunks.instance.unclaimAllChunks(event.getTeam(), OptionalInt.empty());
@@ -99,48 +182,6 @@ public class FTBUtilitiesTeamData extends TeamData
 		nbt.setString("InteractWithBlocks", interactWithBlocks.getName());
 		nbt.setString("AttackEntities", attackEntities.getName());
 		nbt.setString("UseItems", useItems.getName());
-
-		if (ClaimedChunks.isActive())
-		{
-			Int2ObjectOpenHashMap<NBTTagList> claimedChunks = new Int2ObjectOpenHashMap<>();
-
-			for (ClaimedChunk chunk : ClaimedChunks.instance.getTeamChunks(team, OptionalInt.empty()))
-			{
-				ChunkDimPos pos = chunk.getPos();
-
-				NBTTagList list = claimedChunks.get(pos.dim);
-
-				if (list == null)
-				{
-					list = new NBTTagList();
-					claimedChunks.put(pos.dim, list);
-				}
-
-				NBTTagCompound chunkNBT = new NBTTagCompound();
-				chunkNBT.setInteger("x", pos.posX);
-				chunkNBT.setInteger("z", pos.posZ);
-
-				if (chunk.isLoaded())
-				{
-					chunkNBT.setBoolean("loaded", true);
-				}
-
-				list.appendTag(chunkNBT);
-			}
-
-			NBTTagCompound claimedChunksTag = new NBTTagCompound();
-
-			for (Map.Entry<Integer, NBTTagList> entry : claimedChunks.entrySet())
-			{
-				claimedChunksTag.setTag(entry.getKey().toString(), entry.getValue());
-			}
-
-			if (!claimedChunksTag.isEmpty())
-			{
-				nbt.setTag("ClaimedChunks", claimedChunksTag);
-			}
-		}
-
 		return nbt;
 	}
 
@@ -153,8 +194,9 @@ public class FTBUtilitiesTeamData extends TeamData
 		attackEntities = EnumTeamStatus.NAME_MAP_PERMS.get(nbt.getString("AttackEntities"));
 		useItems = EnumTeamStatus.NAME_MAP_PERMS.get(nbt.getString("UseItems"));
 
-		if (ClaimedChunks.isActive())
+		if (ClaimedChunks.isActive() && nbt.hasKey("ClaimedChunks"))
 		{
+			team.markDirty();
 			NBTTagCompound claimedChunksTag = nbt.getCompoundTag("ClaimedChunks");
 
 			for (String dim : claimedChunksTag.getKeySet())

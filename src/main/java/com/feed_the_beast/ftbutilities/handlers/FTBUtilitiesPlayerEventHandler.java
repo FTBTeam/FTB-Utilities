@@ -63,9 +63,8 @@ public class FTBUtilitiesPlayerEventHandler
 			return;
 		}
 
-		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
-		data.setLastSafePos(new BlockDimPos(player));
-		FTBUtilitiesNotifications.updateChunkMessage(data, player, new ChunkDimPos(event.getNewChunkX(), event.getNewChunkZ(), player.dimension));
+		FTBUtilitiesPlayerData.get(p).setLastSafePos(new BlockDimPos(player));
+		FTBUtilitiesNotifications.updateChunkMessage(player, new ChunkDimPos(event.getNewChunkX(), event.getNewChunkZ(), player.dimension));
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

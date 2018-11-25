@@ -10,7 +10,6 @@ import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
-import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -41,7 +40,7 @@ public class CmdUnclaim extends CmdBase
 		if (ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_UNCLAIM) && ClaimedChunks.instance.unclaimChunk(pos))
 		{
 			Notification.of(FTBUtilitiesNotifications.CHUNK_MODIFIED, FTBUtilities.lang(player, "ftbutilities.lang.chunks.chunk_unclaimed")).send(server, player);
-			FTBUtilitiesNotifications.updateChunkMessage(FTBUtilitiesPlayerData.get(p), player, pos);
+			FTBUtilitiesNotifications.updateChunkMessage(player, pos);
 		}
 		else
 		{

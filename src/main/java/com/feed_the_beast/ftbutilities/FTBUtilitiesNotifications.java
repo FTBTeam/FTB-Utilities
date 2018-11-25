@@ -6,8 +6,6 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
-import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
-import com.google.common.base.Objects;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -30,7 +28,7 @@ public class FTBUtilitiesNotifications
 		Notification.of(new ResourceLocation(FTBUtilities.MOD_ID, "cant_modify_chunk"), FTBUtilities.lang(player, "ftbutilities.lang.chunks.cant_modify_chunk")).setError().send(server, player);
 	}
 
-	public static void updateChunkMessage(FTBUtilitiesPlayerData data, EntityPlayerMP player, ChunkDimPos pos)
+	public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)
 	{
 		if (!ClaimedChunks.isActive())
 		{
@@ -39,10 +37,18 @@ public class FTBUtilitiesNotifications
 
 		ClaimedChunk chunk = ClaimedChunks.instance.getChunk(pos);
 		ForgeTeam team = chunk == null ? null : chunk.getTeam();
+		short teamID = team == null ? 0 : team.getUID();
 
-		if (!Objects.equal(data.lastChunkTeam, team))
+		if (player.getEntityData().getShort("FTBULastChunkTeam") != teamID)
 		{
-			data.lastChunkTeam = team;
+			if (teamID == 0)
+			{
+				player.getEntityData().removeTag("FTBULastChunkTeam");
+			}
+			else
+			{
+				player.getEntityData().setShort("FTBULastChunkTeam", teamID);
+			}
 
 			if (team != null)
 			{

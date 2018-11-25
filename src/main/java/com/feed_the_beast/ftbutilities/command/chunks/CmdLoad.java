@@ -10,7 +10,6 @@ import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
-import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -41,7 +40,7 @@ public class CmdLoad extends CmdBase
 		if (p.hasTeam() && ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_LOAD) && ClaimedChunks.instance.loadChunk(p.team, pos))
 		{
 			Notification.of(FTBUtilitiesNotifications.CHUNK_MODIFIED, FTBUtilities.lang(player, "ftbutilities.lang.chunks.chunk_loaded")).send(server, player);
-			FTBUtilitiesNotifications.updateChunkMessage(FTBUtilitiesPlayerData.get(p), player, pos);
+			FTBUtilitiesNotifications.updateChunkMessage(player, pos);
 		}
 		else
 		{

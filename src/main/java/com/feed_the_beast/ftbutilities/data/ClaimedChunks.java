@@ -149,7 +149,7 @@ public class ClaimedChunks
 				int startX = playerPos.posX - ChunkSelectorMap.TILES_GUI2;
 				int startZ = playerPos.posZ - ChunkSelectorMap.TILES_GUI2;
 				new MessageClaimedChunksUpdate(startX, startZ, player).sendTo(player);
-				FTBUtilitiesNotifications.updateChunkMessage(FTBUtilitiesPlayerData.get(universe.getPlayer(player)), player, playerPos);
+				FTBUtilitiesNotifications.updateChunkMessage(player, playerPos);
 			}
 
 			isDirty = false;

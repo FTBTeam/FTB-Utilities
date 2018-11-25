@@ -10,7 +10,6 @@ import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
-import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -48,7 +47,7 @@ public class CmdClaim extends CmdBase
 		{
 			case SUCCESS:
 				Notification.of(FTBUtilitiesNotifications.CHUNK_MODIFIED, FTBUtilities.lang(player, "ftbutilities.lang.chunks.chunk_claimed")).send(server, player);
-				FTBUtilitiesNotifications.updateChunkMessage(FTBUtilitiesPlayerData.get(p), player, pos);
+				FTBUtilitiesNotifications.updateChunkMessage(player, pos);
 				break;
 			case DIMENSION_BLOCKED:
 				Notification.of(FTBUtilitiesNotifications.CHUNK_CANT_CLAIM, FTBUtilities.lang(player, "ftbutilities.lang.chunks.claiming_not_enabled_dim")).setError().send(server, player);

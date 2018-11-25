@@ -71,26 +71,6 @@ public class FTBUtilitiesTeamData extends TeamData
 		}
 	}
 
-	/*
-	@SubscribeEvent
-	public static void onTeamPlayerJoined(ForgeTeamPlayerJoinedEvent event)
-	{
-		//printMessage(FTBLibLang.TEAM_MEMBER_JOINED.textComponent(player.getName()));
-	}
-
-	@SubscribeEvent
-	public static void onTeamPlayerLeft(ForgeTeamPlayerLeftEvent event)
-	{
-		//printMessage(FTBLibLang.TEAM_MEMBER_LEFT.textComponent(player.getName()));
-	}
-
-	@SubscribeEvent
-	public static void onTeamOwnerChanged(ForgeTeamOwnerChangedEvent event)
-	{
-		//printMessage(FTBLibLang.TEAM_TRANSFERRED_OWNERSHIP.textComponent(p1.getName()));
-	}
-	*/
-
 	private EnumTeamStatus editBlocks = EnumTeamStatus.ALLY;
 	private EnumTeamStatus interactWithBlocks = EnumTeamStatus.ALLY;
 	private EnumTeamStatus attackEntities = EnumTeamStatus.ALLY;

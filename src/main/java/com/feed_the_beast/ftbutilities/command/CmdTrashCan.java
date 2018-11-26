@@ -16,6 +16,6 @@ public class CmdTrashCan extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		getCommandSenderAsPlayer(sender).displayGUIChest(new InventoryBasic("Trash Can", true, 18));
+		getCommandSenderAsPlayer(sender).displayGUIChest(new InventoryBasic("Trash Can", true, 36));
 	}
 }

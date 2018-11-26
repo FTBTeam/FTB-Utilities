@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -76,7 +77,7 @@ public class CmdLeaderboard extends CmdBase
 			Leaderboard leaderboard = FTBUtilitiesCommon.LEADERBOARDS.get(new ResourceLocation(args[0]));
 			sender.sendMessage(leaderboard.getTitle().createCopy().appendText(":"));
 
-			ForgePlayer p0 = Universe.get().getPlayer(sender);
+			ForgePlayer p0 = sender instanceof EntityPlayerMP ? Universe.get().getPlayer(sender) : null;
 			List<ForgePlayer> players = new ArrayList<>(Universe.get().getPlayers());
 			players.sort(leaderboard.getComparator());
 

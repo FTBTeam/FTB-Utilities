@@ -39,15 +39,15 @@ public class FTBUtilitiesNotifications
 		ForgeTeam team = chunk == null ? null : chunk.getTeam();
 		short teamID = team == null ? 0 : team.getUID();
 
-		if (player.getEntityData().getShort("FTBULastChunkTeam") != teamID)
+		if (player.getEntityData().getShort("ftbu_lchunk") != teamID)
 		{
 			if (teamID == 0)
 			{
-				player.getEntityData().removeTag("FTBULastChunkTeam");
+				player.getEntityData().removeTag("ftbu_lchunk");
 			}
 			else
 			{
-				player.getEntityData().setShort("FTBULastChunkTeam", teamID);
+				player.getEntityData().setShort("ftbu_lchunk", teamID);
 			}
 
 			if (team != null)

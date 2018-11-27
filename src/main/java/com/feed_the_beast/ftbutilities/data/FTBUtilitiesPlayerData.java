@@ -200,7 +200,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		}
 
 		FTBUtilitiesUniverseData.updateBadge(event.getPlayer().getId());
-		event.getPlayer().getPlayer().getEntityData().removeTag("FTBULastChunkTeam");
+		event.getPlayer().getPlayer().getEntityData().removeTag("ftbu_lchunk");
 	}
 
 	@SubscribeEvent

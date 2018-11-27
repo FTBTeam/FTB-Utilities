@@ -33,6 +33,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -48,6 +49,10 @@ import java.util.function.Function;
 @Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
 public class FTBUtilitiesPlayerData extends PlayerData
 {
+	public static final String TAG_FLY = "fly";
+	public static final String TAG_MUTED = "muted";
+	public static final String TAG_LAST_CHUNK = "ftbu_lchunk";
+
 	public enum Timer
 	{
 		HOME(FTBUtilitiesPermissions.HOMES_COOLDOWN, FTBUtilitiesPermissions.HOMES_WARMUP),
@@ -199,8 +204,15 @@ public class FTBUtilitiesPlayerData extends PlayerData
 			ClaimedChunks.instance.markDirty();
 		}
 
-		FTBUtilitiesUniverseData.updateBadge(event.getPlayer().getId());
-		event.getPlayer().getPlayer().getEntityData().removeTag("ftbu_lchunk");
+		EntityPlayerMP player = event.getPlayer().getPlayer();
+		FTBUtilitiesUniverseData.updateBadge(player.getUniqueID());
+		player.getEntityData().removeTag(TAG_LAST_CHUNK);
+	}
+
+	@SubscribeEvent
+	public static void onPlayerClone(PlayerEvent.Clone event)
+	{
+		event.getEntity().getEntityData().removeTag(TAG_LAST_CHUNK);
 	}
 
 	@SubscribeEvent

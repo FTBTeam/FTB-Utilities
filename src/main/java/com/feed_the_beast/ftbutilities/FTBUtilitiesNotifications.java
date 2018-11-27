@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
+import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -39,15 +40,15 @@ public class FTBUtilitiesNotifications
 		ForgeTeam team = chunk == null ? null : chunk.getTeam();
 		short teamID = team == null ? 0 : team.getUID();
 
-		if (player.getEntityData().getShort("ftbu_lchunk") != teamID)
+		if (player.getEntityData().getShort(FTBUtilitiesPlayerData.TAG_LAST_CHUNK) != teamID)
 		{
 			if (teamID == 0)
 			{
-				player.getEntityData().removeTag("ftbu_lchunk");
+				player.getEntityData().removeTag(FTBUtilitiesPlayerData.TAG_LAST_CHUNK);
 			}
 			else
 			{
-				player.getEntityData().setShort("ftbu_lchunk", teamID);
+				player.getEntityData().setShort(FTBUtilitiesPlayerData.TAG_LAST_CHUNK, teamID);
 			}
 
 			if (team != null)

@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.EnumMessageLocation;
 import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
@@ -64,7 +65,7 @@ public class FTBUtilitiesServerEventHandler
 		GameProfile profile = player.getGameProfile();
 		IContext context = new PlayerContext(player);
 
-		if (!PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_SPEAK, context) || player.getEntityData().getBoolean("muted"))
+		if (!PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_SPEAK, context) || NBTUtils.getPersistedData(player, false).getBoolean(FTBUtilitiesPlayerData.TAG_MUTED))
 		{
 			player.sendStatusMessage(StringUtils.color(FTBUtilities.lang(player, "commands.mute.muted"), TextFormatting.RED), true);
 			event.setCanceled(true);
@@ -145,7 +146,7 @@ public class FTBUtilitiesServerEventHandler
 
 				boolean fly = player.capabilities.allowFlying;
 
-				if (!player.capabilities.isCreativeMode && player.getEntityData().getBoolean("fly"))
+				if (!player.capabilities.isCreativeMode && NBTUtils.getPersistedData(player, false).getBoolean(FTBUtilitiesPlayerData.TAG_FLY))
 				{
 					player.capabilities.allowFlying = true;
 				}

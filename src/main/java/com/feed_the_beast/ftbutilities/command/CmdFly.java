@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftbutilities.command;
 
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 
 /**
@@ -26,16 +28,17 @@ public class CmdFly extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		NBTTagCompound nbt = NBTUtils.getPersistedData(player, true);
 
-		if (player.getEntityData().getBoolean("fly"))
+		if (nbt.getBoolean("fly"))
 		{
-			player.getEntityData().removeTag("fly");
+			nbt.removeTag("fly");
 			player.capabilities.allowFlying = false;
 			player.capabilities.isFlying = false;
 		}
 		else
 		{
-			player.getEntityData().setBoolean("fly", true);
+			nbt.setBoolean("fly", true);
 			player.capabilities.allowFlying = true;
 		}
 

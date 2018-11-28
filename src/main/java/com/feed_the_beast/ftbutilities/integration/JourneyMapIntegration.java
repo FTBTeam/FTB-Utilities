@@ -43,6 +43,11 @@ public class JourneyMapIntegration implements IClientPlugin
 	@Override
 	public void initialize(IClientAPI api)
 	{
+		if (!FTBUtilitiesClientConfig.general.journeymap_overlay)
+		{
+			return;
+		}
+
 		clientAPI = api;
 		polygons = new HashMap<>();
 		lastPosition = null;
@@ -117,7 +122,7 @@ public class JourneyMapIntegration implements IClientPlugin
 	@SubscribeEvent
 	public void onEnteringChunk(EntityEvent.EnteringChunk event)
 	{
-		if (!FTBUtilitiesClientConfig.general.journeymap_overlay || event.getEntity() != ClientUtils.MC.player)
+		if (event.getEntity() != ClientUtils.MC.player)
 		{
 			return;
 		}
@@ -132,14 +137,14 @@ public class JourneyMapIntegration implements IClientPlugin
 	@SubscribeEvent
 	public void onDataReceived(UpdateClientDataEvent event)
 	{
-		if (!polygons.isEmpty() && (!FTBUtilitiesClientConfig.general.journeymap_overlay || !clientAPI.playerAccepts(FTBUtilities.MOD_ID, DisplayType.Polygon)))
+		if (!polygons.isEmpty() && !clientAPI.playerAccepts(FTBUtilities.MOD_ID, DisplayType.Polygon))
 		{
 			clearData();
 			return;
 		}
 
 		MessageClaimedChunksUpdate m = event.getMessage();
-		ClientClaimedChunks.ChunkData data[] = new ClientClaimedChunks.ChunkData[ChunkSelectorMap.TILES_GUI * ChunkSelectorMap.TILES_GUI];
+		ClientClaimedChunks.ChunkData[] data = new ClientClaimedChunks.ChunkData[ChunkSelectorMap.TILES_GUI * ChunkSelectorMap.TILES_GUI];
 
 		for (ClientClaimedChunks.Team team : m.teams.values())
 		{

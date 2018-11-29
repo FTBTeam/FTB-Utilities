@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbutilities.gui;
 
-import com.feed_the_beast.ftblib.events.client.GuideEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
 import com.feed_the_beast.ftblib.lib.client.CachedVertexData;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
@@ -262,7 +261,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			public void onClicked(MouseButton button)
 			{
 				GuiHelper.playClickSound();
-				GuideEvent.openOrWeb("/ftbutilities/chunk_claiming");
+				handleClick("curseforgepages:ftb-utilities:claimed-chunks");
 			}
 		});
 	}

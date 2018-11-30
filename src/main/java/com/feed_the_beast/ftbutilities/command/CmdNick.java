@@ -38,7 +38,7 @@ public class CmdNick extends CmdBase
 		}
 		else
 		{
-			String name = data.getNickname().replace('&', StringUtils.FORMATTING_CHAR);
+			String name = StringUtils.addFormatting(data.getNickname());
 
 			if (!player.hasPermission(FTBUtilitiesPermissions.CHAT_NICKNAME_COLORS))
 			{

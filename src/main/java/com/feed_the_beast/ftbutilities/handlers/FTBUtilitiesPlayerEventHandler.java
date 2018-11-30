@@ -145,7 +145,7 @@ public class FTBUtilitiesPlayerEventHandler
 
 				if (!data.getNickname().isEmpty() && PermissionAPI.hasPermission(event.getEntityPlayer(), FTBUtilitiesPermissions.CHAT_NICKNAME_SET))
 				{
-					String name = data.getNickname().replace('&', StringUtils.FORMATTING_CHAR);
+					String name = StringUtils.addFormatting(data.getNickname());
 
 					if (!p.hasPermission(FTBUtilitiesPermissions.CHAT_NICKNAME_COLORS))
 					{

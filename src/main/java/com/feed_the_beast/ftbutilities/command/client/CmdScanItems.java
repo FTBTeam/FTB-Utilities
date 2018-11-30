@@ -16,6 +16,9 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.io.File;
@@ -205,6 +208,16 @@ public class CmdScanItems extends CmdBase
 						list.add(builder.toString());
 						builder.setLength(0);
 					}
+				}
+
+				list.add("");
+				list.add("");
+				list.add("## Fluids:");
+				list.add("");
+
+				for (Fluid fluid : FluidRegistry.getRegisteredFluids().values())
+				{
+					list.add("- " + fluid.getName() + " - " + new FluidStack(fluid, 1000).getLocalizedName());
 				}
 
 				FileUtils.saveSafe(new File(ClientUtils.MC.gameDir, "local/client/scanneditems." + (md ? "md" : "txt")), list);

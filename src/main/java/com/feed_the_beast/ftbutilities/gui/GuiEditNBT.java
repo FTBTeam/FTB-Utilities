@@ -418,7 +418,7 @@ public class GuiEditNBT extends GuiBase
 						list.add("");
 					}
 
-					GuiHelper.addStackTooltip(((ItemIcon) hoverIcon).getStack(), list, "");
+					GuiHelper.addStackTooltip(((ItemIcon) hoverIcon).getStack(), list);
 				}
 			}
 		}

@@ -1,0 +1,325 @@
+# Config
+ftbutilities.auto_shutdown=Автовыключение
+ftbutilities.auto_shutdown.enabled_singleplayer=Включено в одиночной игре
+ftbutilities.auto_shutdown.times=Время выключения
+
+ftbutilities.afk=AFK
+ftbutilities.afk_kicked=Вы будете изгнаны после: %s
+ftbutilities.afk.enabled_singleplayer=Включено в одиночной игре
+ftbutilities.afk.notification_timer=Таймер уведомления
+ftbutilities.afk.log_afk=Журнал AFK
+
+ftbutilities.server_info=Информация о сервере
+ftbutilities.server_info.difficulty=Сложность
+ftbutilities.server_info.admin_quick_access=Быстрый доступ администратора
+
+ftbutilities.chat=Чат
+ftbutilities.chat.general_history_limit=Общий лимит истории чата
+ftbutilities.chat.team_history_limit=Командный лимит истории чата
+ftbutilities.chat.admin_history_limit=Админ лимит истории чата
+
+ftbutilities.backups=Резервные копии
+ftbutilities.backups.silent=Тихий
+ftbutilities.backups.backups_to_keep=Резервные копии для хранения
+ftbutilities.backups.backup_timer=Таймер резервного копирования
+ftbutilities.backups.compression_level=Уровень сжатия
+ftbutilities.backups.folder=Папка
+ftbutilities.backups.display_file_size=Отображать размер файла
+ftbutilities.backups.use_separate_thread=Использовать отдельный поток
+ftbutilities.backups.extra_files=Дополнительные файлы
+ftbutilities.backups.max_total_size=Максимальный общий размер
+ftbutilities.backups.disable_level_saving=Отключить сохранение уровня
+
+ftbutilities.commands=Команды
+
+ftbutilities.login=Вход
+ftbutilities.login.enable_motd=Включить MOTD
+ftbutilities.login.enable_starting_items=Включить стартовые предметы
+ftbutilities.login.enable_global_badges=Включить глобальные значки
+ftbutilities.login.enable_event_badges=Включить значки событий
+ftbutilities.login.motd=MOTD
+ftbutilities.login.starting_items=Стартовые предметы
+
+ftbutilities.world=Мир
+ftbutilities.world.blocked_claiming_dimensions=Заблокированные на занятость измерения
+ftbutilities.world.chunk_claiming=Занятость чанка
+ftbutilities.world.chunk_loading=Загрузка чанка
+ftbutilities.world.safe_spawn=Безопасный спавн
+ftbutilities.world.spawn_area_in_sp=Область спавна в одиночной игре
+ftbutilities.world.spawn_radius=Радиус спавна
+ftbutilities.world.spawn_dimension=Измерение спавна
+ftbutilities.world.unload_erroring_chunks=Выгружать ошибочные чанки
+ftbutilities.world.rtp_min_distance=Мин. /rtp дистанция
+ftbutilities.world.rtp_max_distance=Макс. /rtp дистанция
+
+ftbutilities.world.logging=Логирование
+ftbutilities.world.logging.include_creative_players=Включить творческих игроков
+ftbutilities.world.logging.include_fake_players=Включить фейк игроков
+ftbutilities.world.logging.block_placed=Размещение блока
+ftbutilities.world.logging.block_broken=Разрушение блока
+ftbutilities.world.logging.item_clicked_in_air=Предмет нажатого в воздухе
+
+ftbutilities.ranks=Ранги
+ftbutilities.ranks.enabled=Включено
+ftbutilities.ranks.override_chat=Переопределить чат
+ftbutilities.ranks.crash_client_side_permissions=Разрешения крашей на стороне клиента
+ftbutilities.ranks.load_from_config_folder=Загрузить из конфигурационной папки
+ftbutilities.ranks.print_command_errors=Печатать командные ошибки
+
+ftbutilities.ranks.tags.default_player_rank=По умолчанию ранк игрока
+ftbutilities.ranks.tags.default_op_rank=По умолчанию ранк OP
+
+ftbutilities.debugging.log_chunkloading=Журнал загрузки чанков
+
+ftbutilities_client.general.render_badges=Показать значки
+ftbutilities_client.general.journeymap_overlay=Включить интеграцию с Journeymap
+ftbutilities_client.general.scan_items_whitelist=/scan_items белый список
+ftbutilities_client.general.scan_items_blacklist=/scan_items черный список
+ftbutilities_client.general.show_backup_progress=Показать ход выполнения архивации
+ftbutilities_client.general.show_shutdown_timer=Показать таймер отключения
+ftbutilities_client.general.shutdown_timer_start=Запуск таймера отключения
+
+# Rank Config
+permission.ftbutilities.badge=Значок
+permission.ftbutilities.badge.tooltip=Значок (иконка на сундуке). Должна быть ссылка
+permission.ftbutilities.homes.max=Макс. домов
+permission.ftbutilities.claims.max_chunks=Макс. занятых чанков
+permission.ftbutilities.claims.max_chunks.tooltip=Макс. количество чанков, которые игрок может занять\n0 - Отключено
+permission.ftbutilities.claims.blocked_dimensions=Заблокированные занятость в измерении
+permission.ftbutilities.claims.blocked_dimensions.tooltip=Измерения, в которых не разрешается заявка на чанк
+permission.ftbutilities.chunkloader.max_chunks=Макс. загружаемые чанки
+permission.ftbutilities.chunkloader.max_chunks.tooltip=Макс. количество чанков, которые игрок может загрузить\n0 - Отключено
+permission.ftbutilities.chunkloader.offline_timer=Таймер не в сети загрузчика чанков
+permission.ftbutilities.chunkloader.offline_timer.tooltip=Макс. количество часов, которое игрок может быть не в сети до тех пор, пока он не выгрузит чанки\n0 - Отключено, мгновенно выгружается, когда он отключается\n-1 - Чанк всегда загружен
+permission.ftbutilities.homes.cooldown=/home Cooldown Timer
+permission.ftbutilities.warps.cooldown=/warp Cooldown Timer
+permission.ftbutilities.tpa.cooldown=/tpa Cooldown Timer
+permission.ftbutilities.spawn.cooldown=/spawn Cooldown Timer
+permission.ftbutilities.back.cooldown=/back Cooldown Timer
+permission.ftbutilities.homes.warmup=/home Warmup Timer
+permission.ftbutilities.warps.warmup=/warp Warmup Timer
+permission.ftbutilities.tpa.warmup=/tpa Warmup Timer
+permission.ftbutilities.spawn.warmup=/spawn Warmup Timer
+permission.ftbutilities.back.warmup=/back Warmup Timer
+permission.ftbutilities.afk.timer=Таймер AFK
+permission.ftbutilities.afk.timer.is_afk=%s сейчас AFK
+permission.ftbutilities.afk.timer.isnt_afk=%s больше не AFK
+permission.ftbutilities.chat.prefix.left.color=Цвет префикса чата
+permission.ftbutilities.chat.prefix.base.color=Цвет префикса чата
+permission.ftbutilities.chat.prefix.right.color=Цвет префикса чата
+permission.ftbutilities.chat.name.color=Цвет имени чата
+permission.ftbutilities.chat.suffix.left.color=Цвет суффикса чата [слева]
+permission.ftbutilities.chat.suffix.base.color=Цвет суффикса чата [основа]
+permission.ftbutilities.chat.suffix.right.color=Цвет суффикса чата [справа]
+permission.ftbutilities.chat.text.color=Цвет текста чата
+permission.ftbutilities.chat.prefix.left.text=Текст префикса чата
+permission.ftbutilities.chat.prefix.base.text=Текст префикса чата
+permission.ftbutilities.chat.prefix.right.text=Текст префикса чата
+permission.ftbutilities.chat.suffix.left.text=Текст суффикса чата [слева]
+permission.ftbutilities.chat.suffix.base.text=Текст суффикса чата [основа]
+permission.ftbutilities.chat.suffix.right.text=Текст суффикса чата [справа]
+
+# Player Settings
+player_config.ftbutilities.chat_links=Чат-ссылки
+player_config.ftbutilities.disable_global_badge=Отключить глобальный значок
+player_config.ftbutilities.render_badge=Рендерить мой значок
+player_config.ftbutilities.enable_pvp=Включить PVP
+player_config.ftbutilities.nickname=Никнейм
+player_config.ftbutilities.afk=Положение уведомления AFK
+
+# Team Settings
+team_config.ftbutilities.blocks_edit=Необходимый уровень для редактирования блока
+team_config.ftbutilities.blocks_interact=Необходимый уровень для взаимодействия блоков
+team_config.ftbutilities.attack_entities=Необходимый уровень для атакующих существ
+team_config.ftbutilities.use_items=Необходимый уровень для использования предметов
+team_config.ftbutilities.explosions=Включить взрывы в занятых чанках
+team_config.ftbutilities.fake_players=Разрешить фейк игрокам взаимодействовать с блоками
+
+# Action Buttons
+sidebar_button.ftbutilities.chats=Чаты
+sidebar_button.ftbutilities.chats.general=Общий чат
+sidebar_button.ftbutilities.chats.admin=Админ чат
+sidebar_button.ftbutilities.chats.team=Командный чат
+sidebar_button.ftbutilities.leaderboards=Таблица лидеров
+sidebar_button.ftbutilities.toggle.gamemode=Переключение режима игры
+sidebar_button.ftbutilities.toggle.gamemode.tooltip=Переключение между выживанием и творческим режимами
+sidebar_button.ftbutilities.toggle.rain=Переключить дождь
+sidebar_button.ftbutilities.toggle.rain.tooltip=Переключает погоду между ясной и дождливой
+sidebar_button.ftbutilities.toggle.day=Установить время на день
+sidebar_button.ftbutilities.toggle.day.tooltip=Устанавливает дневное время
+sidebar_button.ftbutilities.toggle.night=Установить время на ночь
+sidebar_button.ftbutilities.toggle.night.tooltip=Устанавливает ночное время
+sidebar_button.ftbutilities.heal=Исцеление
+sidebar_button.ftbutilities.heal.tooltip=Исцеляет игрока до максимального здоровья и насыщения, и тушит, если игрок находится в огне
+sidebar_button.ftbutilities.server_info=Информация о сервере
+sidebar_button.ftbutilities.claimed_chunks=Занятые чанки
+sidebar_button.ftbutilities.trash_can=Мусорная корзина
+sidebar_button.ftbutilities.trash_can.tooltip=Открывает корзину. Предметы из него исчезают после закрытия интерфейса, но остаются там, пока он открыт
+sidebar_button.ftbutilities.mail=Почта
+
+admin_panel.ftbutilities.file_browser=Браузер файлов
+admin_panel.ftbutilities.crash_reports=Просмотр отчетов о сбоях
+admin_panel.ftbutilities.config=Редактировать конфигурацию
+admin_panel.ftbutilities.ranks=Редактировать ранги
+admin_panel.ftbutilities.ranks.player_ranks=Ранги игроков
+admin_panel.ftbutilities.ranks.select_rank=Выбрать ранг
+admin_panel.ftbutilities.ranks.edit.id=ID
+admin_panel.ftbutilities.ranks.edit.parent=Родитель
+admin_panel.ftbutilities.ranks.edit.chat_formatting=Форматирование чата
+admin_panel.ftbutilities.ranks.edit.permissions=Разрешения
+admin_panel.ftbutilities.claimed_chunks=Посмотреть все занятые чанки
+admin_panel.ftbutilities.loaded_chunks=Посмотреть все загруженные чанки
+admin_panel.ftbutilities.whitelist=Редактировать белый список
+admin_panel.ftbutilities.ops=Редактировать OP
+admin_panel.ftbutilities.edit_world=Редактировать мир
+
+# Keys
+key.ftbutilities.warp=Графический интерфейс Варп
+key.ftbutilities.nbt=Редактировать NBT
+
+# Misc
+gamerules=Правила игры
+ftbutilities.lang.timer.shutdown=Сервер выключится в %s
+ftbutilities.lang.timer.backup=Резервное копирование сервера в: %s
+ftbutilities.lang.timer.backup_progress=[%d%% | %d / %d]
+ftbutilities.lang.killed_entities=Убил %d существ с типом '%s'
+ftbutilities.lang.kickme=Вы сами себя изгнали!
+ftbutilities.lang.upload_crash=Загрузить отчет о сбоях
+ftbutilities.lang.uploaded_crash=Отчет о сбоях загружен! %s
+ftbutilities.lang.nickname_changed=Никнейм изменен на '%s'
+ftbutilities.lang.nickname_reset=Сброс никнейма
+
+ftbutilities.stat.dph=Смертей за час
+ftbutilities.stat.last_seen=Последнее посещение
+
+# Chunks
+ftbutilities.lang.chunks.cant_modify_chunk=Не удается изменить этот чанк!
+ftbutilities.lang.chunks.unclaimed_all=Отзаявлены все чанки
+ftbutilities.lang.chunks.chunk_claimed=Чанк заявлен
+ftbutilities.lang.chunks.chunk_unclaimed=Чанк отзаявлен
+ftbutilities.lang.chunks.chunk_loaded=Чанк загружен
+ftbutilities.lang.chunks.chunk_unloaded=Чанк выгружен
+ftbutilities.lang.chunks.unloaded_all=Выгружены все чанки
+
+ftbutilities.lang.chunks.unclaim_all=Освободить все чанки
+ftbutilities.lang.chunks.unclaim_all_dim=Освободить все чанки в %s
+ftbutilities.lang.chunks.unclaim_all_q=Освободить все чанки?
+ftbutilities.lang.chunks.unclaim_all_dim_q=Освободить все чанки в %s?
+ftbutilities.lang.chunks.claims_invalid_dim=Не удается освободить чанки в этом измерении
+ftbutilities.lang.chunks.claimed_count=Занятые чанки: %d / %d
+ftbutilities.lang.chunks.loaded_count=Загруженные чанки: %d / %d
+ftbutilities.lang.chunks.claimed_area=Занятая область
+ftbutilities.lang.chunks.wilderness=Дикая местность
+
+# Chunk Types
+ftbutilities.lang.chunks.upgrade.loaded=Чанк загружен
+ftbutilities.lang.chunks.upgrade.no_explosions=Взрывы отключены
+ftbutilities.lang.chunks.upgrade.no_pvp=Союзническое PVP отключено
+
+# Warps
+ftbutilities.lang.warps.set=Варп '%s' установлен!
+ftbutilities.lang.warps.del=Варп '%s' удален!
+ftbutilities.lang.warps.not_set=Неизвестный варп: '%s'!
+ftbutilities.lang.warps.cooldown=Вы можете использовать варп только в %s!
+вftbutilities.lang.warps.tp=Телепортирован в '%s'!
+ftbutilities.lang.warps.no_dp=Вы можете вернуться только один раз!
+
+# Homes
+ftbutilities.lang.homes.set=Дом '%s' установлен!
+ftbutilities.lang.homes.del=Дом '%s' удален!
+ftbutilities.lang.homes.not_set=Неизвестный дом: '%s'!
+ftbutilities.lang.homes.cooldown=Вы можете использовать дом только в %s!
+ftbutilities.lang.homes.cross_dim=Вы не можете телепортироваться в другое измерение!
+ftbutilities.lang.homes.limit=Вы не можете установить больше домашних мест!
+
+# TPA
+ftbutilities.lang.tpa.from_to=%s -> %s
+ftbutilities.lang.tpa.request_received=%s требует TPA! %s, чтобы принять.
+ftbutilities.lang.tpa.request_sent=Запрос отправлен!
+ftbutilities.lang.tpa.no_request=%s не запрашивает TPA!
+ftbutilities.lang.tpa.cant_request=Не могу запросить TPA!
+ftbutilities.lang.tpa.request_expired=TPA запрос истек!
+ftbutilities.lang.tpa.request_accepted=TPA запрос принят!
+
+# Backups
+ftbutilities.lang.backup.start=Резервное копирование сервера началось!
+ftbutilities.lang.backup.end_1=Резервное копирование сервера выполнено в %s!
+ftbutilities.lang.backup.end_2=Резервное копирование сервера выполнено в %s! (%s)
+ftbutilities.lang.backup.fail=Не удалось сохранить мир! (%s)
+ftbutilities.lang.backup.manual_launch=%s запустил ручное резервное копирование!
+ftbutilities.lang.backup.already_running=Резервное копирование выполняется!
+ftbutilities.lang.backup.size=Текущий размер мира: %s, общий размер папки резервных копий: %s
+ftbutilities.lang.backup.saving_failed=Не удалось сохранить мир!
+
+# Commands
+commands.shutdown.usage=/shutdown
+commands.inv.usage=/inv
+commands.inv.view.usage=/inv view <player>
+commands.inv.save.usage=/inv save <player> <id>
+commands.inv.load.usage=/inv load <player> <id>
+commands.inv.list.usage=/inv list
+commands.warp.usage=/warp <warp>
+commands.setwarp.usage=/setwarp <warp> <player>|{<x> <y> <z> [dim]}
+commands.delwarp.usage=/delwarp <warp>
+commands.backup.usage=/backup
+commands.backup.start.usage=/backup start [custom name]
+commands.backup.stop.usage=/backup stop
+commands.backup.getsize.usage=/backup getsize
+commands.home.usage=/home [list|list_all|home] [player]
+commands.sethome.usage=/sethome [home]
+commands.delhome.usage=/delhome [home]
+commands.server_info.usage=/server_info
+commands.loaded_chunks_list.usage=/loaded_chunks_list
+commands.tpl.usage=/tpl (<x> <y> <z>) | ([who] <player>)
+commands.trash_can.usage=/trash_can
+commands.back.usage=/back
+commands.spawn.usage=/spawn
+commands.chunks.usage=/chunks
+commands.chunks.claim.usage=/chunks claim
+commands.chunks.unclaim.usage=/chunks unclaim
+commands.chunks.load.usage=/chunks load
+commands.chunks.unload.usage=/chunks unload [player]
+commands.chunks.unclaim_all.usage=/chunks unclaim_all [dimension] [player]
+commands.chunks.unload_all.usage=/chunks unload_all [dimension] [player]
+commands.chunks.unclaim_everything.usage=/chunks unclaim_everything [dimension]
+commands.chunks.unload_everything.usage=/chunks unload_everything [dimension]
+commands.kickme.usage=/kickme
+commands.ranks.usage=/ranks
+commands.ranks.not_found=Ранг '%s' не найден!
+commands.ranks.add.usage=/ranks add <id> [parent]
+commands.ranks.add.id_invalid=Недопустимый ID ранга: '%s'. Он должен быть буквенно-цифровым и строчным.
+commands.ranks.add.id_exists=Ранг '%s' уже существует!
+commands.ranks.add.added=Ранг %s добавлен!
+commands.ranks.get.usage=/ranks get [player]
+commands.ranks.set.usage=/ranks set <player> <rank|none>
+commands.ranks.set.set=Установить ранг для %s в %s
+commands.ranks.get_permission.usage=/ranks get_permission <player> <permission>
+commands.ranks.get_permission.text=%s для %s %s
+commands.ranks.set_permission.usage=/ranks set_permission <rank> <permission> <true|false|value|none>
+commands.ranks.set_permission.set=%s ляд %s установлен в %s
+commands.ranks.delete.usage=/ranks delete <rank>
+commands.ranks.delete.deleted=Ранг %s удален
+commands.upload_crash_report.usage=/upload_crash_report <file>
+commands.heal.usage=/heal [player]
+commands.killall.usage=/killall [type] [dimension]
+commands.nbtedit.usage=/nbtedit
+commands.nbtedit.too_large=Размер NBT слишком большой!
+commands.nbtedit.tile.usage=/nbtedit tile <x> <y> <z>
+commands.nbtedit.entity.usage=/nbtedit entity <id>
+commands.nbtedit.player.usage=/nbtedit player <player>
+commands.nbtedit.item.usage=/nbtedit item
+commands.tpa.usage=/tpa <player>
+commands.tpaccept.usage=/tpaccept <player>
+commands.tpdeny.usage=/tpdeny <player>
+commands.nick.usage=/nick <name...>
+commands.fly.usage=/fly
+commands.cycle_block_state.usage=/cycle_block_state
+commands.leaderboards.usage=/leaderboards [id]
+commands.mute.usage=/mute <player>
+commands.mute.muted=Вы приглушены!
+commands.unmute.usage=/unmute <player>
+
+# Client Commands
+commands.shrug.usage=/shrug [text...]
+commands.scan_items.usage=/scan_items
+commands.print_item.usage=/print_item

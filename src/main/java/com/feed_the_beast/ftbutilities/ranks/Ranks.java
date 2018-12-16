@@ -478,8 +478,8 @@ public class Ranks
 
 			if (line.startsWith("[") && line.endsWith("]"))
 			{
-				String iss[] = line.substring(1, line.length() - 1).split(" is ", 2);
-				String extendss[] = iss[0].split(" extends ", 2);
+				String[] iss = line.substring(1, line.length() - 1).split(" is ", 2);
+				String[] extendss = iss[0].split(" extends ", 2);
 
 				currentRank = new Rank(this, StringUtils.removeAllWhitespace(extendss[0]));
 
@@ -516,7 +516,7 @@ public class Ranks
 
 				if (s1.length == 2)
 				{
-					String[] s2 = s1[1].split("//");
+					String[] s2 = s1[1].split(" //");
 					JsonElement json = DataReader.get(s2[0].trim()).safeJson();
 
 					if (!JsonUtils.isNull(json))

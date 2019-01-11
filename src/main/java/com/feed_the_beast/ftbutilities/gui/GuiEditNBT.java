@@ -435,6 +435,13 @@ public class GuiEditNBT extends GuiBase
 		}
 
 		@Override
+		@Nullable
+		public Object getJEIFocus()
+		{
+			return hoverIcon instanceof ItemIcon ? ((ItemIcon) hoverIcon).getStack() : null;
+		}
+
+		@Override
 		public NBTBase getTag(String k)
 		{
 			return map.getTag(k);

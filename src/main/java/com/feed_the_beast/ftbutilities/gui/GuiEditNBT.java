@@ -368,16 +368,15 @@ public class GuiEditNBT extends GuiBase
 
 		private void updateHoverIcon()
 		{
-			hoverIcon = Icon.EMPTY;
+			ItemEntryWithCount entry = new ItemEntryWithCount(map);
 
-			if (map.hasKey("id", Constants.NBT.TAG_STRING) && map.hasKey("Count") && map.hasKey("Damage"))
+			if (!entry.isEmpty())
 			{
-				ItemEntryWithCount entry = new ItemEntryWithCount(map);
-
-				if (!entry.isEmpty())
-				{
-					hoverIcon = ItemIcon.getItemIcon(entry.getStack(false));
-				}
+				hoverIcon = ItemIcon.getItemIcon(entry.getStack(false));
+			}
+			else
+			{
+				hoverIcon = Icon.EMPTY;
 			}
 
 			setWidth(12 + getTheme().getStringWidth(getTitle()) + (hoverIcon.isEmpty() ? 0 : 10));

@@ -2,8 +2,10 @@ package com.feed_the_beast.ftbutilities.command.tp;
 
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
+import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
+import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import net.minecraft.block.material.Material;
 import net.minecraft.command.CommandException;
@@ -40,6 +42,11 @@ public class CmdRTP extends CmdBase
 		int x = MathHelper.floor(Math.cos(angle) * dist);
 		int y = 256;
 		int z = MathHelper.floor(Math.sin(angle) * dist);
+
+		if (ClaimedChunks.instance.getChunk(new ChunkDimPos(x >> 4, z >> 4, world.provider.getDimension())) != null)
+		{
+			return findBlockPos(world);
+		}
 
 		//TODO: Find a better way to check for biome without loading the chunk
 		Biome biome = world.getBiome(new BlockPos(x, y, z));

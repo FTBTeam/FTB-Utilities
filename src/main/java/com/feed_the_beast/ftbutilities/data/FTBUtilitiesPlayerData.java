@@ -10,7 +10,6 @@ import com.feed_the_beast.ftblib.lib.EnumMessageLocation;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.PlayerData;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
@@ -227,7 +226,6 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	private String nickname = "";
 	private EnumMessageLocation afkMesageLocation = EnumMessageLocation.CHAT;
 
-	public ForgeTeam lastChunkTeam;
 	public final Collection<ForgePlayer> tpaRequestsFrom;
 	public long afkTime;
 	private ITextComponent cachedNameForChat;

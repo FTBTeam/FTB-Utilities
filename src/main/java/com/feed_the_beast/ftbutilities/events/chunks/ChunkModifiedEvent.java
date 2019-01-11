@@ -35,11 +35,13 @@ public abstract class ChunkModifiedEvent extends FTBUtilitiesEvent
 			player = p;
 		}
 
-		public ChunkDimPos getChunkDimPos() {
+		public ChunkDimPos getChunkDimPos()
+		{
 			return chunkDimPos;
 		}
 
-		public ForgePlayer getPlayer() {
+		public ForgePlayer getPlayer()
+		{
 			return player;
 		}
 	}

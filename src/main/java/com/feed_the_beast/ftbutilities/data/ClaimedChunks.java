@@ -348,6 +348,11 @@ public class ClaimedChunks
 			return ClaimResult.ALREADY_CLAIMED;
 		}
 
+		if(new ChunkModifiedEvent.Claim(pos, player).post())
+		{
+			return ClaimResult.BLOCKED;
+		}
+
 		chunk = new ClaimedChunk(pos, data);
 		addChunk(chunk);
 		new ChunkModifiedEvent.Claimed(chunk).post();

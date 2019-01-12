@@ -213,6 +213,7 @@ public class FTBUtilitiesConfig
 		public boolean nick = true;
 		public boolean mute = true;
 		public boolean rtp = true;
+		public boolean god = true;
 	}
 
 	public static class Login

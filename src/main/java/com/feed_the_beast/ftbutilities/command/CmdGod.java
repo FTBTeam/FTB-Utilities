@@ -24,7 +24,7 @@ public class CmdGod extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		EntityPlayerMP player = args.length == 0 ? getCommandSenderAsPlayer(sender) : getPlayer(server, sender, args[0]);
 		NBTTagCompound nbt = NBTUtils.getPersistedData(player, true);
 
 		if (nbt.getBoolean("god"))

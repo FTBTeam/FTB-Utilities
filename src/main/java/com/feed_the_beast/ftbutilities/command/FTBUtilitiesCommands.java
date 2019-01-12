@@ -148,5 +148,9 @@ public class FTBUtilitiesCommands
 		{
 			event.registerServerCommand(new CmdRTP());
 		}
+		if (FTBUtilitiesConfig.commands.god)
+		{
+			event.registerServerCommand(new CmdGod());
+		}
 	}
 }

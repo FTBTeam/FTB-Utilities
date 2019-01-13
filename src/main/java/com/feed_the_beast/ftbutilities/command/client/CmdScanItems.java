@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbutilities.command.client;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.item.ItemEntry;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftbutilities.client.FTBUtilitiesClientConfig;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.creativetab.CreativeTabs;
@@ -172,7 +172,7 @@ public class CmdScanItems extends CmdBase
 
 	private static void saveFile(List<String> list, String file)
 	{
-		File f = new File(ClientUtils.MC.gameDir, "local/client/ftbjanitor/" + file);
+		File f = new File(Minecraft.getMinecraft().gameDir, "local/client/ftbjanitor/" + file);
 		FileUtils.saveSafe(f, list);
 		ITextComponent component = new TextComponentString(file + " saved! Click here to open.");
 
@@ -185,6 +185,6 @@ public class CmdScanItems extends CmdBase
 			component.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, f.getAbsolutePath()));
 		}
 
-		ClientUtils.MC.player.sendMessage(component);
+		Minecraft.getMinecraft().player.sendMessage(component);
 	}
 }

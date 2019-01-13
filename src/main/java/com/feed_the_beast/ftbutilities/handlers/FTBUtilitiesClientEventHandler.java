@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbutilities.gui.GuiClaimedChunks;
 import com.feed_the_beast.ftbutilities.net.MessageEditNBTRequest;
 import com.feed_the_beast.ftbutilities.net.MessageLeaderboardList;
 import com.feed_the_beast.ftbutilities.net.MessageRequestBadge;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
@@ -73,7 +74,7 @@ public class FTBUtilitiesClientEventHandler
 	@SubscribeEvent
 	public static void onDebugInfoEvent(RenderGameOverlayEvent.Text event)
 	{
-		if (ClientUtils.MC.gameSettings.showDebugInfo)
+		if (Minecraft.getMinecraft().gameSettings.showDebugInfo)
 		{
 			return;
 		}
@@ -99,7 +100,7 @@ public class FTBUtilitiesClientEventHandler
 	{
 		if (FTBUtilitiesClient.KEY_WARP.isPressed())
 		{
-			ClientUtils.MC.player.sendStatusMessage(new TextComponentString("Feature disabled for now!"), true); //LANG
+			Minecraft.getMinecraft().player.sendStatusMessage(new TextComponentString("Feature disabled for now!"), true); //LANG
 			//GuiWarps.INSTANCE = new GuiWarps();
 			//GuiWarps.INSTANCE.openGui();
 			//ClientUtils.execClientCommand("/ftb warp gui");
@@ -119,13 +120,13 @@ public class FTBUtilitiesClientEventHandler
 			switch (event.getID().getPath())
 			{
 				case "toggle_gamemode":
-					ClientUtils.execClientCommand("/gamemode " + (ClientUtils.MC.player.capabilities.isCreativeMode ? "survival" : "creative"));
+					ClientUtils.execClientCommand("/gamemode " + (Minecraft.getMinecraft().player.capabilities.isCreativeMode ? "survival" : "creative"));
 					break;
 				case "daytime":
-					ClientUtils.execClientCommand("/time add " + (24000L - (ClientUtils.MC.world.getWorldTime() % 24000L) + 6000) % 24000L);
+					ClientUtils.execClientCommand("/time add " + (24000L - (Minecraft.getMinecraft().world.getWorldTime() % 24000L) + 6000) % 24000L);
 					break;
 				case "nighttime":
-					ClientUtils.execClientCommand("/time add " + (24000L - (ClientUtils.MC.world.getWorldTime() % 24000L) + 18000) % 24000L);
+					ClientUtils.execClientCommand("/time add " + (24000L - (Minecraft.getMinecraft().world.getWorldTime() % 24000L) + 18000) % 24000L);
 					break;
 				case "claims_gui":
 					GuiClaimedChunks.instance = new GuiClaimedChunks();

@@ -18,6 +18,7 @@ import journeymap.client.api.event.ClientEvent;
 import journeymap.client.api.model.MapPolygon;
 import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.util.PolygonHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
@@ -67,9 +68,9 @@ public class JourneyMapIntegration implements IClientPlugin
 		switch (event.type)
 		{
 			case DISPLAY_UPDATE:
-				if (ClientUtils.MC.player != null)
+				if (Minecraft.getMinecraft().player != null)
 				{
-					new MessageClaimedChunksRequest(ClientUtils.MC.player).sendToServer();
+					new MessageClaimedChunksRequest(Minecraft.getMinecraft().player).sendToServer();
 				}
 				break;
 			case MAPPING_STOPPED:
@@ -122,7 +123,7 @@ public class JourneyMapIntegration implements IClientPlugin
 	@SubscribeEvent
 	public void onEnteringChunk(EntityEvent.EnteringChunk event)
 	{
-		if (event.getEntity() != ClientUtils.MC.player)
+		if (event.getEntity() != Minecraft.getMinecraft().player)
 		{
 			return;
 		}
@@ -130,7 +131,7 @@ public class JourneyMapIntegration implements IClientPlugin
 		if (lastPosition == null || MathUtils.dist(event.getNewChunkX(), event.getNewChunkZ(), lastPosition.x, lastPosition.z) >= 3D)
 		{
 			lastPosition = new ChunkPos(event.getNewChunkX(), event.getNewChunkZ());
-			new MessageClaimedChunksRequest(ClientUtils.MC.player).sendToServer();
+			new MessageClaimedChunksRequest(Minecraft.getMinecraft().player).sendToServer();
 		}
 	}
 

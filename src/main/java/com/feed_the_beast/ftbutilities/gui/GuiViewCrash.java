@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbutilities.gui;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
@@ -18,6 +17,7 @@ import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.net.MessageViewCrashDelete;
 import com.google.gson.JsonElement;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -42,14 +42,14 @@ public class GuiViewCrash extends GuiBase
 		{
 			try
 			{
-				File urlFile = new File(ClientUtils.MC.gameDir, "local/ftbutilities/uploaded_crash_reports/crash-" + name.text[0] + ".txt");
+				File urlFile = new File(Minecraft.getMinecraft().gameDir, "local/ftbutilities/uploaded_crash_reports/crash-" + name.text[0] + ".txt");
 				String url = DataReader.get(urlFile).safeString();
 
 				if (url.isEmpty())
 				{
 					URL hastebinURL = new URL("https://hastebin.com/documents");
 					String outText = StringUtils.unformatted(StringJoiner.with('\n').joinStrings(text.text));
-					JsonElement json = DataReader.get(hastebinURL, RequestMethod.POST, DataReader.TEXT, new HttpDataReader.HttpDataOutput.StringOutput(outText), ClientUtils.MC.getProxy()).json();
+					JsonElement json = DataReader.get(hastebinURL, RequestMethod.POST, DataReader.TEXT, new HttpDataReader.HttpDataOutput.StringOutput(outText), Minecraft.getMinecraft().getProxy()).json();
 
 					if (json.isJsonObject() && json.getAsJsonObject().has("key"))
 					{
@@ -64,7 +64,7 @@ public class GuiViewCrash extends GuiBase
 					link.getStyle().setColor(TextFormatting.GOLD);
 					link.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(url)));
 					link.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
-					ClientUtils.MC.player.sendMessage(new TextComponentTranslation("ftbutilities.lang.uploaded_crash", link));
+					Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("ftbutilities.lang.uploaded_crash", link));
 				}
 			}
 			catch (Exception ex)

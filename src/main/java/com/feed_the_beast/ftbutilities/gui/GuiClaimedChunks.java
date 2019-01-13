@@ -17,6 +17,7 @@ import com.feed_the_beast.ftbutilities.events.chunks.UpdateClientDataEvent;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksModify;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksRequest;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -168,7 +169,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 
 	public GuiClaimedChunks()
 	{
-		currentDimName = ServerUtils.getDimensionName(ClientUtils.MC.world.provider.getDimension()).getFormattedText();
+		currentDimName = ServerUtils.getDimensionName(Minecraft.getMinecraft().world.provider.getDimension()).getFormattedText();
 	}
 
 	@Override
@@ -239,7 +240,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 				{
 					GuiHelper.playClickSound();
 					String s = I18n.format("ftbutilities.lang.chunks.unclaim_all_dim_q", currentDimName);
-					openYesNo(s, "", () -> ClientUtils.execClientCommand("/chunks unclaim_all " + ClientUtils.MC.world.provider.getDimension()));
+					openYesNo(s, "", () -> ClientUtils.execClientCommand("/chunks unclaim_all " + Minecraft.getMinecraft().world.provider.getDimension()));
 				}
 			});
 

@@ -2,10 +2,10 @@ package com.feed_the_beast.ftbutilities.client;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
 import com.feed_the_beast.ftbutilities.command.client.CmdScanItems;
 import com.feed_the_beast.ftbutilities.command.client.CmdShrug;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -40,7 +40,7 @@ public class FTBUtilitiesClient extends FTBUtilitiesCommon // FTBLibClient
 			ClientCommandHandler.instance.registerCommand(new CmdScanItems());
 		}
 
-		ClientUtils.MC.getRenderManager().getSkinMap().get("default").addLayer(LayerBadge.INSTANCE);
-		ClientUtils.MC.getRenderManager().getSkinMap().get("slim").addLayer(LayerBadge.INSTANCE);
+		Minecraft.getMinecraft().getRenderManager().getSkinMap().get("default").addLayer(LayerBadge.INSTANCE);
+		Minecraft.getMinecraft().getRenderManager().getSkinMap().get("slim").addLayer(LayerBadge.INSTANCE);
 	}
 }

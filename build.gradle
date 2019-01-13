@@ -35,6 +35,10 @@ minecraft {
 	replaceIn "${mod_reference}"
 }
 
+artifacts {
+	archives sourceJar
+}
+
 repositories {
 	mavenLocal()
 	mavenCentral()

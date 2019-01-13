@@ -42,11 +42,11 @@ public class FTBUtilitiesCommon
 
 		ForgeChunkManager.setForcedChunkLoadingCallback(FTBUtilities.INST, FTBUtilitiesLoadedChunkManager.INSTANCE);
 		new CustomPermissionPrefixesRegistryEvent(CUSTOM_PERM_PREFIX_REGISTRY::add).post();
-		new LeaderboardRegistryEvent(leaderboard -> LEADERBOARDS.put(leaderboard.id, leaderboard)).post();
 	}
 
 	public void init()
 	{
+		new LeaderboardRegistryEvent(leaderboard -> LEADERBOARDS.put(leaderboard.id, leaderboard)).post();
 		FTBUtilitiesPermissions.registerPermissions();
 	}
 

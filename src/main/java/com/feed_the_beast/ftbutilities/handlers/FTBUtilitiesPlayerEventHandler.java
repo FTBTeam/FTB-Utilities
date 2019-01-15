@@ -18,6 +18,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -80,6 +81,18 @@ public class FTBUtilitiesPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event)
 	{
+		if (FTBUtilitiesConfig.world.isItemRightClickDisabled(event.getItemStack()))
+		{
+			event.setCanceled(true);
+
+			if (!event.getWorld().isRemote)
+			{
+				event.getEntityPlayer().sendStatusMessage(new TextComponentString("Item disabled!"), true);
+			}
+
+			return;
+		}
+
 		if (ClaimedChunks.blockBlockInteractions(event.getEntityPlayer(), event.getPos(), null))
 		{
 			InvUtils.forceUpdate(event.getEntityPlayer());
@@ -90,6 +103,18 @@ public class FTBUtilitiesPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onRightClickItem(PlayerInteractEvent.RightClickItem event)
 	{
+		if (FTBUtilitiesConfig.world.isItemRightClickDisabled(event.getItemStack()))
+		{
+			event.setCanceled(true);
+
+			if (!event.getWorld().isRemote)
+			{
+				event.getEntityPlayer().sendStatusMessage(new TextComponentString("Item disabled!"), true);
+			}
+
+			return;
+		}
+
 		if (ClaimedChunks.blockItemUse(event.getEntityPlayer(), event.getHand(), event.getPos()))
 		{
 			InvUtils.forceUpdate(event.getEntityPlayer());

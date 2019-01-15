@@ -10,6 +10,8 @@ import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
@@ -18,6 +20,7 @@ import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -388,6 +391,20 @@ public class FTBUtilitiesConfig
 		@Config.Comment("Max /rtp distance")
 		public double rtp_max_distance = 100000D;
 
+		@Config.Comment({
+				"List of items that will have right-click function disabled on both sides.",
+				"You can use '/inv disable_right_click' command to do with from in-game.",
+				"Syntax: modid:item:metadata. Set metadata to * to ignore it."})
+		public String[] disabled_right_click_items = { };
+
+		private List<DisabledItem> disabledItems = null;
+
+		private static class DisabledItem
+		{
+			private Item item;
+			private int metadata;
+		}
+
 		public boolean allowDimension(int dimension)
 		{
 			if (!ClaimedChunks.isActive())
@@ -408,6 +425,46 @@ public class FTBUtilitiesConfig
 
 			return true;
 		}
+
+		public boolean isItemRightClickDisabled(ItemStack stack)
+		{
+			if (disabledItems == null)
+			{
+				disabledItems = new ArrayList<>();
+
+				for (String s : disabled_right_click_items)
+				{
+					String[] s1 = s.split("@", 2);
+					Item item = Item.getByNameOrId(s1[0]);
+
+					if (item != null && item != Items.AIR)
+					{
+						DisabledItem di = new DisabledItem();
+						di.item = item;
+						di.metadata = (s1.length == 1 || s1[1].startsWith("*")) ? OreDictionary.WILDCARD_VALUE : Integer.parseInt(s1[1].trim());
+						disabledItems.add(di);
+					}
+				}
+			}
+
+			if (disabledItems.isEmpty())
+			{
+				return false;
+			}
+
+			Item item = stack.getItem();
+			int meta = stack.getMetadata();
+
+			for (DisabledItem disabledItem : disabledItems)
+			{
+				if (disabledItem.item == item && (disabledItem.metadata == OreDictionary.WILDCARD_VALUE || disabledItem.metadata == meta))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
 	}
 
 	public static class Debugging
@@ -422,6 +479,7 @@ public class FTBUtilitiesConfig
 		login.motdComponents = null;
 		login.startingItems = null;
 		afk.notificationTimer = -1L;
+		world.disabledItems = null;
 		return true;
 	}
 

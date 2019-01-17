@@ -55,7 +55,7 @@ public enum Backups
 	public void init()
 	{
 		File dataDir = FMLCommonHandler.instance().getMinecraftServerInstance().getDataDirectory();
-		backupsFolder = FTBUtilitiesConfig.backups.folder.isEmpty() ? new File(dataDir, "backups") : new File(FTBUtilitiesConfig.backups.folder);
+		backupsFolder = FTBUtilitiesConfig.backups.folder.trim().isEmpty() ? new File(dataDir, "backups") : new File(FTBUtilitiesConfig.backups.folder.trim());
 		doingBackup = 0;
 		backups.clear();
 

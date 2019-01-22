@@ -383,7 +383,7 @@ public class FTBUtilitiesUniverseData
 					}
 				}
 
-				FileUtils.delete(file);
+				FileUtils.deleteSafe(file);
 			}
 
 			return true;

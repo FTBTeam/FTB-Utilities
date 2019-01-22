@@ -447,7 +447,7 @@ public class Ranks
 			}
 
 			loadedOldFile = true;
-			FileUtils.delete(ranksFile);
+			FileUtils.deleteSafe(ranksFile);
 		}
 
 		ranksFile = FTBUtilitiesConfig.ranks.load_from_config_folder ? new File(Loader.instance().getConfigDir(), "ftbutilities_ranks.txt") : new File(universe.server.getDataDirectory(), "local/ftbutilities/ranks.txt");
@@ -563,7 +563,7 @@ public class Ranks
 				}
 			}
 
-			FileUtils.delete(playerRanksFile);
+			FileUtils.deleteSafe(playerRanksFile);
 		}
 
 		playerRanksFile = new File(universe.server.getDataDirectory(), "local/ftbutilities/player_ranks.txt");
@@ -849,7 +849,7 @@ public class Ranks
 
 		list.add("</body></html>");
 		FileUtils.saveSafe(new File(universe.server.getDataDirectory(), "local/ftbutilities/all_permissions.html"), list);
-		FileUtils.delete(new File(universe.server.getDataDirectory(), "local/ftbutilities/all_configs.html"));
+		FileUtils.deleteSafe(new File(universe.server.getDataDirectory(), "local/ftbutilities/all_configs.html"));
 
 		list = new ArrayList<>();
 

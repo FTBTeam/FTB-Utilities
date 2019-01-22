@@ -97,7 +97,7 @@ public class FTBUtilitiesTeamData extends TeamData
 
 		if (nbt.isEmpty())
 		{
-			FileUtils.delete(file);
+			FileUtils.deleteSafe(file);
 		}
 		else
 		{

@@ -14,7 +14,6 @@ import com.feed_the_beast.ftbutilities.net.MessageRequestBadge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -98,14 +97,6 @@ public class FTBUtilitiesClientEventHandler
 	@SubscribeEvent
 	public static void onKeyEvent(InputEvent.KeyInputEvent event)
 	{
-		if (FTBUtilitiesClient.KEY_WARP.isPressed())
-		{
-			Minecraft.getMinecraft().player.sendStatusMessage(new TextComponentString("Feature disabled for now!"), true); //LANG
-			//GuiWarps.INSTANCE = new GuiWarps();
-			//GuiWarps.INSTANCE.openGui();
-			//ClientUtils.execClientCommand("/ftb warp gui");
-		}
-
 		if (FTBUtilitiesClient.KEY_NBT.isPressed())
 		{
 			MessageEditNBTRequest.editNBT();

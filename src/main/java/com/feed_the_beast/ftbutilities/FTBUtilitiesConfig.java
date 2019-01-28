@@ -169,6 +169,12 @@ public class FTBUtilitiesConfig
 		@Config.Comment("Disables level saving while performing backup.")
 		public boolean disable_level_saving = true;
 
+		@Config.Comment("Only create backups when players have been online.")
+		public boolean only_if_players_online = true;
+
+		@Config.Comment("Create a backup when server is stopped.")
+		public boolean force_on_shutdown = false;
+
 		public long time()
 		{
 			return (long) (backup_timer * Ticks.HOUR.millis());

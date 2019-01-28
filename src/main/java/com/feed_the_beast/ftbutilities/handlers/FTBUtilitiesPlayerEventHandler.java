@@ -14,6 +14,7 @@ import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
+import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -37,6 +38,15 @@ import net.minecraftforge.server.permission.PermissionAPI;
 @Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
 public class FTBUtilitiesPlayerEventHandler
 {
+	@SubscribeEvent
+	public static void onPlayerLoggedOut(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent event)
+	{
+		if (event.player instanceof EntityPlayerMP)
+		{
+			Backups.INSTANCE.hadPlayersOnline = true;
+		}
+	}
+
 	@SubscribeEvent
 	public static void onDeath(LivingDeathEvent event)
 	{

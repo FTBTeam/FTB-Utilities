@@ -51,6 +51,7 @@ public enum Backups
 	private int currentFile = 0;
 	private int totalFiles = 0;
 	private String currentFileName = "";
+	public boolean hadPlayersOnline = false;
 
 	public void init()
 	{
@@ -97,7 +98,11 @@ public enum Backups
 	{
 		if (nextBackup > 0L && nextBackup <= now)
 		{
-			run(universe.server, universe.server, "");
+			if (!FTBUtilitiesConfig.backups.only_if_players_online || hadPlayersOnline || !universe.server.getPlayerList().getPlayers().isEmpty())
+			{
+				hadPlayersOnline = false;
+				run(universe.server, universe.server, "");
+			}
 		}
 
 		if (doingBackup > 1)

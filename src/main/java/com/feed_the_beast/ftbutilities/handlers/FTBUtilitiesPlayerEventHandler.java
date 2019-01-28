@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftbutilities.handlers;
 
+import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
@@ -18,7 +20,9 @@ import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -30,6 +34,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 /**
@@ -39,12 +44,63 @@ import net.minecraftforge.server.permission.PermissionAPI;
 public class FTBUtilitiesPlayerEventHandler
 {
 	@SubscribeEvent
+	public static void registerPlayerData(ForgePlayerDataEvent event)
+	{
+		event.register(new FTBUtilitiesPlayerData(event.getPlayer()));
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public static void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event)
+	{
+		if (ServerUtils.isFirstLogin(event.player, "ftbutilities_starting_items"))
+		{
+			if (FTBUtilitiesConfig.login.enable_starting_items)
+			{
+				for (ItemStack stack : FTBUtilitiesConfig.login.getStartingItems())
+				{
+					ItemHandlerHelper.giveItemToPlayer(event.player, stack.copy());
+				}
+			}
+		}
+
+		if (FTBUtilitiesConfig.login.enable_motd)
+		{
+			for (ITextComponent t : FTBUtilitiesConfig.login.getMOTD())
+			{
+				event.player.sendMessage(t);
+			}
+		}
+
+		if (ClaimedChunks.isActive())
+		{
+			ClaimedChunks.instance.markDirty();
+		}
+	}
+
+	@SubscribeEvent
 	public static void onPlayerLoggedOut(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent event)
 	{
-		if (event.player instanceof EntityPlayerMP)
+		Backups.INSTANCE.hadPlayersOnline = true;
+
+		if (ClaimedChunks.isActive())
 		{
-			Backups.INSTANCE.hadPlayersOnline = true;
+			ClaimedChunks.instance.markDirty();
 		}
+
+		FTBUtilitiesUniverseData.updateBadge(event.player.getUniqueID());
+		event.player.getEntityData().removeTag(FTBUtilitiesPlayerData.TAG_LAST_CHUNK);
+	}
+
+	@SubscribeEvent
+	public static void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event)
+	{
+		event.getEntity().getEntityData().removeTag(FTBUtilitiesPlayerData.TAG_LAST_CHUNK);
+	}
+
+	@SubscribeEvent
+	public static void getPlayerSettings(ForgePlayerConfigEvent event)
+	{
+		FTBUtilitiesPlayerData.get(event.getPlayer()).addConfig(event.getConfig());
 	}
 
 	@SubscribeEvent

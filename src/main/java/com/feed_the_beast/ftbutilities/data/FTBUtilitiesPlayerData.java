@@ -2,10 +2,6 @@ package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibCommon;
-import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
-import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
-import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
-import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftblib.lib.EnumMessageLocation;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
@@ -14,7 +10,6 @@ import com.feed_the_beast.ftblib.lib.data.PlayerData;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.IScheduledTask;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
@@ -26,16 +21,11 @@ import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -45,7 +35,6 @@ import java.util.function.Function;
 /**
  * @author LatvianModder
  */
-@Mod.EventBusSubscriber(modid = FTBUtilities.MOD_ID)
 public class FTBUtilitiesPlayerData extends PlayerData
 {
 	public static final String TAG_FLY = "fly";
@@ -159,67 +148,6 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		return player.getData().get(FTBUtilities.MOD_ID);
 	}
 
-	@SubscribeEvent
-	public static void registerPlayerData(ForgePlayerDataEvent event)
-	{
-		event.register(new FTBUtilitiesPlayerData(event.getPlayer()));
-	}
-
-	@SubscribeEvent
-	public static void onPlayerLoggedIn(ForgePlayerLoggedInEvent event)
-	{
-		EntityPlayerMP player = event.getPlayer().getPlayer();
-
-		if (ServerUtils.isFirstLogin(player, "ftbutilities_starting_items"))
-		{
-			if (FTBUtilitiesConfig.login.enable_starting_items)
-			{
-				for (ItemStack stack : FTBUtilitiesConfig.login.getStartingItems())
-				{
-					ItemHandlerHelper.giveItemToPlayer(player, stack.copy());
-				}
-			}
-		}
-
-		if (FTBUtilitiesConfig.login.enable_motd)
-		{
-			for (ITextComponent t : FTBUtilitiesConfig.login.getMOTD())
-			{
-				player.sendMessage(t);
-			}
-		}
-
-		if (ClaimedChunks.isActive())
-		{
-			ClaimedChunks.instance.markDirty();
-		}
-	}
-
-	@SubscribeEvent
-	public static void onPlayerLoggedOut(ForgePlayerLoggedOutEvent event)
-	{
-		if (ClaimedChunks.isActive())
-		{
-			ClaimedChunks.instance.markDirty();
-		}
-
-		EntityPlayerMP player = event.getPlayer().getPlayer();
-		FTBUtilitiesUniverseData.updateBadge(player.getUniqueID());
-		player.getEntityData().removeTag(TAG_LAST_CHUNK);
-	}
-
-	@SubscribeEvent
-	public static void onPlayerClone(PlayerEvent.Clone event)
-	{
-		event.getEntity().getEntityData().removeTag(TAG_LAST_CHUNK);
-	}
-
-	@SubscribeEvent
-	public static void getPlayerSettings(ForgePlayerConfigEvent event)
-	{
-		get(event.getPlayer()).addConfig(event.getConfig());
-	}
-
 	private boolean renderBadge = true;
 	private boolean disableGlobalBadge = false;
 	private boolean enablePVP = true;
@@ -234,7 +162,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	private long[] lastTeleport;
 	public final BlockDimPosStorage homes;
 
-	private FTBUtilitiesPlayerData(ForgePlayer player)
+	public FTBUtilitiesPlayerData(ForgePlayer player)
 	{
 		super(player);
 		homes = new BlockDimPosStorage();
@@ -279,7 +207,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		afkMesageLocation = EnumMessageLocation.NAME_MAP.get(nbt.getString("AFK"));
 	}
 
-	private void addConfig(ConfigGroup main)
+	public void addConfig(ConfigGroup main)
 	{
 		ConfigGroup config = main.getGroup(FTBUtilities.MOD_ID);
 		config.setDisplayName(new TextComponentString(FTBUtilities.MOD_NAME));

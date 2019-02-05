@@ -405,17 +405,38 @@ public class FTBUtilitiesConfig
 
 		private List<DisabledItem> disabledItems = null;
 
+		@Config.Comment({
+				"Locked time in ticks in spawn dimension.",
+				"-1 - Disabled",
+				"0 - Morning",
+				"6000 - Noon",
+				"12000 - Evening",
+				"18000 - Midnight"
+		})
+		@Config.RangeInt(min = -1, max = 23999)
+		public int forced_spawn_dimension_time = -1;
+
+		@Config.Comment({
+				"Locked weather type in spawn dimension.",
+				"-1 - Disabled",
+				"0 - Clear",
+				"1 - Raining",
+				"2 - Thunderstorm"
+		})
+		@Config.RangeInt(min = -1, max = 2)
+		public int forced_spawn_dimension_weather = -1;
+
 		private static class DisabledItem
 		{
 			private Item item;
 			private int metadata;
 		}
 
-		public boolean allowDimension(int dimension)
+		public boolean blockDimension(int dimension)
 		{
 			if (!ClaimedChunks.isActive())
 			{
-				return false;
+				return true;
 			}
 
 			if (blocked_claiming_dimensions.length > 0)
@@ -424,12 +445,12 @@ public class FTBUtilitiesConfig
 				{
 					if (i == dimension)
 					{
-						return false;
+						return true;
 					}
 				}
 			}
 
-			return true;
+			return false;
 		}
 
 		public boolean isItemRightClickDisabled(ItemStack stack)

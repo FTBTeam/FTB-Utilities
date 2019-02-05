@@ -114,7 +114,7 @@ public class FTBUtilitiesServerEventHandler
 	}
 
 	@SubscribeEvent
-	public static void onServerTickEvent(TickEvent.ServerTickEvent event)
+	public static void onServerTick(TickEvent.ServerTickEvent event)
 	{
 		if (!Universe.loaded())
 		{
@@ -210,6 +210,24 @@ public class FTBUtilitiesServerEventHandler
 			if (FTBUtilitiesUniverseData.shutdownTime > 0L && FTBUtilitiesUniverseData.shutdownTime - now <= 0 && Backups.INSTANCE.doingBackup == 0)
 			{
 				CmdShutdown.shutdown(universe.server);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onWorldTick(TickEvent.WorldTickEvent event)
+	{
+		if (!event.world.isRemote && event.phase == TickEvent.Phase.START && event.world.provider.getDimension() == FTBUtilitiesConfig.world.spawn_dimension)
+		{
+			if (FTBUtilitiesConfig.world.forced_spawn_dimension_time != -1)
+			{
+				event.world.setWorldTime(FTBUtilitiesConfig.world.forced_spawn_dimension_time);
+			}
+
+			if (FTBUtilitiesConfig.world.forced_spawn_dimension_weather != -1)
+			{
+				event.world.getWorldInfo().setRaining(FTBUtilitiesConfig.world.forced_spawn_dimension_weather >= 1);
+				event.world.getWorldInfo().setThundering(FTBUtilitiesConfig.world.forced_spawn_dimension_weather >= 2);
 			}
 		}
 	}

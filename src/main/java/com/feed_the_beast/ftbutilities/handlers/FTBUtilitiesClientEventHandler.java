@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.client.FTBUtilitiesClient;
 import com.feed_the_beast.ftbutilities.client.FTBUtilitiesClientConfig;
 import com.feed_the_beast.ftbutilities.gui.GuiClaimedChunks;
@@ -19,6 +20,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -129,6 +131,26 @@ public class FTBUtilitiesClientEventHandler
 			}
 
 			event.setCanceled(true);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onClientWorldTick(TickEvent.ClientTickEvent event)
+	{
+		Minecraft mc = Minecraft.getMinecraft();
+
+		if (event.phase == TickEvent.Phase.START && mc.world != null && mc.world.provider.getDimension() == FTBUtilitiesConfig.world.spawn_dimension)
+		{
+			if (FTBUtilitiesConfig.world.forced_spawn_dimension_time != -1)
+			{
+				mc.world.setWorldTime(FTBUtilitiesConfig.world.forced_spawn_dimension_time);
+			}
+
+			if (FTBUtilitiesConfig.world.forced_spawn_dimension_weather != -1)
+			{
+				mc.world.getWorldInfo().setRaining(FTBUtilitiesConfig.world.forced_spawn_dimension_weather >= 1);
+				mc.world.getWorldInfo().setThundering(FTBUtilitiesConfig.world.forced_spawn_dimension_weather >= 2);
+			}
 		}
 	}
 }

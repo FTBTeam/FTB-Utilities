@@ -159,8 +159,13 @@ public class ClaimedChunks
 	@Nullable
 	public ClaimedChunk getChunk(ChunkDimPos pos)
 	{
+		if (FTBUtilitiesConfig.world.blockDimension(pos.dim))
+		{
+			return null;
+		}
+
 		ClaimedChunk chunk = map.get(pos);
-		return chunk == null || chunk.isInvalid() || !FTBUtilitiesConfig.world.allowDimension(pos.dim) ? null : chunk;
+		return chunk == null || chunk.isInvalid() ? null : chunk;
 	}
 
 	public void removeChunk(ChunkDimPos pos)
@@ -311,7 +316,7 @@ public class ClaimedChunks
 		{
 			return true;
 		}
-		else if (!FTBUtilitiesConfig.world.allowDimension(pos.dim))
+		else if (FTBUtilitiesConfig.world.blockDimension(pos.dim))
 		{
 			return false;
 		}
@@ -325,7 +330,7 @@ public class ClaimedChunks
 		{
 			return ClaimResult.NO_TEAM;
 		}
-		else if (!FTBUtilitiesConfig.world.allowDimension(pos.dim))
+		else if (FTBUtilitiesConfig.world.blockDimension(pos.dim))
 		{
 			return ClaimResult.DIMENSION_BLOCKED;
 		}
@@ -401,11 +406,6 @@ public class ClaimedChunks
 		ClaimedChunk chunk = getChunk(pos);
 
 		if (chunk == null || chunk.isLoaded())
-		{
-			return false;
-		}
-
-		if (!FTBUtilitiesConfig.world.allowDimension(pos.dim))
 		{
 			return false;
 		}

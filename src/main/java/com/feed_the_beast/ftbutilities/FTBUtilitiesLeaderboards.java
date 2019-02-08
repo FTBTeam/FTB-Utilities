@@ -27,6 +27,7 @@ public class FTBUtilitiesLeaderboards
 		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUtilities.MOD_ID, "deaths"), StatList.DEATHS, false, Leaderboard.FromStat.DEFAULT));
 		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUtilities.MOD_ID, "mob_kills"), StatList.MOB_KILLS, false, Leaderboard.FromStat.DEFAULT));
 		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUtilities.MOD_ID, "time_played"), StatList.PLAY_ONE_MINUTE, false, Leaderboard.FromStat.TIME));
+		event.register(new Leaderboard.FromStat(new ResourceLocation(FTBUtilities.MOD_ID, "jumps"), StatList.JUMP, false, Leaderboard.FromStat.DEFAULT));
 
 		event.register(new Leaderboard(
 				new ResourceLocation(FTBUtilities.MOD_ID, "deaths_per_hour"),

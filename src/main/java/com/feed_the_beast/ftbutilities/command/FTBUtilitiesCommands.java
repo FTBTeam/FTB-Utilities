@@ -153,5 +153,10 @@ public class FTBUtilitiesCommands
 		{
 			event.registerServerCommand(new CmdGod());
 		}
+
+		if (FTBUtilitiesConfig.commands.rec)
+		{
+			event.registerServerCommand(new CmdRec());
+		}
 	}
 }

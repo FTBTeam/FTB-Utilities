@@ -17,6 +17,7 @@ import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import com.feed_the_beast.ftbutilities.data.backups.Backups;
+import com.feed_the_beast.ftbutilities.net.MessageUpdateTabName;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -52,6 +53,11 @@ public class FTBUtilitiesPlayerEventHandler
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event)
 	{
+		if (!(event.player instanceof EntityPlayerMP))
+		{
+			return;
+		}
+
 		if (ServerUtils.isFirstLogin(event.player, "ftbutilities_starting_items"))
 		{
 			if (FTBUtilitiesConfig.login.enable_starting_items)
@@ -74,6 +80,18 @@ public class FTBUtilitiesPlayerEventHandler
 		if (ClaimedChunks.isActive())
 		{
 			ClaimedChunks.instance.markDirty();
+		}
+
+		EntityPlayerMP playerMP = (EntityPlayerMP) event.player;
+
+		new MessageUpdateTabName(playerMP).sendToAll();
+
+		for (EntityPlayerMP player : playerMP.server.getPlayerList().getPlayers())
+		{
+			if (player != playerMP)
+			{
+				new MessageUpdateTabName(player).sendTo(playerMP);
+			}
 		}
 	}
 

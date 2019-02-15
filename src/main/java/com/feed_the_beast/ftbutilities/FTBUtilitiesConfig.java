@@ -110,6 +110,10 @@ public class FTBUtilitiesConfig
 		@Config.Comment("Adds ~ to player names that have changed nickname to prevent trolling.")
 		public boolean add_nickname_tilde = false;
 
+		@Config.Comment("Adds [AFK] for afk players and [REC] for players that are recording or streaming in player list.")
+		public boolean change_tab_gui = true;
+
+		/*
 		@Config.RangeInt(min = 0, max = 10000000)
 		public int general_history_limit = 10000;
 
@@ -118,6 +122,7 @@ public class FTBUtilitiesConfig
 
 		@Config.RangeInt(min = 0, max = 10000000)
 		public int admin_history_limit = 10000;
+		*/
 	}
 
 	public static class BackupsConfig
@@ -223,6 +228,7 @@ public class FTBUtilitiesConfig
 		public boolean mute = true;
 		public boolean rtp = true;
 		public boolean god = true;
+		public boolean rec = true;
 	}
 
 	public static class Login

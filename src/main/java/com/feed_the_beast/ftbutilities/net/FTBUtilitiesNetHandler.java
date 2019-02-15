@@ -14,6 +14,7 @@ public class FTBUtilitiesNetHandler
 		GENERAL.register(new MessageBackupProgress());
 		GENERAL.register(new MessageRequestBadge());
 		GENERAL.register(new MessageSendBadge());
+		GENERAL.register(new MessageUpdateTabName());
 
 		CLAIMS.register(new MessageClaimedChunksRequest());
 		CLAIMS.register(new MessageClaimedChunksUpdate());

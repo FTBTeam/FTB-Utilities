@@ -50,11 +50,6 @@ public class FTBUtilitiesCommands
 			event.registerServerCommand(new CmdDelWarp());
 		}
 
-		if (FTBUtilitiesConfig.backups.enabled)
-		{
-			event.registerServerCommand(new CmdBackup());
-		}
-
 		if (FTBUtilitiesConfig.commands.home)
 		{
 			event.registerServerCommand(new CmdHome());

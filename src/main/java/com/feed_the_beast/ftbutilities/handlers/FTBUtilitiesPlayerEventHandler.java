@@ -16,7 +16,6 @@ import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
-import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import com.feed_the_beast.ftbutilities.net.MessageUpdateTabName;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -98,8 +97,6 @@ public class FTBUtilitiesPlayerEventHandler
 	@SubscribeEvent
 	public static void onPlayerLoggedOut(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent event)
 	{
-		Backups.INSTANCE.hadPlayersOnline = true;
-
 		if (ClaimedChunks.isActive())
 		{
 			ClaimedChunks.instance.markDirty();

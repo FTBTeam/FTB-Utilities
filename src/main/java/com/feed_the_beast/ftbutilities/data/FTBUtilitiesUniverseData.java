@@ -17,7 +17,6 @@ import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
-import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import com.google.gson.JsonElement;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -104,7 +103,6 @@ public class FTBUtilitiesUniverseData
 	{
 		long now = System.currentTimeMillis();
 		shutdownTime = 0L;
-		Backups.INSTANCE.nextBackup = now + FTBUtilitiesConfig.backups.time();
 
 		if (FTBUtilitiesConfig.auto_shutdown.enabled && FTBUtilitiesConfig.auto_shutdown.times.length > 0 && (FTBUtilitiesConfig.auto_shutdown.enabled_singleplayer || event.getUniverse().server.isDedicatedServer()))
 		{

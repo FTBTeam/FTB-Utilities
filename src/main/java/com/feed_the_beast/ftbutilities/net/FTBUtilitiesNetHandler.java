@@ -11,7 +11,6 @@ public class FTBUtilitiesNetHandler
 
 	public static void init()
 	{
-		GENERAL.register(new MessageBackupProgress());
 		GENERAL.register(new MessageRequestBadge());
 		GENERAL.register(new MessageSendBadge());
 		GENERAL.register(new MessageUpdateTabName());

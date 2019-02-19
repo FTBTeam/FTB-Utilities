@@ -16,7 +16,6 @@ import com.feed_the_beast.ftbutilities.command.CmdShutdown;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
-import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import com.feed_the_beast.ftbutilities.net.MessageUpdateTabName;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import com.mojang.authlib.GameProfile;
@@ -207,9 +206,7 @@ public class FTBUtilitiesServerEventHandler
 				playerToKickForAfk.connection.disconnect(new TextComponentTranslation("multiplayer.disconnect.idling"));
 			}
 
-			Backups.INSTANCE.tick(universe, now);
-
-			if (FTBUtilitiesUniverseData.shutdownTime > 0L && FTBUtilitiesUniverseData.shutdownTime - now <= 0 && Backups.INSTANCE.doingBackup == 0)
+			if (FTBUtilitiesUniverseData.shutdownTime > 0L && FTBUtilitiesUniverseData.shutdownTime - now <= 0)
 			{
 				CmdShutdown.shutdown(universe.server);
 			}

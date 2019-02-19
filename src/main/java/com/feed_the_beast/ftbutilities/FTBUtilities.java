@@ -3,12 +3,10 @@ package com.feed_the_beast.ftbutilities;
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
-import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.command.FTBUtilitiesCommands;
-import com.feed_the_beast.ftbutilities.data.backups.Backups;
 import com.feed_the_beast.ftbutilities.ranks.CommandOverride;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.CommandException;
@@ -25,7 +23,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -99,8 +96,6 @@ public class FTBUtilities
 	@Mod.EventHandler
 	public void onServerStarted(FMLServerStartedEvent event)
 	{
-		Backups.INSTANCE.init();
-
 		if (Ranks.isActive())
 		{
 			Ranks.INSTANCE.commands.clear();
@@ -126,15 +121,6 @@ public class FTBUtilities
 
 			LOGGER.info("Overridden " + manager.getCommands().size() + " commands");
 			Ranks.INSTANCE.generateExampleFiles();
-		}
-	}
-
-	@Mod.EventHandler
-	public void onServerStopping(FMLServerStoppingEvent event)
-	{
-		if (FTBUtilitiesConfig.backups.force_on_shutdown && Universe.loaded())
-		{
-			Backups.INSTANCE.run(Universe.get().server, Universe.get().server, "");
 		}
 	}
 }

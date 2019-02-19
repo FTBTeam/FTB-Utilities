@@ -4,10 +4,8 @@ import com.feed_the_beast.ftblib.lib.config.EnumTristate;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
-import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -38,8 +36,6 @@ public class FTBUtilitiesConfig
 	public static final AFK afk = new AFK();
 
 	public static final Chat chat = new Chat();
-
-	public static final BackupsConfig backups = new BackupsConfig();
 
 	@Config.RequiresWorldRestart
 	@Config.LangKey("commands")
@@ -123,87 +119,6 @@ public class FTBUtilitiesConfig
 		@Config.RangeInt(min = 0, max = 10000000)
 		public int admin_history_limit = 10000;
 		*/
-	}
-
-	public static class BackupsConfig
-	{
-		@Config.LangKey("addServer.resourcePack.enabled")
-		@Config.Comment("Enables backups.")
-		public boolean enabled = true;
-
-		@Config.Comment("If set to true, no messages will be displayed in chat/status bar.")
-		public boolean silent = false;
-
-		@Config.RangeInt(min = 0, max = 32000)
-		@Config.Comment({
-				"The number of backup files to keep.",
-				"More backups = more space used",
-				"0 - Infinite"
-		})
-		public int backups_to_keep = 12;
-
-		@Config.RangeDouble(min = 0.05D, max = 600D)
-		@Config.Comment({
-				"Timer in hours.",
-				"1.0 - backups every hour",
-				"6.0 - backups every 6 hours",
-				"0.5 - backups every 30 minutes"
-		})
-		public double backup_timer = 2D;
-
-		@Config.RangeInt(min = 0, max = 9)
-		@Config.Comment({
-				"0 - Disabled (output = folders)",
-				"1 - Best speed",
-				"9 - Smallest file size"
-		})
-		public int compression_level = 1;
-
-		@Config.Comment("Absolute path to backups folder.")
-		public String folder = "";
-
-		@Config.Comment("Prints (current size | total size) when backup is done.")
-		public boolean display_file_size = true;
-
-		@Config.Comment("Add extra files that will be placed in backup _extra_/ folder.")
-		public String[] extra_files = { };
-
-		@Config.Comment("Maximum total size that is allowed in backups folder. Older backups will be deleted to free space for newer ones.")
-		public String max_total_size = "50 GB";
-
-		@Config.Comment("Disables level saving while performing backup.")
-		public boolean disable_level_saving = true;
-
-		@Config.Comment("Only create backups when players have been online.")
-		public boolean only_if_players_online = true;
-
-		@Config.Comment("Create a backup when server is stopped.")
-		public boolean force_on_shutdown = false;
-
-		public long time()
-		{
-			return (long) (backup_timer * Ticks.HOUR.millis());
-		}
-
-		public long getMaxTotalSize()
-		{
-			String s = StringUtils.removeAllWhitespace(max_total_size).toUpperCase();
-
-			if (s.endsWith("GB"))
-			{
-				return Long.parseLong(s.substring(0, s.length() - 2)) * FileUtils.GB;
-			}
-			else if (s.endsWith("MB"))
-			{
-				return Long.parseLong(s.substring(0, s.length() - 2)) * FileUtils.MB;
-			}
-			else if (s.endsWith("KB"))
-			{
-				return Long.parseLong(s.substring(0, s.length() - 2)) * FileUtils.KB;
-			}
-
-			return Long.parseLong(s);
-		}
 	}
 
 	public static class Commands

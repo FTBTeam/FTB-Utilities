@@ -22,12 +22,14 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -145,7 +147,10 @@ public class CmdEditNBT extends CmdTreeBase
 				addInfo(list, new TextComponentString("Block"), new TextComponentString(tile.getBlockType().getRegistryName().toString()));
 				addInfo(list, new TextComponentString("Block Class"), new TextComponentString(tile.getBlockType().getClass().getName()));
 				addInfo(list, new TextComponentString("Position"), new TextComponentString("[" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + "]"));
-				addInfo(list, new TextComponentString("Mod"), new TextComponentString(key == null ? "null" : Loader.instance().getIndexedModList().get(key.getNamespace()).getName()));
+
+				ModContainer mod = key == null ? null : Loader.instance().getIndexedModList().get(key.getNamespace());
+				addInfo(list, new TextComponentString("Mod"), new TextComponentString(mod == null ? "null" : mod.getName()));
+				addInfo(list, new TextComponentString("Ticking"), new TextComponentString(tile instanceof ITickable ? "true" : "false"));
 				info.setTag("text", list);
 
 				ITextComponent title = tile.getDisplayName();

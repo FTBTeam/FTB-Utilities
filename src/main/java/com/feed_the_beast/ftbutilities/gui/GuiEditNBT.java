@@ -368,7 +368,7 @@ public class GuiEditNBT extends GuiBase
 
 		private void updateHoverIcon()
 		{
-			ItemEntryWithCount entry = new ItemEntryWithCount(map);
+			ItemEntryWithCount entry = new ItemEntryWithCount(map.copy());
 
 			if (!entry.isEmpty())
 			{

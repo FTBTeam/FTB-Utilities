@@ -39,6 +39,12 @@ public class CmdSetHome extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+
+		if (player.isSpectator())
+		{
+			throw FTBUtilities.error(sender, "ftbutilities.lang.homes.spectator");
+		}
+
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(CommandUtils.getForgePlayer(player));
 
 		if (args.length == 0)

@@ -218,6 +218,7 @@ ftbutilities.lang.homes.not_set=Unknown Home: '%s'!
 ftbutilities.lang.homes.cooldown=You can only use home in %s!
 ftbutilities.lang.homes.cross_dim=You can't teleport to another dimension!
 ftbutilities.lang.homes.limit=You can't set any more home locations!
+ftbutilities.lang.homes.spectator=Exit spectator mode first!
 
 # TPA
 ftbutilities.lang.tpa.from_to=%s -> %s

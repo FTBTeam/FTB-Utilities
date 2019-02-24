@@ -86,6 +86,12 @@ public class FTBUtilitiesClientConfig
 
 			return show_shutdown_timer_ms;
 		}
+
+		@Config.RangeInt(min = 0, max = 23999)
+		public int button_daytime = 6000;
+
+		@Config.RangeInt(min = 0, max = 23999)
+		public int button_nighttime = 18000;
 	}
 
 	public static void sync()

@@ -67,6 +67,8 @@ ftbutilities_client.general.scan_items_whitelist=/scan_items Whitelist
 ftbutilities_client.general.scan_items_blacklist=/scan_items Blacklist
 ftbutilities_client.general.show_shutdown_timer=Show Shutdown Timer
 ftbutilities_client.general.shutdown_timer_start=Shutdown Timer Start
+ftbutilities_client.general.button_daytime=Button Daytime
+ftbutilities_client.general.button_nighttime=Button Nighttime
 
 # Rank Config
 permission.ftbutilities.badge=Badge

@@ -116,10 +116,22 @@ public class FTBUtilitiesClientEventHandler
 					ClientUtils.execClientCommand("/gamemode " + (Minecraft.getMinecraft().player.capabilities.isCreativeMode ? "survival" : "creative"));
 					break;
 				case "daytime":
-					ClientUtils.execClientCommand("/time add " + (24000L - (Minecraft.getMinecraft().world.getWorldTime() % 24000L) + FTBUtilitiesClientConfig.general.button_daytime) % 24000L);
+					long addDay = (24000L - (Minecraft.getMinecraft().world.getWorldTime() % 24000L) + FTBUtilitiesClientConfig.general.button_daytime) % 24000L;
+
+					if (addDay != 0L)
+					{
+						ClientUtils.execClientCommand("/time add " + addDay);
+					}
+
 					break;
 				case "nighttime":
-					ClientUtils.execClientCommand("/time add " + (24000L - (Minecraft.getMinecraft().world.getWorldTime() % 24000L) + FTBUtilitiesClientConfig.general.button_nighttime) % 24000L);
+					long addNight = (24000L - (Minecraft.getMinecraft().world.getWorldTime() % 24000L) + FTBUtilitiesClientConfig.general.button_nighttime) % 24000L;
+
+					if (addNight != 0L)
+					{
+						ClientUtils.execClientCommand("/time add " + addNight);
+					}
+
 					break;
 				case "claims_gui":
 					GuiClaimedChunks.instance = new GuiClaimedChunks();

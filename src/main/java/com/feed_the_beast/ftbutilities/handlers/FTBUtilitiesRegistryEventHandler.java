@@ -18,7 +18,6 @@ import com.feed_the_beast.ftbutilities.net.MessageViewCrashList;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
@@ -59,7 +58,7 @@ public class FTBUtilitiesRegistryEventHandler
 			}
 		});*/
 
-		registry.registerAdminPanelAction(new AdminPanelAction(FTBUtilities.MOD_ID, "crash_reports", ItemIcon.getItemIcon(new ItemStack(Blocks.BARRIER)), 0)
+		registry.registerAdminPanelAction(new AdminPanelAction(FTBUtilities.MOD_ID, "crash_reports", ItemIcon.getItemIcon(Blocks.BARRIER), 0)
 		{
 			@Override
 			public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -133,7 +132,7 @@ public class FTBUtilitiesRegistryEventHandler
 			}
 		});
 
-		registry.registerAdminPanelAction(new AdminPanelAction(FTBUtilities.MOD_ID, "ranks", ItemIcon.getItemIcon(new ItemStack(Items.DIAMOND_SWORD)), 0)
+		registry.registerAdminPanelAction(new AdminPanelAction(FTBUtilities.MOD_ID, "ranks", ItemIcon.getItemIcon(Items.DIAMOND_SWORD), 0)
 		{
 			@Override
 			public Type getType(ForgePlayer player, NBTTagCompound data)

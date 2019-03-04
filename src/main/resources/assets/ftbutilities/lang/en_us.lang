@@ -165,8 +165,8 @@ admin_panel.ftbutilities.ops=Edit OPs
 admin_panel.ftbutilities.edit_world=Edit World
 
 # Keys
-key.ftbutilities.warp=Warp GUI
 key.ftbutilities.nbt=Edit NBT
+key.ftbutilities.trash=Trash Can
 
 # Misc
 gamerules=Gamerules

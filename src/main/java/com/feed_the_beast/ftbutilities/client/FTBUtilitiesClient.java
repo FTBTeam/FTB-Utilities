@@ -15,7 +15,7 @@ import org.lwjgl.input.Keyboard;
 
 public class FTBUtilitiesClient extends FTBUtilitiesCommon // FTBLibClient
 {
-	public static final KeyBinding KEY_NBT = new KeyBinding("key.ftbutilities.nbt", KeyConflictContext.IN_GAME, KeyModifier.ALT, Keyboard.KEY_N, FTBLib.KEY_CATEGORY);
+	public static KeyBinding KEY_NBT, KEY_TRASH;
 
 	@Override
 	public void preInit()
@@ -23,7 +23,8 @@ public class FTBUtilitiesClient extends FTBUtilitiesCommon // FTBLibClient
 		super.preInit();
 
 		FTBUtilitiesClientConfig.sync();
-		ClientRegistry.registerKeyBinding(KEY_NBT);
+		ClientRegistry.registerKeyBinding(KEY_NBT = new KeyBinding("key.ftbutilities.nbt", KeyConflictContext.IN_GAME, KeyModifier.ALT, Keyboard.KEY_N, FTBLib.KEY_CATEGORY));
+		ClientRegistry.registerKeyBinding(KEY_TRASH = new KeyBinding("key.ftbutilities.trash", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_DELETE, FTBLib.KEY_CATEGORY));
 	}
 
 	@Override

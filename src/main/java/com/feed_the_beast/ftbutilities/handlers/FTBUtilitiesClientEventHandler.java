@@ -103,6 +103,11 @@ public class FTBUtilitiesClientEventHandler
 		{
 			MessageEditNBTRequest.editNBT();
 		}
+
+		if (FTBUtilitiesClient.KEY_TRASH.isPressed())
+		{
+			ClientUtils.execClientCommand("/trash_can");
+		}
 	}
 
 	@SubscribeEvent

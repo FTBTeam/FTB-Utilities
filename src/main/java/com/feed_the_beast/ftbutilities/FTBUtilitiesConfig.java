@@ -347,6 +347,9 @@ public class FTBUtilitiesConfig
 		@Config.RangeInt(min = -1, max = 2)
 		public int forced_spawn_dimension_weather = -1;
 
+		@Config.Comment("Disables player damage when they are stuck in walls.")
+		public boolean disable_player_suffocation_damage = false;
+
 		private static class DisabledItem
 		{
 			private Item item;

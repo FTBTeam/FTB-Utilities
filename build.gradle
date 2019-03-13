@@ -92,6 +92,7 @@ if (ENV.CURSEFORGE_KEY) {
 				requiredDependency 'ftblib'
 				optionalDependency 'ftb-guides'
 				optionalDependency 'journeymap'
+				requiredDependency 'ftb-utilities-backups'
 			}
 			changelog = getGitChangelog
 			changelogType = 'markdown'

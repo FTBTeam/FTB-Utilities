@@ -16,10 +16,12 @@ import com.feed_the_beast.ftbutilities.command.CmdShutdown;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
+import com.feed_the_beast.ftbutilities.net.MessageUpdatePlayTime;
 import com.feed_the_beast.ftbutilities.net.MessageUpdateTabName;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -227,6 +229,14 @@ public class FTBUtilitiesServerEventHandler
 			{
 				event.world.getWorldInfo().setRaining(FTBUtilitiesConfig.world.forced_spawn_dimension_weather >= 1);
 				event.world.getWorldInfo().setThundering(FTBUtilitiesConfig.world.forced_spawn_dimension_weather >= 2);
+			}
+
+			if (FTBUtilitiesConfig.world.show_playtime && event.world.getTotalWorldTime() % 20L == 7L)
+			{
+				for (EntityPlayerMP player : event.world.getMinecraftServer().getPlayerList().getPlayers())
+				{
+					new MessageUpdatePlayTime(player.getStatFile().readStat(StatList.PLAY_ONE_MINUTE)).sendTo(player);
+				}
 			}
 		}
 	}

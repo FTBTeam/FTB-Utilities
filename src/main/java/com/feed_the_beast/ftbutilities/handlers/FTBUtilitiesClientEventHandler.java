@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbutilities.handlers;
 import com.feed_the_beast.ftblib.events.client.CustomClickEvent;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
@@ -15,6 +16,7 @@ import com.feed_the_beast.ftbutilities.net.MessageRequestBadge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -35,9 +37,8 @@ import java.util.UUID;
 public class FTBUtilitiesClientEventHandler
 {
 	private static final Map<UUID, Icon> BADGE_CACHE = new HashMap<>();
-	public static int currentBackupFile = 0;
-	public static int totalBackupFiles = 0;
 	public static long shutdownTime = 0L;
+	public static int currentPlaytime = 0;
 
 	public static void readSyncData(NBTTagCompound nbt)
 	{
@@ -67,8 +68,6 @@ public class FTBUtilitiesClientEventHandler
 	public static void onClientDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
 	{
 		BADGE_CACHE.clear();
-		currentBackupFile = 0;
-		totalBackupFiles = 0;
 		shutdownTime = 0L;
 	}
 
@@ -90,9 +89,9 @@ public class FTBUtilitiesClientEventHandler
 			}
 		}
 
-		if (totalBackupFiles > 0 && totalBackupFiles > currentBackupFile && FTBUtilitiesClientConfig.general.show_backup_progress)
+		if (FTBUtilitiesConfig.world.show_playtime)
 		{
-			event.getLeft().add(TextFormatting.LIGHT_PURPLE + I18n.format("ftbutilities.lang.timer.backup_progress", currentBackupFile * 100 / totalBackupFiles, currentBackupFile, totalBackupFiles));
+			event.getLeft().add(StatList.PLAY_ONE_MINUTE.getStatName().getUnformattedText() + ": " + Ticks.get(Minecraft.getMinecraft().player.getStatFileWriter().readStat(StatList.PLAY_ONE_MINUTE)).toTimeString());
 		}
 	}
 

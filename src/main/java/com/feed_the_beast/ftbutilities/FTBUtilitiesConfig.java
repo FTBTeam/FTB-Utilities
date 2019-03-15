@@ -350,6 +350,9 @@ public class FTBUtilitiesConfig
 		@Config.Comment("Disables player damage when they are stuck in walls.")
 		public boolean disable_player_suffocation_damage = false;
 
+		@Config.Comment("Show play time in corner.")
+		public boolean show_playtime = false;
+
 		private static class DisabledItem
 		{
 			private Item item;

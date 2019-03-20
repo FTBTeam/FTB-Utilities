@@ -608,7 +608,7 @@ public class Ranks
 		list.add("// Add [name extends parent_name] to make this rank include all permissions from parent_name rank.");
 		list.add("// Add [name is default_player_rank] or [name is default_op_rank] to make this rank default for players/ops that don't have a rank set explicitly.");
 		list.add("// ");
-		list.add("// For more info visit https://guides.latmod.com/ftbutilities/ranks/");
+		list.add("// For more info visit https://minecraft.curseforge.com/projects/ftb-utilities/pages/ranks");
 		list.add("// To see the list of permission nodes, open all_permissions.html in browser or all_permissions_full_list.txt");
 
 		StringBuilder line = new StringBuilder();

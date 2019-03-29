@@ -120,6 +120,7 @@ public class FTBUtilitiesCommands
 		if (FTBLibConfig.debugging.special_commands)
 		{
 			event.registerServerCommand(new CmdCycleBlockState());
+			event.registerServerCommand(new CmdDumpChunkloaders());
 		}
 
 		if (FTBUtilitiesConfig.commands.tpa)

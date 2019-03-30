@@ -1,12 +1,15 @@
 package com.feed_the_beast.ftbutilities.command;
 
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -49,10 +52,46 @@ public class CmdDumpChunkloaders extends CmdBase
 					ITextComponent owner = new TextComponentString("Owner");
 					owner.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(ticket.getModId() + " : " + ticket.getEntity())));
 
-					ITextComponent chunks = new TextComponentString("Chunks");
-					chunks.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(ticket.getChunkList().toString())));
+					ITextComponent data = new TextComponentString("Data");
+					data.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(NBTUtils.getColoredNBTString(ticket.getModData()))));
 
-					sender.sendMessage(new TextComponentString("").appendSibling(title).appendText(" | ").appendSibling(owner).appendText(" | ").appendSibling(chunks));
+					ITextComponent chunks = new TextComponentString("Chunks");
+
+					int minX = Integer.MAX_VALUE;
+					int minZ = Integer.MAX_VALUE;
+					int maxX = Integer.MIN_VALUE;
+					int maxZ = Integer.MIN_VALUE;
+
+					for (ChunkPos pos : ticket.getChunkList())
+					{
+						if (pos.x < minX)
+						{
+							minX = pos.x;
+						}
+
+						if (pos.z < minZ)
+						{
+							minZ = pos.z;
+						}
+
+						if (pos.x > maxX)
+						{
+							maxX = pos.x;
+						}
+
+						if (pos.z > maxZ)
+						{
+							maxZ = pos.z;
+						}
+					}
+
+					BlockPos pos = new BlockPos((minX + maxX) * 8 + 8, 255, (minZ + maxZ) * 8 + 8);
+					world.getChunk(pos);
+					pos = world.getTopSolidOrLiquidBlock(pos);
+					chunks.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(pos + " ; " + ticket.getChunkList().toString())));
+					chunks.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tp " + pos.getX() + " " + pos.getY() + " " + pos.getZ()));
+
+					sender.sendMessage(new TextComponentString("").appendSibling(title).appendText(" | ").appendSibling(owner).appendText(" | ").appendSibling(data).appendText(" | ").appendSibling(chunks));
 				}
 			}
 		}

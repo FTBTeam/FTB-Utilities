@@ -43,7 +43,7 @@ repositories {
 	mavenLocal()
 	mavenCentral()
 	maven { url "https://maven.latmod.com/" }
-	maven { url "http://dvs1.progwml6.com/files/maven" }
+	maven { url "https://dvs1.progwml6.com/files/maven" }
 }
 
 dependencies {

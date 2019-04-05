@@ -26,7 +26,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -41,15 +40,6 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	public static final String TAG_FLY = "fly";
 	public static final String TAG_MUTED = "muted";
 	public static final String TAG_LAST_CHUNK = "ftbu_lchunk";
-
-	private enum TeleportType {
-		HOME,
-		WARP,
-		BACK,
-		SPAWN,
-		TPA,
-		RTP,
-	}
 
 	public enum Timer
 	{
@@ -155,47 +145,6 @@ public class FTBUtilitiesPlayerData extends PlayerData
 				player.sendStatusMessage(new TextComponentString(Integer.toString(secondsLeft - 1)), true);
 				player.sendStatusMessage(StringUtils.color(FTBLib.lang(player, "stand_still", startSeconds).appendText(" [" + (secondsLeft - 1) + "]"), TextFormatting.GOLD), true);
 			}
-		}
-	}
-
-
-	private class TeleportRecord implements INBTSerializable<NBTTagCompound>
-	{
-		private static final String NBT_KEY_X = "x";
-		private static final String NBT_KEY_Y = "y";
-		private static final String NBT_KEY_Z = "z";
-		private static final String NBT_KEY_DIMENSION = "dimension";
-		private static final String NBT_KEY_TELEPORT_TYPE = "teleportType";
-		BlockDimPos from;
-		TeleportType teleportType;
-		TeleportRecord(TeleportType teleportType, BlockDimPos from) {
-			this.teleportType = teleportType;
-			this.from = from;
-		}
-
-		@Override
-		public NBTTagCompound serializeNBT()
-		{
-			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setInteger(NBT_KEY_DIMENSION, from.dim);
-			nbt.setInteger(NBT_KEY_X, from.posX);
-			nbt.setInteger(NBT_KEY_Y, from.posY);
-			nbt.setInteger(NBT_KEY_Z, from.posZ);
-			nbt.setInteger(NBT_KEY_TELEPORT_TYPE, teleportType.ordinal());
-			return nbt;
-		}
-
-		@Override
-		public void deserializeNBT(NBTTagCompound nbt)
-		{
-			final int posX, posY, posZ, dimension, teleportType;
-			posX = nbt.getInteger(NBT_KEY_X);
-			posY = nbt.getInteger(NBT_KEY_Y);
-			posZ = nbt.getInteger(NBT_KEY_Z);
-			dimension = nbt.getInteger(NBT_KEY_DIMENSION);
-			teleportType = nbt.getInteger(NBT_KEY_TELEPORT_TYPE);
-			this.from = new BlockDimPos(posX, posY,posZ, dimension);
-			this.teleportType = TeleportType.values()[teleportType];
 		}
 	}
 

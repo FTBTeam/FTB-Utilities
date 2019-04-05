@@ -51,6 +51,13 @@ public class FTBUtilitiesPermissions
 	public static final Node WARPS_COOLDOWN = Node.get("ftbutilities.warps.cooldown");
 	public static final Node WARPS_WARMUP = Node.get("ftbutilities.warps.warmup");
 
+	public static final Node HOMES_BACK = Node.get("ftbutilities.back.home");
+	public static final Node WARPS_BACK = Node.get("ftbutilities.back.warp");
+	public static final Node SPAWN_BACK = Node.get("ftbutilities.back.spawn");
+	public static final Node TPA_BACK = Node.get("ftbutilities.back.tpa");
+	public static final Node RTP_BACK = Node.get("ftbutilities.back.rtp");
+	public static final Node RESPAWN_BACK = Node.get("ftbutilities.back.respawn");
+
 	// Claims //
 	public static final String CLAIMS_OTHER_SEE_INFO = "ftbutilities.other_player.claims.see_info";
 	public static final String CLAIMS_OTHER_CLAIM = "ftbutilities.other_player.claims.claim";

@@ -5,7 +5,7 @@ import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class TeleportRecord implements INBTSerializable<NBTTagCompound>
+public class TeleportLog implements INBTSerializable<NBTTagCompound>
 {
 	private static final String NBT_KEY_X = "x";
 	private static final String NBT_KEY_Y = "y";
@@ -17,7 +17,7 @@ public class TeleportRecord implements INBTSerializable<NBTTagCompound>
 
 	private BlockDimPos from;
 
-	TeleportRecord(TeleportType teleportType, BlockDimPos from) {
+	TeleportLog(TeleportType teleportType, BlockDimPos from) {
 		this.teleportType = teleportType;
 		this.from = from;
 	}

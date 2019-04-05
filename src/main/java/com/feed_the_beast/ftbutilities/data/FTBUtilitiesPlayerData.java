@@ -165,7 +165,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 
 	private BlockDimPos lastSafePos;
 	private long[] lastTeleport;
-	private TeleportRecord lastTeleportRecord;
+	private TeleportLog lastTeleportRecord;
 	public final BlockDimPosStorage homes;
 
 	public FTBUtilitiesPlayerData(ForgePlayer player)
@@ -274,7 +274,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	@Nullable
 	public BlockDimPos getLastDeath()
 	{
-		TeleportRecord lastTeleport = getLastTeleport();
+		TeleportLog lastTeleport = getLastTeleport();
 		if (lastTeleport == null) {
 			return null;
 		}
@@ -347,12 +347,12 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		if (teleportType == TeleportType.BACK) {
 			return;
 		}
-		this.lastTeleportRecord = new TeleportRecord(teleportType, from);
+		this.lastTeleportRecord = new TeleportLog(teleportType, from);
 		player.markDirty();
 	}
 
 	@Nullable
-	public TeleportRecord getLastTeleport() {
+	public TeleportLog getLastTeleport() {
 		return this.lastTeleportRecord;
 	}
 

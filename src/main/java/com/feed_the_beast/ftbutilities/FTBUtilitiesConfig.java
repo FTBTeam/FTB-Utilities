@@ -248,7 +248,7 @@ public class FTBUtilitiesConfig
 
 	public static class WorldConfig
 	{
-		public static class WorldLogging
+    public static class WorldLogging
 		{
 			@Config.Comment("Enables world logging.")
 			@Config.LangKey("addServer.resourcePack.enabled")
@@ -317,6 +317,9 @@ public class FTBUtilitiesConfig
 
 		@Config.Comment("Max /rtp distance")
 		public double rtp_max_distance = 100000D;
+		
+		@Config.Comment("Max tries /rtp does before failure.")
+		public int rtp_max_tries = 200;
 
 		@Config.Comment({
 				"List of items that will have right-click function disabled on both sides.",

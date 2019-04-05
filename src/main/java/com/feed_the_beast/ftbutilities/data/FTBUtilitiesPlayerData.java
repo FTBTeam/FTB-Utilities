@@ -26,6 +26,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -41,24 +42,35 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	public static final String TAG_MUTED = "muted";
 	public static final String TAG_LAST_CHUNK = "ftbu_lchunk";
 
+	private enum TeleportType {
+		HOME,
+		WARP,
+		BACK,
+		SPAWN,
+		TPA,
+		RTP,
+	}
+
 	public enum Timer
 	{
-		HOME(FTBUtilitiesPermissions.HOMES_COOLDOWN, FTBUtilitiesPermissions.HOMES_WARMUP),
-		WARP(FTBUtilitiesPermissions.WARPS_COOLDOWN, FTBUtilitiesPermissions.WARPS_WARMUP),
-		BACK(FTBUtilitiesPermissions.BACK_COOLDOWN, FTBUtilitiesPermissions.BACK_WARMUP),
-		SPAWN(FTBUtilitiesPermissions.SPAWN_COOLDOWN, FTBUtilitiesPermissions.SPAWN_WARMUP),
-		TPA(FTBUtilitiesPermissions.TPA_COOLDOWN, FTBUtilitiesPermissions.TPA_WARMUP),
-		RTP(FTBUtilitiesPermissions.RTP_COOLDOWN, FTBUtilitiesPermissions.RTP_WARMUP);
+		HOME(TeleportType.HOME,FTBUtilitiesPermissions.HOMES_COOLDOWN, FTBUtilitiesPermissions.HOMES_WARMUP),
+		WARP(TeleportType.WARP,FTBUtilitiesPermissions.WARPS_COOLDOWN, FTBUtilitiesPermissions.WARPS_WARMUP),
+		BACK(TeleportType.BACK,FTBUtilitiesPermissions.BACK_COOLDOWN, FTBUtilitiesPermissions.BACK_WARMUP),
+		SPAWN(TeleportType.SPAWN,FTBUtilitiesPermissions.SPAWN_COOLDOWN, FTBUtilitiesPermissions.SPAWN_WARMUP),
+		TPA(TeleportType.TPA,FTBUtilitiesPermissions.TPA_COOLDOWN, FTBUtilitiesPermissions.TPA_WARMUP),
+		RTP(TeleportType.RTP,FTBUtilitiesPermissions.RTP_COOLDOWN, FTBUtilitiesPermissions.RTP_WARMUP);
 
 		public static final Timer[] VALUES = values();
 
 		private final Node cooldown;
 		private final Node warmup;
+		private final TeleportType teleportType;
 
-		Timer(Node c, Node w)
+		Timer(TeleportType teleportType, Node c, Node w)
 		{
-			cooldown = c;
-			warmup = w;
+			this.teleportType = teleportType;
+			this.cooldown = c;
+			this.warmup = w;
 		}
 
 		public void teleport(EntityPlayerMP player, Function<EntityPlayerMP, TeleporterDimPos> pos, @Nullable IScheduledTask extraTask)
@@ -69,11 +81,11 @@ public class FTBUtilitiesPlayerData extends PlayerData
 			if (seconds > 0)
 			{
 				player.sendStatusMessage(StringUtils.color(FTBLib.lang(player, "stand_still", seconds).appendText(" [" + seconds + "]"), TextFormatting.GOLD), true);
-				universe.scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 1000L, new TeleportTask(player, this, seconds, seconds, pos, extraTask));
+				universe.scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 1000L, new TeleportTask(teleportType,player, this, seconds, seconds, pos, extraTask));
 			}
 			else
 			{
-				new TeleportTask(player, this, 0, 0, pos, extraTask).execute(universe);
+				new TeleportTask(teleportType,player, this, 0, 0, pos, extraTask).execute(universe);
 			}
 		}
 	}
@@ -87,17 +99,19 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		private final float startHP;
 		private final int startSeconds, secondsLeft;
 		private final IScheduledTask extraTask;
+		private final TeleportType teleportType;
 
-		private TeleportTask(EntityPlayerMP p, Timer t, int ss, int s, Function<EntityPlayerMP, TeleporterDimPos> to, @Nullable IScheduledTask e)
+		private TeleportTask(TeleportType teleportType,EntityPlayerMP p, Timer t, int ss, int s, Function<EntityPlayerMP, TeleporterDimPos> to, @Nullable IScheduledTask e)
 		{
-			player = p;
-			timer = t;
-			startPos = new BlockDimPos(player);
-			startHP = player.getHealth();
-			pos = to;
-			startSeconds = ss;
-			secondsLeft = s;
-			extraTask = e;
+			this.teleportType = teleportType;
+			this.player = p;
+			this.timer = t;
+			this.startPos = new BlockDimPos(player);
+			this.startHP = player.getHealth();
+			this.pos = to;
+			this.startSeconds = ss;
+			this.secondsLeft = s;
+			this.extraTask = e;
 		}
 
 		@Override
@@ -113,6 +127,8 @@ public class FTBUtilitiesPlayerData extends PlayerData
 
 				if (teleporter != null)
 				{
+					FTBUtilitiesPlayerData data = get(universe.getPlayer(player));
+					data.setLastTeleport(teleportType, new BlockDimPos(player.getRidingEntity()));
 					teleporter.teleport(player);
 
 					if (player.getRidingEntity() != null)
@@ -120,7 +136,6 @@ public class FTBUtilitiesPlayerData extends PlayerData
 						teleporter.teleport(player.getRidingEntity());
 					}
 
-					FTBUtilitiesPlayerData data = get(universe.getPlayer(player));
 					data.lastTeleport[timer.ordinal()] = System.currentTimeMillis();
 
 					if (secondsLeft != 0)
@@ -136,10 +151,51 @@ public class FTBUtilitiesPlayerData extends PlayerData
 			}
 			else
 			{
-				universe.scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 1000L, new TeleportTask(player, timer, startSeconds, secondsLeft - 1, pos, extraTask));
+				universe.scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 1000L, new TeleportTask(teleportType,player, timer, startSeconds, secondsLeft - 1, pos, extraTask));
 				player.sendStatusMessage(new TextComponentString(Integer.toString(secondsLeft - 1)), true);
 				player.sendStatusMessage(StringUtils.color(FTBLib.lang(player, "stand_still", startSeconds).appendText(" [" + (secondsLeft - 1) + "]"), TextFormatting.GOLD), true);
 			}
+		}
+	}
+
+
+	private class TeleportRecord implements INBTSerializable<NBTTagCompound>
+	{
+		private static final String NBT_KEY_X = "x";
+		private static final String NBT_KEY_Y = "y";
+		private static final String NBT_KEY_Z = "z";
+		private static final String NBT_KEY_DIMENSION = "dimension";
+		private static final String NBT_KEY_TELEPORT_TYPE = "teleportType";
+		BlockDimPos from;
+		TeleportType teleportType;
+		TeleportRecord(TeleportType teleportType, BlockDimPos from) {
+			this.teleportType = teleportType;
+			this.from = from;
+		}
+
+		@Override
+		public NBTTagCompound serializeNBT()
+		{
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setInteger(NBT_KEY_DIMENSION, from.dim);
+			nbt.setInteger(NBT_KEY_X, from.posX);
+			nbt.setInteger(NBT_KEY_Y, from.posY);
+			nbt.setInteger(NBT_KEY_Z, from.posZ);
+			nbt.setInteger(NBT_KEY_TELEPORT_TYPE, teleportType.ordinal());
+			return nbt;
+		}
+
+		@Override
+		public void deserializeNBT(NBTTagCompound nbt)
+		{
+			final int posX, posY, posZ, dimension, teleportType;
+			posX = nbt.getInteger(NBT_KEY_X);
+			posY = nbt.getInteger(NBT_KEY_Y);
+			posZ = nbt.getInteger(NBT_KEY_Z);
+			dimension = nbt.getInteger(NBT_KEY_DIMENSION);
+			teleportType = nbt.getInteger(NBT_KEY_TELEPORT_TYPE);
+			this.from = new BlockDimPos(posX, posY,posZ, dimension);
+			this.teleportType = TeleportType.values()[teleportType];
 		}
 	}
 
@@ -160,6 +216,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 
 	private BlockDimPos lastDeath, lastSafePos;
 	private long[] lastTeleport;
+	private TeleportRecord lastTeleportRecord;
 	public final BlockDimPosStorage homes;
 
 	public FTBUtilitiesPlayerData(ForgePlayer player)
@@ -328,5 +385,12 @@ public class FTBUtilitiesPlayerData extends PlayerData
 
 		cachedNameForChat.appendText(" ");
 		return cachedNameForChat;
+	}
+
+	public void setLastTeleport(TeleportType teleportType, BlockDimPos from) {
+		if (teleportType == TeleportType.BACK) {
+			return;
+		}
+		this.lastTeleportRecord = new TeleportRecord(teleportType, from);
 	}
 }

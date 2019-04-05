@@ -8,4 +8,5 @@ public enum TeleportType
 	SPAWN,
 	TPA,
 	RTP,
+	RESPAWN,
 }

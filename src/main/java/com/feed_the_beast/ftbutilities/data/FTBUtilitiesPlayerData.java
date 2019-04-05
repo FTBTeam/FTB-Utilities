@@ -163,7 +163,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	public long afkTime;
 	private ITextComponent cachedNameForChat;
 
-	private BlockDimPos lastDeath, lastSafePos;
+	private BlockDimPos lastSafePos;
 	private long[] lastTeleport;
 	private TeleportRecord lastTeleportRecord;
 	public final BlockDimPosStorage homes;
@@ -191,6 +191,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		nbt.setBoolean("EnablePVP", enablePVP);
 		nbt.setTag("Homes", homes.serializeNBT());
 
+		BlockDimPos lastDeath = getLastDeath();
 		if (lastDeath != null)
 		{
 			nbt.setIntArray("LastDeath", lastDeath.toIntArray());
@@ -208,7 +209,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		disableGlobalBadge = nbt.getBoolean("DisableGlobalBadges");
 		enablePVP = !nbt.hasKey("EnablePVP") || nbt.getBoolean("EnablePVP");
 		homes.deserializeNBT(nbt.getCompoundTag("Homes"));
-		lastDeath = BlockDimPos.fromIntArray(nbt.getIntArray("LastDeath"));
+		setLastDeath(BlockDimPos.fromIntArray(nbt.getIntArray("LastDeath")));
 		nickname = nbt.getString("Nickname");
 		afkMesageLocation = EnumMessageLocation.NAME_MAP.get(nbt.getString("AFK"));
 	}
@@ -267,14 +268,20 @@ public class FTBUtilitiesPlayerData extends PlayerData
 
 	public void setLastDeath(@Nullable BlockDimPos pos)
 	{
-		lastDeath = pos;
-		player.markDirty();
+		setLastTeleport(TeleportType.RESPAWN, pos);
 	}
 
 	@Nullable
 	public BlockDimPos getLastDeath()
 	{
-		return lastDeath;
+		TeleportRecord lastTeleport = getLastTeleport();
+		if (lastTeleport == null) {
+			return null;
+		}
+		if (getLastTeleport().teleportType != TeleportType.RESPAWN) {
+			return null;
+		}
+		return lastTeleport.getBlockDimPos();
 	}
 
 	public void setLastSafePos(@Nullable BlockDimPos pos)
@@ -341,13 +348,16 @@ public class FTBUtilitiesPlayerData extends PlayerData
 			return;
 		}
 		this.lastTeleportRecord = new TeleportRecord(teleportType, from);
+		player.markDirty();
 	}
 
+	@Nullable
 	public TeleportRecord getLastTeleport() {
 		return this.lastTeleportRecord;
 	}
 
 	public void clearLastTeleport() {
 		this.lastTeleportRecord = null;
+		player.markDirty();
 	}
 }

@@ -27,18 +27,18 @@ public class CmdBack extends CmdBase
 
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
 
-		if (data.getLastDeath() == null)
+		if (data.getLastTeleport() == null)
 		{
 			throw FTBUtilities.error(sender, "ftbutilities.lang.warps.no_dp");
 		}
 
 		data.checkTeleportCooldown(sender, FTBUtilitiesPlayerData.Timer.BACK);
 
-		FTBUtilitiesPlayerData.Timer.BACK.teleport(player, playerMP -> data.getLastDeath().teleporter(), universe ->
+		FTBUtilitiesPlayerData.Timer.BACK.teleport(player, playerMP -> data.getLastTeleport().teleporter(), universe ->
 		{
 			if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.INFINITE_BACK_USAGE))
 			{
-				data.setLastDeath(null);
+				data.clearLastTeleport();
 			}
 		});
 	}

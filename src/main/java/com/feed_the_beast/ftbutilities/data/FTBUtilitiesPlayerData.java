@@ -118,7 +118,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 				if (teleporter != null)
 				{
 					FTBUtilitiesPlayerData data = get(universe.getPlayer(player));
-					data.setLastTeleport(teleportType, new BlockDimPos(player.getRidingEntity()));
+					data.setLastTeleport(teleportType, new BlockDimPos(player));
 					teleporter.teleport(player);
 
 					if (player.getRidingEntity() != null)
@@ -341,5 +341,13 @@ public class FTBUtilitiesPlayerData extends PlayerData
 			return;
 		}
 		this.lastTeleportRecord = new TeleportRecord(teleportType, from);
+	}
+
+	public TeleportRecord getLastTeleport() {
+		return this.lastTeleportRecord;
+	}
+
+	public void clearLastTeleport() {
+		this.lastTeleportRecord = null;
 	}
 }

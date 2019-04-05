@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
+import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -48,5 +49,9 @@ public class TeleportRecord implements INBTSerializable<NBTTagCompound>
 
 	public BlockDimPos getBlockDimPos() {
 		return this.from;
+	}
+
+	public TeleporterDimPos teleporter() {
+		return getBlockDimPos().teleporter();
 	}
 }

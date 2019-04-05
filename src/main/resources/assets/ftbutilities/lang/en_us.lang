@@ -233,6 +233,9 @@ ftbutilities.lang.tpa.cant_request=Can't request TPA!
 ftbutilities.lang.tpa.request_expired=TPA request expired!
 ftbutilities.lang.tpa.request_accepted=TPA Request accepted!
 
+# RTP
+ftbutilities.lang.rtp.fail=Could not find a valid location to teleport to!
+
 # Commands
 commands.shutdown.usage=/shutdown
 commands.inv.usage=/inv

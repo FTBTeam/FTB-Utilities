@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbutilities.client;
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
+import com.feed_the_beast.ftbutilities.command.client.CmdPing;
 import com.feed_the_beast.ftbutilities.command.client.CmdScanItems;
 import com.feed_the_beast.ftbutilities.command.client.CmdShrug;
 import net.minecraft.client.Minecraft;
@@ -33,6 +34,7 @@ public class FTBUtilitiesClient extends FTBUtilitiesCommon // FTBLibClient
 		super.postInit();
 
 		ClientCommandHandler.instance.registerCommand(new CmdShrug());
+		ClientCommandHandler.instance.registerCommand(new CmdPing());
 
 		if (FTBLibConfig.debugging.special_commands)
 		{

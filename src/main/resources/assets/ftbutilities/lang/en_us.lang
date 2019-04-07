@@ -303,6 +303,9 @@ commands.unmute.usage=/unmute <player>
 commands.rec.usage=/rec
 commands.rec.recording=%s is now recording!
 commands.rec.not_recording=%s is no longer recording!
+commands.ping.integrated_server=Integrated Server
+commands.ping.unknown=Unknown
+commands.ping.ping=Ping %s
 
 # Client Commands
 commands.shrug.usage=/shrug [text...]

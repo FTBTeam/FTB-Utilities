@@ -80,8 +80,12 @@ public class TeleportTracker implements INBTSerializable<NBTTagCompound>
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("{");
-		for(TeleportLog l : logs) {
+		for(int i = 0; i < logs.length; i++) {
+			final TeleportLog l = logs[i];
 			builder.append(l.teleportType.toString() + ":" + l.getBlockDimPos());
+			if (i != logs.length - 1) {
+				builder.append(",");
+			}
 		}
 		builder.append("}");
 		return builder.toString();

@@ -18,6 +18,7 @@ import com.feed_the_beast.ftblib.lib.util.text_components.TextComponentParser;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -165,8 +166,8 @@ public class FTBUtilitiesPlayerData extends PlayerData
 
 	private BlockDimPos lastSafePos;
 	private long[] lastTeleport;
-	private TeleportLog lastTeleportRecord;
 	public final BlockDimPosStorage homes;
+	private TeleportTracker teleportTracker;
 
 	public FTBUtilitiesPlayerData(ForgePlayer player)
 	{
@@ -174,6 +175,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		homes = new BlockDimPosStorage();
 		tpaRequestsFrom = new HashSet<>();
 		lastTeleport = new long[Timer.VALUES.length];
+		teleportTracker = new TeleportTracker();
 	}
 
 	@Override
@@ -268,20 +270,13 @@ public class FTBUtilitiesPlayerData extends PlayerData
 
 	public void setLastDeath(@Nullable BlockDimPos pos)
 	{
-		setLastTeleport(TeleportType.RESPAWN, pos);
+		teleportTracker.logTeleport(TeleportType.RESPAWN, pos, Minecraft.getSystemTime());
 	}
 
 	@Nullable
 	public BlockDimPos getLastDeath()
 	{
-		TeleportLog lastTeleport = getLastTeleport();
-		if (lastTeleport == null) {
-			return null;
-		}
-		if (getLastTeleport().teleportType != TeleportType.RESPAWN) {
-			return null;
-		}
-		return lastTeleport.getBlockDimPos();
+		return teleportTracker.getLastDeath().getBlockDimPos();
 	}
 
 	public void setLastSafePos(@Nullable BlockDimPos pos)
@@ -343,21 +338,17 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		return cachedNameForChat;
 	}
 
+	public TeleportLog getLastTeleportLog() {
+		return teleportTracker.getLastAvailableLog(player.getProfile());
+	}
+
 	public void setLastTeleport(TeleportType teleportType, BlockDimPos from) {
-		if (teleportType == TeleportType.BACK) {
-			return;
-		}
-		this.lastTeleportRecord = new TeleportLog(teleportType, from);
+		teleportTracker.logTeleport(teleportType, from, Minecraft.getSystemTime());
 		player.markDirty();
 	}
 
-	@Nullable
-	public TeleportLog getLastTeleport() {
-		return this.lastTeleportRecord;
-	}
-
-	public void clearLastTeleport() {
-		this.lastTeleportRecord = null;
+	public void clearLastTeleport(TeleportType teleportType) {
+		teleportTracker.clearLog(teleportType);
 		player.markDirty();
 	}
 }

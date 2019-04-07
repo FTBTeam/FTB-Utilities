@@ -12,14 +12,21 @@ public class TeleportLog implements INBTSerializable<NBTTagCompound>
 	private static final String NBT_KEY_Z = "z";
 	private static final String NBT_KEY_DIMENSION = "dimension";
 	private static final String NBT_KEY_TELEPORT_TYPE = "teleportType";
+	private static final String NBT_KEY_CREATED_AT = "createdAt";
 
 	public TeleportType teleportType;
 
 	private BlockDimPos from;
+	private long createdAt;
 
-	TeleportLog(TeleportType teleportType, BlockDimPos from) {
+	public TeleportLog(NBTTagCompound nbt) {
+		deserializeNBT(nbt);
+	}
+
+	public TeleportLog(TeleportType teleportType, BlockDimPos from, long createdAt) {
 		this.teleportType = teleportType;
 		this.from = from;
+		this.createdAt = createdAt;
 	}
 
 	@Override
@@ -31,6 +38,7 @@ public class TeleportLog implements INBTSerializable<NBTTagCompound>
 		nbt.setInteger(NBT_KEY_Y, from.posY);
 		nbt.setInteger(NBT_KEY_Z, from.posZ);
 		nbt.setInteger(NBT_KEY_TELEPORT_TYPE, teleportType.ordinal());
+		nbt.setLong(NBT_KEY_CREATED_AT, createdAt);
 		return nbt;
 	}
 
@@ -53,5 +61,9 @@ public class TeleportLog implements INBTSerializable<NBTTagCompound>
 
 	public TeleporterDimPos teleporter() {
 		return getBlockDimPos().teleporter();
+	}
+
+	public long getCreatedAt() {
+		return this.createdAt;
 	}
 }

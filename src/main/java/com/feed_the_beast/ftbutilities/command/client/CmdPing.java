@@ -31,27 +31,34 @@ import java.util.concurrent.Executors;
 public class CmdPing extends CmdBase
 {
 	private final static Executor EXECUTOR = Executors.newScheduledThreadPool(1);
-	public CmdPing() {
+
+	public CmdPing()
+	{
 		super("ping", Level.ALL);
 	}
+
 	@Override
 	public void execute(MinecraftServer minecraftServer, ICommandSender iCommandSender, String[] strings) throws CommandException
 	{
 		Minecraft mc = Minecraft.getMinecraft();
-		if (mc.getIntegratedServer() != null) {
-			iCommandSender.sendMessage(FTBUtilities.lang(iCommandSender,"commands.ping.integrated_server"));
+		if (mc.getIntegratedServer() != null)
+		{
+			iCommandSender.sendMessage(FTBUtilities.lang(iCommandSender, "commands.ping.integrated_server"));
 			return;
 		}
 		ServerData data = mc.getCurrentServerData();
-		if (data != null) {
+		if (data != null)
+		{
 			EXECUTOR.execute(() -> {
 				ServerAddress address = ServerAddress.fromString(data.serverIP);
-				try {
+				try
+				{
 					NetworkManager networkManager = NetworkManager.createNetworkManagerAndConnect(InetAddress.getByName(address.getIP()), address.getPort(), false);
 					networkManager.setNetHandler(new INetHandlerStatusClient()
 					{
 						private long latency = -1L;
 						private long sendAt;
+
 						@Override
 						public void handleServerInfo(SPacketServerInfo sPacketServerInfo)
 						{
@@ -64,26 +71,29 @@ public class CmdPing extends CmdBase
 						{
 							latency = Minecraft.getSystemTime() - sendAt;
 							networkManager.closeChannel(new TextComponentString("Finished"));
-							iCommandSender.sendMessage(FTBUtilities.lang(iCommandSender,"commands.ping.ping",StringUtils.getTimeString(latency)));
+							iCommandSender.sendMessage(FTBUtilities.lang(iCommandSender, "commands.ping.ping", StringUtils.getTimeString(latency)));
 						}
 
 						@Override
 						public void onDisconnect(ITextComponent iTextComponent)
 						{
-							if (latency == -1L) {
-								iCommandSender.sendMessage(FTBUtilities.lang(iCommandSender,"commands.ping.unknown"));
+							if (latency == -1L)
+							{
+								iCommandSender.sendMessage(FTBUtilities.lang(iCommandSender, "commands.ping.unknown"));
 							}
 						}
 					});
 					networkManager.sendPacket(new C00Handshake(address.getIP(), address.getPort(), EnumConnectionState.STATUS));
 					networkManager.sendPacket(new CPacketServerQuery());
-				} catch (UnknownHostException e) {
+				}
+				catch (UnknownHostException e)
+				{
 					e.printStackTrace();
-					iCommandSender.sendMessage(FTBUtilities.lang(iCommandSender,"commands.ping.unknown"));
+					iCommandSender.sendMessage(FTBUtilities.lang(iCommandSender, "commands.ping.unknown"));
 				}
 			});
 			return;
 		}
-		iCommandSender.sendMessage(FTBUtilities.lang(iCommandSender,"commands.ping.unknown"));
+		iCommandSender.sendMessage(FTBUtilities.lang(iCommandSender, "commands.ping.unknown"));
 	}
 }

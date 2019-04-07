@@ -43,14 +43,14 @@ public class CmdRTP extends CmdBase
 			player.sendMessage(FTBUtilities.lang(player, "ftbutilities.lang.rtp.fail"));
 			return TeleporterDimPos.of(player);
 		}
-		
+
 		double dist = FTBUtilitiesConfig.world.rtp_min_distance + world.rand.nextDouble() * (FTBUtilitiesConfig.world.rtp_max_distance - FTBUtilitiesConfig.world.rtp_min_distance);
 		double angle = world.rand.nextDouble() * Math.PI * 2D;
 
 		int x = MathHelper.floor(Math.cos(angle) * dist);
 		int y = 256;
 		int z = MathHelper.floor(Math.sin(angle) * dist);
-		
+
 		if (!isInsideWorldBorder(world, x, y, z))
 		{
 			return findBlockPos(world, player, depth);
@@ -82,11 +82,11 @@ public class CmdRTP extends CmdBase
 
 		return findBlockPos(world, player, depth);
 	}
-	
+
 	private boolean isInsideWorldBorder(World world, double x, double y, double z)
 	{
 		WorldBorder border = world.getWorldBorder();
 		return border.contains(new BlockPos(x, y, z));
 	}
-	
+
 }

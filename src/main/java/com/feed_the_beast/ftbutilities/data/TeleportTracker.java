@@ -39,7 +39,7 @@ public class TeleportTracker implements INBTSerializable<NBTTagCompound>
 	// Returns latest available according to permissions.
 	public TeleportLog getLastAvailableLog(GameProfile gameProfile) {
 		for(TeleportLog l : getSortedLogs()) {
-			if (permissionHandler.hasPermission(gameProfile, l.teleportType.getPermissionNode().toString(), null)) {
+			if (permissionHandler.hasPermission(gameProfile, l.teleportType.getPermission(), null)) {
 				return l;
 			}
 		}
@@ -68,8 +68,22 @@ public class TeleportTracker implements INBTSerializable<NBTTagCompound>
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
+		if (nbt == null) {
+			return;
+		}
 		for(int i = 0; i < logs.length; i++) {
 			logs[i] = new TeleportLog(nbt.getCompoundTag(String.valueOf(i)));
 		}
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("{");
+		for(TeleportLog l : logs) {
+			builder.append(l.teleportType.toString() + ":" + l.getBlockDimPos());
+		}
+		builder.append("}");
+		return builder.toString();
 	}
 }

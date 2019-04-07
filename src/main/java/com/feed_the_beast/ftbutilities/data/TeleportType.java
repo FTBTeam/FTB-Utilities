@@ -1,25 +1,24 @@
 package com.feed_the_beast.ftbutilities.data;
 
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 
 public enum TeleportType
 {
 	HOME(FTBUtilitiesPermissions.HOMES_BACK),
 	WARP(FTBUtilitiesPermissions.WARPS_BACK),
-	BACK(null),
+	BACK(FTBUtilitiesPermissions.BACK_BACK),
 	SPAWN(FTBUtilitiesPermissions.SPAWN_BACK),
 	TPA(FTBUtilitiesPermissions.TPA_BACK),
 	RTP(FTBUtilitiesPermissions.RTP_BACK),
 	RESPAWN(FTBUtilitiesPermissions.RESPAWN_BACK);
 
-	private Node permission;
+	private String permission;
 
-	TeleportType(Node node) {
+	TeleportType(String node) {
 		this.permission = node;
 	}
 
-	public Node getPermissionNode() {
+	public String getPermission() {
 		return this.permission;
 	}
 }

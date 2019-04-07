@@ -51,12 +51,13 @@ public class FTBUtilitiesPermissions
 	public static final Node WARPS_COOLDOWN = Node.get("ftbutilities.warps.cooldown");
 	public static final Node WARPS_WARMUP = Node.get("ftbutilities.warps.warmup");
 
-	public static final Node HOMES_BACK = Node.get("ftbutilities.back.home");
-	public static final Node WARPS_BACK = Node.get("ftbutilities.back.warp");
-	public static final Node SPAWN_BACK = Node.get("ftbutilities.back.spawn");
-	public static final Node TPA_BACK = Node.get("ftbutilities.back.tpa");
-	public static final Node RTP_BACK = Node.get("ftbutilities.back.rtp");
-	public static final Node RESPAWN_BACK = Node.get("ftbutilities.back.respawn");
+	public static final String HOMES_BACK = "ftbutilities.back.home";
+	public static final String WARPS_BACK = "ftbutilities.back.warp";
+	public static final String SPAWN_BACK = "ftbutilities.back.spawn";
+	public static final String TPA_BACK = "ftbutilities.back.tpa";
+	public static final String RTP_BACK = "ftbutilities.back.rtp";
+	public static final String RESPAWN_BACK = "ftbutilities.back.respawn";
+	public static final String BACK_BACK = "ftbutilities.back.back";
 
 	// Claims //
 	public static final String CLAIMS_OTHER_SEE_INFO = "ftbutilities.other_player.claims.see_info";
@@ -146,6 +147,13 @@ public class FTBUtilitiesPermissions
 		PermissionAPI.registerNode(EDIT_WORLD_GAMERULES, DefaultPermissionLevel.OP, "Allow to edit gamerules via Admin Panel");
 		PermissionAPI.registerNode(TPA_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /tpa to teleport to/from another dimension");
 		PermissionAPI.registerNode(HEAL_OTHER, DefaultPermissionLevel.OP, "Allow to heal other players");
+		PermissionAPI.registerNode(HOMES_BACK, DefaultPermissionLevel.OP, "Allow player back to last time where /home is used");
+		PermissionAPI.registerNode(WARPS_BACK, DefaultPermissionLevel.OP, "Allow player back to last time where /warp is used");
+		PermissionAPI.registerNode(BACK_BACK,DefaultPermissionLevel.OP, "Allow player back to last time where /back is used");
+		PermissionAPI.registerNode(SPAWN_BACK,DefaultPermissionLevel.OP, "Allow player back to last time where /spawn is used");
+		PermissionAPI.registerNode(TPA_BACK, DefaultPermissionLevel.OP, "Allow player back to last time where /tpa is used");
+		PermissionAPI.registerNode(RTP_BACK, DefaultPermissionLevel.OP, "Allow player back to last time where /rtp is used");
+		PermissionAPI.registerNode(RESPAWN_BACK, DefaultPermissionLevel.ALL, "Allow player back to last death point");
 
 		for (Block block : Block.REGISTRY)
 		{

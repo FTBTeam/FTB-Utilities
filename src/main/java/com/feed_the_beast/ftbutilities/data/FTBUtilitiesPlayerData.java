@@ -18,11 +18,11 @@ import com.feed_the_beast.ftblib.lib.util.text_components.TextComponentParser;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -193,12 +193,6 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		nbt.setBoolean("EnablePVP", enablePVP);
 		nbt.setTag("Homes", homes.serializeNBT());
 
-		BlockDimPos lastDeath = getLastDeath();
-		if (lastDeath != null)
-		{
-			nbt.setIntArray("LastDeath", lastDeath.toIntArray());
-		}
-
 		nbt.setString("Nickname", nickname);
 		nbt.setString("AFK", EnumMessageLocation.NAME_MAP.getName(afkMesageLocation));
 		return nbt;
@@ -211,7 +205,9 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		disableGlobalBadge = nbt.getBoolean("DisableGlobalBadges");
 		enablePVP = !nbt.hasKey("EnablePVP") || nbt.getBoolean("EnablePVP");
 		homes.deserializeNBT(nbt.getCompoundTag("Homes"));
-		setLastDeath(BlockDimPos.fromIntArray(nbt.getIntArray("LastDeath")));
+		teleportTracker = new TeleportTracker();
+		teleportTracker.deserializeNBT(nbt.getCompoundTag("teleportTracker"));
+		setLastDeath(BlockDimPos.fromIntArray(nbt.getIntArray("LastDeath")), 0);
 		nickname = nbt.getString("Nickname");
 		afkMesageLocation = EnumMessageLocation.NAME_MAP.get(nbt.getString("AFK"));
 	}
@@ -270,10 +266,17 @@ public class FTBUtilitiesPlayerData extends PlayerData
 
 	public void setLastDeath(@Nullable BlockDimPos pos)
 	{
-		teleportTracker.logTeleport(TeleportType.RESPAWN, pos, Minecraft.getSystemTime());
+		setLastDeath(pos, MinecraftServer.getCurrentTimeMillis());
 	}
 
-	@Nullable
+	public void setLastDeath(@Nullable BlockDimPos pos, long timestamp) {
+		if (pos == null) {
+			return;
+		}
+		teleportTracker.logTeleport(TeleportType.RESPAWN, pos, timestamp);
+		player.markDirty();
+	}
+
 	public BlockDimPos getLastDeath()
 	{
 		return teleportTracker.getLastDeath().getBlockDimPos();
@@ -343,7 +346,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	}
 
 	public void setLastTeleport(TeleportType teleportType, BlockDimPos from) {
-		teleportTracker.logTeleport(teleportType, from, Minecraft.getSystemTime());
+		teleportTracker.logTeleport(teleportType, from, MinecraftServer.getCurrentTimeMillis());
 		player.markDirty();
 	}
 

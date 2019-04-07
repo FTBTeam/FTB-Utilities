@@ -44,12 +44,12 @@ public class FTBUtilitiesPlayerData extends PlayerData
 
 	public enum Timer
 	{
-		HOME(TeleportType.HOME,FTBUtilitiesPermissions.HOMES_COOLDOWN, FTBUtilitiesPermissions.HOMES_WARMUP),
-		WARP(TeleportType.WARP,FTBUtilitiesPermissions.WARPS_COOLDOWN, FTBUtilitiesPermissions.WARPS_WARMUP),
-		BACK(TeleportType.BACK,FTBUtilitiesPermissions.BACK_COOLDOWN, FTBUtilitiesPermissions.BACK_WARMUP),
-		SPAWN(TeleportType.SPAWN,FTBUtilitiesPermissions.SPAWN_COOLDOWN, FTBUtilitiesPermissions.SPAWN_WARMUP),
-		TPA(TeleportType.TPA,FTBUtilitiesPermissions.TPA_COOLDOWN, FTBUtilitiesPermissions.TPA_WARMUP),
-		RTP(TeleportType.RTP,FTBUtilitiesPermissions.RTP_COOLDOWN, FTBUtilitiesPermissions.RTP_WARMUP);
+		HOME(TeleportType.HOME),
+		WARP(TeleportType.WARP),
+		BACK(TeleportType.BACK),
+		SPAWN(TeleportType.SPAWN),
+		TPA(TeleportType.TPA),
+		RTP(TeleportType.RTP);
 
 		public static final Timer[] VALUES = values();
 
@@ -57,11 +57,11 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		private final Node warmup;
 		private final TeleportType teleportType;
 
-		Timer(TeleportType teleportType, Node c, Node w)
+		Timer(TeleportType teleportType)
 		{
 			this.teleportType = teleportType;
-			this.cooldown = c;
-			this.warmup = w;
+			this.cooldown = teleportType.getCooldownPermission();
+			this.warmup = teleportType.getWarmupPermission();
 		}
 
 		public void teleport(EntityPlayerMP player, Function<EntityPlayerMP, TeleporterDimPos> pos, @Nullable IScheduledTask extraTask)

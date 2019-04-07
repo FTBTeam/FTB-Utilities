@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.TeleportLog;
+import com.feed_the_beast.ftbutilities.data.TeleportType;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -41,7 +42,9 @@ public class CmdBack extends CmdBase
 		{
 			if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.INFINITE_BACK_USAGE))
 			{
-				data.clearLastTeleport(lastTeleportLog.teleportType);
+				for(TeleportType t : TeleportType.values()) {
+					data.clearLastTeleport(t);
+				}
 			}
 		});
 	}

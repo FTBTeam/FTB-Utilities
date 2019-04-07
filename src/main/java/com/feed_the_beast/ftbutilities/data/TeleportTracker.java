@@ -8,6 +8,7 @@ import net.minecraftforge.server.permission.IPermissionHandler;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 public class TeleportTracker implements INBTSerializable<NBTTagCompound>
 {
@@ -30,8 +31,8 @@ public class TeleportTracker implements INBTSerializable<NBTTagCompound>
 	}
 
 	private TeleportLog[] getSortedLogs() {
-		TeleportLog[] toSort = logs.clone();
-		Arrays.sort(toSort, (a,b) -> (int)(b.getCreatedAt() - a.getCreatedAt()));
+		TeleportLog[] toSort = Arrays.stream(logs).filter((l) -> l != null).toArray(TeleportLog[]::new);
+		Arrays.sort(toSort, Collections.reverseOrder());
 		return toSort;
 	}
 

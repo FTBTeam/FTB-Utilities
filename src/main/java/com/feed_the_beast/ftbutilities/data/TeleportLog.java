@@ -5,7 +5,9 @@ import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class TeleportLog implements INBTSerializable<NBTTagCompound>
+import java.util.Comparator;
+
+public class TeleportLog implements INBTSerializable<NBTTagCompound>,Comparable<TeleportLog>
 {
 	private static final String NBT_KEY_X = "x";
 	private static final String NBT_KEY_Y = "y";
@@ -13,6 +15,8 @@ public class TeleportLog implements INBTSerializable<NBTTagCompound>
 	private static final String NBT_KEY_DIMENSION = "dimension";
 	private static final String NBT_KEY_TELEPORT_TYPE = "teleportType";
 	private static final String NBT_KEY_CREATED_AT = "createdAt";
+
+	private static Comparator<TeleportLog> comparator = Comparator.comparing((log) -> log == null ? null:log.getCreatedAt(), Comparator.nullsFirst(Long::compareTo));
 
 	public TeleportType teleportType;
 
@@ -65,5 +69,11 @@ public class TeleportLog implements INBTSerializable<NBTTagCompound>
 
 	public long getCreatedAt() {
 		return this.createdAt;
+	}
+
+	@Override
+	public int compareTo(TeleportLog o)
+	{
+		return comparator.compare(this, o);
 	}
 }

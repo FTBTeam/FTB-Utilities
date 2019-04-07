@@ -13,8 +13,8 @@ public class TeleportLog implements INBTSerializable<NBTTagCompound>,Comparable<
 	private static final String NBT_KEY_Y = "y";
 	private static final String NBT_KEY_Z = "z";
 	private static final String NBT_KEY_DIMENSION = "dimension";
-	private static final String NBT_KEY_TELEPORT_TYPE = "teleportType";
-	private static final String NBT_KEY_CREATED_AT = "createdAt";
+	private static final String NBT_KEY_TELEPORT_TYPE = "teleport_type";
+	private static final String NBT_KEY_CREATED_AT = "created_at";
 
 	private static Comparator<TeleportLog> comparator = Comparator.comparing((log) -> log == null ? null:log.getCreatedAt(), Comparator.nullsFirst(Long::compareTo));
 

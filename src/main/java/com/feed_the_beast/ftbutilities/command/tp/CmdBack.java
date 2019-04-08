@@ -42,7 +42,8 @@ public class CmdBack extends CmdBase
 		{
 			if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.INFINITE_BACK_USAGE))
 			{
-				for(TeleportType t : TeleportType.values()) {
+				for (TeleportType t : TeleportType.values())
+				{
 					data.clearLastTeleport(t);
 				}
 			}

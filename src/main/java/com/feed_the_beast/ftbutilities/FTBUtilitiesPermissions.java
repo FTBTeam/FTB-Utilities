@@ -149,8 +149,8 @@ public class FTBUtilitiesPermissions
 		PermissionAPI.registerNode(HEAL_OTHER, DefaultPermissionLevel.OP, "Allow to heal other players");
 		PermissionAPI.registerNode(HOMES_BACK, DefaultPermissionLevel.OP, "Allow player back to last time where /home is used");
 		PermissionAPI.registerNode(WARPS_BACK, DefaultPermissionLevel.OP, "Allow player back to last time where /warp is used");
-		PermissionAPI.registerNode(BACK_BACK,DefaultPermissionLevel.OP, "Allow player back to last time where /back is used");
-		PermissionAPI.registerNode(SPAWN_BACK,DefaultPermissionLevel.OP, "Allow player back to last time where /spawn is used");
+		PermissionAPI.registerNode(BACK_BACK, DefaultPermissionLevel.OP, "Allow player back to last time where /back is used");
+		PermissionAPI.registerNode(SPAWN_BACK, DefaultPermissionLevel.OP, "Allow player back to last time where /spawn is used");
 		PermissionAPI.registerNode(TPA_BACK, DefaultPermissionLevel.OP, "Allow player back to last time where /tpa is used");
 		PermissionAPI.registerNode(RTP_BACK, DefaultPermissionLevel.OP, "Allow player back to last time where /rtp is used");
 		PermissionAPI.registerNode(RESPAWN_BACK, DefaultPermissionLevel.ALL, "Allow player back to last death point");

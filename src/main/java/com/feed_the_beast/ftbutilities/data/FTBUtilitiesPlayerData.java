@@ -72,11 +72,11 @@ public class FTBUtilitiesPlayerData extends PlayerData
 			if (seconds > 0)
 			{
 				player.sendStatusMessage(StringUtils.color(FTBLib.lang(player, "stand_still", seconds).appendText(" [" + seconds + "]"), TextFormatting.GOLD), true);
-				universe.scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 1000L, new TeleportTask(teleportType,player, this, seconds, seconds, pos, extraTask));
+				universe.scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 1000L, new TeleportTask(teleportType, player, this, seconds, seconds, pos, extraTask));
 			}
 			else
 			{
-				new TeleportTask(teleportType,player, this, 0, 0, pos, extraTask).execute(universe);
+				new TeleportTask(teleportType, player, this, 0, 0, pos, extraTask).execute(universe);
 			}
 		}
 	}
@@ -92,7 +92,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		private final IScheduledTask extraTask;
 		private final TeleportType teleportType;
 
-		private TeleportTask(TeleportType teleportType,EntityPlayerMP p, Timer t, int ss, int s, Function<EntityPlayerMP, TeleporterDimPos> to, @Nullable IScheduledTask e)
+		private TeleportTask(TeleportType teleportType, EntityPlayerMP p, Timer t, int ss, int s, Function<EntityPlayerMP, TeleporterDimPos> to, @Nullable IScheduledTask e)
 		{
 			this.teleportType = teleportType;
 			this.player = p;
@@ -142,7 +142,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 			}
 			else
 			{
-				universe.scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 1000L, new TeleportTask(teleportType,player, timer, startSeconds, secondsLeft - 1, pos, extraTask));
+				universe.scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 1000L, new TeleportTask(teleportType, player, timer, startSeconds, secondsLeft - 1, pos, extraTask));
 				player.sendStatusMessage(new TextComponentString(Integer.toString(secondsLeft - 1)), true);
 				player.sendStatusMessage(StringUtils.color(FTBLib.lang(player, "stand_still", startSeconds).appendText(" [" + (secondsLeft - 1) + "]"), TextFormatting.GOLD), true);
 			}
@@ -269,8 +269,10 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		setLastDeath(pos, MinecraftServer.getCurrentTimeMillis());
 	}
 
-	public void setLastDeath(@Nullable BlockDimPos pos, long timestamp) {
-		if (pos == null) {
+	public void setLastDeath(@Nullable BlockDimPos pos, long timestamp)
+	{
+		if (pos == null)
+		{
 			return;
 		}
 		teleportTracker.logTeleport(TeleportType.RESPAWN, pos, timestamp);
@@ -341,16 +343,19 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		return cachedNameForChat;
 	}
 
-	public TeleportLog getLastTeleportLog() {
+	public TeleportLog getLastTeleportLog()
+	{
 		return teleportTracker.getLastAvailableLog(player.getProfile());
 	}
 
-	public void setLastTeleport(TeleportType teleportType, BlockDimPos from) {
+	public void setLastTeleport(TeleportType teleportType, BlockDimPos from)
+	{
 		teleportTracker.logTeleport(teleportType, from, MinecraftServer.getCurrentTimeMillis());
 		player.markDirty();
 	}
 
-	public void clearLastTeleport(TeleportType teleportType) {
+	public void clearLastTeleport(TeleportType teleportType)
+	{
 		teleportTracker.clearLog(teleportType);
 		player.markDirty();
 	}

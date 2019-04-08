@@ -13,27 +13,31 @@ public enum TeleportType
 	SPAWN(FTBUtilitiesPermissions.SPAWN_BACK, FTBUtilitiesPermissions.SPAWN_WARMUP, FTBUtilitiesPermissions.SPAWN_COOLDOWN),
 	TPA(FTBUtilitiesPermissions.TPA_BACK, FTBUtilitiesPermissions.TPA_WARMUP, FTBUtilitiesPermissions.TPA_COOLDOWN),
 	RTP(FTBUtilitiesPermissions.RTP_BACK, FTBUtilitiesPermissions.RTP_WARMUP, FTBUtilitiesPermissions.RTP_COOLDOWN),
-	RESPAWN(FTBUtilitiesPermissions.RESPAWN_BACK, null,null);
+	RESPAWN(FTBUtilitiesPermissions.RESPAWN_BACK, null, null);
 
 	private String permission;
 	private Node warmup;
 	private Node cooldown;
 
-	TeleportType(String node, @Nullable Node warmup,@Nullable Node cooldown) {
+	TeleportType(String node, @Nullable Node warmup, @Nullable Node cooldown)
+	{
 		this.permission = node;
 		this.warmup = warmup;
 		this.cooldown = cooldown;
 	}
 
-	public String getPermission() {
+	public String getPermission()
+	{
 		return this.permission;
 	}
 
-	public Node getWarmupPermission() {
+	public Node getWarmupPermission()
+	{
 		return this.warmup;
 	}
 
-	public Node getCooldownPermission() {
+	public Node getCooldownPermission()
+	{
 		return this.cooldown;
 	}
 }

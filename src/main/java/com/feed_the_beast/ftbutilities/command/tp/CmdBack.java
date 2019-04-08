@@ -6,6 +6,8 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
+import com.feed_the_beast.ftbutilities.data.TeleportLog;
+import com.feed_the_beast.ftbutilities.data.TeleportType;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -27,18 +29,22 @@ public class CmdBack extends CmdBase
 
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(p);
 
-		if (data.getLastDeath() == null)
+		TeleportLog lastTeleportLog = data.getLastTeleportLog();
+
+		if (lastTeleportLog == null)
 		{
 			throw FTBUtilities.error(sender, "ftbutilities.lang.warps.no_dp");
 		}
 
 		data.checkTeleportCooldown(sender, FTBUtilitiesPlayerData.Timer.BACK);
 
-		FTBUtilitiesPlayerData.Timer.BACK.teleport(player, playerMP -> data.getLastDeath().teleporter(), universe ->
+		FTBUtilitiesPlayerData.Timer.BACK.teleport(player, playerMP -> lastTeleportLog.teleporter(), universe ->
 		{
 			if (!PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.INFINITE_BACK_USAGE))
 			{
-				data.setLastDeath(null);
+				for(TeleportType t : TeleportType.values()) {
+					data.clearLastTeleport(t);
+				}
 			}
 		});
 	}

@@ -22,6 +22,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -43,22 +44,24 @@ public class FTBUtilitiesPlayerData extends PlayerData
 
 	public enum Timer
 	{
-		HOME(FTBUtilitiesPermissions.HOMES_COOLDOWN, FTBUtilitiesPermissions.HOMES_WARMUP),
-		WARP(FTBUtilitiesPermissions.WARPS_COOLDOWN, FTBUtilitiesPermissions.WARPS_WARMUP),
-		BACK(FTBUtilitiesPermissions.BACK_COOLDOWN, FTBUtilitiesPermissions.BACK_WARMUP),
-		SPAWN(FTBUtilitiesPermissions.SPAWN_COOLDOWN, FTBUtilitiesPermissions.SPAWN_WARMUP),
-		TPA(FTBUtilitiesPermissions.TPA_COOLDOWN, FTBUtilitiesPermissions.TPA_WARMUP),
-		RTP(FTBUtilitiesPermissions.RTP_COOLDOWN, FTBUtilitiesPermissions.RTP_WARMUP);
+		HOME(TeleportType.HOME),
+		WARP(TeleportType.WARP),
+		BACK(TeleportType.BACK),
+		SPAWN(TeleportType.SPAWN),
+		TPA(TeleportType.TPA),
+		RTP(TeleportType.RTP);
 
 		public static final Timer[] VALUES = values();
 
 		private final Node cooldown;
 		private final Node warmup;
+		private final TeleportType teleportType;
 
-		Timer(Node c, Node w)
+		Timer(TeleportType teleportType)
 		{
-			cooldown = c;
-			warmup = w;
+			this.teleportType = teleportType;
+			this.cooldown = teleportType.getCooldownPermission();
+			this.warmup = teleportType.getWarmupPermission();
 		}
 
 		public void teleport(EntityPlayerMP player, Function<EntityPlayerMP, TeleporterDimPos> pos, @Nullable IScheduledTask extraTask)
@@ -69,11 +72,11 @@ public class FTBUtilitiesPlayerData extends PlayerData
 			if (seconds > 0)
 			{
 				player.sendStatusMessage(StringUtils.color(FTBLib.lang(player, "stand_still", seconds).appendText(" [" + seconds + "]"), TextFormatting.GOLD), true);
-				universe.scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 1000L, new TeleportTask(player, this, seconds, seconds, pos, extraTask));
+				universe.scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 1000L, new TeleportTask(teleportType,player, this, seconds, seconds, pos, extraTask));
 			}
 			else
 			{
-				new TeleportTask(player, this, 0, 0, pos, extraTask).execute(universe);
+				new TeleportTask(teleportType,player, this, 0, 0, pos, extraTask).execute(universe);
 			}
 		}
 	}
@@ -87,17 +90,19 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		private final float startHP;
 		private final int startSeconds, secondsLeft;
 		private final IScheduledTask extraTask;
+		private final TeleportType teleportType;
 
-		private TeleportTask(EntityPlayerMP p, Timer t, int ss, int s, Function<EntityPlayerMP, TeleporterDimPos> to, @Nullable IScheduledTask e)
+		private TeleportTask(TeleportType teleportType,EntityPlayerMP p, Timer t, int ss, int s, Function<EntityPlayerMP, TeleporterDimPos> to, @Nullable IScheduledTask e)
 		{
-			player = p;
-			timer = t;
-			startPos = new BlockDimPos(player);
-			startHP = player.getHealth();
-			pos = to;
-			startSeconds = ss;
-			secondsLeft = s;
-			extraTask = e;
+			this.teleportType = teleportType;
+			this.player = p;
+			this.timer = t;
+			this.startPos = new BlockDimPos(player);
+			this.startHP = player.getHealth();
+			this.pos = to;
+			this.startSeconds = ss;
+			this.secondsLeft = s;
+			this.extraTask = e;
 		}
 
 		@Override
@@ -113,6 +118,8 @@ public class FTBUtilitiesPlayerData extends PlayerData
 
 				if (teleporter != null)
 				{
+					FTBUtilitiesPlayerData data = get(universe.getPlayer(player));
+					data.setLastTeleport(teleportType, new BlockDimPos(player));
 					teleporter.teleport(player);
 
 					if (player.getRidingEntity() != null)
@@ -120,7 +127,6 @@ public class FTBUtilitiesPlayerData extends PlayerData
 						teleporter.teleport(player.getRidingEntity());
 					}
 
-					FTBUtilitiesPlayerData data = get(universe.getPlayer(player));
 					data.lastTeleport[timer.ordinal()] = System.currentTimeMillis();
 
 					if (secondsLeft != 0)
@@ -136,7 +142,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 			}
 			else
 			{
-				universe.scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 1000L, new TeleportTask(player, timer, startSeconds, secondsLeft - 1, pos, extraTask));
+				universe.scheduleTask(TimeType.MILLIS, System.currentTimeMillis() + 1000L, new TeleportTask(teleportType,player, timer, startSeconds, secondsLeft - 1, pos, extraTask));
 				player.sendStatusMessage(new TextComponentString(Integer.toString(secondsLeft - 1)), true);
 				player.sendStatusMessage(StringUtils.color(FTBLib.lang(player, "stand_still", startSeconds).appendText(" [" + (secondsLeft - 1) + "]"), TextFormatting.GOLD), true);
 			}
@@ -158,9 +164,10 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	public long afkTime;
 	private ITextComponent cachedNameForChat;
 
-	private BlockDimPos lastDeath, lastSafePos;
+	private BlockDimPos lastSafePos;
 	private long[] lastTeleport;
 	public final BlockDimPosStorage homes;
+	private TeleportTracker teleportTracker;
 
 	public FTBUtilitiesPlayerData(ForgePlayer player)
 	{
@@ -168,6 +175,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		homes = new BlockDimPosStorage();
 		tpaRequestsFrom = new HashSet<>();
 		lastTeleport = new long[Timer.VALUES.length];
+		teleportTracker = new TeleportTracker();
 	}
 
 	@Override
@@ -185,11 +193,6 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		nbt.setBoolean("EnablePVP", enablePVP);
 		nbt.setTag("Homes", homes.serializeNBT());
 
-		if (lastDeath != null)
-		{
-			nbt.setIntArray("LastDeath", lastDeath.toIntArray());
-		}
-
 		nbt.setString("Nickname", nickname);
 		nbt.setString("AFK", EnumMessageLocation.NAME_MAP.getName(afkMesageLocation));
 		return nbt;
@@ -202,7 +205,9 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		disableGlobalBadge = nbt.getBoolean("DisableGlobalBadges");
 		enablePVP = !nbt.hasKey("EnablePVP") || nbt.getBoolean("EnablePVP");
 		homes.deserializeNBT(nbt.getCompoundTag("Homes"));
-		lastDeath = BlockDimPos.fromIntArray(nbt.getIntArray("LastDeath"));
+		teleportTracker = new TeleportTracker();
+		teleportTracker.deserializeNBT(nbt.getCompoundTag("teleportTracker"));
+		setLastDeath(BlockDimPos.fromIntArray(nbt.getIntArray("LastDeath")), 0);
 		nickname = nbt.getString("Nickname");
 		afkMesageLocation = EnumMessageLocation.NAME_MAP.get(nbt.getString("AFK"));
 	}
@@ -261,14 +266,20 @@ public class FTBUtilitiesPlayerData extends PlayerData
 
 	public void setLastDeath(@Nullable BlockDimPos pos)
 	{
-		lastDeath = pos;
+		setLastDeath(pos, MinecraftServer.getCurrentTimeMillis());
+	}
+
+	public void setLastDeath(@Nullable BlockDimPos pos, long timestamp) {
+		if (pos == null) {
+			return;
+		}
+		teleportTracker.logTeleport(TeleportType.RESPAWN, pos, timestamp);
 		player.markDirty();
 	}
 
-	@Nullable
 	public BlockDimPos getLastDeath()
 	{
-		return lastDeath;
+		return teleportTracker.getLastDeath().getBlockDimPos();
 	}
 
 	public void setLastSafePos(@Nullable BlockDimPos pos)
@@ -328,5 +339,19 @@ public class FTBUtilitiesPlayerData extends PlayerData
 
 		cachedNameForChat.appendText(" ");
 		return cachedNameForChat;
+	}
+
+	public TeleportLog getLastTeleportLog() {
+		return teleportTracker.getLastAvailableLog(player.getProfile());
+	}
+
+	public void setLastTeleport(TeleportType teleportType, BlockDimPos from) {
+		teleportTracker.logTeleport(teleportType, from, MinecraftServer.getCurrentTimeMillis());
+		player.markDirty();
+	}
+
+	public void clearLastTeleport(TeleportType teleportType) {
+		teleportTracker.clearLog(teleportType);
+		player.markDirty();
 	}
 }

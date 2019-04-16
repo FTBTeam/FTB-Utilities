@@ -10,6 +10,7 @@ import com.feed_the_beast.ftblib.lib.data.PlayerData;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.IScheduledTask;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
@@ -317,11 +318,11 @@ public class FTBUtilitiesPlayerData extends PlayerData
 		}
 	}
 
-	public ITextComponent getNameForChat()
+	public ITextComponent getNameForChat(EntityPlayerMP playerMP)
 	{
 		if (cachedNameForChat != null)
 		{
-			return cachedNameForChat;
+			return cachedNameForChat.createCopy();
 		}
 
 		String text = player.getRankConfig(FTBUtilitiesPermissions.CHAT_NAME_FORMAT).getString();
@@ -339,8 +340,15 @@ public class FTBUtilitiesPlayerData extends PlayerData
 			cachedNameForChat.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(s)));
 		}
 
+		if (NBTUtils.getPersistedData(playerMP, false).getBoolean("recording"))
+		{
+			ITextComponent rec = new TextComponentString("\u25A0 ");
+			rec.getStyle().setColor(TextFormatting.RED);
+			cachedNameForChat = new TextComponentString("").appendSibling(rec).appendSibling(cachedNameForChat);
+		}
+
 		cachedNameForChat.appendText(" ");
-		return cachedNameForChat;
+		return cachedNameForChat.createCopy();
 	}
 
 	public TeleportLog getLastTeleportLog()

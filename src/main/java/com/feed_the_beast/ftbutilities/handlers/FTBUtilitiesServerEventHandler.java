@@ -76,7 +76,7 @@ public class FTBUtilitiesServerEventHandler
 
 		ITextComponent main = new TextComponentString("");
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(Universe.get().getPlayer(player));
-		main.appendSibling(data.getNameForChat());
+		main.appendSibling(data.getNameForChat(player));
 		ITextComponent text = ForgeHooks.newChatWithLinks(event.getMessage().trim());
 
 		TextFormatting colortf = (TextFormatting) ((ConfigEnum) RankConfigAPI.get(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_COLOR, context)).getValue();

@@ -2,6 +2,8 @@ package com.feed_the_beast.ftbutilities.handlers;
 
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
@@ -52,20 +54,17 @@ public class FTBUtilitiesPlayerEventHandler
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public static void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event)
+	public static void onPlayerLoggedIn(ForgePlayerLoggedInEvent event)
 	{
-		if (!(event.player instanceof EntityPlayerMP))
-		{
-			return;
-		}
+		EntityPlayerMP player = event.getPlayer().getPlayer();
 
-		if (ServerUtils.isFirstLogin(event.player, "ftbutilities_starting_items"))
+		if (ServerUtils.isFirstLogin(player, "ftbutilities_starting_items"))
 		{
 			if (FTBUtilitiesConfig.login.enable_starting_items)
 			{
 				for (ItemStack stack : FTBUtilitiesConfig.login.getStartingItems())
 				{
-					ItemHandlerHelper.giveItemToPlayer(event.player, stack.copy());
+					ItemHandlerHelper.giveItemToPlayer(player, stack.copy());
 				}
 			}
 		}
@@ -74,7 +73,7 @@ public class FTBUtilitiesPlayerEventHandler
 		{
 			for (ITextComponent t : FTBUtilitiesConfig.login.getMOTD())
 			{
-				event.player.sendMessage(t);
+				player.sendMessage(t);
 			}
 		}
 
@@ -83,29 +82,29 @@ public class FTBUtilitiesPlayerEventHandler
 			ClaimedChunks.instance.markDirty();
 		}
 
-		EntityPlayerMP playerMP = (EntityPlayerMP) event.player;
+		new MessageUpdateTabName(player).sendToAll();
 
-		new MessageUpdateTabName(playerMP).sendToAll();
-
-		for (EntityPlayerMP player : playerMP.server.getPlayerList().getPlayers())
+		for (EntityPlayerMP player1 : player.server.getPlayerList().getPlayers())
 		{
-			if (player != playerMP)
+			if (player1 != player)
 			{
-				new MessageUpdateTabName(player).sendTo(playerMP);
+				new MessageUpdateTabName(player1).sendTo(player);
 			}
 		}
 	}
 
 	@SubscribeEvent
-	public static void onPlayerLoggedOut(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent event)
+	public static void onPlayerLoggedOut(ForgePlayerLoggedOutEvent event)
 	{
+		EntityPlayerMP player = event.getPlayer().getPlayer();
+
 		if (ClaimedChunks.isActive())
 		{
 			ClaimedChunks.instance.markDirty();
 		}
 
-		FTBUtilitiesUniverseData.updateBadge(event.player.getUniqueID());
-		event.player.getEntityData().removeTag(FTBUtilitiesPlayerData.TAG_LAST_CHUNK);
+		FTBUtilitiesUniverseData.updateBadge(player.getUniqueID());
+		player.getEntityData().removeTag(FTBUtilitiesPlayerData.TAG_LAST_CHUNK);
 	}
 
 	@SubscribeEvent

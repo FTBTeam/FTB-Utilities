@@ -35,22 +35,21 @@ minecraft {
 	replaceIn "${mod_reference}"
 }
 
-artifacts {
-	archives sourceJar
+configurations.all {
+	transitive = false
 }
 
 repositories {
 	mavenLocal()
-	mavenCentral()
-	maven { url "https://maven.latmod.com/" }
-	maven { url "https://dvs1.progwml6.com/files/maven" }
+	maven { url "https://maven.latmod.com/" } //FTB Library
+	maven { url "https://minecraft.curseforge.com/api/maven/" } //iChunUtil, JourneyMap API, Chisels & Bits
 }
 
 dependencies {
 	deobfCompile "com.feed_the_beast.mods:FTBLib:${ftblib_version}"
-	deobfProvided "me.ichun.mods.ichunutil:iChunUtil:${ichunutil_version}:api"
-	provided "info.journeymap:journeymap-api:${journeymap_version}"
-	deobfProvided "mod.chiselsandbits:chiselsandbits:${chiselsandbits_version}:api"
+	deobfProvided "ichunutil:iChunUtil:1.12.2:${ichunutil_version}"
+	deobfProvided "journeymap-api:journeymap-api:1.12:${journeymap_version}"
+	deobfProvided "chisels-bits:chiselsandbits:${chiselsandbits_version}"
 }
 
 processResources {

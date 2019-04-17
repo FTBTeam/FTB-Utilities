@@ -1,14 +1,17 @@
 package com.feed_the_beast.ftbutilities;
 
+import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesLoadedChunkManager;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
 import com.feed_the_beast.ftbutilities.events.LeaderboardRegistryEvent;
+import com.feed_the_beast.ftbutilities.integration.ChiselsAndBitsIntegration;
 import com.feed_the_beast.ftbutilities.net.FTBUtilitiesNetHandler;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.server.permission.PermissionAPI;
 
@@ -42,6 +45,11 @@ public class FTBUtilitiesCommon
 
 		ForgeChunkManager.setForcedChunkLoadingCallback(FTBUtilities.INST, FTBUtilitiesLoadedChunkManager.INSTANCE);
 		new CustomPermissionPrefixesRegistryEvent(CUSTOM_PERM_PREFIX_REGISTRY::add).post();
+
+		if (Loader.isModLoaded(OtherMods.CHISELS_AND_BITS))
+		{
+			ChiselsAndBitsIntegration.init();
+		}
 	}
 
 	public void init()

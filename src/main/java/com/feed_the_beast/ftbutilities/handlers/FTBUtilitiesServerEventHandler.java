@@ -9,6 +9,7 @@ import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
+import com.feed_the_beast.ftblib.lib.util.text_components.TextComponentParser;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
@@ -38,6 +39,8 @@ import net.minecraftforge.server.permission.PermissionAPI;
 import net.minecraftforge.server.permission.context.IContext;
 import net.minecraftforge.server.permission.context.PlayerContext;
 
+import java.util.regex.Pattern;
+
 /**
  * @author LatvianModder
  */
@@ -45,6 +48,12 @@ import net.minecraftforge.server.permission.context.PlayerContext;
 public class FTBUtilitiesServerEventHandler
 {
 	private static final ResourceLocation AFK_ID = new ResourceLocation(FTBUtilities.MOD_ID, "afk");
+	private static final Pattern STRIKETHROUGH_PATTERN = Pattern.compile("\\~\\~(.*?)\\~\\~");
+	private static final String STRIKETHROUGH_REPLACE = "&m$1&m";
+	private static final Pattern BOLD_PATTERN = Pattern.compile("\\*\\*(.*?)\\*\\*|__(.*?)__");
+	private static final String BOLD_REPLACE = "&l$1$2&l";
+	private static final Pattern ITALIC_PATTERN = Pattern.compile("\\*(.*?)\\*|_(.*?)_");
+	private static final String ITALIC_REPLACE = "&o$1$2&o";
 
 	@SubscribeEvent
 	public static void onCacheCleared(UniverseClearCacheEvent event)
@@ -77,7 +86,28 @@ public class FTBUtilitiesServerEventHandler
 		ITextComponent main = new TextComponentString("");
 		FTBUtilitiesPlayerData data = FTBUtilitiesPlayerData.get(Universe.get().getPlayer(player));
 		main.appendSibling(data.getNameForChat(player));
-		ITextComponent text = ForgeHooks.newChatWithLinks(event.getMessage().trim());
+
+		String message = event.getMessage().trim();
+
+		boolean b = false;
+
+		if (PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_FORMATTING, context))
+		{
+			b = !message.equals(message = STRIKETHROUGH_PATTERN.matcher(message).replaceAll(STRIKETHROUGH_REPLACE)) | b;
+			b = !message.equals(message = BOLD_PATTERN.matcher(message).replaceAll(BOLD_REPLACE)) | b;
+			b = !message.equals(message = ITALIC_PATTERN.matcher(message).replaceAll(ITALIC_REPLACE)) | b;
+		}
+
+		ITextComponent text;
+
+		if (b)
+		{
+			text = TextComponentParser.parse(message, null);
+		}
+		else
+		{
+			text = ForgeHooks.newChatWithLinks(message);
+		}
 
 		TextFormatting colortf = (TextFormatting) ((ConfigEnum) RankConfigAPI.get(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_COLOR, context)).getValue();
 

@@ -83,6 +83,7 @@ public class FTBUtilitiesPermissions
 
 	// Chat //
 	public static final String CHAT_SPEAK = "ftbutilities.chat.speak";
+	public static final String CHAT_FORMATTING = "ftbutilities.chat.formatting";
 	public static final String CHAT_NICKNAME_SET = "ftbutilities.chat.nickname.set";
 	public static final String CHAT_NICKNAME_COLORS = "ftbutilities.chat.nickname.colors";
 	public static final Node CHAT_NAME_FORMAT = Node.get("ftbutilities.chat.name_format");
@@ -127,6 +128,7 @@ public class FTBUtilitiesPermissions
 	public static void registerPermissions()
 	{
 		PermissionAPI.registerNode(CHAT_SPEAK, DefaultPermissionLevel.ALL, "Controls if player is muted or not");
+		PermissionAPI.registerNode(CHAT_FORMATTING, DefaultPermissionLevel.ALL, "Allows to use **bold**, *italic* and ~~striketrough~~ in chat");
 		PermissionAPI.registerNode(CHAT_NICKNAME_SET, DefaultPermissionLevel.OP, "Allow to change nickname");
 		PermissionAPI.registerNode(CHAT_NICKNAME_COLORS, DefaultPermissionLevel.OP, "Allow to use formatting codes in nickname, requires " + CHAT_NICKNAME_SET);
 		PermissionAPI.registerNode(DISPLAY_ADMIN_INFO, DefaultPermissionLevel.OP, "Display 'Admin' in Server Info");

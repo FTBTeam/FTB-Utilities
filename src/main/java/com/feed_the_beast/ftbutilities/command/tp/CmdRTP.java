@@ -56,7 +56,7 @@ public class CmdRTP extends CmdBase
 			return findBlockPos(world, player, depth);
 		}
 
-		if (ClaimedChunks.instance.getChunk(new ChunkDimPos(x >> 4, z >> 4, world.provider.getDimension())) != null)
+		if (ClaimedChunks.instance != null && ClaimedChunks.instance.getChunk(new ChunkDimPos(x >> 4, z >> 4, world.provider.getDimension())) != null)
 		{
 			return findBlockPos(world, player, depth);
 		}

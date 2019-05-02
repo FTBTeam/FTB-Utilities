@@ -25,7 +25,7 @@ public class FTBUtilitiesClientConfig
 		public boolean render_badges = true;
 
 		@Config.Comment("Enable JourneyMap overlay. Requires a restart to work.")
-		public boolean journeymap_overlay = true;
+		public boolean journeymap_overlay = false;
 
 		@Config.Comment("Will be called first. If item ID starts with any of these strings, it won't skip this item.")
 		public String[] scan_items_whitelist = {

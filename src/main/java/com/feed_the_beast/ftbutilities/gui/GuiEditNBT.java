@@ -435,7 +435,7 @@ public class GuiEditNBT extends GuiBase
 
 		@Override
 		@Nullable
-		public Object getJEIFocus()
+		public Object getIngredientUnderMouse()
 		{
 			return hoverIcon instanceof ItemIcon ? ((ItemIcon) hoverIcon).getStack() : null;
 		}

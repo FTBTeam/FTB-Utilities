@@ -6,7 +6,6 @@ import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
-import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
@@ -14,6 +13,7 @@ import com.feed_the_beast.ftblib.lib.gui.SimpleButton;
 import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
+import com.feed_the_beast.ftblib.lib.gui.WrappedIngredient;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiEditConfig;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiEditConfigValue;
 import com.feed_the_beast.ftblib.lib.gui.misc.IConfigValueEditCallback;
@@ -385,15 +385,12 @@ public class GuiEditNBT extends GuiBase
 		@Override
 		public void addMouseOverText(List<String> list)
 		{
-			boolean space = false;
-
 			if (this == buttonNBTRoot)
 			{
 				NBTTagList infoList = info.getTagList("text", Constants.NBT.TAG_STRING);
 
 				if (infoList.tagCount() > 0)
 				{
-					space = true;
 					list.add(I18n.format("gui.info") + ":");
 
 					for (int i = 0; i < infoList.tagCount(); i++)
@@ -405,19 +402,6 @@ public class GuiEditNBT extends GuiBase
 							list.add(component.getFormattedText());
 						}
 					}
-				}
-			}
-
-			if (!hoverIcon.isEmpty())
-			{
-				if (hoverIcon instanceof ItemIcon)
-				{
-					if (space)
-					{
-						list.add("");
-					}
-
-					GuiHelper.addStackTooltip(((ItemIcon) hoverIcon).getStack(), list);
 				}
 			}
 		}
@@ -437,7 +421,7 @@ public class GuiEditNBT extends GuiBase
 		@Nullable
 		public Object getIngredientUnderMouse()
 		{
-			return hoverIcon instanceof ItemIcon ? ((ItemIcon) hoverIcon).getStack() : null;
+			return new WrappedIngredient(hoverIcon.getIngredient()).tooltip();
 		}
 
 		@Override

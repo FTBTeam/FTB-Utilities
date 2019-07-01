@@ -23,7 +23,7 @@ public class ClientClaimedChunks
 		{
 			data.writeShort(team.uid);
 			data.writeTextComponent(team.nameComponent);
-			data.write(team.color, EnumTeamColor.NAME_MAP);
+			EnumTeamColor.NAME_MAP.write(data, team.color);
 			data.writeBoolean(team.isAlly);
 			data.writeMap(team.chunks, DataOut.INT, ChunkData.SERIALIZER);
 		};
@@ -32,7 +32,7 @@ public class ClientClaimedChunks
 		{
 			Team team = new Team(data.readShort());
 			team.nameComponent = data.readTextComponent();
-			team.color = data.read(EnumTeamColor.NAME_MAP);
+			team.color = EnumTeamColor.NAME_MAP.read(data);
 			team.isAlly = data.readBoolean();
 			currentTeam = team;
 			data.readMap(team.chunks, DataIn.INT, ChunkData.DESERIALIZER);

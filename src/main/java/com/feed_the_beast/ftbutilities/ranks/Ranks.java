@@ -600,7 +600,7 @@ public class Ranks
 	public void saveRanks()
 	{
 		List<String> list = new ArrayList<>();
-		list.add("// For more info visit https://minecraft.curseforge.com/projects/ftb-utilities/pages/ranks");
+		list.add("// For more info visit https://www.curseforge.com/minecraft/mc-mods/ftb-utilities/pages/ranks");
 		list.add("// To see the list of permission nodes, open all_permissions.html in browser or all_permissions_full_list.txt");
 
 		StringBuilder line = new StringBuilder();
@@ -654,7 +654,7 @@ public class Ranks
 	public void savePlayerRanks()
 	{
 		List<String> list = new ArrayList<>();
-		list.add("// For more info visit https://minecraft.curseforge.com/projects/ftb-utilities/pages/ranks");
+		list.add("// For more info visit https://www.curseforge.com/minecraft/mc-mods/ftb-utilities/pages/ranks");
 		list.add("");
 
 		for (Map.Entry<UUID, Rank> entry : playerMap.entrySet())

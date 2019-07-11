@@ -1,1 +1,1 @@
-# FTBUtilities [![](http://cf.way2muchnoise.eu/ftb-utilities.svg)](https://minecraft.curseforge.com/projects/ftb-utilities) [![](http://cf.way2muchnoise.eu/versions/ftb-utilities.svg)](https://minecraft.curseforge.com/projects/ftb-utilities)
+# FTB Utilities [![](http://cf.way2muchnoise.eu/ftb-utilities.svg) ![](https://cf.way2muchnoise.eu/packs/ftb-utilities.svg) ![](http://cf.way2muchnoise.eu/versions/ftb-utilities.svg)](https://www.curseforge.com/minecraft/mc-mods/ftb-utilities)

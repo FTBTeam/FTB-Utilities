@@ -294,6 +294,7 @@ commands.tpa.usage=/tpa <player>
 commands.tpaccept.usage=/tpaccept <player>
 commands.tpdeny.usage=/tpdeny <player>
 commands.nick.usage=/nick <name...>
+commands.nickfor.usage=/nickfor <player> <name...>
 commands.fly.usage=/fly
 commands.cycle_block_state.usage=/cycle_block_state
 commands.leaderboards.usage=/leaderboards [id]

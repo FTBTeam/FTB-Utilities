@@ -30,6 +30,7 @@ import com.feed_the_beast.ftbutilities.net.MessageEditNBTResponse;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagByte;
@@ -97,6 +98,8 @@ public class GuiEditNBT extends GuiBase
 			key = k;
 			setTitle(key);
 		}
+
+		public abstract NBTTagCompound copy();
 
 		public void updateChildren(boolean first)
 		{
@@ -262,6 +265,14 @@ public class GuiEditNBT extends GuiBase
 			}
 
 			GuiEditNBT.this.openGui();
+		}
+
+		@Override
+		public NBTTagCompound copy()
+		{
+			NBTTagCompound n = new NBTTagCompound();
+			n.setTag(key, nbt);
+			return n;
 		}
 	}
 
@@ -455,6 +466,35 @@ public class GuiEditNBT extends GuiBase
 		{
 			return true;
 		}
+
+		@Override
+		public NBTTagCompound copy()
+		{
+			NBTTagCompound nbt = map.copy();
+
+			if (this == buttonNBTRoot)
+			{
+				NBTTagList infoList1 = new NBTTagList();
+				NBTTagList infoList0 = info.getTagList("text", Constants.NBT.TAG_STRING);
+
+				if (infoList0.tagCount() > 0)
+				{
+					for (int i = 0; i < infoList0.tagCount(); i++)
+					{
+						ITextComponent component = ITextComponent.Serializer.jsonToComponent(infoList0.getStringTagAt(i));
+
+						if (component != null)
+						{
+							infoList1.appendTag(new NBTTagString(component.getUnformattedText()));
+						}
+					}
+
+					nbt.setTag("_", infoList1);
+				}
+			}
+
+			return nbt;
+		}
 	}
 
 	public class ButtonNBTList extends ButtonNBTCollection
@@ -517,6 +557,14 @@ public class GuiEditNBT extends GuiBase
 		public boolean canCreateNew(int id)
 		{
 			return list.isEmpty() || list.getTagType() == id;
+		}
+
+		@Override
+		public NBTTagCompound copy()
+		{
+			NBTTagCompound n = new NBTTagCompound();
+			n.setTag(key, list);
+			return n;
 		}
 	}
 
@@ -581,6 +629,14 @@ public class GuiEditNBT extends GuiBase
 		{
 			return id == Constants.NBT.TAG_BYTE;
 		}
+
+		@Override
+		public NBTTagCompound copy()
+		{
+			NBTTagCompound n = new NBTTagCompound();
+			n.setTag(key, new NBTTagByteArray(list.toByteArray()));
+			return n;
+		}
 	}
 
 	public class ButtonNBTIntArray extends ButtonNBTCollection
@@ -643,6 +699,14 @@ public class GuiEditNBT extends GuiBase
 		public boolean canCreateNew(int id)
 		{
 			return id == Constants.NBT.TAG_INT;
+		}
+
+		@Override
+		public NBTTagCompound copy()
+		{
+			NBTTagCompound n = new NBTTagCompound();
+			n.setTag(key, new NBTTagIntArray(list.toIntArray()));
+			return n;
 		}
 	}
 
@@ -832,6 +896,8 @@ public class GuiEditNBT extends GuiBase
 			@Override
 			public void addWidgets()
 			{
+				add(new SimpleButton(this, I18n.format("gui.copy"), ItemIcon.getItemIcon(Items.PAPER), (widget, button) -> setClipboardString(selected.copy().toString())));
+
 				add(new SimpleButton(this, I18n.format("gui.collapse_all"), GuiIcons.REMOVE, (widget, button) ->
 				{
 					for (Widget w : panelNbt.widgets)

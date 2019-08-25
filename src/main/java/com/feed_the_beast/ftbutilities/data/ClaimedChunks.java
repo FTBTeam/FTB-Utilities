@@ -326,18 +326,23 @@ public class ClaimedChunks
 
 	public ClaimResult claimChunk(ForgePlayer player, ChunkDimPos pos)
 	{
+		return claimChunk(player, pos, true);
+	}
+
+	public ClaimResult claimChunk(ForgePlayer player, ChunkDimPos pos, boolean checkLimits)
+	{
 		if (!player.hasTeam())
 		{
 			return ClaimResult.NO_TEAM;
 		}
-		else if (FTBUtilitiesConfig.world.blockDimension(pos.dim))
+		else if (checkLimits && FTBUtilitiesConfig.world.blockDimension(pos.dim))
 		{
 			return ClaimResult.DIMENSION_BLOCKED;
 		}
 
 		FTBUtilitiesTeamData data = FTBUtilitiesTeamData.get(player.team);
 
-		if (!player.hasPermission(FTBUtilitiesPermissions.CLAIMS_BYPASS_LIMITS))
+		if (checkLimits && !player.hasPermission(FTBUtilitiesPermissions.CLAIMS_BYPASS_LIMITS))
 		{
 			int max = data.getMaxClaimChunks();
 			if (max == 0 || getTeamChunks(data.team, OptionalInt.empty(), true).size() >= max)
@@ -353,7 +358,7 @@ public class ClaimedChunks
 			return ClaimResult.ALREADY_CLAIMED;
 		}
 
-		if (new ChunkModifiedEvent.Claim(pos, player).post())
+		if (checkLimits && new ChunkModifiedEvent.Claim(pos, player).post())
 		{
 			return ClaimResult.BLOCKED;
 		}

@@ -191,8 +191,8 @@ ftbutilities.lang.chunks.unclaim_all_dim=Освободить все чанки 
 ftbutilities.lang.chunks.unclaim_all_q=Освободить все чанки?
 ftbutilities.lang.chunks.unclaim_all_dim_q=Освободить все чанки в %s?
 ftbutilities.lang.chunks.claims_invalid_dim=Не удается освободить чанки в этом измерении
-ftbutilities.lang.chunks.claimed_count=Занятые чанки: %d / %d
-ftbutilities.lang.chunks.loaded_count=Загруженные чанки: %d / %d
+ftbutilities.lang.chunks.claimed_count=Занятые чанки: %d / %s
+ftbutilities.lang.chunks.loaded_count=Загруженные чанки: %d / %s
 ftbutilities.lang.chunks.claimed_area=Занятая область
 ftbutilities.lang.chunks.wilderness=Дикая местность
 

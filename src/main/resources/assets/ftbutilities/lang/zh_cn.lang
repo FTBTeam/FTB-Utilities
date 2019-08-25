@@ -192,8 +192,8 @@ ftbutilities.lang.chunks.unclaim_all_dim=取消所有在 %s 的声明区块
 ftbutilities.lang.chunks.unclaim_all_q=取消所有声明的区块？
 ftbutilities.lang.chunks.unclaim_all_dim_q=取消声明 %s 中的所有区块？
 ftbutilities.lang.chunks.claims_invalid_dim=不能在此世界声明区块
-ftbutilities.lang.chunks.claimed_count=声明的区块：%d / %d
-ftbutilities.lang.chunks.loaded_count=加载的区块：%d / %d
+ftbutilities.lang.chunks.claimed_count=声明的区块：%d / %s
+ftbutilities.lang.chunks.loaded_count=加载的区块：%d / %s
 ftbutilities.lang.chunks.claimed_area=已声明区域
 ftbutilities.lang.chunks.wilderness=野外
 

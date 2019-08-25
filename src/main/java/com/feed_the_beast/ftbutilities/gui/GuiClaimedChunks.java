@@ -290,8 +290,8 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 		switch (corner)
 		{
 			case BOTTOM_RIGHT:
-				list.add(I18n.format("ftbutilities.lang.chunks.claimed_count", claimedChunks, maxClaimedChunks));
-				list.add(I18n.format("ftbutilities.lang.chunks.loaded_count", loadedChunks, maxLoadedChunks));
+				list.add(I18n.format("ftbutilities.lang.chunks.claimed_count", claimedChunks, maxClaimedChunks == Integer.MAX_VALUE ? "\u221E" : Integer.toString(maxClaimedChunks)));
+				list.add(I18n.format("ftbutilities.lang.chunks.loaded_count", loadedChunks, maxLoadedChunks == Integer.MAX_VALUE ? "\u221E" : Integer.toString(maxLoadedChunks)));
 				break;
 		}
 	}

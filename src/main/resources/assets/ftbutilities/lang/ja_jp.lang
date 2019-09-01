@@ -4,7 +4,7 @@ ftbutilities.auto_shutdown.enabled_singleplayer=シングルプレイで有効�
 ftbutilities.auto_shutdown.times=シャットダウン時間
 
 ftbutilities.afk=退席中
-ftbutilities.afk_kicked=You will be kicked after: %s
+ftbutilities.afk_kicked=あなたはキックされます: %s
 ftbutilities.afk.enabled_singleplayer=シングルプレイで有効化
 ftbutilities.afk.notification_timer=通知タイマー
 ftbutilities.afk.log_afk=退席ログ
@@ -158,8 +158,8 @@ admin_panel.ftbutilities.ranks.player_ranks=プレイヤーランク
 admin_panel.ftbutilities.ranks.select_rank=ランクを選択
 admin_panel.ftbutilities.ranks.edit.id=ID
 admin_panel.ftbutilities.ranks.edit.parent=Parent
-admin_panel.ftbutilities.ranks.edit.chat_formatting=Chat Formatting
-admin_panel.ftbutilities.ranks.edit.permissions=Permissions
+admin_panel.ftbutilities.ranks.edit.chat_formatting=チャットのフォーマット
+admin_panel.ftbutilities.ranks.edit.permissions=パーミッション
 admin_panel.ftbutilities.claimed_chunks=全ての領有チャンクを表示
 admin_panel.ftbutilities.loaded_chunks=全てのロード済みチャンクを表示
 admin_panel.ftbutilities.whitelist=ホワイトリストを編集
@@ -185,7 +185,7 @@ ftbutilities.stat.last_seen=最終ログイン時間
 
 # Chunks
 ftbutilities.lang.chunks.cant_modify_chunk=このチャンクは変更できません！
-ftbutilities.lang.chunks.unclaimed_all=Unclaimed all chunks
+ftbutilities.lang.chunks.unclaimed_all=全てのチャンクの領有を破棄しました
 ftbutilities.lang.chunks.chunk_claimed=チャンクを領有主張しました
 ftbutilities.lang.chunks.chunk_unclaimed=チャンクの領有を破棄しました
 ftbutilities.lang.chunks.chunk_loaded=チャンクをロード
@@ -211,7 +211,7 @@ ftbutilities.lang.chunks.upgrade.no_pvp=味方間でのPvPが無効
 ftbutilities.lang.warps.set=ワープ「%s」を設定しました！
 ftbutilities.lang.warps.del=ワープ「%s」を削除しました！
 ftbutilities.lang.warps.not_set=「%s」は不明なワープ先です！
-ftbutilities.lang.warps.cooldown=You can only use warp in %s!
+ftbutilities.lang.warps.cooldown=%sでワープ可能になります！
 ftbutilities.lang.warps.tp=「%s」にテレポートしました！
 ftbutilities.lang.warps.no_dp=戻ることができるのは一度だけです！
 
@@ -219,7 +219,7 @@ ftbutilities.lang.warps.no_dp=戻ることができるのは一度だけです�
 ftbutilities.lang.homes.set=ホーム「%s」を設定しました！
 ftbutilities.lang.homes.del=ホーム「%s」を削除しました！
 ftbutilities.lang.homes.not_set=「%s」は不明なホームです！
-ftbutilities.lang.homes.cooldown=You can only use home in %s!
+ftbutilities.lang.homes.cooldown=%sでホームへ移動可能になります！
 ftbutilities.lang.homes.cross_dim=別のディメンションへはテレポートできません！
 ftbutilities.lang.homes.limit=これ以上ホームを設定することができません！
 ftbutilities.lang.homes.spectator=最初にスペクテイターモードを終了してください！

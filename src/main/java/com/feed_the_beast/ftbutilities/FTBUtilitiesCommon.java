@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEv
 import com.feed_the_beast.ftbutilities.events.LeaderboardRegistryEvent;
 import com.feed_the_beast.ftbutilities.integration.ChiselsAndBitsIntegration;
 import com.feed_the_beast.ftbutilities.integration.IChunUtilIntegration;
+import com.feed_the_beast.ftbutilities.integration.kubejs.KubeJSIntegration;
 import com.feed_the_beast.ftbutilities.net.FTBUtilitiesNetHandler;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
 import dev.latvian.kubejs.KubeJS;
@@ -61,7 +62,7 @@ public class FTBUtilitiesCommon
 
 		if (Loader.isModLoaded(KubeJS.MOD_ID))
 		{
-			IChunUtilIntegration.init();
+			KubeJSIntegration.init();
 		}
 	}
 

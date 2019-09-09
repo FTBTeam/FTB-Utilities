@@ -197,7 +197,7 @@ public class Ranks
 
 	public void addRank(Rank rank)
 	{
-		if (!rank.isNone() && ranks.put(rank.getID(), rank) != rank)
+		if (!rank.isNone() && ranks.put(rank.getId(), rank) != rank)
 		{
 			universe.clearCache();
 			saveRanks();
@@ -206,7 +206,7 @@ public class Ranks
 
 	public boolean removeRank(Rank rank)
 	{
-		if (!rank.isNone() && ranks.remove(rank.getID()) != null)
+		if (!rank.isNone() && ranks.remove(rank.getId()) != null)
 		{
 			if (playerMap.values().removeIf(r -> r == rank))
 			{
@@ -362,7 +362,7 @@ public class Ranks
 					}
 
 					Rank rank = new Rank(this, rankEntry.getKey());
-					ranks.put(rank.getID(), rank);
+					ranks.put(rank.getId(), rank);
 
 					JsonElement json0 = rankEntry.getValue();
 
@@ -371,7 +371,7 @@ public class Ranks
 						JsonObject o = json0.getAsJsonObject();
 						if (o.has("parent"))
 						{
-							rankParents.put(rank.getID(), o.get("parent").getAsString());
+							rankParents.put(rank.getId(), o.get("parent").getAsString());
 						}
 
 						if (o.has("permissions"))
@@ -455,13 +455,13 @@ public class Ranks
 		if (!loadedOldFile && !ranksFile.exists())
 		{
 			Rank pRank = new Rank(this, "player");
-			ranks.put(pRank.getID(), pRank);
+			ranks.put(pRank.getId(), pRank);
 			pRank.tags.add(Rank.TAG_DEFAULT_PLAYER);
 			pRank.setPermission(Node.get("example.permission"), JsonUtils.JSON_TRUE);
 			pRank.setPermission(Node.get("example.other_permission"), JsonUtils.JSON_FALSE);
 
 			Rank oRank = new Rank(this, "admin");
-			ranks.put(oRank.getID(), oRank);
+			ranks.put(oRank.getId(), oRank);
 			oRank.tags.add(Rank.TAG_DEFAULT_OP);
 			oRank.parent = pRank;
 			oRank.setPermission(Node.get("example.other_permission"), JsonUtils.JSON_TRUE);
@@ -483,9 +483,9 @@ public class Ranks
 
 				currentRank = new Rank(this, StringUtils.removeAllWhitespace(extendss[0]));
 
-				if (isValidName(currentRank.getID()))
+				if (isValidName(currentRank.getId()))
 				{
-					ranks.put(currentRank.getID(), currentRank);
+					ranks.put(currentRank.getId(), currentRank);
 				}
 
 				String parent = "";
@@ -508,7 +508,7 @@ public class Ranks
 					parent = StringUtils.removeAllWhitespace(extendss[1]);
 				}
 
-				rankParents.put(currentRank.getID(), parent);
+				rankParents.put(currentRank.getId(), parent);
 			}
 			else if (currentRank != null)
 			{
@@ -533,7 +533,7 @@ public class Ranks
 
 		for (Rank rank : ranks.values())
 		{
-			Rank rankp = getRank(rankParents.get(rank.getID()));
+			Rank rankp = getRank(rankParents.get(rank.getId()));
 
 			if (rankp != rank)
 			{
@@ -750,7 +750,7 @@ public class Ranks
 		{
 			list.add("<tr>");
 			list.add("<td><code>" + entry.getNode() + "</code></td>");
-			list.add("<td><code>" + entry.player.getID() + "</code></td>");
+			list.add("<td><code>" + entry.player.getId() + "</code></td>");
 			String playerText = fixHTML(entry.player.getStringForGUI().getUnformattedText());
 			String opText = fixHTML(entry.op.getStringForGUI().getUnformattedText());
 

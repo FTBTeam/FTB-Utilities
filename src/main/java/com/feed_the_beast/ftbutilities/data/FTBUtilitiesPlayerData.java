@@ -180,7 +180,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	}
 
 	@Override
-	public String getID()
+	public String getId()
 	{
 		return FTBUtilities.MOD_ID;
 	}

@@ -9,6 +9,7 @@ import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.command.FTBUtilitiesCommands;
 import com.feed_the_beast.ftbutilities.ranks.CommandOverride;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
+import dev.latvian.kubejs.KubeJS;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -35,7 +36,7 @@ import java.util.List;
 		name = FTBUtilities.MOD_NAME,
 		version = FTBUtilities.VERSION,
 		acceptableRemoteVersions = "*",
-		dependencies = FTBLib.THIS_DEP
+		dependencies = FTBLib.THIS_DEP + ";before:" + KubeJS.MOD_ID
 )
 public class FTBUtilities
 {

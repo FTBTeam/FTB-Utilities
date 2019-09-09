@@ -45,7 +45,7 @@ public class CmdClaimAs extends CmdBase
 			{
 				if (team.type.isServer)
 				{
-					list.add(team.getID());
+					list.add(team.getId());
 				}
 			}
 

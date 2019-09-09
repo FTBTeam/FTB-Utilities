@@ -1,14 +1,17 @@
 package com.feed_the_beast.ftbutilities;
 
-import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesLoadedChunkManager;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
 import com.feed_the_beast.ftbutilities.events.LeaderboardRegistryEvent;
 import com.feed_the_beast.ftbutilities.integration.ChiselsAndBitsIntegration;
+import com.feed_the_beast.ftbutilities.integration.IChunUtilIntegration;
 import com.feed_the_beast.ftbutilities.net.FTBUtilitiesNetHandler;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
+import dev.latvian.kubejs.KubeJS;
+import me.ichun.mods.ichunutil.common.iChunUtil;
+import mod.chiselsandbits.core.ChiselsAndBits;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.Loader;
@@ -46,9 +49,19 @@ public class FTBUtilitiesCommon
 		ForgeChunkManager.setForcedChunkLoadingCallback(FTBUtilities.INST, FTBUtilitiesLoadedChunkManager.INSTANCE);
 		new CustomPermissionPrefixesRegistryEvent(CUSTOM_PERM_PREFIX_REGISTRY::add).post();
 
-		if (Loader.isModLoaded(OtherMods.CHISELS_AND_BITS))
+		if (Loader.isModLoaded(ChiselsAndBits.MODID))
 		{
 			ChiselsAndBitsIntegration.init();
+		}
+
+		if (Loader.isModLoaded(iChunUtil.MOD_ID))
+		{
+			IChunUtilIntegration.init();
+		}
+
+		if (Loader.isModLoaded(KubeJS.MOD_ID))
+		{
+			IChunUtilIntegration.init();
 		}
 	}
 

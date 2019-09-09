@@ -49,7 +49,7 @@ public class GuiSelectRank extends GuiButtonListBase
 		{
 			if (filter.test(inst))
 			{
-				panel.add(new SimpleTextButton(panel, StringUtils.firstUppercase(inst.getID()), Icon.EMPTY)
+				panel.add(new SimpleTextButton(panel, StringUtils.firstUppercase(inst.getId()), Icon.EMPTY)
 				{
 					@Override
 					public void onClicked(MouseButton button)

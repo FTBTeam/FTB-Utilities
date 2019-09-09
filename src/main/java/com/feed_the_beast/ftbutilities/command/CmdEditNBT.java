@@ -234,7 +234,7 @@ public class CmdEditNBT extends CmdTreeBase
 			addInfo(list, new TextComponentString("Name"), new TextComponentString(player.getName()));
 			addInfo(list, new TextComponentString("Display Name"), player.getDisplayName());
 			addInfo(list, new TextComponentString("UUID"), new TextComponentString(player.getUniqueID().toString()));
-			addInfo(list, new TextComponentString("FTBLib Team"), new TextComponentString(p.team.getID()));
+			addInfo(list, new TextComponentString("FTBLib Team"), new TextComponentString(p.team.getId()));
 			info.setTag("text", list);
 			info.setString("title", ITextComponent.Serializer.componentToJson(player.getDisplayName()));
 			return nbt;

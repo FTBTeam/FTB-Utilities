@@ -7,12 +7,14 @@ buildscript {
 	dependencies {
 		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
 		classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.1.0'
+		classpath 'com.wynprice.cursemaven:CurseMaven:1.2.2'
 	}
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'maven'
+apply plugin: 'com.wynprice.cursemaven'
 
 apply from: 'https://raw.githubusercontent.com/MinecraftModDevelopment/Gradle-Collection/master/generic/markdown-git-changelog.gradle'
 
@@ -41,15 +43,15 @@ configurations.all {
 
 repositories {
 	mavenLocal()
-	maven { url "https://maven.latmod.com/" } //FTB Library
-	maven { url "https://minecraft.curseforge.com/api/maven/" } //iChunUtil, JourneyMap API, Chisels & Bits
+	maven { url "https://maven.latmod.com/" } //FTB Library, KubeJS
 }
 
 dependencies {
 	deobfCompile "com.feed_the_beast.mods:FTBLib:${ftblib_version}"
-	deobfProvided "ichunutil:iChunUtil:1.12.2:${ichunutil_version}"
-	deobfProvided "journeymap-api:journeymap-api:1.12:${journeymap_version}"
-	deobfProvided "chisels-bits:chiselsandbits:${chiselsandbits_version}"
+	deobfProvided "dev.latvian.kubejs:KubeJS:forge-1.12.2-${kubejs_version}"
+	deobfProvided curse.resolve('ichunutil', project.ichunutil_file)
+	deobfProvided curse.resolve('journeymap', project.journeymap_file)
+	deobfProvided curse.resolve('chisels-bits', project.chiselsandbits_file)
 }
 
 processResources {
@@ -89,9 +91,8 @@ if (ENV.CURSEFORGE_KEY) {
 			addGameVersion "${mc_version}"
 			relations {
 				requiredDependency 'ftblib'
-				optionalDependency 'ftb-guides'
-				optionalDependency 'journeymap'
 				requiredDependency 'ftb-utilities-backups'
+				optionalDependency 'journeymap'
 			}
 			changelog = getGitChangelog
 			changelogType = 'markdown'

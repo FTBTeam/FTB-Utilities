@@ -61,7 +61,7 @@ public class KubeJSFTBUtilitiesPlayerData
 	{
 		if (Ranks.isActive())
 		{
-			Ranks.INSTANCE.setRank(playerData.id, Ranks.INSTANCE.getRank(rank));
+			Ranks.INSTANCE.setRank(playerData.getId(), Ranks.INSTANCE.getRank(rank));
 		}
 	}
 

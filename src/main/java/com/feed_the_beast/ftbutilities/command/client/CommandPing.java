@@ -19,20 +19,17 @@ import net.minecraft.network.status.server.SPacketServerInfo;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-@SideOnly(Side.CLIENT)
-public class CmdPing extends CmdBase
+public class CommandPing extends CmdBase
 {
 	private final static Executor EXECUTOR = Executors.newScheduledThreadPool(1);
 
-	public CmdPing()
+	public CommandPing()
 	{
 		super("ping", Level.ALL);
 	}

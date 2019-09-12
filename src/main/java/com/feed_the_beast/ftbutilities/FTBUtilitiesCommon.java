@@ -28,6 +28,7 @@ public class FTBUtilitiesCommon
 {
 	public static final Collection<NodeEntry> CUSTOM_PERM_PREFIX_REGISTRY = new HashSet<>();
 	public static final Map<ResourceLocation, Leaderboard> LEADERBOARDS = new HashMap<>();
+	public static final Map<String, String> KAOMOJIS = new HashMap<>();
 
 	public void preInit()
 	{
@@ -64,6 +65,10 @@ public class FTBUtilitiesCommon
 		{
 			KubeJSIntegration.init();
 		}
+
+		KAOMOJIS.put("shrug", "\u00AF\\_(\u30C4)_/\u00AF");
+		KAOMOJIS.put("tableflip", "(\u256F\u00B0\u25A1\u00B0)\u256F \uFE35 \u253B\u2501\u253B");
+		KAOMOJIS.put("unflip", "\u252C\u2500\u252C\u30CE( \u309C-\u309C\u30CE)");
 	}
 
 	public void init()

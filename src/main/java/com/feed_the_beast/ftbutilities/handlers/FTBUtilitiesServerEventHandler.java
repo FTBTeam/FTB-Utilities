@@ -11,6 +11,7 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftblib.lib.util.text_components.TextComponentParser;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.command.CmdShutdown;
@@ -39,6 +40,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
 import net.minecraftforge.server.permission.context.IContext;
 import net.minecraftforge.server.permission.context.PlayerContext;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -91,11 +93,21 @@ public class FTBUtilitiesServerEventHandler
 
 		boolean b = false;
 
-		if (PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_FORMATTING, context))
+		if (!message.contains("https://") && !message.contains("http://") && PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_FORMATTING, context))
 		{
+			for (Map.Entry<String, String> entry : FTBUtilitiesCommon.KAOMOJIS.entrySet())
+			{
+				message = message.replace(entry.getValue(), "<emoji:" + entry.getKey() + ">");
+			}
+
 			b = !message.equals(message = STRIKETHROUGH_PATTERN.matcher(message).replaceAll(STRIKETHROUGH_REPLACE)) | b;
 			b = !message.equals(message = BOLD_PATTERN.matcher(message).replaceAll(BOLD_REPLACE)) | b;
 			b = !message.equals(message = ITALIC_PATTERN.matcher(message).replaceAll(ITALIC_REPLACE)) | b;
+
+			for (Map.Entry<String, String> entry : FTBUtilitiesCommon.KAOMOJIS.entrySet())
+			{
+				message = message.replace("<emoji:" + entry.getKey() + ">", entry.getValue());
+			}
 		}
 
 		ITextComponent text;

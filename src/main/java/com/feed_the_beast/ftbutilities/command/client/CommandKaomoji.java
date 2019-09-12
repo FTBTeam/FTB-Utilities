@@ -10,11 +10,14 @@ import net.minecraft.server.MinecraftServer;
 /**
  * @author LatvianModder
  */
-public class CmdShrug extends CmdBase
+public class CommandKaomoji extends CmdBase
 {
-	public CmdShrug()
+	private final String emoji;
+
+	public CommandKaomoji(String n, String e)
 	{
-		super("shrug", Level.ALL);
+		super(n, Level.ALL);
+		emoji = e;
 	}
 
 	@Override
@@ -24,11 +27,11 @@ public class CmdShrug extends CmdBase
 
 		if (txt.isEmpty())
 		{
-			ClientUtils.execClientCommand("\u00AF\\_(\u30C4)_/\u00AF");
+			ClientUtils.execClientCommand(emoji);
 		}
 		else
 		{
-			ClientUtils.execClientCommand(txt + " \u00AF\\_(\u30C4)_/\u00AF");
+			ClientUtils.execClientCommand(txt + " " + emoji);
 		}
 	}
 }

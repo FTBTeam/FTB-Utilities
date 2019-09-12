@@ -1,11 +1,9 @@
 package com.feed_the_beast.ftbutilities.client;
 
 import com.feed_the_beast.ftblib.FTBLib;
-import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
-import com.feed_the_beast.ftbutilities.command.client.CmdPing;
-import com.feed_the_beast.ftbutilities.command.client.CmdScanItems;
-import com.feed_the_beast.ftbutilities.command.client.CmdShrug;
+import com.feed_the_beast.ftbutilities.command.client.CommandKaomoji;
+import com.feed_the_beast.ftbutilities.command.client.CommandPing;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -13,6 +11,8 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import org.lwjgl.input.Keyboard;
+
+import java.util.Map;
 
 public class FTBUtilitiesClient extends FTBUtilitiesCommon // FTBLibClient
 {
@@ -33,13 +33,12 @@ public class FTBUtilitiesClient extends FTBUtilitiesCommon // FTBLibClient
 	{
 		super.postInit();
 
-		ClientCommandHandler.instance.registerCommand(new CmdShrug());
-		ClientCommandHandler.instance.registerCommand(new CmdPing());
-
-		if (FTBLibConfig.debugging.special_commands)
+		for (Map.Entry<String, String> entry : FTBUtilitiesCommon.KAOMOJIS.entrySet())
 		{
-			ClientCommandHandler.instance.registerCommand(new CmdScanItems());
+			ClientCommandHandler.instance.registerCommand(new CommandKaomoji(entry.getKey(), entry.getValue()));
 		}
+
+		ClientCommandHandler.instance.registerCommand(new CommandPing());
 
 		Minecraft.getMinecraft().getRenderManager().getSkinMap().get("default").addLayer(LayerBadge.INSTANCE);
 		Minecraft.getMinecraft().getRenderManager().getSkinMap().get("slim").addLayer(LayerBadge.INSTANCE);

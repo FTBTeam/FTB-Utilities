@@ -1,4 +1,5 @@
 # Config
+ftbutilities=FTB Utilities Common
 ftbutilities.auto_shutdown=Auto Shutdown
 ftbutilities.auto_shutdown.enabled_singleplayer=Enabled in Singleplayer
 ftbutilities.auto_shutdown.times=Shutdown Times
@@ -14,9 +15,7 @@ ftbutilities.server_info.difficulty=Difficulty
 ftbutilities.server_info.admin_quick_access=Admin Quick Access
 
 ftbutilities.chat=Chat
-ftbutilities.chat.general_history_limit=General Chat History Limit
-ftbutilities.chat.team_history_limit=Team Chat History Limit
-ftbutilities.chat.admin_history_limit=Admin Chat History Limit
+ftbutilities.chat.add_nickname_tilde=Add Nickname Tilde
 
 ftbutilities.commands=Commands
 
@@ -63,14 +62,15 @@ ftbutilities.ranks.tags.default_op_rank=Default OP Rank
 
 ftbutilities.debugging.log_chunkloading=Log Chunkloading
 
-ftbutilities_client.general.render_badges=Show Badges
-ftbutilities_client.general.journeymap_overlay=Enable Journeymap Integration
-ftbutilities_client.general.scan_items_whitelist=/scan_items Whitelist
-ftbutilities_client.general.scan_items_blacklist=/scan_items Blacklist
-ftbutilities_client.general.show_shutdown_timer=Show Shutdown Timer
-ftbutilities_client.general.shutdown_timer_start=Shutdown Timer Start
-ftbutilities_client.general.button_daytime=Button Daytime
-ftbutilities_client.general.button_nighttime=Button Nighttime
+ftbutilities_client=FTB Utilities Client
+ftbutilities.general.render_badges=Show Badges
+ftbutilities.general.journeymap_overlay=Enable Journeymap Integration
+ftbutilities.general.scan_items_whitelist=/scan_items Whitelist
+ftbutilities.general.scan_items_blacklist=/scan_items Blacklist
+ftbutilities.general.show_shutdown_timer=Show Shutdown Timer
+ftbutilities.general.shutdown_timer_start=Shutdown Timer Start
+ftbutilities.general.button_daytime=Button Daytime
+ftbutilities.general.button_nighttime=Button Nighttime
 
 # Rank Config
 permission.ftbutilities.badge=Badge

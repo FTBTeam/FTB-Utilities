@@ -10,7 +10,6 @@ import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import com.feed_the_beast.ftbutilities.net.MessageRanks;
@@ -38,7 +37,6 @@ public class FTBUtilitiesRegistryEventHandler
 	public static void onFTBLibPreInitRegistry(FTBLibPreInitRegistryEvent event)
 	{
 		FTBLibPreInitRegistryEvent.Registry registry = event.getRegistry();
-		registry.registerServerReloadHandler(new ResourceLocation(FTBUtilities.MOD_ID, "config"), reloadEvent -> FTBUtilitiesConfig.sync());
 		registry.registerServerReloadHandler(new ResourceLocation(FTBUtilities.MOD_ID, "ranks"), reloadEvent -> Ranks.INSTANCE.reload());
 		registry.registerServerReloadHandler(new ResourceLocation(FTBUtilities.MOD_ID, "badges"), reloadEvent -> FTBUtilitiesUniverseData.reloadServerBadges(reloadEvent.getUniverse()));
 

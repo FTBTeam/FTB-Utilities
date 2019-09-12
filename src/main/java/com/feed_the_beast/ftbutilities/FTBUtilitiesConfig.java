@@ -430,14 +430,13 @@ public class FTBUtilitiesConfig
 		public boolean log_chunkloading = false;
 	}
 
-	public static boolean sync()
+	public static void sync()
 	{
 		ConfigManager.sync(FTBUtilities.MOD_ID, Config.Type.INSTANCE);
 		login.motdComponents = null;
 		login.startingItems = null;
 		afk.notificationTimer = -1L;
 		world.disabledItems = null;
-		return true;
 	}
 
 	@SubscribeEvent

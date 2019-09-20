@@ -58,7 +58,7 @@ public class CmdUnclaimAll extends CmdBase
 		if (p.hasTeam())
 		{
 			OptionalInt dimension = CommandUtils.parseDimension(sender, args, 0);
-			ClaimedChunks.instance.unclaimAllChunks(p.team, dimension);
+			ClaimedChunks.instance.unclaimAllChunks(p, p.team, dimension);
 			Notification.of(FTBUtilitiesNotifications.UNCLAIMED_ALL, FTBUtilities.lang(sender, "ftbutilities.lang.chunks.unclaimed_all")).send(server, sender);
 		}
 		else

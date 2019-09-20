@@ -92,19 +92,19 @@ public class MessageClaimedChunksModify extends MessageToServer
 				case UNCLAIM:
 					if (ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_UNCLAIM))
 					{
-						ClaimedChunks.instance.unclaimChunk(pos);
+						ClaimedChunks.instance.unclaimChunk(p, pos);
 					}
 					break;
 				case LOAD:
 					if (ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_LOAD))
 					{
-						ClaimedChunks.instance.loadChunk(p.team, pos);
+						ClaimedChunks.instance.loadChunk(p, p.team, pos);
 					}
 					break;
 				case UNLOAD:
 					if (ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_UNLOAD))
 					{
-						ClaimedChunks.instance.unloadChunk(pos);
+						ClaimedChunks.instance.unloadChunk(p, pos);
 					}
 					break;
 			}

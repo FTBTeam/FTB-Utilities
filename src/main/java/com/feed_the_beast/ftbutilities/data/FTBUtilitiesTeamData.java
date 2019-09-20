@@ -150,7 +150,7 @@ public class FTBUtilitiesTeamData extends TeamData
 	{
 		if (ClaimedChunks.isActive())
 		{
-			ClaimedChunks.instance.unclaimAllChunks(event.getTeam(), OptionalInt.empty());
+			ClaimedChunks.instance.unclaimAllChunks(event.getTeam().owner, event.getTeam(), OptionalInt.empty());
 		}
 	}
 

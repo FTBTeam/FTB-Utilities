@@ -48,7 +48,7 @@ public class CmdUnclaimEverything extends CmdBase
 
 		for (ForgeTeam team : Universe.get().getTeams())
 		{
-			ClaimedChunks.instance.unclaimAllChunks(team, dimension);
+			ClaimedChunks.instance.unclaimAllChunks(null, team, dimension);
 		}
 	}
 }

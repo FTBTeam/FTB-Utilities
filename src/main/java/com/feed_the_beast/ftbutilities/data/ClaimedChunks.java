@@ -365,11 +365,11 @@ public class ClaimedChunks
 
 		chunk = new ClaimedChunk(pos, data);
 		addChunk(chunk);
-		new ChunkModifiedEvent.Claimed(chunk).post();
+		new ChunkModifiedEvent.Claimed(chunk, player).post();
 		return ClaimResult.SUCCESS;
 	}
 
-	public boolean unclaimChunk(ChunkDimPos pos)
+	public boolean unclaimChunk(@Nullable ForgePlayer player, ChunkDimPos pos)
 	{
 		ClaimedChunk chunk = map.get(pos);
 
@@ -377,11 +377,11 @@ public class ClaimedChunks
 		{
 			if (chunk.isLoaded())
 			{
-				new ChunkModifiedEvent.Unloaded(chunk).post();
+				new ChunkModifiedEvent.Unloaded(chunk, player).post();
 			}
 
 			chunk.setLoaded(false);
-			new ChunkModifiedEvent.Unclaimed(chunk).post();
+			new ChunkModifiedEvent.Unclaimed(chunk, player).post();
 			removeChunk(pos);
 			return true;
 		}
@@ -389,7 +389,7 @@ public class ClaimedChunks
 		return false;
 	}
 
-	public void unclaimAllChunks(ForgeTeam team, OptionalInt dim)
+	public void unclaimAllChunks(@Nullable ForgePlayer player, ForgeTeam team, OptionalInt dim)
 	{
 		for (ClaimedChunk chunk : getTeamChunks(team, dim))
 		{
@@ -397,16 +397,16 @@ public class ClaimedChunks
 
 			if (chunk.isLoaded())
 			{
-				new ChunkModifiedEvent.Unloaded(chunk).post();
+				new ChunkModifiedEvent.Unloaded(chunk, player).post();
 			}
 
 			chunk.setLoaded(false);
-			new ChunkModifiedEvent.Unclaimed(chunk).post();
+			new ChunkModifiedEvent.Unclaimed(chunk, player).post();
 			removeChunk(pos);
 		}
 	}
 
-	public boolean loadChunk(ForgeTeam team, ChunkDimPos pos)
+	public boolean loadChunk(@Nullable ForgePlayer player, ForgeTeam team, ChunkDimPos pos)
 	{
 		ClaimedChunk chunk = getChunk(pos);
 
@@ -439,13 +439,13 @@ public class ClaimedChunks
 
 		if (chunk.setLoaded(true))
 		{
-			new ChunkModifiedEvent.Loaded(chunk).post();
+			new ChunkModifiedEvent.Loaded(chunk, player).post();
 		}
 
 		return true;
 	}
 
-	public boolean unloadChunk(ChunkDimPos pos)
+	public boolean unloadChunk(@Nullable ForgePlayer player, ChunkDimPos pos)
 	{
 		ClaimedChunk chunk = getChunk(pos);
 
@@ -454,7 +454,7 @@ public class ClaimedChunks
 			return false;
 		}
 
-		new ChunkModifiedEvent.Unloaded(chunk).post();
+		new ChunkModifiedEvent.Unloaded(chunk, player).post();
 		chunk.setLoaded(false);
 		return true;
 	}

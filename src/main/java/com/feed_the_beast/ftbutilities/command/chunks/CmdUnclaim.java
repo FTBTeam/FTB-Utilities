@@ -37,7 +37,7 @@ public class CmdUnclaim extends CmdBase
 		ForgePlayer p = CommandUtils.getForgePlayer(player);
 		ChunkDimPos pos = new ChunkDimPos(player);
 
-		if (ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_UNCLAIM) && ClaimedChunks.instance.unclaimChunk(pos))
+		if (ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_UNCLAIM) && ClaimedChunks.instance.unclaimChunk(p, pos))
 		{
 			Notification.of(FTBUtilitiesNotifications.CHUNK_MODIFIED, FTBUtilities.lang(player, "ftbutilities.lang.chunks.chunk_unclaimed")).send(server, player);
 			FTBUtilitiesNotifications.updateChunkMessage(player, pos);

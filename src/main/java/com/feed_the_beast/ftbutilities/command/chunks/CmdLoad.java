@@ -37,7 +37,7 @@ public class CmdLoad extends CmdBase
 		ForgePlayer p = CommandUtils.getForgePlayer(player);
 		ChunkDimPos pos = new ChunkDimPos(player);
 
-		if (p.hasTeam() && ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_LOAD) && ClaimedChunks.instance.loadChunk(p.team, pos))
+		if (p.hasTeam() && ClaimedChunks.instance.canPlayerModify(p, pos, FTBUtilitiesPermissions.CLAIMS_OTHER_LOAD) && ClaimedChunks.instance.loadChunk(p, p.team, pos))
 		{
 			Notification.of(FTBUtilitiesNotifications.CHUNK_MODIFIED, FTBUtilities.lang(player, "ftbutilities.lang.chunks.chunk_loaded")).send(server, player);
 			FTBUtilitiesNotifications.updateChunkMessage(player, pos);

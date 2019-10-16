@@ -6,8 +6,10 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.server.command.CommandTreeBase;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -17,7 +19,7 @@ public class CommandTreeOverride extends CmdTreeBase
 {
 	public final CommandTreeBase mirrored;
 
-	public CommandTreeOverride(CommandTreeBase c, Node parent)
+	public CommandTreeOverride(CommandTreeBase c, Node parent, @Nullable ModContainer container)
 	{
 		super(c.getName());
 		mirrored = c;
@@ -25,7 +27,7 @@ public class CommandTreeOverride extends CmdTreeBase
 
 		for (ICommand command : mirrored.getSubCommands())
 		{
-			addSubcommand(CommandOverride.create(command, node));
+			addSubcommand(CommandOverride.create(command, node, container));
 		}
 	}
 

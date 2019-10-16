@@ -7,10 +7,12 @@ import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEv
 import com.feed_the_beast.ftbutilities.events.LeaderboardRegistryEvent;
 import com.feed_the_beast.ftbutilities.integration.ChiselsAndBitsIntegration;
 import com.feed_the_beast.ftbutilities.integration.IChunUtilIntegration;
+import com.feed_the_beast.ftbutilities.integration.aurora.AuroraIntegration;
 import com.feed_the_beast.ftbutilities.integration.kubejs.KubeJSIntegration;
 import com.feed_the_beast.ftbutilities.net.FTBUtilitiesNetHandler;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
 import dev.latvian.kubejs.KubeJS;
+import dev.latvian.mods.aurora.Aurora;
 import me.ichun.mods.ichunutil.common.iChunUtil;
 import mod.chiselsandbits.core.ChiselsAndBits;
 import net.minecraft.util.ResourceLocation;
@@ -69,6 +71,11 @@ public class FTBUtilitiesCommon
 		KAOMOJIS.put("shrug", "\u00AF\\_(\u30C4)_/\u00AF");
 		KAOMOJIS.put("tableflip", "(\u256F\u00B0\u25A1\u00B0)\u256F \uFE35 \u253B\u2501\u253B");
 		KAOMOJIS.put("unflip", "\u252C\u2500\u252C\u30CE( \u309C-\u309C\u30CE)");
+
+		if (Loader.isModLoaded(Aurora.MOD_ID))
+		{
+			AuroraIntegration.init();
+		}
 	}
 
 	public void init()

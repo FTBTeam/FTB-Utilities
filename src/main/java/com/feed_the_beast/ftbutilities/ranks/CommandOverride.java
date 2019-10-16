@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
-import com.feed_the_beast.ftbutilities.FTBUtilities;
-import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -13,6 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.context.PlayerContext;
@@ -25,23 +24,24 @@ import java.util.List;
  */
 public class CommandOverride extends CommandBase
 {
-	public static ICommand create(ICommand command, Node parent)
+	public static ICommand create(ICommand command, Node parent, @Nullable ModContainer container)
 	{
 		if (command instanceof CommandTreeBase)
 		{
-			return new CommandTreeOverride((CommandTreeBase) command, parent);
+			return new CommandTreeOverride((CommandTreeBase) command, parent, container);
 		}
 		else
 		{
-			return new CommandOverride(command, parent);
+			return new CommandOverride(command, parent, container);
 		}
 	}
 
 	public final ICommand mirrored;
 	public final Node node;
 	public final ITextComponent usage;
+	public final ModContainer modContainer;
 
-	private CommandOverride(ICommand c, Node parent)
+	private CommandOverride(ICommand c, Node parent, @Nullable ModContainer container)
 	{
 		mirrored = c;
 		node = parent.append(mirrored.getName());
@@ -51,17 +51,14 @@ public class CommandOverride extends CommandBase
 
 		if (usageS == null || usageS.isEmpty() || usageS.indexOf('/') != -1 || usageS.indexOf('%') != -1 || usageS.indexOf(' ') != -1)
 		{
-			if (FTBUtilitiesConfig.ranks.print_command_errors)
-			{
-				FTBUtilities.LOGGER.warn("Command " + node + " (class: " + mirrored.getClass().getName() + ") has invalid usage language key: " + usageS);
-			}
-
-			usage = new TextComponentString(String.valueOf(usageS));
+			usage = new TextComponentString(usageS);
 		}
 		else
 		{
 			usage = new TextComponentTranslation(usageS);
 		}
+
+		modContainer = container;
 	}
 
 	@Override

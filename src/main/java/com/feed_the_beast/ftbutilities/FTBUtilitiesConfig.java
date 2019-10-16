@@ -227,9 +227,6 @@ public class FTBUtilitiesConfig
 
 		@Config.Comment("Will load config/ftbutilities_ranks.txt instead of local/ftbutilities/ranks.txt.")
 		public boolean load_from_config_folder = false;
-
-		@Config.Comment("Print command usage key errors?")
-		public boolean print_command_errors = true;
 	}
 
 	public static class WorldConfig

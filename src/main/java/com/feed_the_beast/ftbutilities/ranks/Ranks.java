@@ -1,20 +1,13 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
-import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
-import com.feed_the_beast.ftblib.lib.config.ConfigDouble;
-import com.feed_the_beast.ftblib.lib.config.ConfigInt;
-import com.feed_the_beast.ftblib.lib.config.ConfigTimer;
-import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
-import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
-import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
@@ -26,8 +19,6 @@ import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
@@ -41,7 +32,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -465,6 +455,7 @@ public class Ranks
 			oRank.tags.add(Rank.TAG_DEFAULT_OP);
 			oRank.parent = pRank;
 			oRank.setPermission(Node.get("example.other_permission"), JsonUtils.JSON_TRUE);
+			saveRanks();
 		}
 
 		Rank currentRank = null;
@@ -541,8 +532,6 @@ public class Ranks
 			}
 		}
 
-		saveRanks();
-
 		File playerRanksFile = new File(universe.server.getDataDirectory(), "local/ftbutilities/player_ranks.json");
 		ranksJson = DataReader.get(playerRanksFile).safeJson();
 
@@ -593,15 +582,14 @@ public class Ranks
 			}
 		}
 
-		savePlayerRanks();
+		//savePlayerRanks();
 		return result;
 	}
 
 	public void saveRanks()
 	{
 		List<String> list = new ArrayList<>();
-		list.add("// For more info visit https://www.curseforge.com/minecraft/mc-mods/ftb-utilities/pages/ranks");
-		list.add("// To see the list of permission nodes, open all_permissions.html in browser or all_permissions_full_list.txt");
+		list.add("// For more info visit https://latvian.dev/mods/ftbutilities/wiki/ranks/");
 
 		StringBuilder line = new StringBuilder();
 
@@ -619,10 +607,10 @@ public class Ranks
 				line.append(rank.parent);
 			}
 
-			if (!rank.tags.isEmpty())
+			for (String tag : rank.tags)
 			{
 				line.append(" is ");
-				line.append(StringJoiner.with(", ").join(rank.tags));
+				line.append(tag);
 			}
 
 			line.append(']');
@@ -654,7 +642,7 @@ public class Ranks
 	public void savePlayerRanks()
 	{
 		List<String> list = new ArrayList<>();
-		list.add("// For more info visit https://www.curseforge.com/minecraft/mc-mods/ftb-utilities/pages/ranks");
+		list.add("// For more info visit https://latvian.dev/mods/ftbutilities/wiki/ranks/");
 		list.add("");
 
 		for (Map.Entry<UUID, Rank> entry : playerMap.entrySet())
@@ -672,192 +660,5 @@ public class Ranks
 		}
 
 		FileUtils.saveSafe(new File(universe.server.getDataDirectory(), "local/ftbutilities/player_ranks.txt"), list);
-	}
-
-	private String classOf(ConfigValue value)
-	{
-		if (value instanceof ConfigBoolean)
-		{
-			return value.getBoolean() ? "true" : "false";
-		}
-		else
-		{
-			return "other";
-		}
-	}
-
-	private String fixHTML(String string)
-	{
-		return string.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
-	}
-
-	public void generateExampleFiles()
-	{
-		List<NodeEntry> allNodes = new ArrayList<>(FTBUtilitiesCommon.CUSTOM_PERM_PREFIX_REGISTRY);
-
-		for (String s : PermissionAPI.getPermissionHandler().getRegisteredNodes())
-		{
-			DefaultPermissionLevel level = DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(s);
-			String desc = PermissionAPI.getPermissionHandler().getNodeDescription(s);
-			Node node = Node.get(s);
-
-			boolean printNode = true;
-
-			for (NodeEntry cprefix : FTBUtilitiesCommon.CUSTOM_PERM_PREFIX_REGISTRY)
-			{
-				if (cprefix.getNode().matches(node))
-				{
-					if (cprefix.level != null && level == cprefix.level && desc.isEmpty())
-					{
-						printNode = false;
-					}
-
-					break;
-				}
-			}
-
-			if (printNode)
-			{
-				allNodes.add(new NodeEntry(node, level, desc));
-			}
-		}
-
-		for (RankConfigValueInfo info : RankConfigAPI.getHandler().getRegisteredConfigs())
-		{
-			String desc = new TextComponentTranslation("permission." + info.node).getUnformattedText();
-			allNodes.add(new NodeEntry(info.node, info.defaultValue, info.defaultOPValue, desc.equals(info.node.toString()) ? "" : desc, null));
-		}
-
-		allNodes.sort(null);
-		List<String> list = new ArrayList<>();
-
-		list.add("<html><head><title>Permissions</title><style>");
-		list.add("table{font-family:arial, sans-serif;border-collapse:collapse;}");
-		list.add("td,th{border:1px solid #666666;text-align:left;padding:8px;min-width:45px;}");
-		list.add("th{background-color:#CCCCCC;}");
-		list.add("p{margin:0;}");
-		list.add("tr:nth-child(even){background-color:#D8D8D8;}");
-		list.add("tr:nth-child(odd){background-color:#EEEEEE;}");
-		list.add("td.true{background-color:#72FF85AA;}");
-		list.add("td.false{background-color:#FF6666AA;}");
-		list.add("td.other{background-color:#42A3FFAA;}");
-		list.add("td.error{color:#FF0000;}");
-		list.add("th,td.true,td.false,td.other{text-align:center;}");
-		list.add("</style></head><body><h1>Permissions</h1><h3>Modifying this file won't have any effect, edit ranks.txt!</h3><table>");
-		list.add("<tr><th>Node</th><th>Type</th><th>Player</th><th>OP</th><th>Info (Mouse over for variants)</th></tr>");
-
-		for (NodeEntry entry : allNodes)
-		{
-			list.add("<tr>");
-			list.add("<td><code>" + entry.getNode() + "</code></td>");
-			list.add("<td><code>" + entry.player.getId() + "</code></td>");
-			String playerText = fixHTML(entry.player.getStringForGUI().getUnformattedText());
-			String opText = fixHTML(entry.op.getStringForGUI().getUnformattedText());
-
-			if (playerText.equals(opText))
-			{
-				list.add("<td class='" + classOf(entry.player) + "' colspan='2'><code>" + playerText + "</code></td>");
-			}
-			else
-			{
-				list.add("<td class='" + classOf(entry.player) + "'><code>" + playerText + "</code></td>");
-				list.add("<td class='" + classOf(entry.op) + "'><code>" + opText + "</code></td>");
-			}
-
-			list.add("<td title='");
-
-			List<String> variants = new ArrayList<>();
-
-			if (entry.player instanceof ConfigBoolean)
-			{
-				variants.add("true");
-				variants.add("false");
-			}
-			else if (entry.player instanceof ConfigInt)
-			{
-				int min = ((ConfigInt) entry.player).getMin();
-				int max = ((ConfigInt) entry.player).getMax();
-				variants.add(String.format("%s to %s", min == Integer.MIN_VALUE ? "-&infin;" : String.valueOf(min), max == Integer.MAX_VALUE ? "&infin;" : String.valueOf(max)));
-			}
-			else if (entry.player instanceof ConfigDouble)
-			{
-				double min = ((ConfigDouble) entry.player).getMin();
-				double max = ((ConfigDouble) entry.player).getMax();
-
-				variants.add(String.format("%s to %s", min == Double.NEGATIVE_INFINITY ? "-&infin;" : StringUtils.formatDouble(min), max == Double.POSITIVE_INFINITY ? "&infin;" : StringUtils.formatDouble(max)));
-			}
-			else if (entry.player instanceof ConfigTimer)
-			{
-				Ticks max = ((ConfigTimer) entry.player).getMax();
-				variants.add(String.format("0s to %s", !max.hasTicks() ? "&infin;" : max.toString()));
-			}
-			else
-			{
-				variants = new ArrayList<>(entry.player.getVariants());
-				variants.sort(StringUtils.IGNORE_CASE_COMPARATOR);
-			}
-
-			for (String s : variants)
-			{
-				list.add(StringUtils.unformatted(s) + " ");
-			}
-
-			list.add("'>");
-
-			if (!entry.desc.isEmpty())
-			{
-				for (String s1 : entry.desc.split("\n"))
-				{
-					list.add("<p>" + s1 + "</p>");
-				}
-			}
-
-			list.add("</td></tr>");
-		}
-
-		list.add("</table><br><table><tr><th>Available command nodes</th><th>Usage</th></tr>");
-		//ServerCommandManager manager = (ServerCommandManager) universe.server.getCommandManager();
-
-		for (CommandOverride c : commands.values())
-		{
-			String text = fixHTML(c.usage.getUnformattedText()).replace(" OR ", "<br>");
-
-			if (c.usage instanceof TextComponentString)
-			{
-				list.add("<tr><td><code>" + c.node + "</code></td><td class='error' title='Invalid usage language key!'>" + text + "</td></tr>");
-			}
-			else
-			{
-				list.add("<tr><td><code>" + c.node + "</code></td><td>" + text + "</td></tr>");
-			}
-		}
-
-		list.add("</table>");
-
-		list.add("</body></html>");
-		FileUtils.saveSafe(new File(universe.server.getDataDirectory(), "local/ftbutilities/all_permissions.html"), list);
-		FileUtils.deleteSafe(new File(universe.server.getDataDirectory(), "local/ftbutilities/all_configs.html"));
-
-		list = new ArrayList<>();
-
-		for (String node : PermissionAPI.getPermissionHandler().getRegisteredNodes())
-		{
-			list.add(node + ": " + DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(node));
-		}
-
-		Collections.sort(list);
-		list.add(0, PermissionAPI.getPermissionHandler().getRegisteredNodes().size() + " nodes in total");
-		list.add(1, "Modifying this file won't have any effect, edit ranks.txt!");
-		list.add(2, "");
-		list.add("");
-		list.add("Available command nodes:");
-		list.add("");
-
-		for (CommandOverride c : commands.values())
-		{
-			list.add(c.node.toString());
-		}
-
-		FileUtils.saveSafe(new File(universe.server.getDataDirectory(), "local/ftbutilities/all_permissions_full_list.txt"), list);
 	}
 }

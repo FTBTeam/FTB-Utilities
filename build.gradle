@@ -43,12 +43,13 @@ configurations.all {
 
 repositories {
 	mavenLocal()
-	maven { url "https://maven.latmod.com/" } //FTB Library, KubeJS
+	maven { url "https://maven.latmod.com/" } //FTB Library, KubeJS, Aurora
 }
 
 dependencies {
 	deobfCompile "com.feed_the_beast.mods:FTBLib:${ftblib_version}"
 	deobfProvided "dev.latvian.kubejs:KubeJS:forge-1.12.2-${kubejs_version}"
+	deobfCompile "dev.latvian.mods:Aurora:1.+"
 	deobfProvided curse.resolve('ichunutil', project.ichunutil_file)
 	deobfProvided curse.resolve('journeymap', project.journeymap_file)
 	deobfProvided curse.resolve('chisels-bits', project.chiselsandbits_file)

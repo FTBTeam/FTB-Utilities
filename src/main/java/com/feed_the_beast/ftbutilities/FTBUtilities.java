@@ -4,12 +4,14 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.command.FTBUtilitiesCommands;
 import com.feed_the_beast.ftbutilities.ranks.CommandOverride;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import dev.latvian.kubejs.KubeJS;
+import dev.latvian.mods.aurora.Aurora;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -28,6 +30,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +39,7 @@ import java.util.List;
 		name = FTBUtilities.MOD_NAME,
 		version = FTBUtilities.VERSION,
 		acceptableRemoteVersions = "*",
-		dependencies = FTBLib.THIS_DEP + ";before:" + KubeJS.MOD_ID
+		dependencies = FTBLib.THIS_DEP + ";before:" + KubeJS.MOD_ID + ";after:" + Aurora.MOD_ID
 )
 public class FTBUtilities
 {
@@ -108,11 +111,15 @@ public class FTBUtilities
 			for (ICommand command : commands)
 			{
 				ModContainer container = CommonUtils.getModContainerForClass(command.getClass());
-				manager.registerCommand(CommandOverride.create(command, container == null ? Node.COMMAND : Node.COMMAND.append(container.getModId())));
+				manager.registerCommand(CommandOverride.create(command, container == null ? Node.COMMAND : Node.COMMAND.append(container.getModId()), container));
 			}
 
 			List<CommandOverride> ocommands = new ArrayList<>(Ranks.INSTANCE.commands.values());
-			ocommands.sort(null);
+			ocommands.sort((o1, o2) -> {
+				int i = Boolean.compare(o1.modContainer != null, o2.modContainer != null);
+				return i == 0 ? o1.node.compareTo(o2.node) : i;
+			});
+
 			Ranks.INSTANCE.commands.clear();
 
 			for (CommandOverride c : ocommands)
@@ -121,7 +128,8 @@ public class FTBUtilities
 			}
 
 			LOGGER.info("Overridden " + manager.getCommands().size() + " commands");
-			Ranks.INSTANCE.generateExampleFiles();
+			FileUtils.deleteSafe(new File(Ranks.INSTANCE.universe.server.getDataDirectory(), "local/ftbutilities/all_permissions.html"));
+			FileUtils.deleteSafe(new File(Ranks.INSTANCE.universe.server.getDataDirectory(), "local/ftbutilities/all_permissions_full_list.txt"));
 		}
 	}
 }

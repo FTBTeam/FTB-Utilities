@@ -4,16 +4,12 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
-import com.feed_the_beast.ftblib.lib.io.DataReader;
-import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -91,15 +87,10 @@ public class CmdSetPermission extends CmdBase
 		}
 
 		Node node = Node.get(args[1]);
-		String json0 = StringUtils.joinSpaceUntilEnd(2, args);
-		JsonElement element = json0.equals("none") ? JsonNull.INSTANCE : DataReader.get(json0).safeJson();
+		String value0 = StringUtils.joinSpaceUntilEnd(2, args);
+		String value = value0.equals("none") ? "" : value0;
 
-		if (element.isJsonObject())
-		{
-			throw FTBLib.error(sender, "wip");
-		}
-
-		if (!rank.setPermission(node, element))
+		if (!rank.setPermission(node, value))
 		{
 			sender.sendMessage(FTBLib.lang(sender, "nothing_changed"));
 		}
@@ -112,17 +103,16 @@ public class CmdSetPermission extends CmdBase
 
 			ITextComponent setText;
 
-			if (JsonUtils.isNull(element))
+			if (value.isEmpty())
 			{
 				setText = FTBUtilities.lang(sender, "commands.ranks.none");
 				setText.getStyle().setColor(TextFormatting.DARK_GRAY);
 			}
 			else
 			{
-				String set = element.toString();
-				setText = new TextComponentString(set);
+				setText = new TextComponentString(value);
 
-				switch (set)
+				switch (value)
 				{
 					case "true":
 						setText.getStyle().setColor(TextFormatting.GREEN);

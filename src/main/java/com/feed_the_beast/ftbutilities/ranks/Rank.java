@@ -2,16 +2,12 @@ package com.feed_the_beast.ftbutilities.ranks;
 
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
-import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,7 +32,7 @@ public class Rank extends FinalIDObject
 	public static class Entry implements Comparable<Entry>
 	{
 		public final Node node;
-		public JsonElement json = JsonNull.INSTANCE;
+		public String value = "";
 
 		public Entry(Node n)
 		{
@@ -81,9 +77,9 @@ public class Rank extends FinalIDObject
 		return displayName;
 	}
 
-	public boolean setPermission(Node node, @Nullable JsonElement json)
+	public boolean setPermission(Node node, String value)
 	{
-		if (JsonUtils.isNull(json))
+		if (value.isEmpty())
 		{
 			Iterator<Entry> iterator = permissions.iterator();
 
@@ -98,18 +94,14 @@ public class Rank extends FinalIDObject
 
 			return false;
 		}
-		else if (json.isJsonObject())
-		{
-			return false;
-		}
 
 		for (Entry entry : permissions)
 		{
 			if (entry.node.equals(node))
 			{
-				if (!entry.json.equals(json))
+				if (!entry.value.equals(value))
 				{
-					entry.json = json;
+					entry.value = value;
 					return true;
 				}
 
@@ -118,7 +110,7 @@ public class Rank extends FinalIDObject
 		}
 
 		Entry entry = new Entry(node);
-		entry.json = json;
+		entry.value = value;
 		permissions.add(entry);
 		return true;
 	}
@@ -131,26 +123,26 @@ public class Rank extends FinalIDObject
 
 		for (Entry entry : permissions)
 		{
-			if (entry.node.getPartCount() > parts && entry.json.isJsonPrimitive() && entry.json.getAsJsonPrimitive().isBoolean() && (matching ? entry.node.matches(node) : entry.node.equals(node)))
+			if (entry.node.getPartCount() > parts && (entry.value.equals("true") || entry.value.equals("false")) && (matching ? entry.node.matches(node) : entry.node.equals(node)))
 			{
 				parts = entry.node.getPartCount();
-				result = entry.json.getAsBoolean() ? Event.Result.ALLOW : Event.Result.DENY;
+				result = entry.value.equals("true") ? Event.Result.ALLOW : Event.Result.DENY;
 			}
 		}
 
 		return result != Event.Result.DEFAULT || parent.isNone() ? result : parent.getPermissionRaw(node, matching);
 	}
 
-	public JsonElement getConfigRaw(Node node)
+	public String getConfigRaw(Node node)
 	{
 		for (Entry entry : permissions)
 		{
-			if (entry.node.equals(node) && !JsonUtils.isNull(entry.json))
+			if (entry.node.equals(node) && !entry.value.isEmpty())
 			{
-				return entry.json;
+				return entry.value;
 			}
 		}
 
-		return parent.isNone() ? JsonNull.INSTANCE : parent.getConfigRaw(node);
+		return parent.isNone() ? "" : parent.getConfigRaw(node);
 	}
 }

@@ -6,16 +6,12 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
-import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -120,6 +116,7 @@ public class Ranks
 	public final Map<UUID, Rank> playerMap = new HashMap<>();
 	private Rank defaultPlayerRank, defaultOPRank;
 	public final Map<Node, CommandOverride> commands = new LinkedHashMap<>();
+	private File ranksFile;
 
 	public Ranks(Universe u)
 	{
@@ -324,137 +321,33 @@ public class Ranks
 		}
 
 		boolean result = true;
-		boolean loadedOldFile = false;
 
-		File ranksFile = new File(universe.server.getDataDirectory(), "local/ftbutilities/ranks.json");
-		JsonElement ranksJson = DataReader.get(ranksFile).safeJson();
 		Map<String, String> rankParents = new HashMap<>();
-
-		if (ranksJson.isJsonObject())
-		{
-			JsonObject json = ranksJson.getAsJsonObject();
-
-			if (json.has("ranks"))
-			{
-				for (Map.Entry<String, JsonElement> entry : json.get("ranks").getAsJsonObject().entrySet())
-				{
-					if (!isValidName(entry.getKey()))
-					{
-						ranks.put(entry.getKey(), new Rank(this, entry.getKey()));
-					}
-				}
-
-				for (Map.Entry<String, JsonElement> rankEntry : json.get("ranks").getAsJsonObject().entrySet())
-				{
-					if (!isValidName(rankEntry.getKey()))
-					{
-						continue;
-					}
-
-					Rank rank = new Rank(this, rankEntry.getKey());
-					ranks.put(rank.getId(), rank);
-
-					JsonElement json0 = rankEntry.getValue();
-
-					if (json0.isJsonObject())
-					{
-						JsonObject o = json0.getAsJsonObject();
-						if (o.has("parent"))
-						{
-							rankParents.put(rank.getId(), o.get("parent").getAsString());
-						}
-
-						if (o.has("permissions"))
-						{
-							JsonElement e1 = o.get("permissions");
-
-							if (e1.isJsonArray())
-							{
-								JsonArray a = e1.getAsJsonArray();
-
-								for (int i = 0; i < a.size(); i++)
-								{
-									String id = a.get(i).getAsString();
-									char firstChar = id.charAt(0);
-									String key = (firstChar == '-' || firstChar == '+' || firstChar == '~') ? id.substring(1) : id;
-									key = key.replace("command.ftb.reload", "command.ftblib.reload");
-									key = key.replace("command.ftb.team", "command.ftblib.team");
-									key = key.replace("command.ftb.my_settings", "command.ftblib.my_settings");
-									key = key.replace("command.ftb", "command.ftbutilities");
-									rank.setPermission(Node.get(key), firstChar == '-' ? JsonUtils.JSON_FALSE : JsonUtils.JSON_TRUE);
-								}
-							}
-							else
-							{
-								JsonObject o1 = e1.getAsJsonObject();
-
-								for (Map.Entry<String, JsonElement> entry : o1.entrySet())
-								{
-									String key = entry.getKey();
-									key = key.replace("command.ftb.reload", "command.ftblib.reload");
-									key = key.replace("command.ftb.team", "command.ftblib.team");
-									key = key.replace("command.ftb.my_settings", "command.ftblib.my_settings");
-									key = key.replace("command.ftb", "command.ftbutilities");
-									rank.setPermission(Node.get(key), entry.getValue());
-								}
-							}
-						}
-
-						if (o.has("config"))
-						{
-							for (Map.Entry<String, JsonElement> entry : o.get("config").getAsJsonObject().entrySet())
-							{
-								rank.setPermission(Node.get(entry.getKey()), entry.getValue());
-							}
-						}
-					}
-				}
-
-				if (json.has("default_ranks"))
-				{
-					JsonObject dr = json.get("default_ranks").getAsJsonObject();
-
-					if (dr.has("player"))
-					{
-						Rank rank = getRank(dr.get("player").getAsString());
-
-						if (!rank.isNone())
-						{
-							rank.tags.add(Rank.TAG_DEFAULT_PLAYER);
-						}
-					}
-
-					if (dr.has("op"))
-					{
-						Rank rank = getRank(dr.get("op").getAsString());
-
-						if (!rank.isNone())
-						{
-							rank.tags.add(Rank.TAG_DEFAULT_OP);
-						}
-					}
-				}
-			}
-
-			loadedOldFile = true;
-			FileUtils.deleteSafe(ranksFile);
-		}
 
 		ranksFile = FTBUtilitiesConfig.ranks.load_from_config_folder ? new File(Loader.instance().getConfigDir(), "ftbutilities_ranks.txt") : new File(universe.server.getDataDirectory(), "local/ftbutilities/ranks.txt");
 
-		if (!loadedOldFile && !ranksFile.exists())
+		if (!ranksFile.exists())
 		{
 			Rank pRank = new Rank(this, "player");
 			ranks.put(pRank.getId(), pRank);
 			pRank.tags.add(Rank.TAG_DEFAULT_PLAYER);
-			pRank.setPermission(Node.get("example.permission"), JsonUtils.JSON_TRUE);
-			pRank.setPermission(Node.get("example.other_permission"), JsonUtils.JSON_FALSE);
+			pRank.setPermission(Node.get("example.permission"), "true");
+			pRank.setPermission(Node.get("example.other_permission"), "false");
+			pRank.setPermission(Node.get("example.permission_with_value"), "0");
+
+			Rank vRank = new Rank(this, "vip");
+			ranks.put(vRank.getId(), vRank);
+			vRank.parent = pRank;
+			vRank.setPermission(Node.get("ftbutilities.chat.name_format"), "<&bVIP {name}&r>");
+			vRank.setPermission(Node.get("example.other_permission"), "true");
+			vRank.setPermission(Node.get("example.permission_with_value"), "15");
 
 			Rank oRank = new Rank(this, "admin");
 			ranks.put(oRank.getId(), oRank);
 			oRank.tags.add(Rank.TAG_DEFAULT_OP);
-			oRank.parent = pRank;
-			oRank.setPermission(Node.get("example.other_permission"), JsonUtils.JSON_TRUE);
+			oRank.parent = vRank;
+			oRank.setPermission(Node.get("ftbutilities.chat.name_format"), "<&2{name}&r>");
+			oRank.setPermission(Node.get("example.permission_with_value"), "100");
 			saveRanks();
 		}
 
@@ -507,12 +400,12 @@ public class Ranks
 
 				if (s1.length == 2)
 				{
-					String[] s2 = s1[1].split(" //");
-					JsonElement json = DataReader.get(s2[0].trim()).safeJson();
+					String[] s2 = s1[1].split("//");
+					String value = s2[0].trim();
 
-					if (!JsonUtils.isNull(json))
+					if (!value.isEmpty())
 					{
-						currentRank.setPermission(Node.get(s1[0].trim()), json);
+						currentRank.setPermission(Node.get(s1[0].trim()), value);
 					}
 				}
 			}
@@ -532,30 +425,7 @@ public class Ranks
 			}
 		}
 
-		File playerRanksFile = new File(universe.server.getDataDirectory(), "local/ftbutilities/player_ranks.json");
-		ranksJson = DataReader.get(playerRanksFile).safeJson();
-
-		if (ranksJson.isJsonObject())
-		{
-			for (Map.Entry<String, JsonElement> entry : ranksJson.getAsJsonObject().entrySet())
-			{
-				ForgePlayer player = universe.getPlayer(entry.getKey());
-
-				if (player != null)
-				{
-					Rank rank = getRank(entry.getValue().getAsString());
-
-					if (!rank.isNone())
-					{
-						playerMap.put(player.getId(), rank);
-					}
-				}
-			}
-
-			FileUtils.deleteSafe(playerRanksFile);
-		}
-
-		playerRanksFile = new File(universe.server.getDataDirectory(), "local/ftbutilities/player_ranks.txt");
+		File playerRanksFile = new File(universe.server.getDataDirectory(), "local/ftbutilities/player_ranks.txt");
 
 		for (String s : DataReader.get(playerRanksFile).safeStringList())
 		{
@@ -618,11 +488,11 @@ public class Ranks
 
 			for (Rank.Entry entry : rank.permissions)
 			{
-				list.add(entry.node + ": " + entry.json);
+				list.add(entry.node + ": " + entry.value);
 			}
 		}
 
-		FileUtils.saveSafe(new File(universe.server.getDataDirectory(), "local/ftbutilities/ranks.txt"), list);
+		FileUtils.saveSafe(ranksFile, list);
 	}
 
 	public void clearCache()

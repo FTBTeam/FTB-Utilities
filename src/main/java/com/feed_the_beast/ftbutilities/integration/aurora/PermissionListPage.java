@@ -13,6 +13,7 @@ import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import dev.latvian.mods.aurora.page.HTTPWebPage;
+import dev.latvian.mods.aurora.tag.Style;
 import dev.latvian.mods.aurora.tag.Tag;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
@@ -20,6 +21,7 @@ import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -53,9 +55,9 @@ public class PermissionListPage extends HTTPWebPage
 	public void head(Tag head)
 	{
 		super.head(head);
-		List<String> style = new ArrayList<>();
-		style.add("p{margin:0;}");
-		head.paired("style", String.join("\r\n", style));
+		Style s = head.style();
+		s.add("p").set("margin", "0");
+		s.add("code.variants:hover").set("cursor", "default").set("text-decoration", "underline dotted");
 	}
 
 	private String classOf(ConfigValue value)
@@ -78,6 +80,8 @@ public class PermissionListPage extends HTTPWebPage
 	@Override
 	public void body(Tag body)
 	{
+		body.h1("Permission List");
+
 		List<NodeEntry> allNodes = new ArrayList<>(FTBUtilitiesCommon.CUSTOM_PERM_PREFIX_REGISTRY);
 
 		for (String s : PermissionAPI.getPermissionHandler().getRegisteredNodes())
@@ -121,31 +125,24 @@ public class PermissionListPage extends HTTPWebPage
 		firstRow.th().text("Type");
 		firstRow.th().text("Player");
 		firstRow.th().text("OP");
-		firstRow.th().text("Info (Mouse over for variants)");
 
 		for (NodeEntry entry : allNodes)
 		{
 			Tag row = nodeTable.tr();
-			row.td().paired("code", entry.getNode().toString());
-			row.td().paired("code", entry.player.getId());
+			Tag n = row.td();
+			n.paired("code", entry.getNode().toString());
 
-			String playerText = fixHTML(entry.player.getStringForGUI().getUnformattedText());
-			String opText = fixHTML(entry.op.getStringForGUI().getUnformattedText());
-
-			if (playerText.equals(opText))
+			if (!entry.desc.isEmpty())
 			{
-				row.td().attr("colspan", "2").span("", classOf(entry.player)).paired("code", playerText);
-			}
-			else
-			{
-				row.td().span("", classOf(entry.player)).paired("code", playerText);
-				row.td().span("", classOf(entry.op)).paired("code", opText);
+				n.text(" ");
+				n.icon("info").title(Arrays.asList(entry.desc.split("\n")));
 			}
 
 			List<String> variants = new ArrayList<>();
 
 			if (entry.player instanceof ConfigBoolean)
 			{
+				variants.add("Variants:");
 				variants.add("true");
 				variants.add("false");
 			}
@@ -171,37 +168,29 @@ public class PermissionListPage extends HTTPWebPage
 			{
 				variants = new ArrayList<>(entry.player.getVariants());
 				variants.sort(StringUtils.IGNORE_CASE_COMPARATOR);
+				variants.add(0, "Variants:");
 			}
 
-
-			Tag info = row.td();
-
-			if (!variants.isEmpty())
+			if (variants.isEmpty())
 			{
-				StringBuilder sb = new StringBuilder();
-
-				for (int i = 0; i < variants.size(); i++)
-				{
-					String s = StringUtils.unformatted(variants.get(i));
-
-					if (i > 0)
-					{
-						sb.append('\n');
-					}
-
-					sb.append(s);
-					sb.append(' ');
-				}
-
-				info.title(sb.toString());
+				row.td().paired("code", entry.player.getId());
+			}
+			else
+			{
+				row.td().paired("code", entry.player.getId()).addClass("variants").title(variants);
 			}
 
-			if (!entry.desc.isEmpty())
+			String playerText = fixHTML(entry.player.getStringForGUI().getUnformattedText());
+			String opText = fixHTML(entry.op.getStringForGUI().getUnformattedText());
+
+			if (playerText.equals(opText))
 			{
-				for (String s1 : entry.desc.split("\n"))
-				{
-					info.p(s1);
-				}
+				row.td().addClass("center-text").attr("colspan", "2").span("", classOf(entry.player)).paired("code", playerText);
+			}
+			else
+			{
+				row.td().addClass("center-text").span("", classOf(entry.player)).paired("code", playerText);
+				row.td().addClass("center-text").span("", classOf(entry.op)).paired("code", opText);
 			}
 		}
 	}

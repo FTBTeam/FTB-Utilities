@@ -7,7 +7,6 @@ import com.feed_the_beast.ftblib.lib.config.IRankConfigHandler;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
-import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
@@ -96,16 +95,16 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 				if (value == null)
 				{
 					value = ConfigNull.INSTANCE;
-					JsonElement json = rank.getConfigRaw(node);
+					String string = rank.getConfigRaw(node);
 
-					if (!json.isJsonNull())
+					if (!string.isEmpty())
 					{
 						RankConfigValueInfo info = RankConfigAPI.getHandler().getInfo(node);
 
 						if (info != null)
 						{
 							value = info.defaultValue.copy();
-							value.setValueFromJson(json);
+							value.setValueFromString(server, string, false);
 						}
 					}
 

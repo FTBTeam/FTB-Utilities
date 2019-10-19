@@ -32,12 +32,12 @@ public class RankInst extends FinalIDObject
 
 	public static final DataOut.Serializer<Rank.Entry> ENTRY_SERIALIZER = (data, object) -> {
 		data.writeString(object.node.toString());
-		data.writeJson(object.json);
+		data.writeString(object.value);
 	};
 
 	public static final DataIn.Deserializer<Rank.Entry> ENTRY_DESERIALIZER = data -> {
 		Rank.Entry entry = new Rank.Entry(Node.get(data.readString()));
-		entry.json = data.readJson();
+		entry.value = data.readString();
 		return entry;
 	};
 

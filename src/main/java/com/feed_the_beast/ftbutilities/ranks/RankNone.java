@@ -1,12 +1,8 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.Event;
-
-import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
@@ -26,7 +22,7 @@ public class RankNone extends Rank
 	}
 
 	@Override
-	public boolean setPermission(Node node, @Nullable JsonElement json)
+	public boolean setPermission(Node node, String value)
 	{
 		return false;
 	}
@@ -38,8 +34,8 @@ public class RankNone extends Rank
 	}
 
 	@Override
-	public JsonElement getConfigRaw(Node node)
+	public String getConfigRaw(Node node)
 	{
-		return JsonNull.INSTANCE;
+		return "";
 	}
 }

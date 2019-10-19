@@ -3,11 +3,9 @@ package com.feed_the_beast.ftbutilities.integration.aurora;
 import com.feed_the_beast.ftbutilities.ranks.CommandOverride;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import dev.latvian.mods.aurora.page.HTTPWebPage;
+import dev.latvian.mods.aurora.tag.Style;
 import dev.latvian.mods.aurora.tag.Tag;
 import net.minecraft.server.MinecraftServer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author LatvianModder
@@ -43,19 +41,15 @@ public class CommandListPage extends HTTPWebPage
 	public void head(Tag head)
 	{
 		super.head(head);
-		List<String> style = new ArrayList<>();
-		style.add("p{margin:0;}");
-		head.paired("style", String.join("\r\n", style));
-	}
-
-	private String fixHTML(String string)
-	{
-		return string.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+		Style s = head.style();
+		s.add("p").set("margin", "0");
 	}
 
 	@Override
 	public void body(Tag body)
 	{
+		body.h1("Command List");
+
 		Tag nodeTable = body.table();
 		Tag firstRow = nodeTable.tr();
 		firstRow.th().text("Available command nodes");
@@ -65,7 +59,22 @@ public class CommandListPage extends HTTPWebPage
 		{
 			Tag row = nodeTable.tr();
 			row.td().paired("code", c.node.toString());
-			row.td().text(fixHTML(c.usage.getUnformattedText()).replace(" OR ", "<br>"));
+			Tag n = row.td();
+			boolean first = true;
+
+			for (String s : Tag.fixHTML(c.usage.getUnformattedText()).split(" OR "))
+			{
+				if (first)
+				{
+					first = false;
+				}
+				else
+				{
+					n.br();
+				}
+
+				n.text(s);
+			}
 		}
 	}
 }

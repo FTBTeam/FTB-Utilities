@@ -103,6 +103,14 @@ public class FTBUtilities
 		if (Ranks.isActive())
 		{
 			Ranks.INSTANCE.commands.clear();
+			FileUtils.deleteSafe(new File(Ranks.INSTANCE.universe.server.getDataDirectory(), "local/ftbutilities/all_permissions.html"));
+			FileUtils.deleteSafe(new File(Ranks.INSTANCE.universe.server.getDataDirectory(), "local/ftbutilities/all_permissions_full_list.txt"));
+
+			if (!FTBUtilitiesConfig.ranks.override_commands)
+			{
+				return;
+			}
+
 			ServerCommandManager manager = (ServerCommandManager) Ranks.INSTANCE.universe.server.getCommandManager();
 			List<ICommand> commands = new ArrayList<>(manager.getCommands().values());
 			ATHelper.getCommandSet(manager).clear();
@@ -120,16 +128,12 @@ public class FTBUtilities
 				return i == 0 ? o1.node.compareTo(o2.node) : i;
 			});
 
-			Ranks.INSTANCE.commands.clear();
-
 			for (CommandOverride c : ocommands)
 			{
 				Ranks.INSTANCE.commands.put(c.node, c);
 			}
 
 			LOGGER.info("Overridden " + manager.getCommands().size() + " commands");
-			FileUtils.deleteSafe(new File(Ranks.INSTANCE.universe.server.getDataDirectory(), "local/ftbutilities/all_permissions.html"));
-			FileUtils.deleteSafe(new File(Ranks.INSTANCE.universe.server.getDataDirectory(), "local/ftbutilities/all_permissions_full_list.txt"));
 		}
 	}
 }

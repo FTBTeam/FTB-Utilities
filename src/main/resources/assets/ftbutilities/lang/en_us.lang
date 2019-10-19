@@ -53,6 +53,7 @@ ftbutilities.world.logging.item_clicked_in_air=Item Clicked in Air
 ftbutilities.ranks=Ranks
 ftbutilities.ranks.enabled=Enabled
 ftbutilities.ranks.override_chat=Override Chat
+ftbutilities.ranks.override_commands=Override Commands
 ftbutilities.ranks.crash_client_side_permissions=Crash Client-Side Permissions
 ftbutilities.ranks.load_from_config_folder=Load From Config Folder
 ftbutilities.ranks.print_command_errors=Print Command Errors

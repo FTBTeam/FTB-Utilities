@@ -222,6 +222,9 @@ public class FTBUtilitiesConfig
 		@Config.Comment("Adds chat colors/rank-specific syntax.")
 		public boolean override_chat = true;
 
+		@Config.Comment("Allow to configure commands with ranks. Disable this if you want to use other permission mod for that.")
+		public boolean override_commands = true;
+
 		@Config.Comment("Will crash when something tries to check permissions on client side.")
 		public boolean crash_client_side_permissions = false;
 

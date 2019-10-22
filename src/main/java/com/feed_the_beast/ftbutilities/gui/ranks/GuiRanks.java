@@ -109,7 +109,7 @@ public class GuiRanks extends GuiButtonListBase
 	@Override
 	public void addButtons(Panel panel)
 	{
-		panel.add(new SimpleTextButton(panel, I18n.format("admin_panel.ftbutilities.ranks.player_ranks"), new PlayerHeadIcon(null).withBorder(4))
+		panel.add(new SimpleTextButton(panel, I18n.format("admin_panel.ftbutilities.ranks.player_ranks"), new PlayerHeadIcon(null).withPadding(4))
 		{
 			@Override
 			public void onClicked(MouseButton button)

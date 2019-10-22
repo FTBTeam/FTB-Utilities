@@ -19,7 +19,7 @@ import com.feed_the_beast.ftblib.lib.gui.misc.GuiEditConfigValue;
 import com.feed_the_beast.ftblib.lib.gui.misc.IConfigValueEditCallback;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
-import com.feed_the_beast.ftblib.lib.icon.IconWithOutline;
+import com.feed_the_beast.ftblib.lib.icon.IconWithBorder;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
 import com.feed_the_beast.ftblib.lib.item.ItemEntryWithCount;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
@@ -127,7 +127,7 @@ public class GuiEditNBT extends GuiBase
 				Color4I.WHITE.withAlpha(33).draw(x, y, w, h);
 			}
 
-			IconWithOutline.BUTTON_ROUND_GRAY.draw(x + 1, y + 1, 8, 8);
+			IconWithBorder.BUTTON_ROUND_GRAY.draw(x + 1, y + 1, 8, 8);
 			drawIcon(theme, x + 1, y + 1, 8, 8);
 			theme.drawString(getTitle(), x + 11, y + 1);
 		}
@@ -758,7 +758,7 @@ public class GuiEditNBT extends GuiBase
 			@Override
 			public void drawBackground(Theme theme, int x, int y, int w, int h)
 			{
-				IconWithOutline.BUTTON_ROUND_GRAY.draw(x, y, w, h);
+				IconWithBorder.BUTTON_ROUND_GRAY.draw(x, y, w, h);
 			}
 		};
 	}

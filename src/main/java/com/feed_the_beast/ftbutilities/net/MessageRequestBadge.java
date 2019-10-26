@@ -7,32 +7,13 @@ import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.HttpUtil;
 
 import java.util.UUID;
 
 public class MessageRequestBadge extends MessageToServer
 {
 	private UUID playerId;
-
-	private static class ThreadBadge extends Thread
-	{
-		private final UUID playerId;
-		private final EntityPlayerMP player;
-
-		private ThreadBadge(UUID id, EntityPlayerMP p)
-		{
-			super("Badge_" + p.getName());
-			playerId = id;
-			player = p;
-			setDaemon(true);
-		}
-
-		@Override
-		public void run()
-		{
-			new MessageSendBadge(playerId, FTBUtilitiesUniverseData.getBadge(Universe.get(), playerId)).sendTo(player);
-		}
-	}
 
 	public MessageRequestBadge()
 	{
@@ -64,6 +45,9 @@ public class MessageRequestBadge extends MessageToServer
 	@Override
 	public void onMessage(EntityPlayerMP player)
 	{
-		new ThreadBadge(playerId, player).start();
+		HttpUtil.DOWNLOADER_EXECUTOR.submit(() -> {
+			String badge = FTBUtilitiesUniverseData.getBadge(Universe.get(), playerId);
+			player.server.addScheduledTask(() -> new MessageSendBadge(playerId, badge).sendTo(player));
+		});
 	}
 }

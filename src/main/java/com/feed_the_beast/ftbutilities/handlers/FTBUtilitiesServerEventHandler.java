@@ -235,7 +235,7 @@ public class FTBUtilitiesServerEventHandler
 
 					if (playerToKickForAfk == null)
 					{
-						long maxTime = data.player.getRankConfig(FTBUtilitiesPermissions.AFK_TIMER).getTimer().millis();
+						long maxTime = RankConfigAPI.get(player.server, player.getGameProfile(), FTBUtilitiesPermissions.AFK_TIMER, new PlayerContext(player)).getTimer().millis();
 
 						if (maxTime > 0L && data.afkTime >= maxTime)
 						{

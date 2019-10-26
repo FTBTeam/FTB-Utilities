@@ -173,7 +173,19 @@ public class Ranks
 	@Nullable
 	public Rank getSetRank(GameProfile profile)
 	{
-		return isActive() && profile.getId() != null ? playerMap.get(profile.getId()) : null;
+		if (isActive() && profile.getId() != null)
+		{
+			Rank rank = getRank(StringUtils.fromUUID(profile.getId()));
+
+			if (!rank.isNone())
+			{
+				return rank;
+			}
+
+			return playerMap.get(profile.getId());
+		}
+
+		return null;
 	}
 
 	public Rank getRank(@Nullable MinecraftServer server, GameProfile profile, @Nullable IContext context)

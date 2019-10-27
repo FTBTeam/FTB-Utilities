@@ -17,6 +17,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -106,7 +107,7 @@ public class FTBUtilities
 			FileUtils.deleteSafe(new File(Ranks.INSTANCE.universe.server.getDataDirectory(), "local/ftbutilities/all_permissions.html"));
 			FileUtils.deleteSafe(new File(Ranks.INSTANCE.universe.server.getDataDirectory(), "local/ftbutilities/all_permissions_full_list.txt"));
 
-			if (!FTBUtilitiesConfig.ranks.override_commands)
+			if (!FTBUtilitiesConfig.ranks.override_commands || Loader.isModLoaded("spongeforge"))
 			{
 				return;
 			}

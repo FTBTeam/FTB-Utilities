@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbutilities.integration.aurora;
 
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
+import dev.latvian.mods.aurora.PageType;
 import dev.latvian.mods.aurora.page.HTTPWebPage;
 import dev.latvian.mods.aurora.tag.Style;
 import dev.latvian.mods.aurora.tag.Tag;
@@ -34,9 +35,9 @@ public class RankPage extends HTTPWebPage
 	}
 
 	@Override
-	public boolean getRequiresAuth()
+	public PageType getPageType()
 	{
-		return true;
+		return PageType.REQUIRES_AUTH;
 	}
 
 	@Override

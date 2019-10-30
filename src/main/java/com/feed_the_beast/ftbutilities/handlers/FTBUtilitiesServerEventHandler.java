@@ -37,8 +37,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.server.permission.PermissionAPI;
-import net.minecraftforge.server.permission.context.IContext;
-import net.minecraftforge.server.permission.context.PlayerContext;
 
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -76,9 +74,8 @@ public class FTBUtilitiesServerEventHandler
 
 		EntityPlayerMP player = event.getPlayer();
 		GameProfile profile = player.getGameProfile();
-		IContext context = new PlayerContext(player);
 
-		if (!PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_SPEAK, context) || NBTUtils.getPersistedData(player, false).getBoolean(FTBUtilitiesPlayerData.TAG_MUTED))
+		if (!PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_SPEAK, null) || NBTUtils.getPersistedData(player, false).getBoolean(FTBUtilitiesPlayerData.TAG_MUTED))
 		{
 			player.sendStatusMessage(StringUtils.color(FTBUtilities.lang(player, "commands.mute.muted"), TextFormatting.RED), true);
 			event.setCanceled(true);
@@ -93,7 +90,7 @@ public class FTBUtilitiesServerEventHandler
 
 		boolean b = false;
 
-		if (!message.contains("https://") && !message.contains("http://") && PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_FORMATTING, context))
+		if (!message.contains("https://") && !message.contains("http://") && PermissionAPI.hasPermission(profile, FTBUtilitiesPermissions.CHAT_FORMATTING, null))
 		{
 			for (Map.Entry<String, String> entry : FTBUtilitiesCommon.KAOMOJIS.entrySet())
 			{
@@ -121,34 +118,34 @@ public class FTBUtilitiesServerEventHandler
 			text = ForgeHooks.newChatWithLinks(message);
 		}
 
-		TextFormatting colortf = (TextFormatting) ((ConfigEnum) RankConfigAPI.get(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_COLOR, context)).getValue();
+		TextFormatting colortf = (TextFormatting) ((ConfigEnum) RankConfigAPI.get(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_COLOR)).getValue();
 
 		if (colortf != TextFormatting.WHITE)
 		{
 			text.getStyle().setColor(colortf);
 		}
 
-		if (Ranks.getPermissionResult(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_BOLD, context, false) == Event.Result.ALLOW)
+		if (Ranks.INSTANCE.getPermissionResult(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_BOLD, player.world, false) == Event.Result.ALLOW)
 		{
 			text.getStyle().setBold(true);
 		}
 
-		if (Ranks.getPermissionResult(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_ITALIC, context, false) == Event.Result.ALLOW)
+		if (Ranks.INSTANCE.getPermissionResult(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_ITALIC, player.world, false) == Event.Result.ALLOW)
 		{
 			text.getStyle().setItalic(true);
 		}
 
-		if (Ranks.getPermissionResult(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_UNDERLINED, context, false) == Event.Result.ALLOW)
+		if (Ranks.INSTANCE.getPermissionResult(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_UNDERLINED, player.world, false) == Event.Result.ALLOW)
 		{
 			text.getStyle().setUnderlined(true);
 		}
 
-		if (Ranks.getPermissionResult(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_STRIKETHROUGH, context, false) == Event.Result.ALLOW)
+		if (Ranks.INSTANCE.getPermissionResult(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_STRIKETHROUGH, player.world, false) == Event.Result.ALLOW)
 		{
 			text.getStyle().setStrikethrough(true);
 		}
 
-		if (Ranks.getPermissionResult(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_OBFUSCATED, context, false) == Event.Result.ALLOW)
+		if (Ranks.INSTANCE.getPermissionResult(player.server, profile, FTBUtilitiesPermissions.CHAT_TEXT_OBFUSCATED, player.world, false) == Event.Result.ALLOW)
 		{
 			text.getStyle().setObfuscated(true);
 		}
@@ -235,7 +232,7 @@ public class FTBUtilitiesServerEventHandler
 
 					if (playerToKickForAfk == null)
 					{
-						long maxTime = RankConfigAPI.get(player.server, player.getGameProfile(), FTBUtilitiesPermissions.AFK_TIMER, new PlayerContext(player)).getTimer().millis();
+						long maxTime = RankConfigAPI.get(player.server, player.getGameProfile(), FTBUtilitiesPermissions.AFK_TIMER).getTimer().millis();
 
 						if (maxTime > 0L && data.afkTime >= maxTime)
 						{

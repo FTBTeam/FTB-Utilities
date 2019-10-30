@@ -18,7 +18,6 @@ import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
-import com.google.gson.JsonElement;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -52,7 +51,6 @@ public class FTBUtilitiesUniverseData
 	private static final ResourceLocation RESTART_TIMER_ID = new ResourceLocation(FTBUtilities.MOD_ID, "restart_timer");
 
 	private static final Map<UUID, String> BADGE_CACHE = new HashMap<>();
-	private static final Map<UUID, String> LOCAL_BADGES = new HashMap<>();
 
 	public static long shutdownTime;
 	public static final BlockDimPosStorage WARPS = new BlockDimPosStorage();
@@ -264,7 +262,6 @@ public class FTBUtilitiesUniverseData
 		FTBUtilitiesLoadedChunkManager.INSTANCE.clear();
 
 		BADGE_CACHE.clear();
-		LOCAL_BADGES.clear();
 	}
 
 	public static void updateBadge(UUID playerId)
@@ -321,75 +318,12 @@ public class FTBUtilitiesUniverseData
 			}
 		}
 
-		String badge = LOCAL_BADGES.get(playerId);
-		return (badge == null || badge.isEmpty()) ? player.getRankConfig(FTBUtilitiesPermissions.BADGE).getString() : badge;
+		return player.getRankConfig(FTBUtilitiesPermissions.BADGE).getString();
 	}
 
-	public static boolean reloadServerBadges(Universe universe)
+	public static boolean clearBadgeCache()
 	{
 		BADGE_CACHE.clear();
-		LOCAL_BADGES.clear();
-
-		try
-		{
-			File file = new File(universe.server.getDataDirectory(), "local/ftbutilities/server_badges.json");
-
-			if (!file.exists())
-			{
-				file = new File(universe.server.getDataDirectory(), "local/ftbutilities/server_badges.txt");
-
-				if (!file.exists())
-				{
-					List<String> list = new ArrayList<>();
-					list.add("// username: url2_to.png");
-					list.add("// uuid: url_to.png");
-					list.add("// For more info see https://guides.latmod.com/ftbutilities/ranks/badges/");
-					FileUtils.saveSafe(file, list);
-				}
-				else
-				{
-					for (String s : DataReader.get(file).safeStringList())
-					{
-						if (s.isEmpty() || s.startsWith("//"))
-						{
-							continue;
-						}
-
-						String[] s1 = s.trim().split(":", 2);
-
-						if (s1.length == 2)
-						{
-							ForgePlayer player = universe.getPlayer(s1[0].trim());
-
-							if (player != null)
-							{
-								LOCAL_BADGES.put(player.getId(), s1[1].trim());
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				for (Map.Entry<String, JsonElement> entry : DataReader.get(file).json().getAsJsonObject().entrySet())
-				{
-					ForgePlayer player = universe.getPlayer(entry.getKey());
-
-					if (player != null)
-					{
-						LOCAL_BADGES.put(player.getId(), entry.getValue().getAsString());
-					}
-				}
-
-				FileUtils.deleteSafe(file);
-			}
-
-			return true;
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-			return false;
-		}
+		return true;
 	}
 }

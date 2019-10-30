@@ -1,38 +1,33 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
-import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
+import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
-public class Rank extends FinalIDObject
+public class Rank extends FinalIDObject implements Comparable<Rank>
 {
-	public static final String TAG_DEFAULT_PLAYER = "default_player_rank";
-	public static final String TAG_DEFAULT_OP = "default_op_rank";
-	public static final HashSet<String> TAGS = new HashSet<>();
-
-	static
-	{
-		TAGS.add(TAG_DEFAULT_PLAYER);
-		TAGS.add(TAG_DEFAULT_OP);
-	}
+	public static final Node NODE_PARENT = Node.get("parent");
+	public static final Node NODE_DEFAULT_PLAYER = Node.get("default_player_rank");
+	public static final Node NODE_DEFAULT_OP = Node.get("default_op_rank");
+	public static final Node NODE_POWER = Node.get("power");
 
 	public static class Entry implements Comparable<Entry>
 	{
 		public final Node node;
 		public String value = "";
+		public String comment = "";
 
 		public Entry(Node n)
 		{
@@ -44,15 +39,20 @@ public class Rank extends FinalIDObject
 		{
 			return node.compareTo(o.node);
 		}
+
+		@Override
+		public String toString()
+		{
+			return node + ":" + value;
+		}
 	}
 
 	public final Ranks ranks;
+	private int power;
 	protected ITextComponent displayName;
-	public Rank parent;
-	public final Collection<String> tags;
+	private Set<Rank> parents;
 	public final List<Entry> permissions;
-	public final Map<Node, Event.Result> cachedPermissions;
-	public final Map<Node, ConfigValue> cachedConfig;
+	public String comment;
 
 	public Rank(Ranks r, String id)
 	{
@@ -60,16 +60,39 @@ public class Rank extends FinalIDObject
 		displayName = new TextComponentString(getId());
 		displayName.getStyle().setColor(TextFormatting.DARK_GREEN);
 		ranks = r;
-		parent = ranks.none;
-		tags = new LinkedHashSet<>();
 		permissions = new ArrayList<>();
-		cachedPermissions = new HashMap<>();
-		cachedConfig = new HashMap<>();
+		comment = "";
+		power = -1;
 	}
 
-	public boolean isNone()
+	public int getPower()
+	{
+		if (power == -1)
+		{
+			String s = getConfigSelf(NODE_POWER);
+
+			if (s.isEmpty())
+			{
+				power = 0;
+			}
+			else
+			{
+				power = MathHelper.clamp(Integer.parseInt(s), 0, Integer.MAX_VALUE - 1);
+			}
+		}
+
+		return power;
+	}
+
+	public boolean isPlayer()
 	{
 		return false;
+	}
+
+	public void clearCache()
+	{
+		parents = null;
+		power = -1;
 	}
 
 	public ITextComponent getDisplayName()
@@ -77,7 +100,77 @@ public class Rank extends FinalIDObject
 		return displayName;
 	}
 
-	public boolean setPermission(Node node, String value)
+	public Set<Rank> getParents()
+	{
+		if (parents == null)
+		{
+			List<Rank> list = new ArrayList<>();
+
+			for (String s : getConfigSelf(NODE_PARENT).split(","))
+			{
+				Rank r = ranks.getRank(s.trim());
+
+				if (r != null && !r.isPlayer())
+				{
+					list.add(r);
+				}
+			}
+
+			list.sort(null);
+			parents = new LinkedHashSet<>(list);
+		}
+
+		return parents;
+	}
+
+	public boolean addParent(@Nullable Rank rank)
+	{
+		if (rank == null || rank.isPlayer())
+		{
+			return false;
+		}
+
+		parents = getParents();
+
+		if (parents.add(rank))
+		{
+			setPermission(NODE_PARENT, StringJoiner.with(", ").join(parents));
+			parents = null;
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean removeParent(Rank rank)
+	{
+		parents = getParents();
+
+		if (parents.remove(rank))
+		{
+			setPermission(NODE_PARENT, StringJoiner.with(", ").join(parents));
+			parents = null;
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean clearParents()
+	{
+		power = -1;
+		parents = null;
+		return setPermission(NODE_PARENT, "") != null;
+	}
+
+	@Nullable
+	public Entry setPermission(String node, Object value)
+	{
+		return setPermission(Node.get(node), String.valueOf(value));
+	}
+
+	@Nullable
+	public Entry setPermission(Node node, String value)
 	{
 		if (value.isEmpty())
 		{
@@ -85,14 +178,15 @@ public class Rank extends FinalIDObject
 
 			while (iterator.hasNext())
 			{
-				if (iterator.next().node.equals(node))
+				Entry entry = iterator.next();
+				if (entry.node.equals(node))
 				{
 					iterator.remove();
-					return true;
+					return entry;
 				}
 			}
 
-			return false;
+			return null;
 		}
 
 		for (Entry entry : permissions)
@@ -102,20 +196,20 @@ public class Rank extends FinalIDObject
 				if (!entry.value.equals(value))
 				{
 					entry.value = value;
-					return true;
+					return entry;
 				}
 
-				return false;
+				return null;
 			}
 		}
 
 		Entry entry = new Entry(node);
 		entry.value = value;
 		permissions.add(entry);
-		return true;
+		return entry;
 	}
 
-	public Event.Result getPermissionRaw(Node node, boolean matching)
+	public Event.Result getPermissionSelf(Node node, boolean matching)
 	{
 		Event.Result result = Event.Result.DEFAULT;
 
@@ -130,10 +224,30 @@ public class Rank extends FinalIDObject
 			}
 		}
 
-		return result != Event.Result.DEFAULT || parent.isNone() ? result : parent.getPermissionRaw(node, matching);
+		return result;
 	}
 
-	public String getConfigRaw(Node node)
+	public Event.Result getPermission(Node node, boolean matching)
+	{
+		Event.Result result = getPermissionSelf(node, matching);
+
+		if (result == Event.Result.DEFAULT)
+		{
+			for (Rank parent : getParents())
+			{
+				result = parent.getPermission(node, matching);
+
+				if (result != Event.Result.DEFAULT)
+				{
+					return result;
+				}
+			}
+		}
+
+		return result;
+	}
+
+	public String getConfigSelf(Node node)
 	{
 		for (Entry entry : permissions)
 		{
@@ -143,6 +257,69 @@ public class Rank extends FinalIDObject
 			}
 		}
 
-		return parent.isNone() ? "" : parent.getConfigRaw(node);
+		return "";
+	}
+
+	public String getConfig(Node node)
+	{
+		String s = getConfigSelf(node);
+
+		if (!s.isEmpty())
+		{
+			return s;
+		}
+
+		for (Rank parent : getParents())
+		{
+			s = parent.getConfig(node);
+
+			if (!s.isEmpty())
+			{
+				return s;
+			}
+		}
+
+		return "";
+	}
+
+	public boolean add()
+	{
+		return ranks.ranks.put(getId(), this) != this;
+	}
+
+	public boolean remove()
+	{
+		if (ranks.ranks.remove(getId()) != null)
+		{
+			for (Rank rank : ranks.ranks.values())
+			{
+				rank.removeParent(this);
+			}
+
+			for (Rank rank : ranks.playerRanks.values())
+			{
+				rank.removeParent(this);
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public int compareTo(Rank o)
+	{
+		return Integer.compare(o.getPower(), getPower());
+	}
+
+	public boolean isDefaultPlayerRank()
+	{
+		return getConfigSelf(NODE_DEFAULT_PLAYER).equals("true");
+	}
+
+	public boolean isDefaultOPRank()
+	{
+		return getConfigSelf(NODE_DEFAULT_OP).equals("true");
 	}
 }

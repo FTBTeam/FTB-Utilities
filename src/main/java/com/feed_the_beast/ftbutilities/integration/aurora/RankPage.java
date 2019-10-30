@@ -60,21 +60,6 @@ public class RankPage extends HTTPWebPage
 			Tag name = table.tr().th().attr("colspan", "2");
 			name.span(rank.getId(), "other");
 
-			if (!rank.parent.isNone())
-			{
-				name.text(" extends ");
-				name.span(rank.parent.getId(), "other");
-			}
-
-			if (!rank.tags.isEmpty())
-			{
-				for (String tag : rank.tags)
-				{
-					name.text(" is ");
-					name.span(tag, "other");
-				}
-			}
-
 			for (Rank.Entry entry : rank.permissions)
 			{
 				Tag row = table.tr();

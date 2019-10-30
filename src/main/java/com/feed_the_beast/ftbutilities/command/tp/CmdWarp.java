@@ -57,7 +57,7 @@ public class CmdWarp extends CmdBase
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 
-		if (Ranks.getPermissionResult(player, Node.COMMAND.append("ftbutilities.warp.teleport." + args[0]), true) == Event.Result.DENY)
+		if (Ranks.INSTANCE.getPermissionResult(player, Node.COMMAND.append("ftbutilities.warp.teleport." + args[0]), true) == Event.Result.DENY)
 		{
 			throw new CommandException("commands.generic.permission");
 		}

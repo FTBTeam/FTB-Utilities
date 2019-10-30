@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbutilities;
 
 import com.feed_the_beast.ftblib.events.RegisterRankConfigEvent;
 import com.feed_the_beast.ftblib.events.RegisterRankConfigHandlerEvent;
+import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
@@ -12,6 +13,7 @@ import com.feed_the_beast.ftblib.lib.util.text_components.TextComponentParser;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
+import com.feed_the_beast.ftbutilities.ranks.Rank;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockDoor;
@@ -28,6 +30,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
+import java.util.regex.Pattern;
 
 /**
  * @author LatvianModder
@@ -203,6 +206,11 @@ public class FTBUtilitiesPermissions
 	@SubscribeEvent
 	public static void registerConfigs(RegisterRankConfigEvent event)
 	{
+		event.register(Rank.NODE_PARENT, new ConfigString("", Pattern.compile("^[a-z0-9\\s,]*$")), new ConfigString(""));
+		event.register(Rank.NODE_DEFAULT_PLAYER, new ConfigBoolean(false), new ConfigBoolean(false));
+		event.register(Rank.NODE_DEFAULT_OP, new ConfigBoolean(false), new ConfigBoolean(false));
+		event.register(Rank.NODE_POWER, new ConfigInt(0, 0, Integer.MAX_VALUE - 1), new ConfigInt(0));
+
 		event.register(CHAT_NAME_FORMAT, new ConfigString("<{name}>"), new ConfigString("<&2{name}&r>"));
 		event.register(CHAT_TEXT_COLOR, new ConfigEnum<>(TextComponentParser.TEXT_FORMATTING_COLORS_NAME_MAP));
 		event.register(BADGE, new ConfigString(""));

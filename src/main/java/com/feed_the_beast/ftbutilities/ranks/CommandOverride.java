@@ -14,7 +14,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.command.CommandTreeBase;
-import net.minecraftforge.server.permission.context.PlayerContext;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -97,7 +96,7 @@ public class CommandOverride extends CommandBase
 		if (sender instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP player = (EntityPlayerMP) sender;
-			Event.Result result = Ranks.getPermissionResult(server, player.getGameProfile(), node, new PlayerContext(player), true);
+			Event.Result result = Ranks.INSTANCE.getPermissionResult(server, player.getGameProfile(), node, player.world, true);
 
 			if (result != Event.Result.DEFAULT)
 			{

@@ -9,9 +9,8 @@ import com.feed_the_beast.ftbutilities.data.FTBUtilitiesTeamData;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import dev.latvian.kubejs.player.PlayerDataJS;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.OptionalInt;
 import java.util.Set;
@@ -39,30 +38,10 @@ public class KubeJSFTBUtilitiesPlayerData
 		return cached;
 	}
 
-	public String getRank()
+	@Nullable
+	public Rank getRank()
 	{
-		if (!Ranks.isActive())
-		{
-			return "";
-		}
-
-		EntityPlayer player = playerData.getPlayerEntity();
-
-		if (!(player instanceof EntityPlayerMP))
-		{
-			return "";
-		}
-
-		Rank rank = Ranks.INSTANCE.getRank(player.getServer(), player.getGameProfile(), null);
-		return rank.isNone() ? "" : rank.getId();
-	}
-
-	public void setRank(String rank)
-	{
-		if (Ranks.isActive())
-		{
-			Ranks.INSTANCE.setRank(playerData.getId(), Ranks.INSTANCE.getRank(rank));
-		}
+		return Ranks.isActive() ? Ranks.INSTANCE.getPlayerRank(playerData.getProfile()) : null;
 	}
 
 	public Set<ClaimedChunk> getClaimedChunks()

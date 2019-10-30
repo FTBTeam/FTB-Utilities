@@ -81,7 +81,7 @@ public class CmdSetPermission extends CmdBase
 		checkArgs(sender, args, 3);
 		Rank rank = Ranks.INSTANCE.getRank(args[0]);
 
-		if (rank.isNone())
+		if (rank == null)
 		{
 			throw FTBUtilities.error(sender, "commands.ranks.not_found", args[0]);
 		}
@@ -90,14 +90,13 @@ public class CmdSetPermission extends CmdBase
 		String value0 = StringUtils.joinSpaceUntilEnd(2, args);
 		String value = value0.equals("none") ? "" : value0;
 
-		if (!rank.setPermission(node, value))
+		if (rank.setPermission(node, value) == null)
 		{
 			sender.sendMessage(FTBLib.lang(sender, "nothing_changed"));
 		}
 		else
 		{
-			Ranks.INSTANCE.universe.clearCache();
-			Ranks.INSTANCE.saveRanks();
+			rank.ranks.save();
 			ITextComponent nodeText = new TextComponentString(node.toString());
 			nodeText.getStyle().setColor(TextFormatting.GOLD);
 

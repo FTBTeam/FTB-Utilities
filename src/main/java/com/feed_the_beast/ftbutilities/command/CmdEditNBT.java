@@ -47,7 +47,7 @@ public class CmdEditNBT extends CmdTreeBase
 	public CmdEditNBT()
 	{
 		super("nbtedit");
-		addSubcommand(new CmdTile());
+		addSubcommand(new CmdBlock());
 		addSubcommand(new CmdEntity());
 		addSubcommand(new CmdPlayer());
 		addSubcommand(new CmdItem());
@@ -106,11 +106,11 @@ public class CmdEditNBT extends CmdTreeBase
 		}
 	}
 
-	private static class CmdTile extends CmdNBT
+	private static class CmdBlock extends CmdNBT
 	{
-		private CmdTile()
+		private CmdBlock()
 		{
-			super("tile");
+			super("block");
 		}
 
 		@Override

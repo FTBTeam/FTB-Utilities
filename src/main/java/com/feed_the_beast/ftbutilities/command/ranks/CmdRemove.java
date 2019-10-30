@@ -11,29 +11,22 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * @author LatvianModder
  */
-public class CmdDelete extends CmdBase
+public class CmdRemove extends CmdBase
 {
-	public CmdDelete()
+	public CmdRemove()
 	{
-		super("delete", Level.OP);
-	}
-
-	@Override
-	public List<String> getAliases()
-	{
-		return Collections.singletonList("del");
+		super("remove", Level.OP);
 	}
 
 	@Override
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
 	{
-		if (args.length == 1 && Ranks.isActive())
+		if ((args.length == 1 || args.length == 2) && Ranks.isActive())
 		{
 			return getListOfStringsMatchingLastWord(args, Ranks.INSTANCE.getRankNames(false));
 		}
@@ -46,26 +39,28 @@ public class CmdDelete extends CmdBase
 	{
 		if (!Ranks.isActive())
 		{
-			throw FTBLib.error(sender, "feature_disabled_server");
+			throw FTBLib.errorFeatureDisabledServer(sender);
 		}
 
 		checkArgs(sender, args, 1);
-
 		Rank rank = Ranks.INSTANCE.getRank(args[0]);
 
 		if (rank == null)
 		{
-			throw FTBUtilities.error(sender, "commands.ranks.not_found", args[0]);
+			throw FTBUtilities.error(sender, "commands.ranks.create.id_invalid", args[0]);
 		}
 
-		if (rank.remove())
+		Rank parent = Ranks.INSTANCE.getRank(args[1]);
+
+		if (parent == null)
+		{
+			throw FTBUtilities.error(sender, "commands.ranks.create.id_invalid", args[1]);
+		}
+
+		if (rank.removeParent(parent))
 		{
 			rank.ranks.save();
-			sender.sendMessage(FTBUtilities.lang(sender, "commands.ranks.delete.deleted", rank.getDisplayName()));
-		}
-		else
-		{
-			sender.sendMessage(FTBLib.lang(sender, "nothing_changed"));
+			sender.sendMessage(FTBUtilities.lang(sender, "commands.ranks.remove.text", parent.getDisplayName(), rank.getDisplayName()));
 		}
 	}
 }

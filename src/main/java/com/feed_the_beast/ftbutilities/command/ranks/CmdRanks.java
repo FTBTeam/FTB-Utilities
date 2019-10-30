@@ -19,12 +19,13 @@ public class CmdRanks extends CmdTreeBase
 	public CmdRanks()
 	{
 		super("ranks");
+		addSubcommand(new CmdInfo());
+		addSubcommand(new CmdCreate());
+		addSubcommand(new CmdDelete());
 		addSubcommand(new CmdAdd());
-		addSubcommand(new CmdGet());
-		addSubcommand(new CmdSet());
+		addSubcommand(new CmdRemove());
 		addSubcommand(new CmdGetPermission());
 		addSubcommand(new CmdSetPermission());
-		addSubcommand(new CmdDelete());
 		addSubcommand(new CmdTreeHelp(this));
 	}
 
@@ -33,7 +34,7 @@ public class CmdRanks extends CmdTreeBase
 	{
 		if (Loader.isModLoaded("spongeforge"))
 		{
-			ITextComponent component = new TextComponentString("FTB Utilities Ranks aren't going to work with Sponge installed!");
+			ITextComponent component = new TextComponentString("FTB Ranks aren't going to work with Sponge installed!");
 			component.getStyle().setColor(TextFormatting.DARK_RED);
 			sender.sendMessage(component);
 			return;

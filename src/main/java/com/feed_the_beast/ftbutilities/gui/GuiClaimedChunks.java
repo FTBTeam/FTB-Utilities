@@ -262,7 +262,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			public void onClicked(MouseButton button)
 			{
 				GuiHelper.playClickSound();
-				handleClick("curseforgepages:ftb-utilities:claimed-chunks");
+				handleClick("https://github.com/FTBTeam/FTB-Chunks/wiki");
 			}
 		});
 	}

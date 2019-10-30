@@ -12,11 +12,9 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
-import com.feed_the_beast.ftbutilities.net.MessageRanks;
 import com.feed_the_beast.ftbutilities.net.MessageViewCrashList;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
@@ -38,23 +36,9 @@ public class FTBUtilitiesRegistryEventHandler
 	{
 		FTBLibPreInitRegistryEvent.Registry registry = event.getRegistry();
 		registry.registerServerReloadHandler(new ResourceLocation(FTBUtilities.MOD_ID, "ranks"), reloadEvent -> Ranks.INSTANCE.reload());
-		registry.registerServerReloadHandler(new ResourceLocation(FTBUtilities.MOD_ID, "badges"), reloadEvent -> FTBUtilitiesUniverseData.reloadServerBadges(reloadEvent.getUniverse()));
+		registry.registerServerReloadHandler(new ResourceLocation(FTBUtilities.MOD_ID, "badges"), reloadEvent -> FTBUtilitiesUniverseData.clearBadgeCache());
 
 		registry.registerSyncData(FTBUtilities.MOD_ID, new FTBUtilitiesSyncData());
-
-		/*registry.registerTeamAction(new Action(new ResourceLocation(FTBUtilities.MOD_ID+":chat"), new TextComponentTranslation("sidebar_button." + FTBUtilities.MOD_ID + ".chats.team"), GuiIcons.CHAT, -10)
-		{
-			@Override
-			public Type getType(ForgePlayer player, NBTTagCompound data)
-			{
-				return Type.INVISIBLE;
-			}
-
-			@Override
-			public void onAction(ForgePlayer player, NBTTagCompound data)
-			{
-			}
-		});*/
 
 		registry.registerAdminPanelAction(new AdminPanelAction(FTBUtilities.MOD_ID, "crash_reports", ItemIcon.getItemIcon(Blocks.BARRIER), 0)
 		{
@@ -127,22 +111,6 @@ public class FTBUtilitiesRegistryEventHandler
 				}
 
 				return GameRules.ValueType.ANY_VALUE;
-			}
-		});
-
-		registry.registerAdminPanelAction(new AdminPanelAction(FTBUtilities.MOD_ID, "ranks", ItemIcon.getItemIcon(Items.DIAMOND_SWORD), 0)
-		{
-			@Override
-			public Type getType(ForgePlayer player, NBTTagCompound data)
-			{
-				//return Ranks.isActive() ? Type.fromBoolean(player.hasPermission(FTBUtilitiesPermissions.RANKS_VIEW)) : Type.INVISIBLE;
-				return Type.INVISIBLE;
-			}
-
-			@Override
-			public void onAction(ForgePlayer player, NBTTagCompound data)
-			{
-				new MessageRanks(Ranks.INSTANCE).sendTo(player.getPlayer());
 			}
 		});
 	}

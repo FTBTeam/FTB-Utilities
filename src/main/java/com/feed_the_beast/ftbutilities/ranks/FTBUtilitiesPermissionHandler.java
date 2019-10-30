@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.lib.config.ConfigNull;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.DefaultRankConfigHandler;
 import com.feed_the_beast.ftblib.lib.config.IRankConfigHandler;
-import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.mojang.authlib.GameProfile;
@@ -50,7 +49,7 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 			profile = new GameProfile(EntityPlayer.getOfflineUUID(profile.getName()), profile.getName());
 		}
 
-		switch (Ranks.getPermissionResult(null, profile, Node.get(nodeS), context, true))
+		switch (Ranks.INSTANCE.getPermissionResult(null, profile, Node.get(nodeS), context == null ? null : context.getWorld(), true))
 		{
 			case ALLOW:
 				return true;
@@ -80,40 +79,16 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 	}
 
 	@Override
-	public ConfigValue getConfigValue(MinecraftServer server, GameProfile profile, Node node, @Nullable IContext context)
+	public ConfigValue getConfigValue(MinecraftServer server, GameProfile profile, Node node)
 	{
 		ConfigValue value = ConfigNull.INSTANCE;
 
 		if (Ranks.isActive())
 		{
-			Rank rank = Ranks.INSTANCE.getRank(server, profile, context);
-
-			if (!rank.isNone())
-			{
-				value = rank.cachedConfig.get(node);
-
-				if (value == null)
-				{
-					value = ConfigNull.INSTANCE;
-					String string = rank.getConfigRaw(node);
-
-					if (!string.isEmpty())
-					{
-						RankConfigValueInfo info = RankConfigAPI.getHandler().getInfo(node);
-
-						if (info != null)
-						{
-							value = info.defaultValue.copy();
-							value.setValueFromString(server, string, false);
-						}
-					}
-
-					rank.cachedConfig.put(node, value);
-				}
-			}
+			value = Ranks.INSTANCE.getConfigValue(server, profile, node);
 		}
 
-		return value.isNull() ? DefaultRankConfigHandler.INSTANCE.getConfigValue(server, profile, node, context) : value;
+		return value.isNull() ? DefaultRankConfigHandler.INSTANCE.getConfigValue(server, profile, node) : value;
 	}
 
 	@Nullable

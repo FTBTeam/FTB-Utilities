@@ -193,6 +193,7 @@ public class Ranks
 				if (extendss.length == 2)
 				{
 					currentRank.setPermission(Rank.NODE_PARENT, StringUtils.removeAllWhitespace(extendss[1]));
+					save = true;
 				}
 
 				if (iss.length == 2)
@@ -204,6 +205,7 @@ public class Ranks
 						if (!s.isEmpty())
 						{
 							currentRank.setPermission(s, true);
+							save = true;
 						}
 					}
 				}

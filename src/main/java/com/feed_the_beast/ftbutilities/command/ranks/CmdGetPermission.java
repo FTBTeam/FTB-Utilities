@@ -1,13 +1,11 @@
 package com.feed_the_beast.ftbutilities.command.ranks;
 
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
-import com.feed_the_beast.ftblib.lib.command.CommandUtils;
-import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
-import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
-import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
+import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
+import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
+import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -58,29 +56,38 @@ public class CmdGetPermission extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		checkArgs(sender, args, 2);
-		ForgePlayer player = CommandUtils.getForgePlayer(sender, args[0]);
-		Node node = Node.get(args[1]);
+		Rank rank = Ranks.INSTANCE.getRank(args[0]);
 
-		ITextComponent nodeText = new TextComponentString(node.toString());
-		nodeText.getStyle().setColor(TextFormatting.GOLD);
+		if (rank == null)
+		{
+			throw FTBUtilities.error(sender, "commands.ranks.not_found", args[0]);
+		}
 
-		ITextComponent nameText = player.getDisplayName();
-		nameText.getStyle().setColor(TextFormatting.DARK_GREEN);
+		ConfigValue value = rank.getPermissionValue(args[1], args[1], true);
 
-		RankConfigValueInfo info = RankConfigAPI.getHandler().getInfo(node);
 		ITextComponent valueText;
 
-		if (info != null)
+		if (value.isNull())
 		{
-			valueText = player.getRankConfig(node).getStringForGUI();
-			valueText.getStyle().setColor(TextFormatting.BLUE);
+			valueText = FTBUtilities.lang(sender, "commands.ranks.none");
+			valueText.getStyle().setColor(TextFormatting.DARK_GRAY);
+		}
+		else if (value instanceof ConfigBoolean)
+		{
+			valueText = new TextComponentString(value.getString());
+			valueText.getStyle().setColor(value.getBoolean() ? TextFormatting.GREEN : TextFormatting.RED);
 		}
 		else
 		{
-			boolean value = player.hasPermission(args[1]);
-			valueText = new TextComponentString(value ? "true" : "false");
-			valueText.getStyle().setColor(value ? TextFormatting.GREEN : TextFormatting.RED);
+			valueText = new TextComponentString(value.getString());
+			valueText.getStyle().setColor(TextFormatting.BLUE);
 		}
+
+		ITextComponent nodeText = new TextComponentString(args[1]);
+		nodeText.getStyle().setColor(TextFormatting.GOLD);
+
+		ITextComponent nameText = rank.getDisplayName().createCopy();
+		nameText.getStyle().setColor(TextFormatting.DARK_GREEN);
 
 		sender.sendMessage(FTBUtilities.lang(sender, "commands.ranks.get_permission.text", nodeText, nameText, valueText));
 	}

@@ -13,7 +13,6 @@ import com.feed_the_beast.ftblib.lib.math.TeleporterDimPos;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.IScheduledTask;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftblib.lib.util.misc.TimeType;
 import com.feed_the_beast.ftblib.lib.util.text_components.TextComponentParser;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
@@ -54,8 +53,8 @@ public class FTBUtilitiesPlayerData extends PlayerData
 
 		public static final Timer[] VALUES = values();
 
-		private final Node cooldown;
-		private final Node warmup;
+		private final String cooldown;
+		private final String warmup;
 		private final TeleportType teleportType;
 
 		Timer(TeleportType teleportType)

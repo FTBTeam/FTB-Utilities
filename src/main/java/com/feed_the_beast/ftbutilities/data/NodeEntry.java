@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbutilities.data;
 
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 
 import javax.annotation.Nullable;
@@ -12,13 +11,13 @@ import javax.annotation.Nullable;
  */
 public final class NodeEntry implements Comparable<NodeEntry>
 {
-	public final Node node;
+	public final String node;
 	public final ConfigValue player;
 	public final ConfigValue op;
 	public final String desc;
 	public final DefaultPermissionLevel level;
 
-	public NodeEntry(Node n, ConfigValue p, ConfigValue o, String d, @Nullable DefaultPermissionLevel l)
+	public NodeEntry(String n, ConfigValue p, ConfigValue o, String d, @Nullable DefaultPermissionLevel l)
 	{
 		node = n;
 		player = p;
@@ -27,19 +26,19 @@ public final class NodeEntry implements Comparable<NodeEntry>
 		level = l;
 	}
 
-	public NodeEntry(Node n, DefaultPermissionLevel l, String d)
+	public NodeEntry(String n, DefaultPermissionLevel l, String d)
 	{
 		this(n, new ConfigBoolean(l == DefaultPermissionLevel.ALL), new ConfigBoolean(l != DefaultPermissionLevel.NONE), d, l);
 	}
 
-	public Node getNode()
+	public String getNode()
 	{
 		return node;
 	}
 
 	public String toString()
 	{
-		return node.toString();
+		return node;
 	}
 
 	public int hashCode()

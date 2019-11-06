@@ -60,10 +60,10 @@ public class RankPage extends HTTPWebPage
 			Tag name = table.tr().th().attr("colspan", "2");
 			name.span(rank.getId(), "other");
 
-			for (Rank.Entry entry : rank.permissions)
+			for (Rank.Entry entry : rank.permissions.values())
 			{
 				Tag row = table.tr();
-				row.td().text(entry.node.toString());
+				row.td().text(entry.node);
 
 				if (entry.value.equals("true") || entry.value.equals("false"))
 				{

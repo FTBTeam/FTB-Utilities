@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -23,7 +22,7 @@ import java.util.List;
  */
 public class CommandOverride extends CommandBase
 {
-	public static ICommand create(ICommand command, Node parent, @Nullable ModContainer container)
+	public static ICommand create(ICommand command, String parent, @Nullable ModContainer container)
 	{
 		if (command instanceof CommandTreeBase)
 		{
@@ -36,14 +35,14 @@ public class CommandOverride extends CommandBase
 	}
 
 	public final ICommand mirrored;
-	public final Node node;
+	public final String node;
 	public final ITextComponent usage;
 	public final ModContainer modContainer;
 
-	private CommandOverride(ICommand c, Node parent, @Nullable ModContainer container)
+	private CommandOverride(ICommand c, String parent, @Nullable ModContainer container)
 	{
 		mirrored = c;
-		node = parent.append(mirrored.getName());
+		node = parent + '.' + mirrored.getName();
 		Ranks.INSTANCE.commands.put(node, this);
 
 		String usageS = getUsage(Ranks.INSTANCE.universe.server);
@@ -95,8 +94,7 @@ public class CommandOverride extends CommandBase
 	{
 		if (sender instanceof EntityPlayerMP)
 		{
-			EntityPlayerMP player = (EntityPlayerMP) sender;
-			Event.Result result = Ranks.INSTANCE.getPermissionResult(server, player.getGameProfile(), node, player.world, true);
+			Event.Result result = Ranks.INSTANCE.getPermissionResult((EntityPlayerMP) sender, node, true);
 
 			if (result != Event.Result.DEFAULT)
 			{

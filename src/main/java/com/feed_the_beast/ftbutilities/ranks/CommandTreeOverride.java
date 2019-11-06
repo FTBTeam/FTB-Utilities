@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
 import com.feed_the_beast.ftblib.lib.command.CmdTreeBase;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -19,11 +18,11 @@ public class CommandTreeOverride extends CmdTreeBase
 {
 	public final CommandTreeBase mirrored;
 
-	public CommandTreeOverride(CommandTreeBase c, Node parent, @Nullable ModContainer container)
+	public CommandTreeOverride(CommandTreeBase c, String parent, @Nullable ModContainer container)
 	{
 		super(c.getName());
 		mirrored = c;
-		Node node = parent.append(mirrored.getName());
+		String node = parent + '.' + mirrored.getName();
 
 		for (ICommand command : mirrored.getSubCommands())
 		{

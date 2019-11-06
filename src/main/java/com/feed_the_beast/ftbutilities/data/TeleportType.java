@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbutilities.data;
 
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 
 import javax.annotation.Nullable;
@@ -16,10 +15,10 @@ public enum TeleportType
 	RESPAWN(FTBUtilitiesPermissions.RESPAWN_BACK, null, null);
 
 	private String permission;
-	private Node warmup;
-	private Node cooldown;
+	private String warmup;
+	private String cooldown;
 
-	TeleportType(String node, @Nullable Node warmup, @Nullable Node cooldown)
+	TeleportType(String node, @Nullable String warmup, @Nullable String cooldown)
 	{
 		this.permission = node;
 		this.warmup = warmup;
@@ -31,12 +30,12 @@ public enum TeleportType
 		return this.permission;
 	}
 
-	public Node getWarmupPermission()
+	public String getWarmupPermission()
 	{
 		return this.warmup;
 	}
 
-	public Node getCooldownPermission()
+	public String getCooldownPermission()
 	{
 		return this.cooldown;
 	}

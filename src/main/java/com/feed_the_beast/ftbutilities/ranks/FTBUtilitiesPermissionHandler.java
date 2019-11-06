@@ -5,7 +5,6 @@ import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.DefaultRankConfigHandler;
 import com.feed_the_beast.ftblib.lib.config.IRankConfigHandler;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
@@ -37,7 +36,7 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 	}
 
 	@Override
-	public boolean hasPermission(GameProfile profile, String nodeS, @Nullable IContext context)
+	public boolean hasPermission(GameProfile profile, String node, @Nullable IContext context)
 	{
 		if (profile.getId() == null) //TODO: PR this fix in Forge
 		{
@@ -49,14 +48,14 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 			profile = new GameProfile(EntityPlayer.getOfflineUUID(profile.getName()), profile.getName());
 		}
 
-		switch (Ranks.INSTANCE.getPermissionResult(null, profile, Node.get(nodeS), context == null ? null : context.getWorld(), true))
+		switch (Ranks.INSTANCE.getPermissionResult(profile, node, true))
 		{
 			case ALLOW:
 				return true;
 			case DENY:
 				return false;
 			default:
-				return DefaultPermissionHandler.INSTANCE.hasPermission(profile, nodeS, context);
+				return DefaultPermissionHandler.INSTANCE.hasPermission(profile, node, context);
 		}
 	}
 
@@ -79,13 +78,13 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 	}
 
 	@Override
-	public ConfigValue getConfigValue(MinecraftServer server, GameProfile profile, Node node)
+	public ConfigValue getConfigValue(MinecraftServer server, GameProfile profile, String node)
 	{
 		ConfigValue value = ConfigNull.INSTANCE;
 
 		if (Ranks.isActive())
 		{
-			value = Ranks.INSTANCE.getConfigValue(server, profile, node);
+			value = Ranks.INSTANCE.getPermission(profile, node, true);
 		}
 
 		return value.isNull() ? DefaultRankConfigHandler.INSTANCE.getConfigValue(server, profile, node) : value;
@@ -93,7 +92,7 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 
 	@Nullable
 	@Override
-	public RankConfigValueInfo getInfo(Node node)
+	public RankConfigValueInfo getInfo(String node)
 	{
 		return DefaultRankConfigHandler.INSTANCE.getInfo(node);
 	}

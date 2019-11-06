@@ -6,9 +6,9 @@ import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.command.FTBUtilitiesCommands;
 import com.feed_the_beast.ftbutilities.ranks.CommandOverride;
+import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import dev.latvian.kubejs.KubeJS;
 import dev.latvian.mods.aurora.Aurora;
@@ -120,7 +120,7 @@ public class FTBUtilities
 			for (ICommand command : commands)
 			{
 				ModContainer container = CommonUtils.getModContainerForClass(command.getClass());
-				manager.registerCommand(CommandOverride.create(command, container == null ? Node.COMMAND : Node.COMMAND.append(container.getModId()), container));
+				manager.registerCommand(CommandOverride.create(command, container == null ? Rank.NODE_COMMAND : (Rank.NODE_COMMAND + '.' + container.getModId()), container));
 			}
 
 			List<CommandOverride> ocommands = new ArrayList<>(Ranks.INSTANCE.commands.values());

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbutilities.events;
 
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 
@@ -23,7 +22,7 @@ public class CustomPermissionPrefixesRegistryEvent extends FTBUtilitiesEvent
 		callback.accept(entry);
 	}
 
-	public void register(Node node, DefaultPermissionLevel level, String desc)
+	public void register(String node, DefaultPermissionLevel level, String desc)
 	{
 		callback.accept(new NodeEntry(node, level, desc));
 	}

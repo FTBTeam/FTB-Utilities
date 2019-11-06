@@ -5,7 +5,6 @@ import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.ranks.FTBUtilitiesPermissionHandler;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
@@ -55,7 +54,7 @@ public class CmdSetPermission extends CmdBase
 		}
 		else if (args.length == 3)
 		{
-			RankConfigValueInfo info = RankConfigAPI.getHandler().getInfo(Node.get(args[1]));
+			RankConfigValueInfo info = RankConfigAPI.getHandler().getInfo(args[1]);
 
 			if (info != null && !info.defaultValue.isNull())
 			{
@@ -86,7 +85,7 @@ public class CmdSetPermission extends CmdBase
 			throw FTBUtilities.error(sender, "commands.ranks.not_found", args[0]);
 		}
 
-		Node node = Node.get(args[1]);
+		String node = args[1];
 		String value0 = StringUtils.joinSpaceUntilEnd(2, args);
 		String value = value0.equals("none") ? "" : value0;
 
@@ -97,7 +96,7 @@ public class CmdSetPermission extends CmdBase
 		else
 		{
 			rank.ranks.save();
-			ITextComponent nodeText = new TextComponentString(node.toString());
+			ITextComponent nodeText = new TextComponentString(node);
 			nodeText.getStyle().setColor(TextFormatting.GOLD);
 
 			ITextComponent setText;

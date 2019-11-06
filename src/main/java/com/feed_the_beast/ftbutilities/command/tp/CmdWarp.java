@@ -4,12 +4,12 @@ import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
+import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -57,7 +57,7 @@ public class CmdWarp extends CmdBase
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 
-		if (Ranks.INSTANCE.getPermissionResult(player, Node.COMMAND.append("ftbutilities.warp.teleport." + args[0]), true) == Event.Result.DENY)
+		if (Ranks.INSTANCE.getPermissionResult(player, Rank.NODE_COMMAND + ".ftbutilities.warp.teleport." + args[0], true) == Event.Result.DENY)
 		{
 			throw new CommandException("commands.generic.permission");
 		}

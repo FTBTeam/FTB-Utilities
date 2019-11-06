@@ -75,7 +75,7 @@ public class CmdInfo extends CmdBase
 		if (!parents.isEmpty())
 		{
 			ITextComponent t = new TextComponentString("");
-			t.appendSibling(StringUtils.color(new TextComponentString(Rank.NODE_PARENT.toString()), TextFormatting.GOLD));
+			t.appendSibling(StringUtils.color(new TextComponentString(Rank.NODE_PARENT), TextFormatting.GOLD));
 			t.appendText(": ");
 
 			boolean first = true;
@@ -106,7 +106,7 @@ public class CmdInfo extends CmdBase
 			sender.sendMessage(t);
 		}
 
-		for (Rank.Entry entry : rank.permissions)
+		for (Rank.Entry entry : rank.permissions.values())
 		{
 			if (entry.node.equals(Rank.NODE_PARENT))
 			{
@@ -114,7 +114,7 @@ public class CmdInfo extends CmdBase
 			}
 
 			ITextComponent t = new TextComponentString("");
-			t.appendSibling(StringUtils.color(new TextComponentString(entry.node.toString()), TextFormatting.GOLD));
+			t.appendSibling(StringUtils.color(new TextComponentString(entry.node), TextFormatting.GOLD));
 			t.appendText(": ");
 			t.appendSibling(StringUtils.color(new TextComponentString(entry.value), TextFormatting.BLUE));
 

@@ -9,7 +9,6 @@ import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import dev.latvian.mods.aurora.page.HTTPWebPage;
@@ -88,13 +87,12 @@ public class PermissionListPage extends HTTPWebPage
 		{
 			DefaultPermissionLevel level = DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(s);
 			String desc = PermissionAPI.getPermissionHandler().getNodeDescription(s);
-			Node node = Node.get(s);
 
 			boolean printNode = true;
 
 			for (NodeEntry cprefix : FTBUtilitiesCommon.CUSTOM_PERM_PREFIX_REGISTRY)
 			{
-				if (cprefix.getNode().matches(node))
+				if (s.startsWith(cprefix.getNode()))
 				{
 					if (cprefix.level != null && level == cprefix.level && desc.isEmpty())
 					{
@@ -107,14 +105,14 @@ public class PermissionListPage extends HTTPWebPage
 
 			if (printNode)
 			{
-				allNodes.add(new NodeEntry(node, level, desc));
+				allNodes.add(new NodeEntry(s, level, desc));
 			}
 		}
 
 		for (RankConfigValueInfo info : RankConfigAPI.getHandler().getRegisteredConfigs())
 		{
 			String desc = new TextComponentTranslation("permission." + info.node).getUnformattedText();
-			allNodes.add(new NodeEntry(info.node, info.defaultValue, info.defaultOPValue, desc.equals(info.node.toString()) ? "" : desc, null));
+			allNodes.add(new NodeEntry(info.node, info.defaultValue, info.defaultOPValue, desc.equals(info.node) ? "" : desc, null));
 		}
 
 		allNodes.sort(null);
@@ -130,7 +128,7 @@ public class PermissionListPage extends HTTPWebPage
 		{
 			Tag row = nodeTable.tr();
 			Tag n = row.td();
-			n.paired("code", entry.getNode().toString());
+			n.paired("code", entry.getNode());
 
 			if (!entry.desc.isEmpty())
 			{

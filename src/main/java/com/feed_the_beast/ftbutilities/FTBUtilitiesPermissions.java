@@ -8,7 +8,6 @@ import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigTimer;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftblib.lib.util.text_components.TextComponentParser;
 import com.feed_the_beast.ftbutilities.data.Leaderboard;
 import com.feed_the_beast.ftbutilities.events.CustomPermissionPrefixesRegistryEvent;
@@ -40,19 +39,19 @@ public class FTBUtilitiesPermissions
 {
 	// Display //
 	public static final String DISPLAY_ADMIN_INFO = "ftbutilities.display.admin_info";
-	public static final Node BADGE = Node.get("ftbutilities.badge");
+	public static final String BADGE = "ftbutilities.badge";
 
 	// Homes //
 	public static final String HOMES_CROSS_DIM = "ftbutilities.homes.cross_dim";
-	public static final Node HOMES_MAX = Node.get("ftbutilities.homes.max");
-	public static final Node HOMES_COOLDOWN = Node.get("ftbutilities.homes.cooldown");
-	public static final Node HOMES_WARMUP = Node.get("ftbutilities.homes.warmup");
+	public static final String HOMES_MAX = "ftbutilities.homes.max";
+	public static final String HOMES_COOLDOWN = "ftbutilities.homes.cooldown";
+	public static final String HOMES_WARMUP = "ftbutilities.homes.warmup";
 	public static final String HOMES_LIST_OTHER = "ftbutilities.other_player.homes.list";
 	public static final String HOMES_TELEPORT_OTHER = "ftbutilities.other_player.homes.teleport";
 
 	// Warps //
-	public static final Node WARPS_COOLDOWN = Node.get("ftbutilities.warps.cooldown");
-	public static final Node WARPS_WARMUP = Node.get("ftbutilities.warps.warmup");
+	public static final String WARPS_COOLDOWN = "ftbutilities.warps.cooldown";
+	public static final String WARPS_WARMUP = "ftbutilities.warps.warmup";
 
 	public static final String HOMES_BACK = "ftbutilities.back.home";
 	public static final String WARPS_BACK = "ftbutilities.back.warp";
@@ -68,10 +67,10 @@ public class FTBUtilitiesPermissions
 	public static final String CLAIMS_OTHER_UNCLAIM = "ftbutilities.other_player.claims.unclaim";
 	public static final String CLAIMS_OTHER_LOAD = "ftbutilities.other_player.claims.load";
 	public static final String CLAIMS_OTHER_UNLOAD = "ftbutilities.other_player.claims.unload";
-	public static final Node CLAIMS_MAX_CHUNKS = Node.get("ftbutilities.claims.max_chunks");
-	public static final Node CLAIMS_BLOCK_EDIT_PREFIX = Node.get("ftbutilities.claims.block.edit");
-	public static final Node CLAIMS_BLOCK_INTERACT_PREFIX = Node.get("ftbutilities.claims.block.interact");
-	public static final Node CLAIMS_ITEM_PREFIX = Node.get("ftbutilities.claims.item");
+	public static final String CLAIMS_MAX_CHUNKS = "ftbutilities.claims.max_chunks";
+	public static final String CLAIMS_BLOCK_EDIT_PREFIX = "ftbutilities.claims.block.edit";
+	public static final String CLAIMS_BLOCK_INTERACT_PREFIX = "ftbutilities.claims.block.interact";
+	public static final String CLAIMS_ITEM_PREFIX = "ftbutilities.claims.item";
 	public static final String CLAIMS_BYPASS_LIMITS = "ftbutilities.claims.bypass_limits";
 	public static final String CLAIMS_ATTACK_ANIMALS = "ftbutilities.claims.attack_animals";
 
@@ -80,7 +79,7 @@ public class FTBUtilitiesPermissions
 	public static final HashSet<Item> CLAIMS_ITEM_BLACKLIST = new HashSet<>();
 
 	// Chunkloader //
-	public static final Node CHUNKLOADER_MAX_CHUNKS = Node.get("ftbutilities.chunkloader.max_chunks");
+	public static final String CHUNKLOADER_MAX_CHUNKS = "ftbutilities.chunkloader.max_chunks";
 	//public static final String CHUNKLOADER_OFFLINE_TIMER = FTBUtilities.MOD_ID + ".chunkloader.offline_timer";
 	public static final String CHUNKLOADER_LOAD_OFFLINE = "ftbutilities.chunkloader.load_offline";
 
@@ -89,13 +88,13 @@ public class FTBUtilitiesPermissions
 	public static final String CHAT_FORMATTING = "ftbutilities.chat.formatting";
 	public static final String CHAT_NICKNAME_SET = "ftbutilities.chat.nickname.set";
 	public static final String CHAT_NICKNAME_COLORS = "ftbutilities.chat.nickname.colors";
-	public static final Node CHAT_NAME_FORMAT = Node.get("ftbutilities.chat.name_format");
-	public static final Node CHAT_TEXT_COLOR = Node.get("ftbutilities.chat.text.color");
-	public static final Node CHAT_TEXT_BOLD = Node.get("ftbutilities.chat.text.bold");
-	public static final Node CHAT_TEXT_ITALIC = Node.get("ftbutilities.chat.text.italic");
-	public static final Node CHAT_TEXT_UNDERLINED = Node.get("ftbutilities.chat.text.underlined");
-	public static final Node CHAT_TEXT_STRIKETHROUGH = Node.get("ftbutilities.chat.text.strikethrough");
-	public static final Node CHAT_TEXT_OBFUSCATED = Node.get("ftbutilities.chat.text.obfuscated");
+	public static final String CHAT_NAME_FORMAT = "ftbutilities.chat.name_format";
+	public static final String CHAT_TEXT_COLOR = "ftbutilities.chat.text.color";
+	public static final String CHAT_TEXT_BOLD = "ftbutilities.chat.text.bold";
+	public static final String CHAT_TEXT_ITALIC = "ftbutilities.chat.text.italic";
+	public static final String CHAT_TEXT_UNDERLINED = "ftbutilities.chat.text.underlined";
+	public static final String CHAT_TEXT_STRIKETHROUGH = "ftbutilities.chat.text.strikethrough";
+	public static final String CHAT_TEXT_OBFUSCATED = "ftbutilities.chat.text.obfuscated";
 
 	// Other //
 	public static final String INFINITE_BACK_USAGE = "ftbutilities.back.infinite";
@@ -105,18 +104,18 @@ public class FTBUtilitiesPermissions
 	public static final String EDIT_WORLD_GAMERULES = "admin_panel.ftbutilities.edit_world.gamerules";
 	public static final String RANKS_VIEW = "admin_panel.ftbutilities.ranks.view";
 
-	public static final Node TPA_COOLDOWN = Node.get("ftbutilities.tpa.cooldown");
-	public static final Node SPAWN_COOLDOWN = Node.get("ftbutilities.spawn.cooldown");
-	public static final Node BACK_COOLDOWN = Node.get("ftbutilities.back.cooldown");
-	public static final Node RTP_COOLDOWN = Node.get("ftbutilities.rtp.cooldown");
+	public static final String TPA_COOLDOWN = "ftbutilities.tpa.cooldown";
+	public static final String SPAWN_COOLDOWN = "ftbutilities.spawn.cooldown";
+	public static final String BACK_COOLDOWN = "ftbutilities.back.cooldown";
+	public static final String RTP_COOLDOWN = "ftbutilities.rtp.cooldown";
 
-	public static final Node TPA_WARMUP = Node.get("ftbutilities.tpa.warmup");
-	public static final Node SPAWN_WARMUP = Node.get("ftbutilities.spawn.warmup");
-	public static final Node BACK_WARMUP = Node.get("ftbutilities.back.warmup");
-	public static final Node RTP_WARMUP = Node.get("ftbutilities.rtp.warmup");
+	public static final String TPA_WARMUP = "ftbutilities.tpa.warmup";
+	public static final String SPAWN_WARMUP = "ftbutilities.spawn.warmup";
+	public static final String BACK_WARMUP = "ftbutilities.back.warmup";
+	public static final String RTP_WARMUP = "ftbutilities.rtp.warmup";
 
 	public static final String TPA_CROSS_DIM = "ftbutilities.tpa.cross_dim";
-	public static final Node AFK_TIMER = Node.get("ftbutilities.afk.timer");
+	public static final String AFK_TIMER = "ftbutilities.afk.timer";
 	public static final String HEAL_OTHER = "ftbutilities.other_player.heal";
 
 	@SubscribeEvent
@@ -188,13 +187,13 @@ public class FTBUtilitiesPermissions
 		for (Block block : Block.REGISTRY)
 		{
 			String name = formatId(block);
-			PermissionAPI.registerNode(CLAIMS_BLOCK_EDIT_PREFIX.append(name).toString(), CLAIMS_BLOCK_EDIT_WHITELIST.contains(block) ? DefaultPermissionLevel.ALL : DefaultPermissionLevel.OP, "");
-			PermissionAPI.registerNode(CLAIMS_BLOCK_INTERACT_PREFIX.append(name).toString(), CLAIMS_BLOCK_INTERACT_WHITELIST.contains(block) ? DefaultPermissionLevel.ALL : DefaultPermissionLevel.OP, "");
+			PermissionAPI.registerNode(CLAIMS_BLOCK_EDIT_PREFIX + '.' + name, CLAIMS_BLOCK_EDIT_WHITELIST.contains(block) ? DefaultPermissionLevel.ALL : DefaultPermissionLevel.OP, "");
+			PermissionAPI.registerNode(CLAIMS_BLOCK_INTERACT_PREFIX + '.' + name, CLAIMS_BLOCK_INTERACT_WHITELIST.contains(block) ? DefaultPermissionLevel.ALL : DefaultPermissionLevel.OP, "");
 		}
 
 		for (Item item : Item.REGISTRY)
 		{
-			PermissionAPI.registerNode(CLAIMS_ITEM_PREFIX.append(formatId(item)).toString(), CLAIMS_ITEM_BLACKLIST.contains(item) ? DefaultPermissionLevel.OP : DefaultPermissionLevel.ALL, "");
+			PermissionAPI.registerNode(CLAIMS_ITEM_PREFIX + '.' + formatId(item), CLAIMS_ITEM_BLACKLIST.contains(item) ? DefaultPermissionLevel.OP : DefaultPermissionLevel.ALL, "");
 		}
 
 		for (Leaderboard leaderboard : FTBUtilitiesCommon.LEADERBOARDS.values())
@@ -236,11 +235,11 @@ public class FTBUtilitiesPermissions
 	@SubscribeEvent
 	public static void registerCustomPermissionPrefixes(CustomPermissionPrefixesRegistryEvent event)
 	{
-		event.register(Node.COMMAND, DefaultPermissionLevel.OP, "Permission for commands, if FTBUtilities command overriding is enabled. If not, this node will be inactive");
+		event.register(Rank.NODE_COMMAND, DefaultPermissionLevel.OP, "Permission for commands, if FTBUtilities command overriding is enabled. If not, this String will be inactive");
 		event.register(CLAIMS_BLOCK_EDIT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can break and place within claimed chunks");
 		event.register(CLAIMS_BLOCK_INTERACT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can right-click within claimed chunks");
 		event.register(CLAIMS_ITEM_PREFIX, DefaultPermissionLevel.ALL, "Permission for items that players can right-click in air within claimed chunks");
-		event.register(Node.get(LEADERBOARD_PREFIX), DefaultPermissionLevel.ALL, "Permission for leaderboards that players can view");
+		event.register(LEADERBOARD_PREFIX, DefaultPermissionLevel.ALL, "Permission for leaderboards that players can view");
 	}
 
 	public static String formatId(@Nullable IForgeRegistryEntry item)
@@ -250,17 +249,17 @@ public class FTBUtilitiesPermissions
 
 	public static boolean hasBlockEditingPermission(EntityPlayer player, Block block)
 	{
-		return PermissionAPI.hasPermission(player, CLAIMS_BLOCK_EDIT_PREFIX.append(formatId(block)).toString());
+		return PermissionAPI.hasPermission(player, CLAIMS_BLOCK_EDIT_PREFIX + '.' + formatId(block));
 	}
 
 	public static boolean hasBlockInteractionPermission(EntityPlayer player, Block block)
 	{
-		return PermissionAPI.hasPermission(player, CLAIMS_BLOCK_INTERACT_PREFIX.append(formatId(block)).toString());
+		return PermissionAPI.hasPermission(player, CLAIMS_BLOCK_INTERACT_PREFIX + '.' + formatId(block));
 	}
 
 	public static boolean hasItemUsePermission(EntityPlayer player, Item block)
 	{
-		return PermissionAPI.hasPermission(player, CLAIMS_ITEM_PREFIX.append(formatId(block)).toString());
+		return PermissionAPI.hasPermission(player, CLAIMS_ITEM_PREFIX + '.' + formatId(block));
 	}
 
 	public static String getLeaderboardNode(Leaderboard leaderboard)

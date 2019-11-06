@@ -1,35 +1,41 @@
 package com.feed_the_beast.ftbutilities.ranks;
 
+import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
+import com.feed_the_beast.ftblib.lib.config.ConfigNull;
+import com.feed_the_beast.ftblib.lib.config.ConfigString;
+import com.feed_the_beast.ftblib.lib.config.ConfigValue;
+import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
+import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Rank extends FinalIDObject implements Comparable<Rank>
 {
-	public static final Node NODE_PARENT = Node.get("parent");
-	public static final Node NODE_DEFAULT_PLAYER = Node.get("default_player_rank");
-	public static final Node NODE_DEFAULT_OP = Node.get("default_op_rank");
-	public static final Node NODE_POWER = Node.get("power");
+	public static final String NODE_PARENT = "parent";
+	public static final String NODE_DEFAULT_PLAYER = "default_player_rank";
+	public static final String NODE_DEFAULT_OP = "default_op_rank";
+	public static final String NODE_POWER = "power";
+	public static final String NODE_COMMAND = "command";
 
 	public static class Entry implements Comparable<Entry>
 	{
-		public final Node node;
+		public final String node;
 		public String value = "";
 		public String comment = "";
 
-		public Entry(Node n)
+		public Entry(String n)
 		{
 			node = n;
 		}
@@ -50,8 +56,8 @@ public class Rank extends FinalIDObject implements Comparable<Rank>
 	public final Ranks ranks;
 	private int power;
 	protected ITextComponent displayName;
-	private Set<Rank> parents;
-	public final List<Entry> permissions;
+	protected Set<Rank> parents;
+	public final Map<String, Entry> permissions;
 	public String comment;
 
 	public Rank(Ranks r, String id)
@@ -60,7 +66,7 @@ public class Rank extends FinalIDObject implements Comparable<Rank>
 		displayName = new TextComponentString(getId());
 		displayName.getStyle().setColor(TextFormatting.DARK_GREEN);
 		ranks = r;
-		permissions = new ArrayList<>();
+		permissions = new LinkedHashMap<>();
 		comment = "";
 		power = -1;
 	}
@@ -69,7 +75,7 @@ public class Rank extends FinalIDObject implements Comparable<Rank>
 	{
 		if (power == -1)
 		{
-			String s = getConfigSelf(NODE_POWER);
+			String s = getLocalPermission(NODE_POWER);
 
 			if (s.isEmpty())
 			{
@@ -106,7 +112,7 @@ public class Rank extends FinalIDObject implements Comparable<Rank>
 		{
 			List<Rank> list = new ArrayList<>();
 
-			for (String s : getConfigSelf(NODE_PARENT).split(","))
+			for (String s : getLocalPermission(NODE_PARENT).split(","))
 			{
 				Rank r = ranks.getRank(s.trim());
 
@@ -121,6 +127,11 @@ public class Rank extends FinalIDObject implements Comparable<Rank>
 		}
 
 		return parents;
+	}
+
+	public Set<Rank> getActualParents()
+	{
+		return getParents();
 	}
 
 	public boolean addParent(@Nullable Rank rank)
@@ -164,114 +175,57 @@ public class Rank extends FinalIDObject implements Comparable<Rank>
 	}
 
 	@Nullable
-	public Entry setPermission(String node, Object value)
+	public Entry setPermission(String node, @Nullable Object value)
 	{
-		return setPermission(Node.get(node), String.valueOf(value));
-	}
+		String v = value == null ? "" : value.toString();
 
-	@Nullable
-	public Entry setPermission(Node node, String value)
-	{
-		if (value.isEmpty())
+		if (v.isEmpty())
 		{
-			Iterator<Entry> iterator = permissions.iterator();
+			return permissions.remove(node);
+		}
 
-			while (iterator.hasNext())
+		Entry entry = permissions.get(node);
+
+		if (entry != null)
+		{
+			if (!entry.value.equals(v))
 			{
-				Entry entry = iterator.next();
-				if (entry.node.equals(node))
-				{
-					iterator.remove();
-					return entry;
-				}
+				entry.value = v;
+				return entry;
 			}
 
 			return null;
 		}
 
-		for (Entry entry : permissions)
-		{
-			if (entry.node.equals(node))
-			{
-				if (!entry.value.equals(value))
-				{
-					entry.value = value;
-					return entry;
-				}
-
-				return null;
-			}
-		}
-
-		Entry entry = new Entry(node);
-		entry.value = value;
-		permissions.add(entry);
+		entry = new Entry(node);
+		entry.value = v;
+		permissions.put(node, entry);
 		return entry;
 	}
 
-	public Event.Result getPermissionSelf(Node node, boolean matching)
+	public String getLocalPermission(String node)
 	{
-		Event.Result result = Event.Result.DEFAULT;
-
-		int parts = 0;
-
-		for (Entry entry : permissions)
-		{
-			if (entry.node.getPartCount() > parts && (entry.value.equals("true") || entry.value.equals("false")) && (matching ? entry.node.matches(node) : entry.node.equals(node)))
-			{
-				parts = entry.node.getPartCount();
-				result = entry.value.equals("true") ? Event.Result.ALLOW : Event.Result.DENY;
-			}
-		}
-
-		return result;
+		Entry entry = permissions.get(node);
+		return entry == null ? "" : entry.value;
 	}
 
-	public Event.Result getPermission(Node node, boolean matching)
+	public String getPermission(String node)
 	{
-		Event.Result result = getPermissionSelf(node, matching);
-
-		if (result == Event.Result.DEFAULT)
-		{
-			for (Rank parent : getParents())
-			{
-				result = parent.getPermission(node, matching);
-
-				if (result != Event.Result.DEFAULT)
-				{
-					return result;
-				}
-			}
-		}
-
-		return result;
+		return getPermission(node, node, false);
 	}
 
-	public String getConfigSelf(Node node)
+	public String getPermission(String originalNode, String node, boolean recursive)
 	{
-		for (Entry entry : permissions)
-		{
-			if (entry.node.equals(node) && !entry.value.isEmpty())
-			{
-				return entry.value;
-			}
-		}
-
-		return "";
-	}
-
-	public String getConfig(Node node)
-	{
-		String s = getConfigSelf(node);
+		String s = getLocalPermission(node);
 
 		if (!s.isEmpty())
 		{
 			return s;
 		}
 
-		for (Rank parent : getParents())
+		for (Rank parent : getActualParents())
 		{
-			s = parent.getConfig(node);
+			s = parent.getPermission(node);
 
 			if (!s.isEmpty())
 			{
@@ -279,7 +233,55 @@ public class Rank extends FinalIDObject implements Comparable<Rank>
 			}
 		}
 
+		if (recursive)
+		{
+			int i = node.lastIndexOf('.');
+
+			if (i != -1)
+			{
+				return getPermission(originalNode, node.substring(0, i), true);
+			}
+			else if (!node.equals("*"))
+			{
+				return getPermission(originalNode, "*", true);
+			}
+		}
+
 		return "";
+	}
+
+	public ConfigValue getPermissionValue(String node)
+	{
+		return getPermissionValue(node, node, false);
+	}
+
+	public ConfigValue getPermissionValue(String originalNode, String node, boolean recursive)
+	{
+		String s = getPermission(originalNode, node, recursive);
+
+		if (s.isEmpty())
+		{
+			return ConfigNull.INSTANCE;
+		}
+		else if (s.equals("true"))
+		{
+			return new ConfigBoolean(true);
+		}
+		else if (s.equals("false"))
+		{
+			return new ConfigBoolean(false);
+		}
+
+		RankConfigValueInfo info = RankConfigAPI.getHandler().getInfo(originalNode);
+
+		if (info != null)
+		{
+			ConfigValue value = info.defaultValue.copy();
+			value.setValueFromString(null, s, false);
+			return value;
+		}
+
+		return new ConfigString(s);
 	}
 
 	public boolean add()
@@ -315,11 +317,11 @@ public class Rank extends FinalIDObject implements Comparable<Rank>
 
 	public boolean isDefaultPlayerRank()
 	{
-		return getConfigSelf(NODE_DEFAULT_PLAYER).equals("true");
+		return getLocalPermission(NODE_DEFAULT_PLAYER).equals("true");
 	}
 
 	public boolean isDefaultOPRank()
 	{
-		return getConfigSelf(NODE_DEFAULT_OP).equals("true");
+		return getLocalPermission(NODE_DEFAULT_OP).equals("true");
 	}
 }

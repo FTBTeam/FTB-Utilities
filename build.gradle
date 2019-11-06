@@ -92,7 +92,7 @@ if (ENV.CURSEFORGE_KEY) {
 			addGameVersion "${mc_version}"
 			relations {
 				requiredDependency 'ftblib'
-				requiredDependency 'ftb-utilities-backups'
+				requiredDependency 'ftb-backups'
 				optionalDependency 'journeymap'
 			}
 			changelog = getGitChangelog

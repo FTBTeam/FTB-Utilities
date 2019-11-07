@@ -57,12 +57,7 @@ public class CmdDelete extends CmdBase
 
 		checkArgs(sender, args, 1);
 
-		Rank rank = Ranks.INSTANCE.getRank(args[0]);
-
-		if (rank == null)
-		{
-			throw FTBUtilities.error(sender, "commands.ranks.not_found", args[0]);
-		}
+		Rank rank = Ranks.INSTANCE.getRank(server, sender, args[0]);
 
 		if (rank.remove())
 		{

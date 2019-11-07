@@ -59,19 +59,8 @@ public class CmdAdd extends CmdBase
 		}
 
 		checkArgs(sender, args, 2);
-		Rank rank = Ranks.INSTANCE.getRank(args[0]);
-
-		if (rank == null)
-		{
-			throw FTBUtilities.error(sender, "commands.ranks.create.id_invalid", args[0]);
-		}
-
-		Rank parent = Ranks.INSTANCE.getRank(args[1]);
-
-		if (parent == null)
-		{
-			throw FTBUtilities.error(sender, "commands.ranks.create.id_invalid", args[1]);
-		}
+		Rank rank = Ranks.INSTANCE.getRank(server, sender, args[0]);
+		Rank parent = Ranks.INSTANCE.getRank(server, sender, args[1]);
 
 		if (rank.addParent(parent))
 		{

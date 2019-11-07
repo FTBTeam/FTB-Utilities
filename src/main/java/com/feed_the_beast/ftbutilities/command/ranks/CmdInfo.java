@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbutilities.command.ranks;
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.ranks.Rank;
 import com.feed_the_beast.ftbutilities.ranks.Ranks;
 import net.minecraft.command.CommandException;
@@ -57,12 +56,7 @@ public class CmdInfo extends CmdBase
 		}
 
 		checkArgs(sender, args, 1);
-		Rank rank = Ranks.INSTANCE.getRank(args[0]);
-
-		if (rank == null)
-		{
-			throw FTBUtilities.error(sender, "commands.ranks.not_found", args[0]);
-		}
+		Rank rank = Ranks.INSTANCE.getRank(server, sender, args[0]);
 
 		sender.sendMessage(new TextComponentString(""));
 		ITextComponent id = new TextComponentString("[" + rank.getId() + (rank.comment.isEmpty() ? "]" : ("] - " + rank.comment)));

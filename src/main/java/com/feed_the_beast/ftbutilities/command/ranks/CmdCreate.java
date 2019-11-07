@@ -44,17 +44,7 @@ public class CmdCreate extends CmdBase
 		{
 			for (int i = 1; i < args.length; i++)
 			{
-				String pid = args[1].toLowerCase();
-				Rank r = Ranks.INSTANCE.getRank(pid);
-
-				if (r == null)
-				{
-					throw FTBUtilities.error(sender, "commands.ranks.not_found", pid);
-				}
-				else
-				{
-					rank.addParent(r);
-				}
+				rank.addParent(Ranks.INSTANCE.getRank(server, sender, args[1].toLowerCase()));
 			}
 		}
 

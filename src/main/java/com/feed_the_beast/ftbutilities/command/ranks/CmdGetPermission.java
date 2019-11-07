@@ -56,12 +56,7 @@ public class CmdGetPermission extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		checkArgs(sender, args, 2);
-		Rank rank = Ranks.INSTANCE.getRank(args[0]);
-
-		if (rank == null)
-		{
-			throw FTBUtilities.error(sender, "commands.ranks.not_found", args[0]);
-		}
+		Rank rank = Ranks.INSTANCE.getRank(server, sender, args[0]);
 
 		ConfigValue value = rank.getPermissionValue(args[1], args[1], true);
 

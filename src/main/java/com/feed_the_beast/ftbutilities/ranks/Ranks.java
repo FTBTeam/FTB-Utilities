@@ -9,13 +9,18 @@ import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesCommon;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.data.NodeEntry;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
@@ -480,6 +485,23 @@ public class Ranks
 		}
 
 		FileUtils.saveSafe(playersFile, list);
+	}
+
+	public Rank getRank(MinecraftServer server, ICommandSender sender, String id) throws CommandException
+	{
+		if (id.startsWith("@"))
+		{
+			return getPlayerRank(CommandBase.getPlayer(server, sender, id));
+		}
+
+		Rank r = getRank(id);
+
+		if (r == null)
+		{
+			throw FTBUtilities.error(sender, "commands.ranks.not_found", id);
+		}
+
+		return r;
 	}
 
 	@Nullable

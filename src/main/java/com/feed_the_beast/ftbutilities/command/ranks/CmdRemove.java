@@ -11,6 +11,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,10 +30,24 @@ public class CmdRemove extends CmdBase
 	{
 		if ((args.length == 1 || args.length == 2) && Ranks.isActive())
 		{
-			return getListOfStringsMatchingLastWord(args, Ranks.INSTANCE.getRankNames(false));
+			List<String> list = new ArrayList<>();
+
+			if (args.length == 1)
+			{
+				list.addAll(Arrays.asList(server.getPlayerList().getOnlinePlayerNames()));
+			}
+
+			list.addAll(Ranks.INSTANCE.getRankNames(false));
+			return getListOfStringsMatchingLastWord(args, list);
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
+	}
+
+	@Override
+	public boolean isUsernameIndex(String[] args, int index)
+	{
+		return index == 0;
 	}
 
 	@Override

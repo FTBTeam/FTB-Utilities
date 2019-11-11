@@ -70,7 +70,7 @@ public class MessageEditNBTResponse extends MessageToServer
 
 					break;
 				}
-				case "tile":
+				case "block":
 				{
 					BlockPos pos = new BlockPos(info.getInteger("x"), info.getInteger("y"), info.getInteger("z"));
 

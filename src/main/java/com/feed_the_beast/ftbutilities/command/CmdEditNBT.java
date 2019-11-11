@@ -129,7 +129,7 @@ public class CmdEditNBT extends CmdTreeBase
 
 			if (tile != null)
 			{
-				info.setString("type", "tile");
+				info.setString("type", "block");
 				info.setInteger("x", pos.getX());
 				info.setInteger("y", pos.getY());
 				info.setInteger("z", pos.getZ());

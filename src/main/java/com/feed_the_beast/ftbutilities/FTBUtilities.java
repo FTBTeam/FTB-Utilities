@@ -107,7 +107,14 @@ public class FTBUtilities
 			FileUtils.deleteSafe(new File(Ranks.INSTANCE.universe.server.getDataDirectory(), "local/ftbutilities/all_permissions.html"));
 			FileUtils.deleteSafe(new File(Ranks.INSTANCE.universe.server.getDataDirectory(), "local/ftbutilities/all_permissions_full_list.txt"));
 
-			if (!FTBUtilitiesConfig.ranks.override_commands || Loader.isModLoaded("spongeforge"))
+			boolean spongeLoaded = Loader.isModLoaded("spongeforge");
+
+			if (spongeLoaded)
+			{
+				LOGGER.warn("Sponge detected, command overriding has been disabled. If there are any issues with FTB Utilities ranks or permissions, please test them without Sponge!");
+			}
+
+			if (!FTBUtilitiesConfig.ranks.override_commands || spongeLoaded)
 			{
 				return;
 			}

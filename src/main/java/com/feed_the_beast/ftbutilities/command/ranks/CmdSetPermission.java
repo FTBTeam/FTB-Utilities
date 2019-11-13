@@ -90,6 +90,11 @@ public class CmdSetPermission extends CmdBase
 		String value0 = StringUtils.joinSpaceUntilEnd(2, args);
 		String value = value0.equals("none") ? "" : value0;
 
+		if (value.length() > 2 && value.startsWith("\"") && value.endsWith("\""))
+		{
+			value = value.substring(1, value.length() - 1);
+		}
+
 		if (rank.setPermission(node, value) == null)
 		{
 			sender.sendMessage(FTBLib.lang(sender, "nothing_changed"));

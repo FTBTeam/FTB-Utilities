@@ -219,6 +219,12 @@ public class Ranks
 				{
 					String value = s1[1].trim();
 
+					if (value.length() > 2 && value.startsWith("\"") && value.endsWith("\""))
+					{
+						value = value.substring(1, value.length() - 1);
+						save = true;
+					}
+
 					if (!value.isEmpty())
 					{
 						Rank.Entry entry = currentRank.setPermission(s1[0].trim(), value);

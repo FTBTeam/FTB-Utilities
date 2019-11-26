@@ -8,6 +8,8 @@ import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.IPermissionHandler;
@@ -38,6 +40,18 @@ public enum FTBUtilitiesPermissionHandler implements IPermissionHandler, IRankCo
 	@Override
 	public boolean hasPermission(GameProfile profile, String node, @Nullable IContext context)
 	{
+		if (context != null && context.getWorld() != null)
+		{
+			if (context.getWorld().isRemote)
+			{
+				return DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(node) == DefaultPermissionLevel.ALL;
+			}
+		}
+		else if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+		{
+			return DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(node) == DefaultPermissionLevel.ALL;
+		}
+
 		if (profile.getId() == null) //TODO: PR this fix in Forge
 		{
 			if (profile.getName() == null)

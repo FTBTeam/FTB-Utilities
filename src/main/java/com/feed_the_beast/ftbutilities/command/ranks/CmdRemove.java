@@ -60,12 +60,24 @@ public class CmdRemove extends CmdBase
 
 		checkArgs(sender, args, 1);
 		Rank rank = Ranks.INSTANCE.getRank(server, sender, args[0]);
-		Rank parent = Ranks.INSTANCE.getRank(server, sender, args[1]);
 
-		if (rank.removeParent(parent))
+		if (args.length == 1)
 		{
-			rank.ranks.save();
-			sender.sendMessage(FTBUtilities.lang(sender, "commands.ranks.remove.text", parent.getDisplayName(), rank.getDisplayName()));
+			if (rank.clearParents())
+			{
+				rank.ranks.save();
+				sender.sendMessage(FTBUtilities.lang(sender, "commands.ranks.remove.text", "*", rank.getDisplayName()));
+			}
+		}
+		else
+		{
+			Rank parent = Ranks.INSTANCE.getRank(server, sender, args[1]);
+
+			if (rank.removeParent(parent))
+			{
+				rank.ranks.save();
+				sender.sendMessage(FTBUtilities.lang(sender, "commands.ranks.remove.text", parent.getDisplayName(), rank.getDisplayName()));
+			}
 		}
 	}
 }

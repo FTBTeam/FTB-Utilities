@@ -91,7 +91,7 @@ if (ENV.CURSEFORGE_KEY) {
 			releaseType = "release"
 			addGameVersion "${mc_version}"
 			relations {
-				requiredDependency 'ftblib'
+				requiredDependency 'ftb-library'
 				requiredDependency 'ftb-backups'
 				optionalDependency 'journeymap'
 			}

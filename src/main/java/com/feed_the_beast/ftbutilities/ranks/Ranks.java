@@ -104,7 +104,6 @@ public class Ranks
 
 			Rank vRank = new Rank(this, "vip");
 			vRank.add();
-			vRank.addParent(pRank);
 			vRank.setPermission(Rank.NODE_POWER, 20);
 			vRank.setPermission("ftbutilities.chat.name_format", "<&bVIP {name}&r>");
 			vRank.setPermission("example.other_permission", true);
@@ -112,7 +111,6 @@ public class Ranks
 
 			Rank aRank = new Rank(this, "admin");
 			aRank.add();
-			aRank.addParent(vRank);
 			aRank.setPermission(Rank.NODE_DEFAULT_OP, true);
 			aRank.setPermission(Rank.NODE_POWER, 100);
 			aRank.setPermission("ftbutilities.chat.name_format", "<&2{name}&r>");

@@ -318,7 +318,7 @@ public class FTBUtilitiesUniverseData
 			}
 		}
 
-		return player.getRankConfig(FTBUtilitiesPermissions.BADGE).getString();
+		return Ranks.isActive() ? Ranks.INSTANCE.getPermission(player.getProfile(), FTBUtilitiesPermissions.BADGE, true).getString() : "";
 	}
 
 	public static boolean clearBadgeCache()

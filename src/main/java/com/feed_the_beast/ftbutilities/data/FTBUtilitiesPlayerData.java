@@ -165,7 +165,7 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	private ITextComponent cachedNameForChat;
 
 	private BlockDimPos lastSafePos;
-	private long[] lastTeleport;
+	private final long[] lastTeleport;
 	public final BlockDimPosStorage homes;
 	private TeleportTracker teleportTracker;
 
@@ -311,9 +311,11 @@ public class FTBUtilitiesPlayerData extends PlayerData
 	{
 		cachedNameForChat = null;
 
-		if (player.isOnline())
+		EntityPlayerMP p = player.getNullablePlayer();
+
+		if (p != null)
 		{
-			player.getPlayer().refreshDisplayName();
+			p.refreshDisplayName();
 		}
 	}
 

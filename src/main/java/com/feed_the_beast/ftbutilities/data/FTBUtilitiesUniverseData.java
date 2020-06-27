@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.universe.UniverseClosedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseLoadedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseSavedEvent;
+import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
@@ -318,7 +319,17 @@ public class FTBUtilitiesUniverseData
 			}
 		}
 
-		return Ranks.isActive() ? Ranks.INSTANCE.getPermission(player.getProfile(), FTBUtilitiesPermissions.BADGE, true).getString() : "";
+		if (Ranks.isActive())
+		{
+			ConfigValue value = Ranks.INSTANCE.getPermission(player.getProfile(), FTBUtilitiesPermissions.BADGE, true);
+
+			if (!value.isNull() && !value.isEmpty())
+			{
+				return value.getString();
+			}
+		}
+
+		return "";
 	}
 
 	public static boolean clearBadgeCache()

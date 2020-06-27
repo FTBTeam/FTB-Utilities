@@ -19,6 +19,9 @@ import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -124,6 +127,10 @@ public class PermissionListPage extends HTTPWebPage
 		firstRow.th().text("Player");
 		firstRow.th().text("OP");
 
+		List<List<String>> export = new ArrayList<>();
+		export.add(Arrays.asList("Node", "Type", "Player default", "OP default", "Variants"));
+		export.add(Arrays.asList("", "", "", "", ""));
+
 		for (NodeEntry entry : allNodes)
 		{
 			Tag row = nodeTable.tr();
@@ -189,6 +196,72 @@ public class PermissionListPage extends HTTPWebPage
 			{
 				row.td().addClass("center-text").span("", classOf(entry.player)).paired("code", playerText);
 				row.td().addClass("center-text").span("", classOf(entry.op)).paired("code", opText);
+			}
+
+			List<String> variants2 = new ArrayList<>(variants);
+
+			if (variants2.get(0).equals("Variants:"))
+			{
+				variants2.remove(0);
+			}
+
+			export.add(Arrays.asList(entry.getNode(), entry.player.getId(), entry.player.getStringForGUI().getUnformattedText(), entry.op.getStringForGUI().getUnformattedText(), variants2.toString()));
+		}
+
+		try
+		{
+			List<String> export2 = new ArrayList<>();
+			StringBuilder builder = new StringBuilder();
+
+			int[] maxLength = new int[5];
+
+			for (List<String> l : export)
+			{
+				for (int i = 0; i < maxLength.length; i++)
+				{
+					maxLength[i] = Math.max(maxLength[i], l.get(i).length());
+				}
+			}
+
+			for (List<String> l : export)
+			{
+				builder.setLength(0);
+
+				for (int i = 0; i < maxLength.length; i++)
+				{
+					if (i > 0)
+					{
+						builder.append(" | ");
+					}
+
+					fillWhitespace(builder, l.get(i), maxLength[i]);
+				}
+
+				export2.add(builder.toString());
+			}
+
+			Files.write(Paths.get("ftb-utilities-permissions.txt"), export2);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	private void fillWhitespace(StringBuilder builder, String s, int l)
+	{
+		int sl = s.length();
+		int m = Math.max(sl, l);
+
+		for (int i = 0; i < m; i++)
+		{
+			if (i >= sl)
+			{
+				builder.append(' ');
+			}
+			else
+			{
+				builder.append(s.charAt(i));
 			}
 		}
 	}

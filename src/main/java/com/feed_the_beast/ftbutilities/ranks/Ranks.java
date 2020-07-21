@@ -427,7 +427,7 @@ public class Ranks
 		universe.clearCache();
 
 		List<String> list = new ArrayList<>();
-		list.add("// For more info visit https://github.com/FTBTeam/FTB-Ranks/wiki");
+		list.add("// For more info visit https://faq.ftb.world/books/ftb-utilities/page/ranks");
 
 		for (Rank rank : ranks.values())
 		{
@@ -459,7 +459,7 @@ public class Ranks
 		FileUtils.saveSafe(ranksFile, list);
 
 		list = new ArrayList<>();
-		list.add("// For more info visit https://github.com/FTBTeam/FTB-Ranks/wiki");
+		list.add("// For more info visit https://faq.ftb.world/books/ftb-utilities/page/ranks");
 
 		for (Rank rank : playerRanks.values())
 		{

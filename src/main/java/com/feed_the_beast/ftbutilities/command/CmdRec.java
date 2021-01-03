@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbutilities.command;
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.net.MessageUpdateTabName;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -53,6 +54,10 @@ public class CmdRec extends CmdBase
 		}
 
 		Universe.get().getPlayer(player).clearCache();
-		new MessageUpdateTabName(player).sendToAll();
+
+		if (FTBUtilitiesConfig.chat.replace_tab_names)
+		{
+			new MessageUpdateTabName(player).sendToAll();
+		}
 	}
 }

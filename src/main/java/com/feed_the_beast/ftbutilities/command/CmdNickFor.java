@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
+import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.net.MessageUpdateTabName;
 import net.minecraft.command.CommandException;
@@ -44,6 +45,9 @@ public class CmdNickFor extends CmdBase
 			sender.sendMessage(FTBUtilities.lang(sender, "ftbutilities.lang.nickname_changed", name));
 		}
 
-		new MessageUpdateTabName(player.getPlayer()).sendToAll();
+		if (FTBUtilitiesConfig.chat.replace_tab_names)
+		{
+			new MessageUpdateTabName(player.getPlayer()).sendToAll();
+		}
 	}
 }

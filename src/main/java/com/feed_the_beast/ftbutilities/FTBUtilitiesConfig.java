@@ -105,6 +105,9 @@ public class FTBUtilitiesConfig
 	{
 		@Config.Comment("Adds ~ to player names that have changed nickname to prevent trolling.")
 		public boolean add_nickname_tilde = false;
+
+		@Config.Comment("Disable this for some plugin compat. Not that they are supported but sometimes this is all that's needed.")
+		public boolean replace_tab_names = true;
 	}
 
 	public static class Commands

@@ -69,7 +69,10 @@ public class FTBUtilitiesLoadedChunkManager implements ForgeChunkManager.Loading
 
 			if (!key.teamId.isEmpty())
 			{
-				ticketMap.put(key, ticket);
+				if (!ticket.getChunkList().isEmpty())
+				{
+					ticketMap.put(key, ticket);
+				}
 
 				for (ChunkPos pos : ticket.getChunkList())
 				{
